@@ -12,6 +12,13 @@ const express = require("express");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const cors = require("cors");
+const app = express();  
+app.use(cors({
+  origin: "*",
+}));
+
+app.options("*", cors()); 
+console.log("CORS ENABLED ✅");
 const path = require("path");
 const archiver = require("archiver");
 const bodyParser = require("body-parser");
@@ -19,18 +26,11 @@ const bodyParser = require("body-parser");
 const multer = require("multer");                 // for image upload
 const cloudinary = require("cloudinary").v2;      // cloudinary SDK
 
-const app = express();
 
 // ------------------------------------------------------
 // CORS
 // ------------------------------------------------------
-app.use(cors({
-  origin: [
-    "http://127.0.0.1:5500",
-    "http://localhost:5500",
-    "http://localhost:3000"
-  ],
-}));
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
