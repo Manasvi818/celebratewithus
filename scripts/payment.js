@@ -1,12 +1,12 @@
 const payBtn = document.getElementById("rzpButton");
-
+const BASE_URL = "https://celebratewithus.onrender.com";
 if (payBtn) {
     payBtn.addEventListener("click", openCheckout);
 }
 
 async function openCheckout() {
     try {
-        const res = await fetch("http://127.0.0.1:4000/create-order", {
+        const res = await fetch(`${BASE_URL}/create-order`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -64,7 +64,7 @@ async function openCheckout() {
 
 async function verifyPayment(response) {
     try {
-        const res = await fetch("http://127.0.0.1:4000/verify-payment", {
+        const res = await fetch(`${BASE_URL}/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(response),
@@ -83,7 +83,7 @@ async function verifyPayment(response) {
             }
 
             // ✅ Download trigger
-            window.location.href = `http://localhost:4000/download?template=${templateId}`;
+            window.location.href = `${BASE_URL}/download?template=${templateId}`;
 
         } else {
             alert("Payment verification failed.");
