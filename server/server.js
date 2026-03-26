@@ -237,7 +237,7 @@ console.log("Assets exists:", require("fs").existsSync(path.join(__dirname, "../
 
 const fs = require("fs");
 
-const templatePath = path.join(__dirname, "../templates", templateId);
+const templatePath = path.join(process.cwd(), "templates", templateId);
 
 console.log("Template ID:", templateId);
 console.log("Path:", templatePath);
@@ -250,9 +250,9 @@ if (!fs.existsSync(templatePath)) {
 archive.file(path.join(templatePath, "viewer.html"), { name: "viewer.html" });
 archive.file(path.join(templatePath, "editor.html"), { name: "editor.html" });
 
-archive.directory(path.join(__dirname, "../assets"), "assets");
-archive.directory(path.join(__dirname, "../styles"), "styles");
-archive.directory(path.join(__dirname, "../scripts"), "scripts");
+archive.directory(path.join(process.cwd(), "assets"), "assets");
+archive.directory(path.join(process.cwd(), "styles"), "styles");
+archive.directory(path.join(process.cwd(), "scripts"), "scripts");
 
 // 🔼 END REPLACE
 
