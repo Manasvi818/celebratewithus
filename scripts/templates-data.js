@@ -20,7 +20,7 @@ window.TEMPLATES = [
   { id: "always-together",   title: "Always Together",   vibe: "family", image: "assets/images/always-together.png" },
   { id: "warm-bonds",        title: "Warm Bonds",        vibe: "family", image: "assets/images/warm-bonds.png" },
   { id: "cherished-times",   title: "Cherished Times",   vibe: "family", image: "assets/images/cherished-times.png" },
-  { id: "joyful-family",     title: "Joyful Family",     vibe: "family", image: "assets/images/joyful-family.png" },
+  { id: "joyful-family",     title: "Joyful Family",     vibe: "family", image: "assets/images/joyful-times.png" },
 
   // --------------------
   // FUN / QUIRKY (5)
