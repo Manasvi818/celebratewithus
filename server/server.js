@@ -218,43 +218,47 @@ app.post("/webhook", (req, res) => {
 // ------------------------------------------------------
 // ✅ DOWNLOAD ROUTE FIRST
 app.get("/download", (req, res) => {
-  const templateId = req.query.template || "template";
+  try {
+    const fs = require("fs");
+    const templateId = req.query.template || "template";
 
-  console.log("🔥 Downloading template:", templateId);
-console.log("Preview exists:", require("fs").existsSync(path.join(__dirname, "../preview.html")));
-console.log("Template exists:", require("fs").existsSync(path.join(__dirname, "../template.html")));
-console.log("Styles exists:", require("fs").existsSync(path.join(__dirname, "../styles")));
-console.log("Scripts exists:", require("fs").existsSync(path.join(__dirname, "../scripts")));
-console.log("Assets exists:", require("fs").existsSync(path.join(__dirname, "../assets")));
-  res.setHeader("Content-Disposition", `attachment; filename=${templateId}.zip`);
-  res.setHeader("Content-Type", "application/zip");
+    console.log("🔥 Downloading template:", templateId);
 
-  const archive = archiver("zip", { zlib: { level: 9 } });
+    const templatePath = path.join(process.cwd(), "templates", templateId);
 
-  archive.pipe(res);
+    console.log("Template Path:", templatePath);
 
-// 🔽 REPLACE EVERYTHING BELOW THIS
+    // ✅ SAFE CHECK (no crash)
+    if (!fs.existsSync(templatePath)) {
+      console.log("❌ Template not found");
+      return res.status(404).json({ error: "Template not found" });
+    }
 
-const fs = require("fs");
+    res.setHeader("Content-Disposition", `attachment; filename=${templateId}.zip`);
+    res.setHeader("Content-Type", "application/zip");
 
-const templatePath = path.join(process.cwd(), "templates", templateId);
+    const archive = archiver("zip", { zlib: { level: 9 } });
 
-console.log("Template ID:", templateId);
-console.log("Path:", templatePath);
-console.log("Exists:", fs.existsSync(templatePath));
+    archive.on("error", (err) => {
+      console.error("Archive error:", err);
+      res.status(500).send("ZIP creation failed");
+    });
 
-if (!fs.existsSync(templatePath)) {
-  return res.status(404).send("Template not found ❌");
-}
+    archive.pipe(res);
 
-archive.file(path.join(templatePath, "viewer.html"), { name: "viewer.html" });
-archive.file(path.join(templatePath, "editor.html"), { name: "editor.html" });
+    // ✅ ADD FILES
+    archive.file(path.join(templatePath, "viewer.html"), { name: "viewer.html" });
+    archive.file(path.join(templatePath, "editor.html"), { name: "editor.html" });
 
-archive.directory(path.join(process.cwd(), "assets"), "assets");
-archive.directory(path.join(process.cwd(), "styles"), "styles");
-archive.directory(path.join(process.cwd(), "scripts"), "scripts");
+    // ✅ ADD ASSETS
+    archive.directory(path.join(process.cwd(), "assets"), "assets");
+    archive.directory(path.join(process.cwd(), "styles"), "styles");
+    archive.directory(path.join(process.cwd(), "scripts"), "scripts");
 
-// 🔼 END REPLACE
+    archive.finalize();
 
-archive.finalize();
+  } catch (err) {
+    console.error("Download error:", err);
+    res.status(500).send("Something went wrong");
+  }
 });
