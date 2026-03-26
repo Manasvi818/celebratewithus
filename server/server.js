@@ -262,3 +262,7 @@ app.get("/download", (req, res) => {
     res.status(500).send("Something went wrong");
   }
 });
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
