@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Candlelight Moments 🕯️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --grad-start:#1a0c06;
+  --grad-end:#2b140b;
+
+  --text-main:#ffd8a8;
+  --text-soft:#ffb703;
+
+  --card-bg:rgba(255,255,255,0.08);
+  --message-text:#ffe8c8;
+}
+
+@keyframes pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+*{
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  margin:0;
+  background:radial-gradient(circle at center,#2b160c,#0d0503);
+  color:var(--text-main);
+}
+ .pass-wrap{
+  position: relative;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.pass-wrap input{
+  width: 100%;
+  padding: 12px 42px 12px 12px;
+  border-radius: 12px;
+  border: 1px solid #ffcc88;
+  background: #1a0f0a;
+  color: #ffe8be;
+  font-size: 14px;
+}
+
+.pass-wrap span{
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: #ffb703;
+  user-select: none;
+  opacity: 0.85;
+}
+
+.pass-wrap span:hover{
+  opacity: 1;
+}
+
+/* 🔥 candle glow */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 70%, rgba(255,180,90,.25), transparent 60%);
+  pointer-events:none;
+  animation:flicker 4s infinite alternate;
+}
+
+@keyframes flicker{
+  from{opacity:.6}
+  to{opacity:1}
+}
+
+/* HERO */
+.hero{
+  min-height:38vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:20px;
+}
+
+.title{
+  font-family: 'Allura', cursive;
+  font-size: 6rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: #ffb703;
+
+  text-shadow:
+    0 0 18px rgba(255,180,60,.6),
+    0 0 40px rgba(255,140,40,.45);
+
+  margin-bottom: 8px;
+  white-space: nowrap;
+}
+
+.soft{
+  font-weight:400;
+  letter-spacing:3px;
+  opacity:0.9;
+}
+
+.subtitle{
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #ffe6c7;
+
+  margin-top: 4px;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+/* 🔥 candle flame cursor */
+#flame {
+  position: fixed;
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle, #ffd27d 0%, #ff9f1a 60%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow:
+    0 0 15px rgba(255,170,60,.9),
+    0 0 30px rgba(255,120,20,.6);
+  transform: translate(-50%, -50%);
+  z-index: 99999;
+  animation: flameFlicker 0.15s infinite alternate;
+}
+@keyframes flameFlicker {
+  from { transform: translate(-50%, -50%) scale(0.9); }
+  to   { transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* GALLERY */
+.gallery{
+  padding:25px 20px;
+  max-width:1100px;
+  margin:auto;
+}
+
+.gallery h2{
+  text-align:center;
+  color:#ffd8a8;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:22px;
+}
+
+/* 👉 make videos full width */
+.card.video {
+  grid-column: span 2;
+}
+
+@media (max-width: 650px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+.card{
+  background:var(--card-bg);
+  backdrop-filter:blur(6px);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 15px 40px rgba(0,0,0,.6);
+}
+
+.card img,
+.card video{
+  width:100%;
+  height:260px;
+  object-fit:cover;
+  transition:.4s;
+}
+
+.card:hover img{
+  transform:scale(1.05);
+}
+
+.caption{
+  padding:12px;
+  text-align:center;
+  font-size:14px;
+  color:#ffd8a8;
+  font-style: italic;
+  opacity:0.9;
+}
+
+.loveWord {
+  position: fixed;
+  bottom: -30px;
+  font-family: "Libre Baskerville", serif;
+  color: rgba(255,220,170,.9);
+  font-size: 14px;
+  letter-spacing: 2px;
+  animation: loveFloat 10s linear forwards;
+  pointer-events: none;
+  z-index: 9997;
+}
+
+@keyframes loveFloat {
+  from {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  to {
+    transform: translateY(-120vh);
+    opacity: 0;
+  }
+}
+
+/* MESSAGE */
+.message-box{
+  text-align:center;
+  margin-top:35px;
+}
+
+.pink-msg-box{
+  background:rgba(255,190,120,.1);
+  border-radius:24px;
+
+  width: min(92%, 980px);   /* ✅ stretches nicely */
+  margin: 0 auto 20px;      /* ✅ keeps space from both sides */
+
+  padding:26px 34px;
+  font-size:16px;
+  line-height:1.7;
+  color:var(--message-text);
+
+  box-shadow:0 0 35px rgba(255,180,90,.35);
+  animation:pop .4s ease;
+  transition: opacity .25s ease;
+}
+
+
+/* EMBERS */
+.confetti{
+  position:absolute;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:orange;
+  opacity:.8;
+  animation:ember 4s linear forwards;
+}
+
+@keyframes ember{
+  to{
+    transform:translateY(-110vh);
+    opacity:0;
+  }
+}
+#topControls{
+  position:fixed;
+  top:20px;
+  right:20px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  z-index:9999;
+}
+/* 🔥 flame trail particles */
+.flameTrail {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255,220,140,0.9) 0%,
+    rgba(255,150,60,0.8) 40%,
+    rgba(255,100,0,0.2) 70%,
+    transparent 80%);
+  box-shadow:
+    0 0 12px rgba(255,170,60,.9),
+    0 0 25px rgba(255,120,20,.6);
+  transform: translate(-50%, -50%);
+  animation: trailFade 0.8s ease-out forwards;
+  z-index: 99998;
+}
+
+@keyframes trailFade {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -70%) scale(0.2);
+  }
+}
+
+/* ✨ golden spark mixed in flame trail */
+.goldSpark {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle,
+    #fff2b0 0%,
+    #ffd86b 40%,
+    rgba(255,200,80,0.3) 70%,
+    transparent 80%);
+  box-shadow:
+    0 0 8px rgba(255,220,150,.9),
+    0 0 14px rgba(255,200,80,.7);
+  animation: sparkFade 0.6s ease-out forwards;
+  z-index: 99999;
+}
+
+@keyframes sparkFade {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(
+      calc(-50% + 12px),
+      calc(-50% - 20px)
+    ) scale(0.2);
+  }
+}
+
+.msg-title{
+  font-family: 'Allura', cursive;
+  font-size: 52px;
+  font-weight: 400;
+  margin-bottom: 16px;
+  color: var(--text-main);
+  letter-spacing: 1px;
+  text-shadow: 0 0 18px rgba(255,180,60,.35);
+}
+
+.controlBox{
+  background:rgba(255, 183, 55, 0.95);
+  color:#3b1f00;
+  padding:10px 18px;
+  border-radius:30px;
+  font-size:14px;
+  cursor:pointer;
+  box-shadow:0 8px 25px rgba(255,180,60,.45);
+  transition:.3s;
+}
+
+.controlBox:hover{
+  transform:scale(1.05);
+  background:#ffcf87;
+}
+
+
+/* 🔍 FULLSCREEN ZOOM MODAL */
+#zoomModal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999999;
+  backdrop-filter: blur(6px);
+}
+
+#zoomModal img{
+  max-width:92%;
+  max-height:85%;
+  border-radius:18px;
+  box-shadow:0 0 50px rgba(255,180,90,.45);
+  animation: pop .25s ease;
+}
+
+#zoomClose{
+  position:absolute;
+  top:18px;
+  right:22px;
+  font-size:26px;
+  color:#ffd27d;
+  cursor:pointer;
+  user-select:none;
+  text-shadow:0 0 15px rgba(255,200,120,.6);
+}
+#zoomBox{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+  max-width:92%;
+}
+
+#zoomCaption{
+  font-size:15px;
+  color:#ffd8a8;
+  font-style: italic;
+  text-align:center;
+  opacity:0.9;
+  text-shadow:0 0 12px rgba(255,180,90,.35);
+  animation: pop .25s ease;
+}
+
+
+/* ✨ sparkles */
+#sparkle-layer{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9998;
+}
+
+.sparkle{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:#ffd27d;
+  border-radius:50%;
+  box-shadow:0 0 12px rgba(255,220,150,.9);
+  animation:sparkleFloat 4s linear forwards;
+}
+
+@keyframes sparkleFloat{
+  from{
+    transform:translateY(100vh) scale(.6);
+    opacity:1;
+  }
+  to{
+    transform:translateY(-20vh) scale(1.2);
+    opacity:0;
+  }
+}
+
+.site-footer{
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+  font-size:14px;
+  color:#ffd8a8;
+  opacity:0.8;
+}
+
+.site-footer p{
+  margin:0;
+}
+</style>
+</head>
+
+<body>
+<div id="lockScreen" style="
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at center,#2b160c,#0d0503);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+">
+
+  <div style="
+    background:rgba(255,190,120,.15);
+    padding:30px;
+    border-radius:22px;
+    text-align:center;
+    color:#ffd8a8;
+    box-shadow:0 0 40px rgba(255,180,90,.45);
+    width:280px;
+  ">
+
+    <h3>🕯️ Private Candlelight</h3>
+
+    <div class="pass-wrap">
+  <input
+    id="passInput"
+    type="password"
+    placeholder="Enter password"
+  >
+  <span id="togglePass">👁️</span>
+</div>
+
+
+    <button onclick="checkPassword()" style="
+      margin-top:16px;
+      padding:10px 22px;
+      border-radius:30px;
+      border:none;
+      background:#ffb703;
+      cursor:pointer;
+    ">
+      Enter 🕯️
+    </button>
+
+    <p id="wrongPass" style="display:none;color:#ff9f1a;margin-top:10px;">
+      Wrong password 🤍
+    </p>
+
+    <div style="
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-top:10px;
+">
+
+  <p id="hintText" style="
+    display:none;
+    font-size:13px;
+    color:#ffd27d;
+    opacity:0.9;
+    text-shadow:0 0 8px rgba(255,200,120,.6);
+    margin:0;
+  ">
+    💡 <span id="hintValue"></span>
+  </p>
+
+  <span id="hintEye" style="
+    cursor:pointer;
+    font-size:18px;
+    color:#ffb703;
+    user-select:none;
+  ">🙈</span>
+
+</div>
+
+  </div>
+</div>
+
+<section class="hero">
+  <h1 class="title">Candlelight Moments</h1>
+  <h2 class="subtitle">
+    Some memories don’t speak —  
+    they glow quietly in the dark.
+  </h2>
+</section>
+
+<section class="gallery">
+  <h2 class="msg-title">Moments by the flame </h2>
+
+  <div class="grid"></div>
+</section>
+
+<section class="message-box">
+  <h2 class="msg-title">Leave a little feeling here </h2>
+
+  <div class="pink-msg-box" id="viewerMessage">
+    A quiet feeling rests here 🤍
+  </div>
+</section>
+
+<section class="message-box">
+  <div class="pink-msg-box" id="viewerMessage">
+    A quiet feeling rests here 🤍
+  </div>
+</section>
+
+<!-- TOP CONTROL BOX -->
+<div id="topControls">
+
+  <div class="controlBox" id="musicToggle">
+    🎶 Music
+  </div>
+
+  <div class="controlBox" id="sparkleToggle">
+    ✨ Sparkles
+  </div>
+
+</div>
+
+<!-- sparkle layer -->
+<div id="sparkle-layer"></div>
+<script>
+  const STORAGE_KEY = "candle_gallery";
+const MSG_KEY = "candle_messages";
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* 🔐 PASSWORD */
+  const savedPass = localStorage.getItem("viewerPassword_candle");
+
+  const savedMusic = localStorage.getItem("candle_music");
+  let bgAudio = null;
+  let playing = false;
+
+  window.checkPassword = function () {
+  const input = document.getElementById("passInput").value;
+
+  if (!savedPass || savedPass === "") {
+    document.getElementById("lockScreen").style.display = "none";
+    return;
+  }
+
+  if (input === savedPass) {
+  document.getElementById("lockScreen").style.display = "none";
+
+  // 👉 AUTO PLAY MUSIC AFTER UNLOCK
+  if (savedMusic) {
+    if (!bgAudio) {
+      bgAudio = new Audio(savedMusic);
+      bgAudio.loop = true;
+      bgAudio.volume = 0;
+    }
+
+   
+bgAudio.play().then(() => {
+  playing = true;
+  document.getElementById("musicToggle").innerText = "⏸ Music";
+
+  // 👉 FADE-IN EFFECT
+  let vol = 0;
+  const fade = setInterval(() => {
+    if (vol >= 0.6) {
+      clearInterval(fade);
+    } else {
+      vol += 0.05;
+      bgAudio.volume = vol;
+    }
+  }, 100);
+
+}).catch(() => {
+  console.log("Autoplay blocked by browser");
+});
+  }
+
+  }}
+
+  /* 🎶 MUSIC */
+  const musicToggle = document.getElementById("musicToggle");
+
+  musicToggle.onclick = () => {
+    if (!savedMusic) {
+      musicToggle.innerText = "🤍 No Music";
+      return;
+    }
+
+    if (!bgAudio) {
+      bgAudio = new Audio(savedMusic);
+      bgAudio.loop = true;
+      bgAudio.volume = 0.6;
+    }
+
+    if (playing) {
+      bgAudio.pause();
+      playing = false;
+      musicToggle.innerText = "🎶 Music";
+    } else {
+      bgAudio.play();
+      playing = true;
+      musicToggle.innerText = "⏸ Music";
+    }
+  };
+
+ /* 👁️ PASSWORD HINT TOGGLE */
+const hintText = document.getElementById("hintText");
+const hintValue = document.getElementById("hintValue");
+const hintEye = document.getElementById("hintEye");
+const hint = localStorage.getItem("viewerPassword_hint");
+
+if (!hint || hint.trim() === "") {
+  hintEye.style.display = "none";
+} else {
+  hintValue.innerText = hint;
+
+  hintEye.onclick = () => {
+  const isVisible = hintText.style.display === "block";
+  hintText.style.display = isVisible ? "none" : "block";
+  hintEye.innerText = isVisible ? "👁️" : "🙈";
+};
+
+}
+
+const passInput = document.getElementById("passInput");
+const togglePass = document.getElementById("togglePass");
+
+togglePass.onclick = () => {
+  const hidden = passInput.type === "password";
+  passInput.type = hidden ? "text" : "password";
+  togglePass.innerText = hidden ? "🙈" : "👁️";
+};
+
+
+/* 🖼️ LOAD GALLERY + MESSAGES */
+const grid = document.querySelector(".grid");
+const viewerMessage = document.getElementById("viewerMessage");
+
+const items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+const messages = (localStorage.getItem(MSG_KEY) || "")
+  .split("\n---\n")
+   .map(m => m.trim())
+  .filter(m => m.length > 0);
+
+if (items.length === 0) {
+  viewerMessage.innerText = "No candlelight moments yet 🤍";
+}
+
+// ✅ Default message section
+if (messages.length > 0) {
+  viewerMessage.innerHTML = messages
+    .map(m => `💌 ${m}`)
+    .join("<br><br>");
+} else if (items.length > 0) {
+  viewerMessage.innerText = items[0].memory || "A quiet feeling rests here 🤍";
+} else {
+  viewerMessage.innerText = "No candlelight moments yet 🤍";
+}
+
+grid.innerHTML = "";
+
+if(items.length === 0){
+  grid.innerHTML = `
+    <p style="grid-column:1/-1;text-align:center;opacity:.7;">
+      No moments added yet 🕯️
+    </p>
+  `;
+}
+
+
+// 👉 separate videos and images
+const videos = items.filter(item => item.type === "video");
+const images = items.filter(item => item.type !== "video");
+
+// 👉 combine: videos first, then images
+const sortedItems = [...videos, ...images];
+
+// 👉 render in new order
+sortedItems.forEach((item, index) => {
+
+  const card = document.createElement("div");
+  card.className = item.type === "video" ? "card video" : "card";
+
+  let media;
+  if (item.type === "video") {
+    media = document.createElement("video");
+    media.src = item.url;
+    media.controls = true;
+  } else {
+    media = document.createElement("img");
+    media.src = item.url;
+  }
+
+  media.onclick = () => {
+    if(item.type !== "video"){
+      openZoom(item.url, item.caption);
+    }
+
+    viewerMessage.style.opacity = 0;
+
+    setTimeout(() => {
+      viewerMessage.innerText =
+        item.memory || messages[index] || messages[0] || "A quiet feeling rests here 🤍";
+      viewerMessage.style.opacity = 1;
+    }, 200);
+  };
+
+  card.appendChild(media);
+
+  if (item.caption && item.caption.trim() !== "") {
+    const cap = document.createElement("div");
+    cap.className = "caption";
+    cap.innerText = item.caption;
+    card.appendChild(cap);
+  }
+
+  if (item.memory && item.memory.trim() !== "") {
+    const mem = document.createElement("div");
+    mem.className = "caption";
+    mem.style.opacity = "0.95";
+    mem.style.fontStyle = "normal";
+    mem.style.color = "#ffe8c8";
+    mem.innerText = item.memory;
+    card.appendChild(mem);
+  }
+
+  grid.appendChild(card);
+});
+
+  /* ✨ SPARKLES */
+  let sparkleOn = false;
+  let sparkleInterval = null;
+
+  const sparkleBtn = document.getElementById("sparkleToggle");
+  const sparkleLayer = document.getElementById("sparkle-layer");
+
+  sparkleBtn.onclick = () => {
+    sparkleOn = !sparkleOn;
+
+    sparkleBtn.innerText = sparkleOn
+      ? "✨ Sparkles ON"
+      : "✨ Sparkles";
+
+    if (sparkleOn) {
+      sparkleInterval = setInterval(() => {
+        const s = document.createElement("div");
+        s.className = "sparkle";
+        s.style.left = Math.random() * 100 + "vw";
+        sparkleLayer.appendChild(s);
+        setTimeout(() => s.remove(), 4000);
+      }, 350);
+    } else {
+      clearInterval(sparkleInterval);
+    }
+  };
+
+  /* 🔥 FLAME CURSOR + TRAIL */
+const flame = document.getElementById("flame");
+
+document.addEventListener("mousemove", e => {
+  flame.style.left = e.clientX + "px";
+  flame.style.top = e.clientY + "px";
+
+  const trail = document.createElement("div");
+  trail.className = "flameTrail";
+  trail.style.left = e.clientX + "px";
+  trail.style.top = e.clientY + "px";
+  document.body.appendChild(trail);
+  setTimeout(() => trail.remove(), 800);
+
+  const sparkCount = Math.random() > 0.6 ? 2 : 1;
+
+  for (let i = 0; i < sparkCount; i++) {
+    const spark = document.createElement("div");
+    spark.className = "goldSpark";
+    spark.style.left = e.clientX + (Math.random() * 10 - 5) + "px";
+    spark.style.top = e.clientY + (Math.random() * 10 - 5) + "px";
+    document.body.appendChild(spark);
+    setTimeout(() => spark.remove(), 600);
+  }
+});
+
+/* 🔍 ZOOM MODAL LOGIC */
+const zoomModal = document.getElementById("zoomModal");
+const zoomImg = document.getElementById("zoomImg");
+const zoomCaption = document.getElementById("zoomCaption");
+const zoomClose = document.getElementById("zoomClose");
+
+function openZoom(src, caption){
+  zoomImg.src = src;
+  zoomCaption.innerText = caption || "";
+  zoomModal.style.display = "flex";
+}
+
+function closeZoom(){
+  zoomModal.style.display = "none";
+  zoomImg.src = "";
+  zoomCaption.innerText = "";
+}
+
+zoomClose.onclick = closeZoom;
+
+zoomModal.onclick = (e) => {
+  if(e.target === zoomModal) closeZoom();
+};
+
+document.addEventListener("keydown", (e) => {
+  if(e.key === "Escape") closeZoom();
+});
+
+  /* 💌 FLOATING WORDS */
+ const loveWords = [
+  "forever",
+  "always you",
+  "soft warmth",
+  "our moment",
+  "quiet love",
+  "gentle hearts",
+  "golden silence",
+  "safe with you",
+  "just us",
+  "together",
+  "slow love",
+  "warm nights",
+  "your presence",
+  "my calm",
+  "my peace",
+  "endless glow",
+  "soft smiles",
+  "held gently",
+  "unspoken love",
+  "heart home",
+  "you feel like home",
+  "where I belong",
+  "still with you",
+  "only us here"
+];
+
+
+  setInterval(() => {
+    const word = document.createElement("div");
+    word.className = "loveWord";
+    word.innerText =
+      loveWords[Math.floor(Math.random() * loveWords.length)];
+    word.style.left = Math.random() * 90 + "vw";
+    document.body.appendChild(word);
+
+    setTimeout(() => word.remove(), 10000);
+  }, 5000);
+
+});
+
+
+</script>
+<div id="flame"></div>
+
+<!-- 🔍 ZOOM MODAL -->
+<div id="zoomModal">
+  <span id="zoomClose">✕</span>
+
+  <div id="zoomBox">
+    <img id="zoomImg" />
+    <div id="zoomCaption"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

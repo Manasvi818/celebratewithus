@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Easy Breezy Viewer 🌿</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sky1:#e8fbff;
+  --sky2:#fff7ec;
+--titleColor:#00f5ff;
+
+  --text:#1f4b52;
+  --soft:#2b6c74;
+
+  --card:rgba(255,255,255,0.85);
+  --btn1:#66d9ff;
+  --btn2:#ffb3d2;
+
+  --msgText:#2b4b55;
+  
+}
+
+/* ===== GLOBAL ===== */
+*{ box-sizing:border-box; font-family:'Poppins', sans-serif; }
+
+body{
+  margin:0;
+  background: linear-gradient(135deg, var(--sky1), var(--sky2));
+  transition: background 0.6s ease;
+}
+
+.gallery h2,
+.message-box h3{
+  font-family: 'Great Vibes', cursive;
+  font-size: 3rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-transform: none;
+  text-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+/* ===== HERO ===== */
+.hero{
+  min-height:38vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:20px;
+}
+
+.title{
+  font-family:'Oswald', sans-serif;
+  font-size:6.2rem;
+  margin:0;
+  letter-spacing:8px;
+  text-transform:uppercase;
+  color:var(--titleColor);
+  text-shadow:0 8px 18px rgba(0,0,0,0.18);
+}
+
+.subtitle{
+  font-size:0.75rem;
+  margin-top:6px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:rgba(0,0,0,0.55);
+  font-weight:500;
+}
+
+
+/* ===== TOP CONTROLS ===== */
+.toggle{
+  background: rgba(255,255,255,0.75);
+  border:1px solid rgba(120,200,220,.25);
+  color:var(--soft);
+  padding:10px 18px;
+  border-radius:30px;
+  cursor:pointer;
+  font-size:14px;
+  text-align:center;
+  min-width:130px;
+  box-shadow:0 10px 25px rgba(0,0,0,.06);
+  transition:.25s;
+  backdrop-filter: blur(10px);
+}
+
+.toggle:hover{
+  transform:scale(1.05);
+  background: rgba(255,255,255,0.9);
+}
+
+/* ===== GALLERY ===== */
+.gallery{
+  padding:25px 20px;
+  max-width:1100px;
+  margin:auto;
+  margin-top:-25px;
+}
+
+.gallery h2{
+  text-align:center;
+  color:var(--soft);
+  margin-top:0;
+  margin-bottom:14px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:20px;
+}
+
+@media(max-width:650px){
+  .grid{ grid-template-columns:1fr; }
+  .title{ font-size:4.7rem; }
+}
+
+.card{
+  background:var(--card);
+  backdrop-filter: blur(8px);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 12px 25px rgba(0,0,0,0.06);
+  cursor:pointer;
+  border:1px solid rgba(120,200,220,.18);
+}
+
+.card img, .card video{
+  width:100%;
+  height:260px;
+  object-fit:cover;
+  transition:0.4s;
+}
+
+.card:hover img,
+.card:hover video{
+  transform:scale(1.06);
+}
+
+.caption{
+  padding:12px;
+  text-align:center;
+  font-size:14px;
+  opacity:.75;
+  color:var(--text);
+}
+
+/* small button inside card */
+.img-msg{
+  margin:12px auto 8px;
+  display:block;
+  background: linear-gradient(135deg, var(--btn1), var(--btn2));
+  color:white;
+  border:none;
+  padding:8px 18px;
+  border-radius:30px;
+  font-size:13px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.img-msg:hover{
+  transform:scale(1.05);
+}
+
+/* ===== MESSAGES ===== */
+.message-box{
+  background:transparent;
+  text-align:center;
+  margin-top:30px;
+  padding-bottom:60px;
+}
+
+.message-box h3{
+  color:var(--soft);
+  margin-bottom:15px;
+}
+
+.breezy-msg-box{
+  background: rgba(255,255,255,0.65);
+  border-radius:22px;
+  padding:22px 26px;
+  max-width:560px;
+  margin:0 auto 20px;
+  font-size:16px;
+  color:var(--msgText);
+  line-height:1.7;
+  box-shadow:0 12px 28px rgba(0,0,0,0.08);
+  animation: pop 0.35s ease;
+  border:1px solid rgba(120,200,220,.18);
+}
+
+@keyframes pop{
+  from{ transform:scale(0.85); opacity:0; }
+  to{ transform:scale(1); opacity:1; }
+}
+
+.send-btn{
+  margin-top:18px;
+  background: linear-gradient(135deg, var(--btn1), var(--btn2));
+  color:white;
+  border:none;
+  padding:14px 40px;
+  border-radius:40px;
+  font-size:16px;
+  cursor:pointer;
+  letter-spacing:0.5px;
+  box-shadow:0 14px 30px rgba(102,217,255,0.35);
+  transition:0.35s ease;
+}
+
+.send-btn:hover{
+  transform:scale(1.06);
+}
+
+/* ===== CONFETTI ===== */
+#confetti-layer{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:2147483647;
+}
+
+.confetti{
+  position:absolute;
+  width:12px;
+  height:18px;
+  top:-20px;
+  background: var(--c);
+  border-radius:4px;
+  animation: fall 4s linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform: translateY(110vh) rotate(360deg);
+    opacity:0;
+  }
+}
+
+/* ===== POPUP PANEL BUTTONS ===== */
+.panel-btn{
+  display:block;
+  width:100%;
+  margin:8px 0;
+  padding:10px;
+  border:none;
+  border-radius:18px;
+  background:#eafcff;
+  cursor:pointer;
+  font-size:14px;
+  transition:0.25s;
+}
+.panel-btn:hover{
+  background:#c9f3ff;
+  transform:scale(1.03);
+}
+
+/* ===== PASSWORD LOCK ===== */
+#passwordOverlay{
+  position:fixed;
+  inset:0;
+  background: linear-gradient(135deg, #66d9ff, #ffb3d2);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:99999;
+}
+
+#passwordOverlay h1{
+  font-family:'Great Vibes', cursive;
+  font-size:54px;
+  color:white;
+  margin-bottom:10px;
+  text-shadow:0 6px 18px rgba(0,0,0,.25);
+}
+
+#passwordOverlay p{
+  color:white;
+  margin-bottom:20px;
+  opacity:.95;
+}
+
+#viewerPass{
+  padding:14px;
+  width:240px;
+  border-radius:14px;
+  border:none;
+  outline:none;
+  font-size:16px;
+  text-align:center;
+}
+
+#passwordOverlay button{
+  margin-top:18px;
+  padding:12px 36px;
+  border:none;
+  border-radius:30px;
+  background:white;
+  color:#2b6c74;
+  font-weight:700;
+  font-size:16px;
+  cursor:pointer;
+}
+
+#wrongPass{
+  display:none;
+  color:#fff;
+  margin-top:12px;
+  background:rgba(255,0,0,.25);
+  padding:6px 16px;
+  border-radius:20px;
+}
+
+/* ===== ZOOM MODAL ===== */
+#zoomOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.75);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:9999999;
+  padding:20px;
+}
+
+#zoomMediaBox{
+  max-width:90vw;
+  max-height:75vh;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,0.45);
+}
+
+#zoomCaption{
+  margin-top:16px;
+  max-width:90vw;
+  text-align:center;
+  color:white;
+  font-size:15px;
+  line-height:1.5;
+}
+
+.closeZoomBtn{
+  margin-top:18px;
+  background: linear-gradient(135deg, var(--btn1), var(--btn2));
+  border:none;
+  padding:10px 26px;
+  border-radius:22px;
+  color:white;
+  cursor:pointer;
+  font-size:14px;
+}
+
+/* Video full width */
+.videoCard{
+  width:100%;
+  margin-bottom:20px;
+}
+
+/* Keep images grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:20px;
+}
+
+@media(max-width:650px){
+  .grid{grid-template-columns:1fr;}
+}
+
+.site-footer{
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+  font-family:'Poppins', sans-serif;
+  color:var(--soft);
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PASSWORD LOCK -->
+<div id="passwordOverlay">
+  <h1>Easy Breezy 🌿</h1>
+  <p>Enter the secret password</p>
+
+  <input id="viewerPass" type="password" placeholder="Password">
+
+  <button onclick="unlockViewer()">Unlock ✨</button>
+
+  <p id="wrongPass">Wrong password ❌</p>
+</div>
+
+<div id="confetti-layer"></div>
+
+<!-- TOP BUTTONS -->
+<div style="position:fixed; top:20px; right:20px; display:flex; flex-direction:column; gap:10px; z-index:9999;">
+  <div class="toggle" onclick="openTheme()">🎨 Theme</div>
+  <div class="toggle" onclick="openConfetti()">🎉 Confetti</div>
+  <div class="toggle" onclick="openMusic()">🎵 Music</div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <h1 class="title">Easy Breezy</h1>
+  <h2 class="subtitle">
+    A calm little place for your happiest moments — light, soft, and forever 
+  </h2>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery">
+  <h2>Cloudlight Moments</h2>
+
+  <!-- VIDEOS -->
+  <div id="videoContainer"></div>
+
+  <!-- IMAGES -->
+  <div id="imageGrid" class="grid"></div>
+</section>
+
+<!-- MESSAGES -->
+<section class="message-box">
+  <h3>Letters in the Breeze</h3>
+
+  <div class="breezy-msg-box" id="viewerMessage">
+    A little message is waiting to be written 🌿
+  </div>
+
+  <button class="send-btn" onclick="sendBreeze()">
+    ✨ Send a breezy sparkle
+  </button>
+</section>
+
+<!-- SWEET MESSAGE POPUP -->
+<div id="msgOverlay" style="
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999999;
+">
+  <div style="
+    background:white;
+    padding:24px 28px;
+    border-radius:22px;
+    width:280px;
+    text-align:center;
+    animation:pop 0.25s ease;
+  ">
+    <div id="msgText" style="
+      font-size:16px;
+      color:#2b6c74;
+      margin-bottom:18px;
+    ">
+      breezy message here
+    </div>
+
+    <button onclick="closeMsg()" style="
+      background:linear-gradient(135deg,#66d9ff,#ffb3d2);
+      border:none;
+      border-radius:20px;
+      padding:8px 26px;
+      color:white;
+      font-size:14px;
+      cursor:pointer;
+    ">
+      Close
+    </button>
+  </div>
+</div>
+
+<!-- THEME PANEL -->
+<div id="themePanel" style="
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+">
+  <div style="
+    background:white;
+    padding:24px;
+    border-radius:26px;
+    width:270px;
+    text-align:center;
+    animation:pop 0.25s ease;
+  ">
+    <h3 style="color:#2b6c74;margin-bottom:18px;">Choose your sky 🌤</h3>
+
+    <button class="panel-btn" onclick="setTheme('#00d4ff','#fff1b8')">
+🌊 Neon Aqua → Sunny Yellow
+</button>
+
+<button class="panel-btn" onclick="setTheme('#00ffb3','#00b3ff')">
+🍃 Tropical Green → Ocean Blue
+</button>
+
+<button class="panel-btn" onclick="setTheme('#ff4d6d','#ffcc00')">
+🌺 Hot Pink → Bright Gold
+</button>
+
+<button class="panel-btn" onclick="setTheme('#7c3aed','#22d3ee')">
+💜 Violet → Electric Cyan
+</button>
+
+<button class="panel-btn" onclick="setTheme('#ff6a00','#ff00a8')">
+🔥 Sunset Orange → Neon Magenta
+</button>
+
+<button class="panel-btn" onclick="setTheme('#111827','#00f5ff')">
+🌙 Midnight Black → Neon Blue
+</button>
+
+
+    <div style="margin-top:16px;">
+      <button onclick="closeTheme()" style="
+        background:linear-gradient(135deg,#66d9ff,#ffb3d2);
+        border:none;
+        color:white;
+        padding:8px 22px;
+        border-radius:20px;
+        cursor:pointer;
+      ">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFETTI PANEL -->
+<div id="confettiPanel" style="
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+">
+  <div style="
+    background:white;
+    padding:24px;
+    border-radius:26px;
+    width:270px;
+    text-align:center;
+    animation:pop 0.25s ease;
+  ">
+    <h3 style="color:#2b6c74;margin-bottom:18px;">Confetti intensity 🎉</h3>
+
+    <button class="panel-btn" onclick="setConfetti(6)">🌿 Low</button>
+    <button class="panel-btn" onclick="setConfetti(12)">✨ Medium</button>
+    <button class="panel-btn" onclick="setConfetti(24)">💥 Heavy</button>
+
+    <div style="margin-top:18px;">
+      <h4 style="color:#2b6c74; margin-bottom:8px;">
+        Confetti: <span id="panelConfettiState">OFF</span>
+      </h4>
+      <button class="panel-btn" onclick="togglePanelConfetti()">Toggle On/Off</button>
+    </div>
+
+    <div style="margin-top:16px;">
+      <button onclick="closeConfetti()" style="
+        background:linear-gradient(135deg,#66d9ff,#ffb3d2);
+        border:none;
+        color:white;
+        padding:8px 22px;
+        border-radius:20px;
+        cursor:pointer;
+      ">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- MUSIC PANEL -->
+<div id="musicPanel" style="
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999999;
+">
+  <div style="
+    background:white;
+    padding:24px;
+    border-radius:26px;
+    width:270px;
+    text-align:center;
+    animation:pop 0.25s ease;
+  ">
+    <h3 style="color:#2b6c74;margin-bottom:18px;">Background Music 🎶</h3>
+
+    <button id="musicBtn" class="panel-btn"
+      style="background:linear-gradient(135deg,#66d9ff,#ffb3d2); color:white;"
+      onclick="toggleMusic()">
+      ▶ Play Music
+    </button>
+
+    <button onclick="closeMusic()" class="panel-btn" style="background:#eee;">
+      Close
+    </button>
+  </div>
+</div>
+
+<!-- ZOOM MODAL -->
+<div id="zoomOverlay">
+  <div id="zoomMediaBox"></div>
+  <div id="zoomCaption"></div>
+  <button class="closeZoomBtn" onclick="closeZoom()">Close ✖</button>
+</div>
+
+<script>
+/* ===============================
+   EASY BREEZY STORAGE KEYS
+================================ */
+const MEDIA_KEY   = "eb_media_v1";
+const MSG_KEY     = "eb_messages_v1";
+const PASS_KEY    = "viewerPassword_easyBreezy";
+const MUSIC_KEY   = "eb_bg_music_v1";
+
+/* ===============================
+   PASSWORD SYSTEM
+================================ */
+function unlockViewer(){
+  const saved = localStorage.getItem(PASS_KEY) || "breezy";
+  const input = document.getElementById("viewerPass").value.trim();
+
+  if(input === saved){
+    document.getElementById("passwordOverlay").style.display = "none";
+
+    // autoplay music if saved
+    const savedMusic = localStorage.getItem(MUSIC_KEY);
+    if(savedMusic){
+      bgAudio = new Audio(savedMusic);
+      bgAudio.loop = true;
+      bgAudio.volume = 0.6;
+      bgAudio.play().then(()=>{
+        isPlaying = true;
+        document.getElementById("musicBtn").innerText = "⏸ Pause Music";
+      }).catch(()=>{});
+    }
+
+  }else{
+    document.getElementById("wrongPass").style.display = "block";
+  }
+}
+
+/* ===============================
+   OPEN / CLOSE PANELS
+================================ */
+function openTheme(){
+  document.getElementById("themePanel").style.display = "flex";
+}
+function closeTheme(){
+  document.getElementById("themePanel").style.display = "none";
+}
+
+function openConfetti(){
+  document.getElementById("panelConfettiState").innerText = confettiOn ? "ON" : "OFF";
+  document.getElementById("confettiPanel").style.display = "flex";
+}
+function closeConfetti(){
+  document.getElementById("confettiPanel").style.display = "none";
+}
+
+function openMusic(){
+  document.getElementById("musicPanel").style.display = "flex";
+}
+function closeMusic(){
+  document.getElementById("musicPanel").style.display = "none";
+}
+
+/* ===============================
+   THEME PANEL
+================================ */
+function setTheme(start,end){
+  document.documentElement.style.setProperty("--sky1", start);
+  document.documentElement.style.setProperty("--sky2", end);
+
+  // 🔥 auto make buttons match theme
+  document.documentElement.style.setProperty("--btn1", start);
+  document.documentElement.style.setProperty("--btn2", end);
+  // 🎯 title color (matches background vibe)
+document.documentElement.style.setProperty("--titleColor", start);
+
+
+  // 🌙 if Midnight theme, make text readable
+  if(start === "#111827"){
+    document.documentElement.style.setProperty("--text", "#e5e7eb");
+    document.documentElement.style.setProperty("--soft", "#00f5ff");
+    document.documentElement.style.setProperty("--msgText", "#e5e7eb");
+  }else{
+    document.documentElement.style.setProperty("--text", "#1f4b52");
+    document.documentElement.style.setProperty("--soft", "#2b6c74");
+    document.documentElement.style.setProperty("--msgText", "#2b4b55");
+  }
+
+  localStorage.setItem("eb_sky1", start);
+  localStorage.setItem("eb_sky2", end);
+
+  closeTheme();
+}
+
+
+
+/* load saved theme */
+const savedSky1 = localStorage.getItem("eb_sky1");
+const savedSky2 = localStorage.getItem("eb_sky2");
+
+if(savedSky1 && savedSky2){
+  document.documentElement.style.setProperty("--sky1", savedSky1);
+  document.documentElement.style.setProperty("--sky2", savedSky2);
+
+  // also update button gradient
+  document.documentElement.style.setProperty("--btn1", savedSky1);
+  document.documentElement.style.setProperty("--btn2", savedSky2);
+
+  // apply midnight fix
+  if(savedSky1 === "#111827"){
+    document.documentElement.style.setProperty("--text", "#e5e7eb");
+    document.documentElement.style.setProperty("--soft", "#00f5ff");
+    document.documentElement.style.setProperty("--msgText", "#e5e7eb");
+  }
+}
+
+/* ===============================
+   CONFETTI
+================================ */
+let confettiAmount = parseInt(localStorage.getItem("eb_confetti")) || 12;
+let confettiInterval = null;
+let confettiOn = false;
+
+function startConfetti(){
+  if(confettiInterval) return;
+
+  const colors = ["#66d9ff","#ffb3d2","#b8ffd9","#ffd0b3","#ffffff"];
+
+  confettiInterval = setInterval(()=>{
+    for(let i=0;i<confettiAmount;i++){
+      const c = document.createElement("div");
+      c.className = "confetti";
+      c.style.left = Math.random()*100 + "vw";
+      c.style.setProperty("--c", colors[Math.floor(Math.random()*colors.length)]);
+      c.style.animationDuration = (3 + Math.random()*3) + "s";
+      document.getElementById("confetti-layer").appendChild(c);
+      setTimeout(()=>c.remove(), 7000);
+    }
+  }, 450);
+}
+
+function stopConfetti(){
+  clearInterval(confettiInterval);
+  confettiInterval = null;
+}
+
+function openConfetti(){
+  document.getElementById("panelConfettiState").innerText = confettiOn ? "ON" : "OFF";
+  confettiPanel.style.display="flex";
+}
+
+function closeConfetti(){ confettiPanel.style.display="none"; }
+
+function setConfetti(amount){
+  confettiAmount = amount;
+  localStorage.setItem("eb_confetti", amount);
+  closeConfetti();
+}
+
+function togglePanelConfetti(){
+  confettiOn = !confettiOn;
+  document.getElementById("panelConfettiState").innerText = confettiOn ? "ON" : "OFF";
+
+  if(confettiOn) startConfetti();
+  else stopConfetti();
+}
+
+/* ===============================
+   MUSIC SYSTEM
+================================ */
+let bgAudio = null;
+let isPlaying = false;
+
+function openMusic(){ musicPanel.style.display="flex"; }
+function closeMusic(){ musicPanel.style.display="none"; }
+
+function toggleMusic(){
+  const song = localStorage.getItem(MUSIC_KEY);
+
+  if(!song){
+    alert("No music selected 🌿");
+    return;
+  }
+
+  if(bgAudio && bgAudio.src !== song){
+    bgAudio.pause();
+    bgAudio = null;
+    isPlaying = false;
+  }
+
+  if(!bgAudio){
+    bgAudio = new Audio(song);
+    bgAudio.loop = true;
+    bgAudio.volume = 0.6;
+  }
+
+  if(isPlaying){
+    bgAudio.pause();
+    musicBtn.innerText = "▶ Play Music";
+  }else{
+    bgAudio.play();
+    musicBtn.innerText = "⏸ Pause Music";
+  }
+
+  isPlaying = !isPlaying;
+}
+
+/* ===============================
+   SWEET MESSAGE POPUP
+================================ */
+const breezyMessages = [
+  "You feel like fresh air 🌿",
+  "This moment is soft and perfect ✨",
+  "If peace had a photo… it’s this 📸",
+  "The breeze brought happiness today 💙",
+  "Stay gentle. Stay glowing 🌸",
+  "This memory is a warm hug 🤍",
+  "Your smile = calm sunshine ☀️",
+  "We’ll miss this day someday 🥹",
+  "This is what happiness looks like 💛",
+  "A tiny moment, a forever feeling 🌙"
+];
+
+function sendBreeze(){
+  launchConfettiOnce();
+  msgText.innerText = breezyMessages[Math.floor(Math.random()*breezyMessages.length)];
+  msgOverlay.style.display="flex";
+}
+
+function closeMsg(){
+  msgOverlay.style.display="none";
+}
+
+function launchConfettiOnce(){
+  startConfetti();
+  setTimeout(stopConfetti, 3000);
+}
+
+/* ===============================
+   LOAD MEDIA + MESSAGES
+================================ */
+const mediaList = JSON.parse(localStorage.getItem("eb_media_v1") || "[]");
+const videoContainer = document.getElementById("videoContainer");
+const imageGrid = document.getElementById("imageGrid");
+
+mediaList.forEach(x=>{
+
+  const card = document.createElement("div");
+  card.className = "card";
+
+  if(x.type === "video"){
+    card.classList.add("videoCard");
+
+    card.innerHTML = `
+      <video src="${x.url}" controls></video>
+      <div class="caption">${x.caption || ""}</div>
+    `;
+
+    videoContainer.appendChild(card);
+  }
+
+  else if(x.type === "image"){
+    card.innerHTML = `
+      <img src="${x.url}">
+      <button class="img-msg" onclick="event.stopPropagation(); sendBreeze()">
+        tap gently 🌿
+      </button>
+      <div class="caption">${x.caption || ""}</div>
+    `;
+
+    card.addEventListener("click", ()=>{
+      openZoom("image", x.url, x.caption);
+    });
+
+    imageGrid.appendChild(card);
+  }
+
+});
+
+/* load saved messages */
+const allMessages = localStorage.getItem(MSG_KEY) || "";
+const viewerBox = document.getElementById("viewerMessage");
+
+if(allMessages.trim()===""){
+  viewerBox.innerText = "A little message is waiting to be written 🌿";
+}else{
+  const list = allMessages.split("\n---\n");
+  viewerBox.innerHTML = "";
+
+  list.forEach(msg=>{
+    const p = document.createElement("div");
+    p.style.marginBottom="12px";
+    p.style.padding="10px 14px";
+    p.style.borderRadius="14px";
+    p.style.background="rgba(255,255,255,0.65)";
+    p.style.boxShadow="0 6px 16px rgba(102,217,255,0.20)";
+    p.style.animation="pop 0.3s ease";
+    p.innerText = msg;
+    viewerBox.appendChild(p);
+  });
+}
+
+/* ===============================
+   ZOOM MODAL
+================================ */
+const zoomOverlay = document.getElementById("zoomOverlay");
+const zoomMediaBox = document.getElementById("zoomMediaBox");
+const zoomCaption = document.getElementById("zoomCaption");
+
+function openZoom(type,url,caption){
+  zoomOverlay.style.display="flex";
+
+  if(type==="video"){
+    zoomMediaBox.innerHTML = `
+      <video src="${url}" controls autoplay style="
+        width:90vw;
+        max-width:900px;
+        max-height:75vh;
+        object-fit:contain;
+        background:black;
+      "></video>
+    `;
+  }else{
+    zoomMediaBox.innerHTML = `
+      <img src="${url}" style="
+        width:90vw;
+        max-width:900px;
+        max-height:75vh;
+        object-fit:contain;
+        display:block;
+      ">
+    `;
+  }
+
+  zoomCaption.innerText = caption || "";
+}
+
+function closeZoom(){
+  zoomOverlay.style.display="none";
+  zoomMediaBox.innerHTML="";
+  zoomCaption.innerText="";
+}
+
+zoomOverlay.addEventListener("click",(e)=>{
+  if(e.target === zoomOverlay) closeZoom();
+});
+</script>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+
+</body>
+</html>

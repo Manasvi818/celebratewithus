@@ -1,0 +1,57 @@
+/* styles/editor.css
+   Editor panel layout and controls
+*/
+
+.editor-layout{
+  max-width:1200px;
+  margin:28px auto;
+  padding:22px;
+  display:flex;
+  gap:26px;
+  align-items:flex-start;
+}
+
+.editor-box, .viewer-box{
+  background:var(--card-bg);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+
+/* primary preview area */
+.preview-area{
+  flex:2;
+  border-radius:14px;
+  overflow:hidden;
+}
+
+/* editor controls */
+.controls{
+  width:340px;
+  min-width:260px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* inputs */
+.controls input[type="text"], .controls textarea{
+  padding:10px;border-radius:10px;border:1px solid #ffe6dd;
+  outline:none;font-family:inherit;
+}
+
+/* action row */
+.action-row{display:flex;gap:10px;justify-content:flex-end}
+.action-row .btn{
+  padding:10px 14px;border-radius:12px;
+}
+
+/* mobile */
+@media (max-width:940px){
+  .editor-layout{flex-direction:column;padding:16px}
+  .controls{width:100%}
+}
+
+.editor-right {
+  flex: 1;
+}

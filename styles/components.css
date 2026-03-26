@@ -1,0 +1,61 @@
+/* styles/components.css
+   Cards, grid, generic components and small animations
+*/
+
+.grid{
+  display:grid;
+  gap:18px;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+}
+
+.card{
+  background:var(--card-bg);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  transition:transform .22s ease, box-shadow .22s ease;
+}
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 18px 38px rgba(0,0,0,0.09);
+}
+
+.card img{
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  display:block;
+}
+
+.card .card-body{
+  padding:12px 14px;
+}
+.card .title{
+  font-size:16px;
+  font-weight:700;
+  color:var(--text);
+  margin:0;
+}
+.card .meta{font-size:13px;color:var(--muted);margin-top:6px}
+
+/* small badges */
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  background:#fff0ea;
+  color:var(--text);
+  font-weight:700;
+  font-size:13px;
+}
+
+/* buttons */
+.button-row{display:flex;gap:10px;flex-wrap:wrap}
+.icon-btn{
+  border-radius:10px;padding:8px;background:#fff;border:1px solid rgba(0,0,0,0.04);
+  cursor:pointer;
+}
+
+/* simple fade-in */
+.fade-in{animation:fadeIn .6s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}

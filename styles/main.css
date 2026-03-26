@@ -1,0 +1,633 @@
+/* ============================================================
+   GLOBAL SETUP & VARIABLES
+   ============================================================ */
+:root{
+  --muted: #7a6b6b;
+  --text: #3b2f2f;
+  --shadow: 0 10px 30px rgba(23,15,30,0.06);
+  --btn-radius: 999px;
+}
+
+/* Typography — Inter Body / Dancing Script Headers */
+body, p, button, a, span, .muted {
+  font-family: 'Inter', sans-serif;
+}
+h1, h2, h3, header h1, .hero-inner h1, .templates h2, .pricing h2 {
+  font-family: 'Dancing Script', cursive !important;
+}
+
+/* ======================================================
+   Animated Pastel Sky Background
+   ====================================================== */
+body {
+  margin:0;
+  padding:0;
+  color:var(--text);
+  background: linear-gradient(
+      180deg,
+      #ffe6fa 0%,
+      #ecd2ff 15%,
+      #cedeff 30%,
+      #bce3ff 45%,
+      #ffd2f5 60%,
+      #ffb4e1 75%,
+      #ffc8aa 100%
+  );
+  background-size: 400% 400%;
+  animation: skyFlow 18s ease-in-out infinite;
+}
+@keyframes skyFlow {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+/***********************
+   HERO CENTERING
+***********************/
+.hero {
+  min-height: 78vh;        /* taller section */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.hero-inner {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/***********************
+   WELCOME TEXT
+***********************/
+.welcome-1 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 42px;
+  font-weight: 600;
+  color: #452b38;
+  margin: 0;
+}
+
+.welcome-2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #6f5c5f;
+  margin: 4px 0;
+}
+
+.welcome-3 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 60px;
+  font-weight: 700;
+  color: #462836;
+  margin: 0 0 30px;
+  letter-spacing: 1px;
+}
+
+/***********************
+   MAIN HEADING
+***********************/
+.main-heading {
+  font-family: 'Dancing Script', cursive;
+  font-size: 78px;
+  font-weight: 700;
+  color: #462d3b;
+  letter-spacing: 1.2px;
+  line-height: 1.18;
+  margin-bottom: 24px;
+  text-shadow:
+     0 2px 4px rgba(0,0,0,.05),
+     0 4px 18px rgba(255,182,255,.35),
+     0 0 8px rgba(255,178,255,.25);
+}
+
+/***********************
+   SUBTITLE (smaller)
+***********************/
+.subtitle {
+  font-size: 18px;
+  opacity: .75;
+  color: #6a5555;
+  margin-bottom: 26px;
+}
+
+/***********************
+   CTA BUTTON
+***********************/
+.start-btn {
+  padding: 16px 44px;
+  border-radius: 40px;
+  background: linear-gradient(145deg,#e8d9ff,#d8c8ff);
+  color: #000;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: .25s;
+  box-shadow: 0 8px 18px rgba(0,0,0,.10);
+}
+
+.start-btn:hover {
+  transform: translateY(-3px);
+}
+
+/* ======================================================
+   HERO
+   ====================================================== */
+.hero{
+  padding:100px 20px;
+  text-align:center;
+}
+.hero-inner{ max-width:980px; margin:0 auto; }
+.hero h1{
+  font-size: 78px;       /* ⬆ increased from ~52px */
+  font-weight: 700;
+  text-align: center;
+  color: #462d3b;
+  letter-spacing: 1.2px;
+  line-height: 1.15;
+  margin-bottom: 32px;
+  text-shadow:
+     0 2px 4px rgba(0,0,0,.05),
+     0 4px 18px rgba(255,182,255,.35),
+     0 0 8px rgba(255,178,255,.25);
+}
+.hero h1::after{
+  content: "";
+  display:block;
+  width: 260px;          /* ⬆ increased underline width */
+  height: 3px;
+  background: linear-gradient(90deg,#ff99d6,#c8afff);
+  margin: 20px auto 0;
+  border-radius: 6px;
+  opacity:.8;
+}
+
+.subtitle{
+  font-size: 18px;      /* ⬇ reduced from 20px */
+  opacity: .75;
+  margin-bottom: 26px;
+  color: #6d5c5c;
+}
+
+.start-btn{
+  padding:16px 44px;
+  border-radius:40px;
+  background:linear-gradient(145deg,#e8d9ff,#d8c8ff);
+  color:#000;
+  box-shadow:0 8px 18px rgba(0,0,0,0.10);
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+  font-size:18px;
+  transition:0.25s;
+}
+.start-btn:hover{
+  transform:translateY(-3px);
+}
+
+/* ======================================================
+   Sticky Vibe Bar + Vibe Buttons
+   ====================================================== */
+.choose-vibe{
+  padding:24px 0 12px;
+   position: relative;
+  z-index: 1;
+  top:0;
+  text-align:center;
+  backdrop-filter:blur(20px) saturate(150%);
+  background:rgba(255,255,255,0.12);
+}
+.choose-vibe h2{
+  font-size:48px;
+  font-weight:600;
+  color:#402a3d;
+  letter-spacing:0.6px;
+  text-shadow:0 2px 8px rgba(255,200,255,.25);
+}
+.vibes{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:26px;
+  padding:14px 0;
+}
+
+.vibe-btn{
+  padding: 14px 36px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+
+  /* MAGIC: adaptive translucent color */
+  background: linear-gradient(
+      145deg,
+      rgba(255,182,255,0.38),
+      rgba(180,140,255,0.32)
+  );
+  backdrop-filter: blur(18px);
+
+  /* soft glow */
+  box-shadow: 0 22px 45px rgba(255,125,210,0.30);
+  transition: 0.25s ease;
+}
+
+/* Hover */
+.vibe-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 26px 55px rgba(255,140,220,0.38);
+}
+
+/* Active */
+.vibe-btn.active{
+  background: linear-gradient(
+      145deg,
+      rgba(255,182,255,0.58),
+      rgba(180,140,255,0.48)
+  );
+  transform: translateY(-2px);
+  box-shadow: 0 26px 55px rgba(255,140,220,0.40);
+}
+
+.hero h1::after {
+  content: "";
+  display: block;
+  width: 180px;
+  height: 3px;
+  background: linear-gradient(90deg,#ff99d6,#c8afff);
+  margin: 18px auto 0;
+  border-radius: 6px;
+  opacity:.8;
+}
+
+/* ======================================================
+   Templates
+   ====================================================== */
+#templates-section{ display:none; }
+.templates{
+  margin-top:60px;
+  padding-bottom:36px;
+  text-align:center;
+   position: relative;
+    display: block;
+  z-index: 1;
+}
+.templates h2{ font-size:36px; }
+.templates-grid{
+  grid-template-columns:repeat(2,1fr);
+  margin-top:26px;
+   display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* ======================================================
+   Pricing
+   ====================================================== */
+
+.pricing-card{
+  max-width:600px;
+  margin:20px auto;
+  padding:28px;
+  border-radius:22px;
+  background:white;
+  box-shadow:var(--shadow);
+}
+.price{
+  font-size:24px;
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+/* ======================================================
+   Footer
+   ====================================================== */
+.site-footer{
+  text-align:center;
+  padding:30px 0;
+  color:var(--muted);
+}
+
+/* Responsive */
+@media(max-width:900px){
+  .templates-grid{ grid-template-columns:1fr; }
+  .hero h1{ font-size:32px; }
+}
+
+.template-card {
+  transition: 0.3s ease;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* ✨ Selected Glow Effect */
+.template-card.selected {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 142, 207, 0.9),
+              0 0 40px rgba(255, 183, 221, 0.6);
+  border: 2px solid #ff8ecf;
+}
+
+.template-pill {
+  padding: 12px 20px;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #f3c6ff, #c7d2ff);
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 10px;
+  transition: 0.3s;
+  min-width: 200px;
+  max-width: 280px;
+  width: auto;
+}
+
+.template-pill:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(255, 182, 255, 0.6);
+}
+
+/* ENHANCED TEMPLATE VIEW */
+
+.template-card.enhanced img {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 20px;
+  margin-bottom: 15px;
+}
+
+
+.payment-box {
+  margin-top: 15px;
+}
+
+.pay-btn {
+  display: inline-block;
+  padding: 12px 25px;
+  background: #6c5ce7;
+  color: white;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.pay-btn:hover {
+  background: #4834d4;
+}
+
+
+.editor-right {
+  flex: 1;
+}
+
+/* MAKE IMAGE REALLY BIG */
+.template-card.enhanced img {
+   
+  height: auto;
+  display: block;
+
+}
+
+/* CENTER EVERYTHING */
+.template-card.enhanced {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.template-card.enhanced img:hover {
+  transform: scale(1.02);
+  transition: 0.3s;
+}
+
+
+
+.payment-box {
+  margin-top: 15px;
+}
+
+.pay-btn {
+  display: inline-block;
+  padding: 14px 35px;
+  background: #6c5ce7;
+  color: white;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+.back {
+  top: 20px;
+  left: 20px;
+  z-index: 99999;       /* above everything */
+  background: #2c2c54;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 14px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+  position: static;
+  width: 80%;
+}
+
+.back:hover {
+  background: #40407a;
+  transform: translateY(-2px);
+}
+
+.common-preview {
+  width: 90%;
+  max-width: 900px;
+  height: auto;
+  display: block;
+  margin: 20px auto;
+  border-radius: 15px;
+}
+
+/* Left Sidebar */
+.sidebar {
+  width: 25%;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  border-right: 1px solid #ddd;
+}
+
+/* Buttons */
+.sidebar button {
+  width: 80%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #e0e0e0;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.sidebar button:hover {
+  background: #d0d0d0;
+}
+
+.pay-btn {
+  background: #4CAF50;
+  color: white;
+}
+
+/* Image Area */
+.image-area {
+  width: 75%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-area img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+}
+
+
+.pricing-section {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.pricing-title {
+  font-size: 22px;
+  font-family: 'Dancing Script', cursive;
+  margin-bottom: 20px;
+  color: #4a2f3c;
+}
+
+.pricing-card {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px;
+  border-radius: 25px;
+  background: rgba(255,255,255,0.85);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.action-buttons {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.action-buttons button {
+  padding: 10px 18px;
+  margin: 8px;
+  border-radius: 8px;
+  border: none;
+  background: orange;
+  color: white;
+  cursor: pointer;
+}
+
+.template-preview {
+  font-family: 'Playfair Display', serif !important;
+  color: #7A5C8E;
+}
+
+.template-preview h1,
+.template-preview h2,
+.template-preview p {
+  font-family: 'Playfair Display', serif !important;
+}
+
+.pricing {
+  text-align: center;
+}
+.template-title {
+  color: #B57EDC;   /* cream yellow */
+}
+.price-box {
+  display: inline-block;
+  padding: 14px 35px;
+  font-size: 30px;
+  font-weight: 700;
+
+  background: linear-gradient(135deg, #ffe4f2, #e0d4ff);
+  color: #4A3F35;
+
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(255, 182, 255, 0.4);
+
+  margin: 20px auto;
+
+}
+
+.btn.primary.big {
+  padding: 16px 40px;
+  font-size: 20px;
+  font-weight: 600;
+background: linear-gradient(135deg, #ffb7dd, #d8c8ff);
+  color: #3b2f2f;
+  border: none;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(255, 140, 200, 0.4);
+  cursor: pointer;
+  transition: 0.3s ease;
+   width: 100%;
+  max-width: 400px;
+  margin: 20px auto;
+  display: block;
+  text-align: center;
+}
+
+.btn.primary.big:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(255, 140, 200, 0.6);
+}
+
+.payment-page {
+  text-align: center;
+}
+
+.payment-title {
+  font-family: 'Dancing Script', cursive !important;
+  font-size: 60px;
+  font-weight: 700;
+  color: #462836;
+
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.back-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 25px;
+
+  background: linear-gradient(135deg, #ffb7dd, #d8c8ff);
+  color: #3b2f2f;
+
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+
+  box-shadow: 0 6px 15px rgba(255, 140, 200, 0.4);
+  transition: 0.3s ease;
+}
+
+.back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(255, 140, 200, 0.6);
+}

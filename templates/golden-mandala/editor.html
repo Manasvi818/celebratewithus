@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Golden Mandala — Editor • CelebrateWithUs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+
+<style>
+:root{
+  --bg:#fff7df;
+  --bg2:#fff2c2;
+  --dark:#1a120b;
+  --card:#fffaf0;
+  --cardDark:#24180e;
+  --text:#6b3f1c;
+  --textDark:#ffe6b6;
+  --gold:#d79b2b;
+  --gold2:#ffcc66;
+  --shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+body{
+  margin:0;
+  font-family:system-ui, sans-serif;
+  background: radial-gradient(circle at top, var(--bg2), var(--bg));
+  color:var(--text);
+  transition:.35s ease;
+}
+
+/* subtle mandala gold overlay */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(212,160,23,0.08), transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(212,160,23,0.08), transparent 40%);
+  pointer-events:none;
+}
+
+.subText{
+  text-align:center;
+  font-family:"Playfair Display", serif;
+  font-size:20px;
+  color:#7B1E2B;
+  margin-top:8px;
+  margin-bottom:24px;
+  letter-spacing:0.5px;
+}
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  background:#FAF3E8;
+  padding:26px;
+  border-radius:22px;
+  box-shadow:0 12px 40px rgba(123,30,43,.15);
+  border:1px solid rgba(212,160,23,.2);
+}
+
+/* Title */
+h1{
+  font-family:"Great Vibes", cursive;
+  font-size:72px;
+  text-align:center;
+  margin:0;
+  color:var(--gold);
+  text-shadow:0 10px 22px rgba(0,0,0,.12);
+}
+
+h2,h3{
+  text-align:center;
+  font-family:"Playfair Display",serif;
+  color:#7B1E2B;
+}
+
+/* Grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+}
+
+/* Cards */
+.card{
+  background:rgba(255,250,240,.9);
+  border-radius:18px;
+  padding:14px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  border:1px solid rgba(215,155,43,.18);
+  backdrop-filter: blur(6px);
+}
+
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 24px rgba(123,30,43,.18);
+}
+
+.card img,
+.card video{
+  width:100%;
+  border-radius:12px;
+}
+
+/* Buttons */
+.btn{
+  background:linear-gradient(135deg, var(--gold), #ffb84d);
+  border:none;
+  border-radius:999px;
+  padding:10px 22px;
+  font-weight:700;
+  color:white;
+  cursor:pointer;
+  box-shadow:0 10px 20px rgba(215,155,43,.25);
+  transition:.25s ease;
+}
+
+.btn:hover{
+  transform:scale(1.05);
+}
+
+.ghost{
+  background:#7B1E2B;
+  color:#FFF5E6;
+  border:1px solid #5A1420;
+}
+
+.ghost:hover{
+  background:#8E2434;
+}
+
+/* Message Box */
+.singleMessage{
+  background:#F5E6D3;
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:12px;
+  border-left:4px solid #D4A017;
+}
+
+.msgBtns button{
+  background:#7B1E2B;
+  color:#FFF5E6;
+  border:none;
+  padding:5px 12px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.msgBtns button:hover{
+  background:#8E2434;
+}
+
+#allMessagesBox{
+  background:#FAF3E8;
+  padding:16px;
+  border-radius:16px;
+  min-height:160px;
+  margin-top:14px;
+  font-family:"Playfair Display";
+  border:1px solid rgba(212,160,23,.2);
+}
+
+/* Inputs */
+input, select, textarea{
+  padding:10px;
+  border-radius:12px;
+  border:1px solid rgba(123,30,43,.3);
+  outline:none;
+  background:#FFF5E6;
+  color:#3B1F1F;
+}
+
+input:focus, textarea:focus, select:focus{
+  border-color:#D4A017;
+  box-shadow:0 0 6px rgba(212,160,23,.4);
+}
+
+/* Popup */
+#msgPopup{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(123,30,43,.4);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.popupInner{
+  background:#FAF3E8;
+  width:340px;
+  padding:24px;
+  border-radius:20px;
+  text-align:center;
+  border:1px solid rgba(212,160,23,.3);
+  box-shadow:0 10px 30px rgba(123,30,43,.3);
+}
+
+.site-footer{
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+  font-size:14px;
+  color:#6b3f1c;
+  opacity:.8;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<h1>Golden Mandala</h1>
+<p class="subText">✨ Upload your golden memories ✨</p>
+
+<!-- BACKGROUND MUSIC -->
+<h2 style="margin-top:28px;">🎵 Background Music</h2>
+
+<div class="card" style="text-align:center;">
+  <p style="margin-bottom:10px;font-family:Playfair Display;">
+    Choose one instrumental song for the viewer page
+  </p>
+
+  <select id="bgMusicSelect">
+    <option value="">No Music</option>
+
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771542/Naadify_v7cfwz.mp3">Naadify</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771542/IndieRaag_aoboya.mp3">IndieRaag</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771536/FolkFuel_retru9.mp3">FolkFuel</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771536/SargamX_pn2nes.mp3">SargamX</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771535/BeatBaithak_bklvs6.mp3">BeatBaithak</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771527/DesiBeats_ujphzf.mp3">DesiBeats</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771533/RaagRush_t1o4ju.mp3">RaagRush</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771527/DesiBeats_ujphzf.mp3">DesiBeats</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771526/SurSnap_yhzctb.mp3">SurSnap</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771525/SwagSwar_zbdrjr.mp3">SwagSwar</option>
+     <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771525/TaalPop_mmjs5s.mp3">TaalPop</option>
+  </select>
+
+  <div style="margin-top:14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+    <button class="btn" onclick="playMusicPreview()">▶ Preview</button>
+    <button class="btn ghost" onclick="stopMusicPreview()">⏹ Stop</button>
+    <button class="btn" onclick="saveBgMusic()">💾 Save Music</button>
+  </div>
+
+  <p id="musicSavedMsg" class="smallOk">Music saved ✓</p>
+</div>
+
+<!-- Preview -->
+<div id="previewBox">
+  <img id="previewImg">
+  <p id="previewCap"></p>
+</div>
+
+<!-- Upload Buttons -->
+<h2 style="margin-top:24px;">📸 Upload Media</h2>
+
+<div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:12px;">
+  <button class="btn" onclick="openWidget('image')">📸 Image</button>
+  <button class="btn" onclick="openWidget('video')">🎥 Video</button>
+  <label class="btn ghost" style="padding:10px 14px;">
+    Local Upload
+    <input type="file" id="localFile" accept="image/*,video/*" style="display:none" onchange="uploadLocal(event)">
+  </label>
+</div>
+
+<!-- Saved Items -->
+<h2 style="margin-top:22px;">Media List</h2>
+<div id="mediaGrid" class="grid"></div>
+
+<!-- Buttons -->
+<div style="display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;">
+  <button class="btn ghost" onclick="clearAll()">Delete All</button>
+  <button class="btn" onclick="autoSave()">Save</button>
+</div>
+
+<!-- PASSWORD -->
+<h3 style="margin-top:30px;">🔑 Set Viewer Password</h3>
+<div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
+  <input id="newPass" placeholder="golden"
+         style="padding:10px; width:240px; border-radius:14px; border:1px solid rgba(215,155,43,.35);">
+  <button class="btn" onclick="savePass()">Save Password</button>
+</div>
+<p id="passSaved" class="smallOk">Password Updated ✓</p>
+
+<!-- MESSAGE SYSTEM -->
+<h3 style="margin-top:30px;">💬 Messages (Shown in Viewer)</h3>
+
+<div style="display:flex; justify-content:center; margin-top:10px;">
+  <button id="msgOpenBtn" class="btn">💌 Add New Message</button>
+</div>
+
+<div id="allMessagesBox">(No messages yet)</div>
+
+<!-- Popup -->
+<div id="msgPopup">
+  <div class="popupInner">
+    <h3 style="margin-top:0;font-family:Cinzel;color:#d79b2b;">Write Message</h3>
+    <textarea id="msgInput" placeholder="Write something sweet..."></textarea>
+    <button id="msgSaveBtn" class="btn" style="margin-top:12px;width:100%;">Save Message</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+/* =========================
+   STORAGE KEYS (Golden Mandala)
+========================= */
+const STORAGE_KEY="gm_photos_v1";
+const MSG_KEY="gm_main_message";
+const MUSIC_KEY="gm_bg_music";
+
+/* Load Items */
+let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+/* Render Media */
+function render(){
+  let box=document.getElementById("mediaGrid");
+  box.innerHTML="";
+
+  items.forEach((obj,i)=>{
+    const d=document.createElement("div");
+    d.className="card";
+
+    let el;
+    if(obj.type==="video"){
+      el=document.createElement("video");
+      el.src=obj.url;
+      el.controls=true;
+    }else{
+      el=document.createElement("img");
+      el.src=obj.url;
+    }
+
+    el.onclick=()=>preview(obj);
+
+    const inp=document.createElement("input");
+    inp.type="text";
+    inp.placeholder="Caption...";
+    inp.value=obj.caption || "";
+    inp.onchange=e=>{
+      obj.caption=e.target.value;
+      autoSave();
+    };
+
+    const del=document.createElement("button");
+    del.textContent="Delete";
+    del.className="btn ghost";
+    del.style.marginTop="10px";
+    del.onclick=()=>{
+      items.splice(i,1);
+      
+      autoSave();
+      render();
+    };
+
+    d.appendChild(el);
+    d.appendChild(inp);
+    d.appendChild(del);
+    box.appendChild(d);
+  });
+}
+render();
+
+/* Preview */
+function preview(obj){
+  const img = document.getElementById("previewImg");
+  img.style.display="block";
+  img.src=obj.url;
+  document.getElementById("previewCap").innerText = obj.caption || "";
+}
+
+/* Cloudinary Upload */
+function openWidget(type){
+  cloudinary.openUploadWidget({
+    cloudName: "di8n4lsjz",
+    uploadPreset: "golden_mandala",
+    folder: "golden_mandala",
+    resourceType: "auto",
+    multiple: true
+  }, (error, result) => {
+    if (!error && result && result.event === "success") {
+      items.push({
+        url: result.info.secure_url,
+        type: result.info.resource_type,
+        caption: ""
+      });
+      
+      autoSave();
+      render();
+    }
+  });
+}
+
+/* Local Upload */
+function uploadLocal(e){
+  const file=e.target.files[0];
+  if(!file) return;
+
+  const r=new FileReader();
+  r.onload=v=>{
+    let type = file.type.startsWith("video") ? "video" : "image";
+
+    items.push({url:v.target.result,type,caption:""});
+    
+    autoSave();
+render();  };
+  r.readAsDataURL(file);
+}
+
+/* Save */
+function saveAll(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+function autoSave(){
+  localStorage.setItem("gm_photos_v1", JSON.stringify(items));
+}
+/* Delete */
+function clearAll(){
+  items=[];
+  autoSave();
+  render();
+}
+
+/* Password */
+function savePass(){
+  localStorage.setItem("viewerPassword_goldenMandala", document.getElementById("newPass").value);
+  passSaved.style.display="block";
+  setTimeout(()=>passSaved.style.display="none",1500);
+}
+
+/* =========================
+   MESSAGE SYSTEM
+========================= */
+function loadMessages(){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let box = document.getElementById("allMessagesBox");
+  box.innerHTML = "";
+
+  if(txt.trim()===""){
+    box.innerText = "(No messages yet)";
+    return;
+  }
+
+  let messages = txt.split("\n---\n");
+
+  messages.forEach((msg, index)=>{
+    let div = document.createElement("div");
+    div.className = "singleMessage";
+
+    div.innerHTML = `
+      <div class="msgText">${msg}</div>
+      <div class="msgBtns">
+        <button onclick="editMsg(${index})">✏️</button>
+        <button onclick="deleteMsg(${index})">🗑️</button>
+      </div>
+    `;
+
+    box.appendChild(div);
+  });
+}
+loadMessages();
+
+msgOpenBtn.onclick = ()=>{
+  document.getElementById("msgPopup").style.display="flex";
+};
+
+msgSaveBtn.onclick = ()=>{
+  let newMsg=document.getElementById("msgInput").value.trim();
+  if(newMsg==="") return;
+
+  let old=localStorage.getItem(MSG_KEY) || "";
+  let updated = old ? old + "\n---\n" + newMsg : newMsg;
+
+  localStorage.setItem(MSG_KEY, updated);
+
+  document.getElementById("msgInput").value="";
+  document.getElementById("msgPopup").style.display="none";
+  loadMessages();
+};
+
+function deleteMsg(index){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let messages = txt.split("\n---\n");
+
+  messages.splice(index, 1);
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+
+  loadMessages();
+}
+
+function editMsg(index){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let messages = txt.split("\n---\n");
+
+  let updated = prompt("Edit message:", messages[index]);
+  if(updated === null) return;
+  if(updated.trim()==="") return;
+
+  messages[index] = updated.trim();
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  loadMessages();
+}
+
+msgPopup.onclick = e=>{
+  if(e.target === msgPopup){
+    msgPopup.style.display="none";
+  }
+};
+
+/* =========================
+   BACKGROUND MUSIC SYSTEM
+========================= */
+let previewAudio = null;
+const musicSelect = document.getElementById("bgMusicSelect");
+
+// Load saved music
+const savedMusic = localStorage.getItem(MUSIC_KEY);
+if(savedMusic){
+  musicSelect.value = savedMusic;
+}
+
+function playMusicPreview(){
+  const url = musicSelect.value;
+  if(!url) return alert("Please select a song first 🎵");
+
+  stopMusicPreview();
+  previewAudio = new Audio(url);
+  previewAudio.volume = 0.6;
+  previewAudio.play();
+}
+
+function stopMusicPreview(){
+  if(previewAudio){
+    previewAudio.pause();
+    previewAudio.currentTime = 0;
+    previewAudio = null;
+  }
+}
+
+function saveBgMusic(){
+  const url = musicSelect.value;
+  localStorage.setItem(MUSIC_KEY, url || "");
+  document.getElementById("musicSavedMsg").style.display = "block";
+  setTimeout(()=>{
+    document.getElementById("musicSavedMsg").style.display = "none";
+  },1500);
+}
+</script>
+
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

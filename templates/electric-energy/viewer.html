@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Electric Energy — Viewer • CelebrateWithUs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg1:#050014;
+  --bg2:#090021;
+
+  --text:#eaf6ff;
+  --muted:rgba(234,246,255,.78);
+
+  --neon:#00f5ff;
+  --neon2:#3c7bff;
+  --pink:#ff2df7;
+
+  --card:rgba(255,255,255,.06);
+  --border:rgba(0,245,255,.18);
+
+  --shadow:0 18px 55px rgba(0,0,0,.55);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui, sans-serif;
+  background:radial-gradient(circle at top, var(--bg2), var(--bg1));
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* Electric background */
+body::before,
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-2;
+}
+body::before{
+  background:
+    radial-gradient(circle at 18% 20%, rgba(0,245,255,.20), transparent 60%),
+    radial-gradient(circle at 80% 18%, rgba(60,123,255,.20), transparent 65%),
+    radial-gradient(circle at 25% 85%, rgba(255,45,247,.12), transparent 60%),
+    radial-gradient(circle at 92% 82%, rgba(0,245,255,.12), transparent 65%);
+}
+body::after{
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(0,245,255,.08) 0 2px,
+      transparent 2px 18px);
+  opacity:.20;
+}
+
+/* Decoration canvas */
+#decorCanvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:50;
+}
+
+/* Layout */
+.page{
+  max-width:1100px;
+  margin:auto;
+  padding:18px;
+  position:relative;
+  z-index:100;
+}
+
+.wrap{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(0,245,255,.18);
+  border-radius:26px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  backdrop-filter: blur(14px);
+}
+
+/* Title */
+.hero-title{
+  font-family:"Orbitron";
+  font-size:64px;
+  line-height:1.02;
+  letter-spacing:3px;
+  margin:0;
+  text-align:center;
+  color:var(--neon);
+  text-shadow:
+    0 0 14px rgba(0,245,255,.45),
+    0 0 40px rgba(60,123,255,.20);
+}
+
+.subtitle{
+  margin:12px 0 0;
+  text-align:center;
+   font-family:"Allura", cursive;   
+  font-size:34px; 
+  color:#ffd24a;
+  text-shadow:0 0 18px rgba(255,210,74,.15);
+}
+
+/* Fixed right corner buttons */
+.cornerBtns{
+  position:fixed;
+  top:18px;
+  right:18px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  z-index:5000;
+}
+
+/* Mobile: keep inside screen */
+@media(max-width:520px){
+  .cornerBtns{
+    top:12px;
+    right:12px;
+  }
+}
+
+.actionBtn{
+  border:none;
+  border-radius:999px;
+  padding:12px 18px;
+  cursor:pointer;
+  font-weight:900;
+  font-size:15px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(0,245,255,.22);
+  color:var(--text);
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+  transition:.18s ease;
+}
+.actionBtn:hover{ transform:scale(1.03); }
+
+/* Section */
+.sectionTitle{
+  text-align:center;
+  margin:26px 0 14px;
+  font-family:"Playfair Display";
+  font-size:28px;
+  color:rgba(234,246,255,.92);
+}
+/* Cursive titles for Gallery + Messages */
+.cursiveTitle{
+  font-family:"Allura", cursive !important;
+  font-size:44px;
+  font-weight:400;
+  letter-spacing:1px;
+  color:rgba(234,246,255,.95);
+  text-shadow:0 0 18px rgba(0,245,255,.18);
+}
+
+/* Videos */
+.videoBox video{
+  width:100%;
+  border-radius:18px;
+  max-height:340px;
+  object-fit:cover;
+  margin-bottom:14px;
+  border:1px solid rgba(0,245,255,.16);
+  box-shadow:0 0 18px rgba(0,245,255,.10);
+}
+
+/* Photos */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:14px;
+}
+
+@media(max-width:560px){
+  .grid{grid-template-columns:1fr;}
+}
+
+.card{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(0,245,255,.14);
+  border-radius:20px;
+  padding:10px;
+  text-align:center;
+  box-shadow:0 10px 35px rgba(0,0,0,.35);
+  transition:.18s ease;
+}
+.card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(0,245,255,.25);
+}
+
+.card img{
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:cover;
+  border-radius:16px;
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 0 18px rgba(0,245,255,.10);
+}
+
+.photoCaption{
+  font-family:"Playfair Display";
+  font-size:15px;
+  margin:8px 0 0;
+  color:rgba(234,246,255,.85);
+}
+
+.tapBtn{
+  margin:10px auto 4px;
+  display:block;
+  background:linear-gradient(135deg, rgba(0,245,255,.95), rgba(60,123,255,.95));
+  border:none;
+  border-radius:999px;
+  padding:7px 18px;
+  font-size:13px;
+  color:#050014;
+  cursor:pointer;
+  font-family:"Playfair Display";
+  font-weight:900;
+  transition:.22s ease;
+}
+.tapBtn:hover{ transform:scale(1.05); }
+
+/* Messages */
+.stickyNote{
+  background:rgba(0,245,255,.06);
+  border:1px solid rgba(0,245,255,.14);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:12px;
+  font-family:"Playfair Display";
+  line-height:1.55;
+  color:rgba(234,246,255,.88);
+  box-shadow:0 12px 35px rgba(0,0,0,.30);
+}
+
+/* Password input + eye */
+.passWrap{
+  position:relative;
+  width:260px;
+
+  /* this makes it ONE box */
+  border-radius:14px;
+  overflow:hidden;
+
+  border:1px solid rgba(0,245,255,.22);
+  background:rgba(255,255,255,.06);
+
+ height:52px; 
+  display:flex;
+  align-items:center;
+}
+
+
+.passWrap input{
+  width:100%;
+  height:52px;              /* ✅ FIX */
+  line-height:52px;         /* ✅ FIX */
+  border:none;
+  outline:none;
+
+  background:transparent;
+  color:white;
+
+  padding:12px 52px 12px 14px; /* space for eye */
+  font-size:16px;
+}
+
+
+.passWrap input::placeholder{
+  color:rgba(234,246,255,.55);
+}
+
+#toggleEye{
+  position:absolute;
+  top:50%;
+  right:8px;
+  transform:translateY(-56%);
+  margin-top:-2px;
+
+  width:44px;
+  height:44px;
+  border-radius:14px;
+
+  background:rgba(0,245,255,.18);
+  border:1px solid rgba(0,245,255,.22);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  cursor:pointer;
+
+  /* WHITE ICON */
+  color:#fff;
+  font-size:18px;
+  opacity:.95;
+}
+
+#toggleEye:hover{
+  opacity:1;
+  background:rgba(0,245,255,.25);
+}
+
+
+/* Password overlay */
+#passwordOverlay{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at top, #0b0030, #050014);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:9999;
+  font-family:"Playfair Display";
+}
+#passwordOverlay h2{
+  font-family:"Orbitron";
+  color:var(--neon);
+  text-shadow:0 0 18px rgba(0,245,255,.30);
+}
+#passwordOverlay input{
+  border-radius:14px;
+  border:1px solid rgba(0,245,255,.22);
+  font-size:16px;
+  outline:none;
+  background:rgba(255,255,255,.06);
+  color:white;
+}
+#passwordOverlay button{
+  margin-top:14px;
+  padding:10px 26px;
+  border:none;
+  border-radius:999px;
+  background:linear-gradient(135deg, var(--neon), var(--neon2));
+  color:#050014;
+  font-weight:900;
+  cursor:pointer;
+}
+#wrongPass{
+  display:none;
+  color:#ff6b6b;
+  margin-top:10px;
+  font-weight:800;
+}
+
+/* Overlays */
+#msgOverlay,
+#imgZoomOverlay,
+#decorOverlay,
+#musicOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  padding:18px;
+}
+
+.popupCard{
+  width:min(320px, 95vw);
+  background:rgba(10,0,35,.92);
+  border:1px solid rgba(0,245,255,.18);
+  border-radius:18px;
+  padding:18px;
+  text-align:center;
+  font-family:"Playfair Display";
+  box-shadow:0 25px 70px rgba(0,0,0,.60);
+  backdrop-filter: blur(14px);
+}
+
+.popupCard h3{
+  margin:0 0 10px;
+  font-family:"Orbitron";
+  color:var(--neon);
+}
+
+.btnSmall{
+  background:linear-gradient(135deg, var(--neon), var(--neon2));
+  border:none;
+  border-radius:12px;
+  padding:8px 14px;
+  margin:6px 4px;
+  color:#050014;
+  font-weight:900;
+  cursor:pointer;
+}
+.btnSmall.ghost{
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  border:1px solid rgba(255,255,255,.18);
+}
+
+#msgText{ white-space:pre-line; color:rgba(234,246,255,.88); }
+
+#zoomImg{
+  max-width:100%;
+  max-height:75vh;
+  border-radius:18px;
+  border:1px solid rgba(0,245,255,.18);
+}
+#zoomCaption{
+  margin-top:10px;
+  font-family:"Playfair Display";
+  color:rgba(234,246,255,.88);
+}
+
+/* Controls */
+.popupCard input[type="range"]{ width:100%; }
+.popupCard select{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid rgba(0,245,255,.18);
+  background:rgba(255,255,255,.06);
+  color:white;
+  outline:none;
+}
+.popupCard option{ background:#070018; color:white; }
+
+#videoContainer{
+  display:block;
+}
+
+.videoBox{
+  
+  
+  position:relative;
+
+
+}
+
+.site-footer{
+  text-align:center;
+  margin-top:40px;
+  padding:18px;
+  font-family:"Playfair Display";
+  color:rgba(234,246,255,.7);
+  border-top:1px solid rgba(0,245,255,.12);
+}
+.videoCaption{
+  font-family:"Playfair Display";
+  font-size:15px;
+  margin:6px 0 14px;
+  text-align:center;
+  color:rgba(234,246,255,.85);
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="decorCanvas"></canvas>
+
+<!-- PASSWORD -->
+<div id="passwordOverlay">
+  <h2>Electric Energy ⚡</h2>
+  <p style="margin-top:-6px;color:rgba(234,246,255,.75)">Enter password to unlock ✨</p>
+  <div class="passWrap">
+  <input id="pass" type="password" placeholder="Password">
+
+  <button id="toggleEye" type="button" aria-label="Show password">
+    👁
+  </button>
+</div>
+
+  <button onclick="unlock()">Unlock</button>
+  <p id="wrongPass">Incorrect password</p>
+</div>
+
+<div class="page">
+  <div class="wrap">
+
+    <!-- TITLE + SUBTITLE -->
+    <h1 class="hero-title">ELECTRIC<br>ENERGY</h1>
+    <p class="subtitle">Turn the night into memories that glow ✨</p>
+
+    <!-- GALLERY SECTION -->
+   <h2 class="sectionTitle cursiveTitle" id="galleryTitle">Voltage Vault</h2>
+
+    <div id="videoContainer"></div>
+    <div id="photoGrid" class="grid"></div>
+
+    <!-- MESSAGE SECTION -->
+    <h2 class="sectionTitle cursiveTitle" id="messageTitle">Charged Messages</h2>
+    <div id="messageList"></div>
+
+  </div>
+</div>
+
+<!-- FIXED RIGHT CORNER BUTTONS -->
+<div class="cornerBtns">
+  <button id="decorBtn" class="actionBtn">✨ Decorations</button>
+  <button id="musicOpenBtn" class="actionBtn">🎵 Music</button>
+</div>
+
+<!-- SURPRISE POPUP -->
+<div id="msgOverlay">
+  <div class="popupCard">
+    <h3>⚡ Surprise</h3>
+    <div id="msgText"></div>
+    <button id="closeMsg" class="btnSmall" style="width:100%;margin-top:12px;">Close</button>
+  </div>
+</div>
+
+<!-- IMAGE ZOOM -->
+<div id="imgZoomOverlay">
+  <div class="popupCard" style="width:min(820px,95vw);">
+    <img id="zoomImg">
+    <p id="zoomCaption"></p>
+    <button class="btnSmall ghost" style="width:100%;margin-top:10px;" onclick="imgZoomOverlay.style.display='none'">
+      Close
+    </button>
+  </div>
+</div>
+
+<!-- DECORATIONS -->
+<div id="decorOverlay">
+  <div class="popupCard">
+    <h3>Decorations</h3>
+
+    <p style="margin:10px 0 6px;color:rgba(234,246,255,.75)">Style</p>
+    <select id="burst">
+      <option>Electric Sparks</option>
+      <option>Neon Stars</option>
+      <option>Lightning</option>
+    </select>
+
+    <p style="margin:12px 0 6px;color:rgba(234,246,255,.75)">Decorations / sec</p>
+    <input id="rate" type="range" min="0" max="12" value="4">
+
+    <p style="margin:12px 0 6px;color:rgba(234,246,255,.75)">Decoration size</p>
+    <input id="size" type="range" min="10" max="90" value="34">
+
+    <button id="applyBtn" class="btnSmall" style="width:100%;margin-top:12px;">Apply</button>
+    <button class="btnSmall ghost" style="width:100%;margin-top:10px;" onclick="decorOverlay.style.display='none'">
+      Close
+    </button>
+  </div>
+</div>
+
+<!-- MUSIC -->
+<div id="musicOverlay">
+  <div class="popupCard">
+    <h3>Music</h3>
+    <p style="margin-top:-4px;color:rgba(234,246,255,.75)">Background Music</p>
+
+    <button id="musicBtn"
+            class="btnSmall"
+            style="width:100%;"
+            onclick="toggleMusic()">
+      ▶ Play Music
+    </button>
+
+    <button class="btnSmall ghost"
+            style="width:100%;margin-top:10px;"
+            onclick="musicOverlay.style.display='none'">
+      Close
+    </button>
+  </div>
+</div>
+
+<script>
+/* =========================
+   STORAGE KEYS (MATCH EDITOR)
+========================= */
+const MEDIA_KEY = "ee_media_v1";
+const MSG_KEY   = "ee_messages_v1";
+const MUSIC_KEY = "ee_bg_music_v1";
+const PASS_KEY  = "viewerPassword_electricEnergy";
+
+/* LOAD DATA */
+const data = JSON.parse(localStorage.getItem(MEDIA_KEY) || "[]");
+const savedSong = localStorage.getItem(MUSIC_KEY) || "";
+const savedPass = localStorage.getItem(PASS_KEY) || "";
+
+/* MUSIC */
+let bgAudio = null;
+let isPlaying = false;
+
+function playMusic(){
+  if(!savedSong) return;
+
+  if(!bgAudio){
+    bgAudio = new Audio(savedSong);
+    bgAudio.loop = true;
+    bgAudio.volume = 0.65;
+  }
+  bgAudio.play().catch(()=>{});
+}
+
+function toggleMusic(){
+  if(!savedSong){
+    alert("No music saved in Editor 🎵");
+    return;
+  }
+
+  if(!bgAudio){
+    playMusic();
+    musicBtn.textContent = "⏸ Pause Music";
+    isPlaying = true;
+    return;
+  }
+
+  if(isPlaying){
+    bgAudio.pause();
+    musicBtn.textContent = "▶ Play Music";
+  }else{
+    bgAudio.play().catch(()=>{});
+    musicBtn.textContent = "⏸ Pause Music";
+  }
+  isPlaying = !isPlaying;
+}
+
+/* PASSWORD */
+function unlock(){
+  if(savedPass.trim()===""){
+    passwordOverlay.style.display="none";
+    if(savedSong){
+      playMusic();
+      musicBtn.textContent="⏸ Pause Music";
+      isPlaying=true;
+    }
+    return;
+  }
+
+  if(pass.value === savedPass){
+    passwordOverlay.style.display="none";
+    if(savedSong){
+      playMusic();
+      musicBtn.textContent="⏸ Pause Music";
+      isPlaying=true;
+    }
+  }else{
+    wrongPass.style.display="block";
+  }
+}
+pass.addEventListener("keydown",(e)=>{ if(e.key==="Enter") unlock(); });
+
+/* SHOW/HIDE PASSWORD */
+const toggleEye = document.getElementById("toggleEye");
+
+toggleEye.onclick = ()=>{
+  if(pass.type === "password"){
+    pass.type = "text";
+    toggleEye.textContent = "🙈";
+  }else{
+    pass.type = "password";
+    toggleEye.textContent = "👁";
+  }
+};
+
+/* RENDER */
+function render(){
+  videoContainer.innerHTML="";
+  photoGrid.innerHTML="";
+  messageList.innerHTML="";
+
+  data.forEach(x=>{
+    if(x.type==="video"){
+  videoContainer.innerHTML += `
+    <div class="videoBox">
+      <video src="${x.url}" controls></video>
+      <p class="videoCaption">${x.caption || ""}</p>
+    </div>
+  `;
+}
+  });
+
+  data.forEach((x,i)=>{
+    if(x.type==="image"){
+      const cap=(x.caption||"").replaceAll("`","'");
+      const d=document.createElement("div");
+      d.className="card";
+      d.innerHTML=`
+        <img src="${x.url}" onclick="openZoom('${x.url}',\`${cap}\`)">
+        <button class="tapBtn" onclick="showRandom(${i})">Surprise ⚡</button>
+        <p class="photoCaption">${x.caption || ""}</p>
+      `;
+      photoGrid.appendChild(d);
+    }
+  });
+
+  if(!data.length){
+    photoGrid.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;opacity:.75;font-family:Playfair Display;padding:20px;">
+        No media found 😭<br>
+        Upload photos/videos from the Editor first ⚡
+      </div>
+    `;
+  }
+}
+render();
+
+/* ZOOM */
+function openZoom(src,cap){
+  zoomImg.src=src;
+  zoomCaption.textContent=cap || "";
+  imgZoomOverlay.style.display="flex";
+}
+imgZoomOverlay.onclick=e=>{
+  if(e.target.id==="imgZoomOverlay"){
+    imgZoomOverlay.style.display="none";
+  }
+};
+
+/* SURPRISE */
+const cuteMessages=[
+  "You glow different when you're happy ⚡✨",
+  "This moment looks like neon magic 💙",
+  "Main character energy detected 😭🔥",
+  "This memory is literally electric ⚡",
+  "One day we’ll miss this night the most 🥹",
+  "No filter can match this vibe 💙",
+  "A moment frozen… a feeling forever 📸✨",
+  "We’re collecting memories like lightning ⚡"
+];
+
+function showRandom(i){
+  msgText.textContent = cuteMessages[Math.floor(Math.random()*cuteMessages.length)];
+  msgOverlay.style.display="flex";
+}
+closeMsg.onclick=()=>msgOverlay.style.display="none";
+
+/* LOAD MESSAGES */
+function loadMessages(){
+  const txt = localStorage.getItem(MSG_KEY) || "";
+  if(!txt.trim()){
+    messageList.innerHTML = `<div style="text-align:center;opacity:.75;font-family:Playfair Display;">
+      (No messages yet)
+    </div>`;
+    return;
+  }
+
+  txt.split("\n---\n").forEach(m=>{
+    const d=document.createElement("div");
+    d.className="stickyNote";
+    d.textContent=m.trim();
+    messageList.appendChild(d);
+  });
+}
+loadMessages();
+
+
+/* OVERLAYS */
+decorBtn.onclick = ()=> decorOverlay.style.display="flex";
+decorOverlay.onclick = e=>{ if(e.target===decorOverlay) decorOverlay.style.display="none"; };
+
+musicOpenBtn.onclick = ()=> musicOverlay.style.display="flex";
+musicOverlay.onclick = e=>{ if(e.target===musicOverlay) musicOverlay.style.display="none"; };
+
+/* DECORATIONS */
+const c = decorCanvas;
+const ctx = c.getContext("2d");
+let W,H,particles=[];
+
+function resizeCanvas(){
+  W = c.width = innerWidth;
+  H = c.height = innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+let decorCfg={ rate:4, size:34, burst:"Electric Sparks" };
+
+applyBtn.onclick=()=>{
+  decorCfg.rate = +rate.value;
+  decorCfg.size = +size.value;
+  decorCfg.burst = burst.value;
+  decorOverlay.style.display="none";
+};
+
+function spawnDecor(){
+  const chance = decorCfg.rate / 18;
+  if(Math.random() > chance) return;
+
+  particles.push({
+    x:Math.random()*W,
+    y:H+30,
+    r:decorCfg.size,
+    t:decorCfg.burst,
+    vx:(Math.random()-.5)*0.6,
+    vy:1.4+Math.random()*1.4,
+    life:1
+  });
+}
+
+function drawLightning(x,y,r){
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.strokeStyle="rgba(0,245,255,.85)";
+  ctx.shadowColor="rgba(0,245,255,.7)";
+  ctx.shadowBlur=18;
+  ctx.lineWidth=3;
+
+  ctx.beginPath();
+  ctx.moveTo(0,0);
+  ctx.lineTo(-r*0.2,-r*0.35);
+  ctx.lineTo(r*0.15,-r*0.35);
+  ctx.lineTo(-r*0.1,-r*0.85);
+  ctx.lineTo(r*0.35,-r*0.45);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawStar(cx, cy, spikes, outerRadius, innerRadius){
+  let rot = Math.PI/2*3;
+  let step = Math.PI/spikes;
+
+  ctx.beginPath();
+  ctx.moveTo(cx, cy - outerRadius);
+  for(let i=0;i<spikes;i++){
+    ctx.lineTo(cx + Math.cos(rot)*outerRadius, cy + Math.sin(rot)*outerRadius);
+    rot += step;
+    ctx.lineTo(cx + Math.cos(rot)*innerRadius, cy + Math.sin(rot)*innerRadius);
+    rot += step;
+  }
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawDecor(){
+  ctx.clearRect(0,0,W,H);
+
+  particles.forEach((p,i)=>{
+    ctx.save();
+    ctx.globalAlpha=p.life;
+
+    if(p.t==="Electric Sparks"){
+      ctx.fillStyle="rgba(0,245,255,.9)";
+      ctx.shadowColor="rgba(0,245,255,.8)";
+      ctx.shadowBlur=18;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r/7,0,Math.PI*2);
+      ctx.fill();
+    }
+
+    if(p.t==="Stars"){
+      ctx.fillStyle="rgba(255,210,74,.95)";
+      ctx.shadowColor="rgba(255,210,74,.8)";
+      ctx.shadowBlur=16;
+      drawStar(p.x,p.y,5,p.r/3,p.r/6);
+    }
+
+    if(p.t==="Lightning"){
+      drawLightning(p.x,p.y,p.r/2.2);
+    }
+
+    ctx.restore();
+
+    p.y -= p.vy;
+    p.x += p.vx;
+    p.life -= 0.006;
+
+    if(p.y < -60 || p.life <= 0) particles.splice(i,1);
+  });
+}
+
+(function loop(){
+  requestAnimationFrame(loop);
+  spawnDecor();
+  drawDecor();
+})();
+</script>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+
+</body>
+</html>

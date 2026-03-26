@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vintage Glory — Viewer • CelebrateWithUs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<style>
+:root{
+
+--agedPaper:#F2E2C8;
+--warmParchment:#E8D3B1;
+--softSand:#D9BC8F;
+
+--vintageGold:#C9A36B;
+--sepiaBrown:#8A5A2B;
+--cocoaBrown:#5B3A1A;
+
+--dustyBeige:#F6EBD8;
+--antiqueCream:#FBF4E6;
+--photoShadow:#C7A67A;
+
+--shadow:
+0 8px 20px rgba(0,0,0,0.12);
+
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:system-ui, sans-serif;
+background:linear-gradient(160deg,var(--antiqueCream),var(--agedPaper));
+color:var(--cocoaBrown);
+overflow-x:hidden;
+}
+
+body::before,
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-2;
+}
+body::before{
+  background:
+    radial-gradient(circle at 18% 20%, rgba(0,245,255,.20), transparent 60%),
+    radial-gradient(circle at 80% 18%, rgba(60,123,255,.20), transparent 65%),
+    radial-gradient(circle at 25% 85%, rgba(255,45,247,.12), transparent 60%),
+    radial-gradient(circle at 92% 82%, rgba(0,245,255,.12), transparent 65%);
+}
+body::after{
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(0,245,255,.08) 0 2px,
+      transparent 2px 18px);
+  opacity:.20;
+}
+
+/* Decoration canvas */
+#decorCanvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:50;
+}
+
+/* Layout */
+.page{
+  width:92%;
+  max-width:1700px;
+  margin:auto;
+  padding:18px;
+  position:relative;
+  z-index:100;
+}
+
+.wrap{
+background:var(--warmParchment);
+border:1px solid var(--photoShadow);
+border-radius:26px;
+padding:20px;
+box-shadow:var(--shadow);
+}
+
+/* Vintage Dust Particles */
+
+.vintageDust{
+position:fixed;
+inset:0;
+pointer-events:none;
+z-index:120;
+overflow:hidden;
+}
+
+.dust{
+position:absolute;
+width:6px;
+height:6px;
+background:rgba(255,235,180,0.6);
+border-radius:50%;
+animation:floatDust linear infinite;
+filter:blur(1px);
+}
+
+@keyframes floatDust{
+0%{
+transform:translateY(100vh) scale(.6);
+opacity:0;
+}
+20%{opacity:.6}
+80%{opacity:.6}
+100%{
+transform:translateY(-10vh) scale(1);
+opacity:0;
+}
+}
+
+/* Golden Sparkles */
+
+.sparkle{
+position:fixed;
+width:8px;
+height:8px;
+background:radial-gradient(circle,#FFD700,#C9A36B);
+border-radius:50%;
+pointer-events:none;
+animation:sparkleAnim 3s infinite ease-in-out;
+z-index:130;
+}
+
+@keyframes sparkleAnim{
+0%{
+transform:scale(.6);
+opacity:0;
+}
+50%{
+transform:scale(1.4);
+opacity:1;
+}
+100%{
+transform:scale(.6);
+opacity:0;
+}
+}
+
+/* Title */
+.hero-title{
+font-family:"Cinzel";
+font-size:64px;
+text-align:center;
+color:var(--sepiaBrown);
+letter-spacing:3px;
+margin-bottom:2px;
+}
+
+.subtitle{
+margin:2px 0 0;
+text-align:center;
+font-family:"Playfair Display";
+font-size:28px;
+color:var(--sepiaBrown);
+}
+
+/* Fixed right corner buttons */
+.cornerBtns{
+  position:fixed;
+  top:18px;
+  right:18px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  z-index:5000;
+}
+
+/* Mobile: keep inside screen */
+@media(max-width:520px){
+  .cornerBtns{
+    top:12px;
+    right:12px;
+  }
+}
+
+ .actionBtn{
+border-radius:999px;
+padding:12px 18px;
+border:none;
+background:linear-gradient(135deg,var(--softSand),var(--vintageGold));
+color:var(--sepiaBrown);
+font-weight:700;
+font-family:"Playfair Display";
+box-shadow:0 6px 14px rgba(0,0,0,0.15);
+cursor:pointer;
+transition:all .25s ease;
+text-shadow:none;
+}
+
+.actionBtn:hover{
+transform:scale(1.05);
+box-shadow:0 8px 18px rgba(0,0,0,0.18);
+}
+
+/* Section */
+.sectionTitle{
+text-align:center;
+margin:26px 0 14px;
+font-family:"Playfair Display";
+font-size:28px;
+color:var(--sepiaBrown);
+}
+
+.cursiveTitle{
+font-family:"Pacifico", cursive !important;
+font-size:42px;
+font-weight:400;
+letter-spacing:1px;
+color:var(--sepiaBrown);
+}
+
+/* Videos */
+.videoBox video{
+  width:100%;
+  border-radius:18px;
+  max-height:340px;
+  object-fit:cover;
+  margin-bottom:14px;
+  border:1px solid rgba(0,245,255,.16);
+  box-shadow:0 0 18px rgba(0,245,255,.10);
+}
+
+/* Photos */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:14px;
+}
+@media(max-width:980px){ .grid{grid-template-columns:repeat(2, 1fr);} }
+@media(max-width:560px){ .grid{grid-template-columns:1fr;} }
+
+.card{
+background:var(--warmParchment);
+border:1px solid var(--photoShadow);
+border-radius:16px;
+padding:10px;
+text-align:center;
+box-shadow:0 6px 14px rgba(0,0,0,0.1);
+}
+
+.card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(0,245,255,.25);
+}
+
+.card img{
+width:100%;
+aspect-ratio:1/1;
+object-fit:cover;
+border-radius:14px;
+border:1px solid var(--photoShadow);
+}
+
+.photoCaption{
+font-family:"Playfair Display";
+font-size:15px;
+margin:8px 0 0;
+color:var(--cocoaBrown);
+font-weight:600;
+}
+
+.tapBtn{
+margin:10px auto;
+border:none;
+border-radius:12px;
+padding:7px 18px;
+background:linear-gradient(135deg,var(--softSand),var(--vintageGold));
+color:var(--cocoaBrown);
+font-size:13px;
+cursor:pointer;
+font-family:"Playfair Display";
+font-weight:700;
+}
+.tapBtn:hover{ transform:scale(1.05); }
+
+/* Messages */
+.stickyNote{
+color:var(--cocoaBrown);
+background:var(--warmParchment);
+border:1px solid var(--photoShadow);
+border-radius:14px;
+padding:16px;
+margin-bottom:12px;
+box-shadow:0 6px 14px rgba(0,0,0,0.08);
+}
+
+/* Password input + eye */
+.passWrap{
+width:280px;
+border-radius:16px;
+background:var(--warmParchment);
+border:1px solid var(--photoShadow);
+height:52px;
+display:flex;
+align-items:center;
+box-shadow:0 6px 14px rgba(0,0,0,0.08);
+}
+
+.passWrap input{
+flex:1;
+border:none;
+outline:none;
+background:transparent;
+color:var(--cocoaBrown);
+padding:0 14px;
+font-size:16px;
+}
+
+.passWrap input::placeholder{
+  color:#64561B;
+}
+
+/* Password overlay */
+#passwordOverlay{
+position:fixed;
+inset:0;
+background:linear-gradient(160deg,var(--antiqueCream),var(--agedPaper));
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:9999;
+font-family:"Playfair Display";
+}
+
+#passwordOverlay h2{
+  font-family:"Cinzel";
+font-size:64px;
+color:var(--sepiaBrown);
+letter-spacing:3px;
+margin-bottom:10px;
+  letter-spacing:2px;
+  text-shadow:
+  0 0 10px #D4A64A,
+  0 0 25px rgba(212,166,74,0.6);
+}
+#passwordOverlay input{
+  border-radius:14px;
+  border:1px solid rgba(0,245,255,.22);
+  font-size:16px;
+  outline:none;
+  background:rgba(255,255,255,.06);
+  color:#1E1E13; 
+}
+#passwordOverlay button{
+margin-top:18px;
+padding:12px 34px;
+border-radius:14px;
+border:none;
+background:linear-gradient(135deg,var(--softSand),var(--vintageGold));
+color:var(--cocoaBrown);
+font-weight:700;
+cursor:pointer;
+}
+
+#passwordOverlay p{
+  font-family:"Playfair Display";
+  font-size:18px;
+  color:#F6E7C6;
+}
+#wrongPass{
+  display:none;
+  color:#ff6b6b;
+  margin-top:10px;
+  font-weight:800;
+}
+
+/* Overlays */
+#msgOverlay,
+#imgZoomOverlay,
+#decorOverlay,
+#musicOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  padding:18px;
+}
+
+.popupCard{
+width:min(320px,95vw);
+background:var(--warmParchment);
+border:1px solid var(--photoShadow);
+border-radius:18px;
+padding:20px;
+text-align:center;
+font-family:"Playfair Display";
+box-shadow:0 10px 20px rgba(0,0,0,0.12);
+}
+
+.popupCard h3{
+  font-family:"Playfair Display";
+  color:var(--sepiaBrown); /* brown */
+  font-size:28px;
+  text-shadow:none;
+}
+
+.btnSmall{
+border:none;
+border-radius:12px;
+padding:10px 14px;
+background:linear-gradient(135deg,var(--softSand),var(--vintageGold));
+color:var(--cocoaBrown);
+font-weight:700;
+cursor:pointer;
+box-shadow:0 6px 14px rgba(0,0,0,0.12);
+}
+
+.btnSmall.ghost{
+background:var(--lightSand);
+color:var(--cocoaBrown);
+border:1px solid var(--photoShadow);
+}
+
+#msgText{ white-space:pre-line; color:rgba(234,246,255,.88); }
+
+#zoomImg{
+  max-width:100%;
+  max-height:75vh;
+  border-radius:18px;
+  border:1px solid rgba(0,245,255,.18);
+}
+#zoomCaption{
+  margin-top:10px;
+  font-family:"Playfair Display";
+  color:rgba(234,246,255,.88);
+}
+
+/* Controls */
+.popupCard input[type="range"]{ width:100%; }
+
+.popupCard input[type="range"]::-webkit-slider-runnable-track{
+background:var(--goldenMustard);
+height:8px;
+border-radius:10px;
+}
+
+.popupCard input[type="range"]::-webkit-slider-thumb{
+background:var(--oliveGreen);
+border:none;
+width:16px;
+height:16px;
+border-radius:50%;
+cursor:pointer;
+}
+
+
+
+/* dropdown list */
+.popupCard option{
+background:var(--dustyBeige);
+color:var(--cocoaBrown);
+font-family:"Playfair Display";
+padding:10px;
+}
+
+/* hovered option */
+.popupCard option:hover{
+background:var(--softSand);
+}
+
+/* selected option */
+.popupCard option:checked{
+background:var(--vintageGold);
+color:#fff;
+}
+
+.popupCard p{
+color:var(--sepiaBrown);
+}
+.popupCard select{
+appearance:none;
+-webkit-appearance:none;
+-moz-appearance:none;
+
+width:100%;
+padding:12px 14px;
+
+border-radius:14px;
+border:1px solid var(--photoShadow);
+
+font-family:"Playfair Display";
+font-size:16px;
+color:var(--sepiaBrown);
+
+background:
+linear-gradient(180deg,var(--warmParchment),var(--dustyBeige))
+url("data:image/svg+xml;utf8,<svg fill='%238A5A2B' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+
+background-repeat:no-repeat;
+background-position:right 12px center;
+background-size:18px;
+
+box-shadow:0 3px 8px rgba(0,0,0,0.12);
+
+cursor:pointer;
+transition:all .25s ease;
+}
+
+.popupCard select:hover{
+border-color:var(--vintageGold);
+box-shadow:0 0 8px rgba(201,163,107,.4);
+}
+
+.popupCard select:focus{
+outline:none;
+border-color:var(--vintageGold);
+box-shadow:0 0 10px rgba(201,163,107,.6);
+}
+
+.site-footer{
+  text-align:center;
+  margin-top:50px;
+  padding:20px 15px;
+
+  background:linear-gradient(135deg,var(--warmParchment),var(--agedPaper));
+  border-top:1px solid var(--photoShadow);
+
+  font-family:"Playfair Display", serif;
+  font-size:15px;
+  color:var(--sepiaBrown);
+
+  letter-spacing:0.5px;
+
+  box-shadow:0 -4px 12px rgba(0,0,0,0.08);
+}
+
+/* subtle glow effect */
+.site-footer p{
+  margin:0;
+  opacity:0.9;
+}
+
+/* hover effect (optional) */
+.site-footer:hover{
+  background:linear-gradient(135deg,var(--softSand),var(--warmParchment));
+  transition:0.3s ease;
+}
+</style>
+</head>
+
+<body>
+<div class="vintageDust" id="dustContainer"></div>
+
+<!-- PASSWORD -->
+<div id="passwordOverlay">
+  <h2>Vintage Glory</h2>
+  <p style="margin-top:-6px;color:rgba(234,246,255,.75)">Enter password to unlock ✨</p>
+  <div class="passWrap">
+  <input id="pass" type="password" placeholder=" ">
+
+</div>
+
+  <button onclick="unlock()">Unlock</button>
+  <p id="wrongPass">Incorrect password</p>
+</div>
+
+<div class="page">
+  <div class="wrap">
+
+    <!-- TITLE + SUBTITLE -->
+    <h1 class="hero-title">VINTAGE GLORY</h1>
+<p class="subtitle">Moments etched in time.</p>
+
+    <!-- GALLERY SECTION -->
+   <h2 class="sectionTitle cursiveTitle" id="galleryTitle">Timeless Gallery </h2>
+
+    <div id="videoContainer"></div>
+    <div id="photoGrid" class="grid"></div>
+
+    <!-- MESSAGE SECTION -->
+    <h2 class="sectionTitle cursiveTitle" id="messageTitle">Golden Thoughts</h2>
+    <div id="messageList"></div>
+
+  </div>
+</div>
+
+<!-- FIXED RIGHT CORNER BUTTONS -->
+<div class="cornerBtns">
+  <button id="decorBtn" class="actionBtn">✨ Decorations</button>
+  <button id="musicOpenBtn" class="actionBtn">🎵 Music</button>
+</div>
+
+<!-- SURPRISE POPUP -->
+<div id="msgOverlay">
+  <div class="popupCard">
+    <h3>⚡ Surprise</h3>
+    <div id="msgText"></div>
+    <button id="closeMsg" class="btnSmall" style="width:100%;margin-top:12px;">Close</button>
+  </div>
+</div>
+
+<!-- IMAGE ZOOM -->
+<div id="imgZoomOverlay">
+  <div class="popupCard" style="width:min(820px,95vw);">
+    <img id="zoomImg">
+    <p id="zoomCaption"></p>
+    <button class="btnSmall ghost" style="width:100%;margin-top:10px;" onclick="imgZoomOverlay.style.display='none'">
+      Close
+    </button>
+  </div>
+</div>
+
+<!-- DECORATIONS -->
+<div id="decorOverlay">
+  <div class="popupCard">
+    <h3>Decorations</h3>
+
+    <p style="margin:10px 0 6px;color:var(--sepiaBrown)">Style</p>
+   <select id="burst">
+  <option value="dust">Floating Dust Particles</option>
+  <option value="sparkles">Golden Sparkles</option>
+</select>
+
+    <p style="margin:12px 0 6px;color:var(--sepiaBrown)">Decorations / sec</p>
+    <input id="rate" type="range" min="0" max="12" value="4">
+
+    <p style="margin:12px 0 6px;color:var(--sepiaBrown)">Decoration size</p>
+    <input id="size" type="range" min="10" max="90" value="34">
+
+    <button id="applyBtn" class="btnSmall" style="width:100%;margin-top:12px;">Apply</button>
+    <button class="btnSmall ghost" style="width:100%;margin-top:10px;" onclick="decorOverlay.style.display='none'">
+      Close
+    </button>
+  </div>
+</div>
+
+<!-- MUSIC -->
+<div id="musicOverlay">
+  <div class="popupCard">
+    <h3>Music</h3>
+    <p style="margin-top:-4px;color:var(--sepiaBrown)">Background Music</p>
+
+    <button id="musicBtn"
+            class="btnSmall"
+            style="width:100%;"
+            onclick="toggleMusic()">
+      ▶ Play Music
+    </button>
+
+    <button class="btnSmall ghost"
+            style="width:100%;margin-top:10px;"
+            onclick="musicOverlay.style.display='none'">
+      Close
+    </button>
+  </div>
+</div>
+
+<script>
+/* =========================
+   STORAGE KEYS (MATCH EDITOR)
+========================= */
+const MEDIA_KEY = "vintage_media";
+const MSG_KEY   = "vintage_messages";
+const MUSIC_KEY = "vintage_music";
+const PASS_KEY  = "viewerPassword_vintageglory";
+
+/* ensure localStorage exists */
+if(!localStorage.getItem(MEDIA_KEY)){
+  localStorage.setItem(MEDIA_KEY,"[]");
+}
+
+/* LOAD DATA */
+const savedSong = localStorage.getItem(MUSIC_KEY) || "";
+const savedPass = localStorage.getItem(PASS_KEY) || "";
+
+/* MUSIC */
+let bgAudio = null;
+let isPlaying = false;
+
+function playMusic(){
+  if(!savedSong) return;
+
+  if(!bgAudio){
+    bgAudio = new Audio(savedSong);
+    bgAudio.loop = true;
+    bgAudio.volume = 0.65;
+  }
+  bgAudio.play().catch(()=>{});
+}
+
+function toggleMusic(){
+  if(!savedSong){
+    alert("No music saved in Editor 🎵");
+    return;
+  }
+
+  if(!bgAudio){
+    playMusic();
+    musicBtn.textContent = "⏸ Pause Music";
+    isPlaying = true;
+    return;
+  }
+
+  if(isPlaying){
+    bgAudio.pause();
+    musicBtn.textContent = "▶ Play Music";
+  }else{
+    bgAudio.play().catch(()=>{});
+    musicBtn.textContent = "⏸ Pause Music";
+  }
+  isPlaying = !isPlaying;
+}
+
+/* PASSWORD */
+function unlock(){
+
+  const input = document.getElementById("pass").value.trim();
+  const savedPass = localStorage.getItem("viewerPassword_vintageglory") || "";
+
+  if(savedPass === ""){
+    document.getElementById("passwordOverlay").style.display="none";
+    playMusic();
+isPlaying = true;
+ render();        // ✅ ADD
+  loadMessages();  // ✅ ADD
+
+    return;
+  }
+
+  if(input === savedPass){
+    document.getElementById("passwordOverlay").style.display="none";
+    playMusic();
+isPlaying = true;
+ render();
+ loadMessages();
+  }else{
+    document.getElementById("wrongPass").style.display="block";
+  }
+
+}
+
+pass.addEventListener("keydown",(e)=>{ if(e.key==="Enter") unlock(); });
+
+/* RENDER */
+function render(){
+
+  const data = JSON.parse(localStorage.getItem(MEDIA_KEY) || "[]"); // ✅ FIX
+
+  videoContainer.innerHTML="";
+  photoGrid.innerHTML="";
+  messageList.innerHTML="";
+
+  // 🎥 VIDEOS (1 PER ROW)
+  data.forEach(x=>{
+  if(!x || !x.url) return;
+    if(x.type==="video"){
+      videoContainer.innerHTML += `
+        <div class="videoBox">
+          <video src="${x.url}" controls></video>
+        </div>
+      `;
+    }
+  });
+
+  // 🖼 IMAGES (2 PER ROW)
+  data.forEach((x,i)=>{
+  if(!x || !x.url) return; 
+    if(x.type==="image"){
+      const d=document.createElement("div");
+      d.className="card";
+
+      d.innerHTML=`
+        <img src="${x.url}">
+        <p class="photoCaption">${x.caption || ""}</p>
+      `;
+
+      photoGrid.appendChild(d);
+    }
+  });
+
+}
+
+loadMessages();
+
+/* START RENDER AFTER EVERYTHING LOADED */
+
+/* ZOOM */
+function openZoom(src,cap){
+  zoomImg.src=src;
+  zoomCaption.textContent=cap || "";
+  imgZoomOverlay.style.display="flex";
+}
+imgZoomOverlay.onclick=e=>{
+  if(e.target.id==="imgZoomOverlay"){
+    imgZoomOverlay.style.display="none";
+  }
+};
+
+/* SURPRISE */
+const cuteMessages=[
+  "You glow different when you're happy ⚡✨",
+  "This moment looks like neon magic 💙",
+  "Main character energy detected 😭🔥",
+  "This memory is literally electric ⚡",
+  "One day we’ll miss this night the most 🥹",
+  "No filter can match this vibe 💙",
+  "A moment frozen… a feeling forever 📸✨",
+  "We’re collecting memories like lightning ⚡"
+];
+
+function showRandom(i){
+  msgText.textContent = cuteMessages[Math.floor(Math.random()*cuteMessages.length)];
+  msgOverlay.style.display="flex";
+}
+closeMsg.onclick=()=>msgOverlay.style.display="none";
+
+/* ======================
+   DECORATION CONTROLLER
+====================== */
+
+let dustEnabled = true;
+let sparkleEnabled = false;
+
+applyBtn.onclick = ()=>{
+
+  const style = document.getElementById("burst").value;
+
+  if(style === "dust"){
+    dustEnabled = true;
+    sparkleEnabled = false;
+  }
+
+  if(style === "sparkles"){
+    dustEnabled = false;
+    sparkleEnabled = true;
+  }
+
+  decorOverlay.style.display="none";
+};
+
+/* LOAD MESSAGES */
+function loadMessages(){
+  const txt = localStorage.getItem(MSG_KEY) || "";
+  if(!txt.trim()){
+    messageList.innerHTML = `<div style="text-align:center;opacity:.75;font-family:Playfair Display;">
+      (No messages yet)
+    </div>`;
+    return;
+  }
+
+  txt.split("\n---\n").forEach(m=>{
+    const d=document.createElement("div");
+    d.className="stickyNote";
+    d.textContent=m.trim();
+    messageList.appendChild(d);
+  });
+}
+loadMessages();
+
+
+/* OVERLAYS */
+decorBtn.onclick = ()=> decorOverlay.style.display="flex";
+decorOverlay.onclick = e=>{ if(e.target===decorOverlay) decorOverlay.style.display="none"; };
+
+musicOpenBtn.onclick = ()=> musicOverlay.style.display="flex";
+musicOverlay.onclick = e=>{ if(e.target===musicOverlay) musicOverlay.style.display="none"; };
+
+/* ======================
+   VINTAGE DUST SYSTEM
+====================== */
+
+const dustBox=document.getElementById("dustContainer");
+
+for(let i=0;i<40;i++){
+
+const d=document.createElement("div");
+d.className="dust";
+
+d.style.left=Math.random()*100+"vw";
+d.style.animationDuration=8+Math.random()*10+"s";
+d.style.animationDelay=Math.random()*10+"s";
+
+dustBox.appendChild(d);
+
+}
+
+/* ======================
+   GOLDEN SPARKLES SYSTEM
+====================== */
+
+setInterval(()=>{
+
+if(!sparkleEnabled) return;
+
+const s=document.createElement("div");
+s.className="sparkle";
+
+s.style.left=Math.random()*100+"vw";
+s.style.top=Math.random()*100+"vh";
+
+document.body.appendChild(s);
+
+setTimeout(()=>s.remove(),3000);
+
+},800);
+</script>
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

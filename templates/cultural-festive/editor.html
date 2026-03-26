@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cultural Festive — Editor • CelebrateWithUs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+
+<style>
+:root{
+  --bg:#FFF8E7;
+  --bg2:#FFE8B5;
+  --deepMaroon:#7B1E2B;
+  --royalMaroon:#5A1420;
+  --gold:#D4A017;
+  --brightGold:#F2C94C;
+  --antiqueGold:#A67C00;
+  --card:#FFF5E6;
+  --shadow:0 10px 30px rgba(123,30,43,.15);
+}
+
+/* BODY */
+body{
+  margin:0;
+  font-family:system-ui, sans-serif;
+  background:
+    radial-gradient(circle at top, var(--bg2), var(--bg));
+  color:var(--deepMaroon);
+  transition:.4s ease;
+  overflow-x:hidden;
+}
+
+/* Festive Mandala Glow Overlay */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(212,160,23,.08), transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(212,160,23,.08), transparent 40%);
+  pointer-events:none;
+}
+
+/* WRAP */
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  background:rgba(255,245,230,.95);
+  padding:30px;
+  border-radius:26px;
+  box-shadow:0 18px 45px rgba(123,30,43,.25);
+  border:1px solid rgba(212,160,23,.25);
+}
+
+/* TITLE */
+h1{
+  font-family:"Cinzel", serif;
+  font-size:64px;
+  text-align:center;
+  margin:0;
+  background:linear-gradient(45deg,var(--gold),var(--brightGold));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  letter-spacing:2px;
+  text-shadow:0 6px 18px rgba(0,0,0,.15);
+}
+
+/* SUBTITLE */
+.subText{
+  text-align:center;
+  font-family:"Playfair Display", serif;
+  font-size:20px;
+  color:var(--deepMaroon);
+  margin-top:6px;
+  margin-bottom:24px;
+}
+
+/* SECTION HEADINGS */
+h2,h3{
+  text-align:center;
+  font-family:"Playfair Display", serif;
+  color:var(--royalMaroon);
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:18px;
+}
+
+/* CARDS */
+.card{
+  background:var(--card);
+  border-radius:20px;
+  padding:16px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  border:1px solid rgba(212,160,23,.18);
+  transition:.3s ease;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 16px 32px rgba(123,30,43,.25);
+}
+
+.card img,
+.card video{
+  width:100%;
+  border-radius:14px;
+}
+
+/* BUTTONS */
+.btn{
+  background:linear-gradient(135deg,var(--gold),var(--brightGold));
+  border:none;
+  border-radius:999px;
+  padding:10px 24px;
+  font-weight:700;
+  color:white;
+  cursor:pointer;
+  transition:.3s ease;
+  box-shadow:0 10px 20px rgba(212,160,23,.35);
+}
+
+.btn:hover{
+  transform:scale(1.06);
+  box-shadow:0 14px 28px rgba(212,160,23,.5);
+}
+
+/* SECONDARY BUTTON */
+.ghost{
+  background:var(--deepMaroon);
+  color:#FFF5E6;
+  border:1px solid var(--royalMaroon);
+}
+
+.ghost:hover{
+  background:#8E2434;
+}
+
+/* INPUTS */
+input, textarea, select{
+  padding:10px;
+  border-radius:14px;
+  border:1px solid rgba(123,30,43,.3);
+  background:#FFF8EC;
+  color:#3B1F1F;
+  outline:none;
+}
+
+input:focus, textarea:focus, select:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 8px rgba(212,160,23,.4);
+}
+
+/* MESSAGE BOX */
+.singleMessage{
+  background:#FFEED8;
+  padding:14px;
+  border-radius:16px;
+  margin-bottom:14px;
+  border-left:5px solid var(--gold);
+}
+
+.msgBtns button{
+  background:var(--deepMaroon);
+  color:#FFF5E6;
+  border:none;
+  padding:5px 12px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.msgBtns button:hover{
+  background:#9C2A3C;
+}
+
+/* POPUP */
+#msgPopup{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(90,20,32,.5);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.popupInner{
+  background:#FFF5E6;
+  width:360px;
+  padding:26px;
+  border-radius:22px;
+  text-align:center;
+  border:1px solid rgba(212,160,23,.3);
+  box-shadow:0 14px 40px rgba(90,20,32,.4);
+}
+.site-footer{
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+  font-family:"Playfair Display";
+  color:var(--gold);
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<h1>Cultural Festive</h1>
+<p class="subText">✨ Upload your golden memories ✨</p>
+
+<!-- BACKGROUND MUSIC -->
+<h2 style="margin-top:28px;">🎵 Background Music</h2>
+
+<div class="card" style="text-align:center;">
+  <p style="margin-bottom:10px;font-family:Playfair Display;">
+    Choose one instrumental song for the viewer page
+  </p>
+
+  <select id="bgMusicSelect">
+    <option value="">No Music</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771542/Naadify_v7cfwz.mp3">Naadify</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771542/IndieRaag_aoboya.mp3">IndieRaag</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771536/FolkFuel_retru9.mp3">FolkFuel</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771536/SargamX_pn2nes.mp3">SargamX</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771535/BeatBaithak_bklvs6.mp3">BeatBaithak</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771527/DesiBeats_ujphzf.mp3">DesiBeats</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771533/RaagRush_t1o4ju.mp3">RaagRush</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771527/DesiBeats_ujphzf.mp3">DesiBeats</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771526/SurSnap_yhzctb.mp3">SurSnap</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771525/SwagSwar_zbdrjr.mp3">SwagSwar</option>
+     <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771525/TaalPop_mmjs5s.mp3">TaalPop</option>
+  </select>
+
+  <div style="margin-top:14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+    <button class="btn" onclick="playMusicPreview()">▶ Preview</button>
+    <button class="btn ghost" onclick="stopMusicPreview()">⏹ Stop</button>
+    <button class="btn" onclick="saveBgMusic()">💾 Save Music</button>
+  </div>
+
+  <p id="musicSavedMsg" class="smallOk">Music saved ✓</p>
+</div>
+
+<!-- Preview -->
+<div id="previewBox">
+  <img id="previewImg">
+  <p id="previewCap"></p>
+</div>
+
+<!-- Upload Buttons -->
+<h2 style="margin-top:24px;">📸 Upload Media</h2>
+
+<div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:12px;">
+  <button class="btn" onclick="openWidget('image')">📸 Image</button>
+  <button class="btn" onclick="openWidget('video')">🎥 Video</button>
+  <label class="btn ghost" style="padding:10px 14px;">
+    Local Upload
+    <input type="file" id="localFile" accept="image/*,video/*" style="display:none" onchange="uploadLocal(event)">
+  </label>
+</div>
+
+<!-- Saved Items -->
+<h2 style="margin-top:22px;">Media List</h2>
+<div id="mediaGrid" class="grid"></div>
+
+<!-- Buttons -->
+<div style="display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;">
+  <button class="btn ghost" onclick="clearAll()">Delete All</button>
+  <button class="btn" onclick="saveAll()">Save</button>
+</div>
+
+<!-- PASSWORD -->
+<h3 style="margin-top:30px;">🔑 Set Viewer Password</h3>
+<div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
+  <input id="newPass" placeholder="golden"
+         style="padding:10px; width:240px; border-radius:14px; border:1px solid rgba(215,155,43,.35);">
+  <button class="btn" onclick="savePass()">Save Password</button>
+</div>
+<p id="passSaved" class="smallOk">Password Updated ✓</p>
+
+<!-- MESSAGE SYSTEM -->
+<h3 style="margin-top:30px;">💬 Messages (Shown in Viewer)</h3>
+
+<div style="display:flex; justify-content:center; margin-top:10px;">
+  <button id="msgOpenBtn" class="btn">💌 Add New Message</button>
+</div>
+
+<div id="allMessagesBox">(No messages yet)</div>
+
+<!-- Popup -->
+<div id="msgPopup">
+  <div class="popupInner">
+    <h3 style="margin-top:0;font-family:Cinzel;color:#d79b2b;">Write Message</h3>
+    <textarea id="msgInput" placeholder="Write something sweet..."></textarea>
+    <button id="msgSaveBtn" class="btn" style="margin-top:12px;width:100%;">Save Message</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+/* =========================
+   STORAGE KEYS (Golden Mandala)
+========================= */
+const STORAGE_KEY="festive_media_v1";
+const MSG_KEY="festive_message_v1";
+const MUSIC_KEY="gm_bg_music";
+
+/* Load Items */
+let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+/* Render Media */
+function render(){
+  let box=document.getElementById("mediaGrid");
+  box.innerHTML="";
+
+  items.forEach((obj,i)=>{
+    const d=document.createElement("div");
+    d.className="card";
+
+    let el;
+    if(obj.type==="video"){
+      el=document.createElement("video");
+      el.src=obj.url;
+      el.controls=true;
+    }else{
+      el=document.createElement("img");
+      el.src=obj.url;
+    }
+
+    el.onclick=()=>preview(obj);
+
+    const inp=document.createElement("input");
+    inp.type="text";
+    inp.placeholder="Caption...";
+    inp.value=obj.caption || "";
+    inp.onchange=e=>{
+      obj.caption=e.target.value;
+      autoSave();
+    };
+
+    const del=document.createElement("button");
+    del.textContent="Delete";
+    del.className="btn ghost";
+    del.style.marginTop="10px";
+    del.onclick=()=>{
+      items.splice(i,1);
+      autoSave();
+      render();
+    };
+
+    d.appendChild(el);
+    d.appendChild(inp);
+    d.appendChild(del);
+    box.appendChild(d);
+  });
+}
+render();
+
+/* Preview */
+function preview(obj){
+  const img = document.getElementById("previewImg");
+  img.style.display="block";
+  img.src=obj.url;
+  document.getElementById("previewCap").innerText = obj.caption || "";
+}
+
+/* Cloudinary Upload */
+function openWidget(type){
+  cloudinary.openUploadWidget({
+    cloudName: "di8n4lsjz",
+    uploadPreset: "cultural_festive",
+    folder: "cultural_festive",
+    resourceType: "auto",
+    multiple: true
+  }, (error, result) => {
+    if (!error && result && result.event === "success") {
+      items.push({
+        url: result.info.secure_url,
+        type: result.info.resource_type,
+        caption: ""
+      });
+      
+      autoSave();
+      render();
+    }
+  });
+}
+
+/* Local Upload */
+function uploadLocal(e){
+  const file=e.target.files[0];
+  if(!file) return;
+
+  const r=new FileReader();
+  r.onload=v=>{
+    let type = file.type.startsWith("video") ? "video" : "image";
+
+    items.push({url:v.target.result,type,caption:""});
+    
+    autoSave();
+    render();
+  };
+  r.readAsDataURL(file);
+}
+
+/* Save */
+function saveAll(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+function autoSave(){
+  localStorage.setItem("festive_media_v1", JSON.stringify(items));
+}
+/* Delete */
+function clearAll(){
+  items=[];
+  autoSave();
+  render();
+}
+
+/* Password */
+function savePass(){
+  localStorage.setItem("festive_viewer_pass", document.getElementById("newPass").value);
+  passSaved.style.display="block";
+  setTimeout(()=>passSaved.style.display="none",1500);
+}
+
+/* =========================
+   MESSAGE SYSTEM
+========================= */
+function loadMessages(){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let box = document.getElementById("allMessagesBox");
+  box.innerHTML = "";
+
+  if(txt.trim()===""){
+    box.innerText = "(No messages yet)";
+    return;
+  }
+
+  let messages = txt.split("\n---\n");
+
+  messages.forEach((msg, index)=>{
+    let div = document.createElement("div");
+    div.className = "singleMessage";
+
+    div.innerHTML = `
+      <div class="msgText">${msg}</div>
+      <div class="msgBtns">
+        <button onclick="editMsg(${index})">✏️</button>
+        <button onclick="deleteMsg(${index})">🗑️</button>
+      </div>
+    `;
+
+    box.appendChild(div);
+  });
+}
+loadMessages();
+
+msgOpenBtn.onclick = ()=>{
+  document.getElementById("msgPopup").style.display="flex";
+};
+
+msgSaveBtn.onclick = ()=>{
+  let newMsg=document.getElementById("msgInput").value.trim();
+  if(newMsg==="") return;
+
+  let old=localStorage.getItem(MSG_KEY) || "";
+  let updated = old ? old + "\n---\n" + newMsg : newMsg;
+
+  localStorage.setItem(MSG_KEY, updated);
+
+  document.getElementById("msgInput").value="";
+  document.getElementById("msgPopup").style.display="none";
+  loadMessages();
+};
+
+function deleteMsg(index){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let messages = txt.split("\n---\n");
+
+  messages.splice(index, 1);
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+
+  loadMessages();
+}
+
+function editMsg(index){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let messages = txt.split("\n---\n");
+
+  let updated = prompt("Edit message:", messages[index]);
+  if(updated === null) return;
+  if(updated.trim()==="") return;
+
+  messages[index] = updated.trim();
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  loadMessages();
+}
+
+msgPopup.onclick = e=>{
+  if(e.target === msgPopup){
+    msgPopup.style.display="none";
+  }
+};
+
+/* =========================
+   BACKGROUND MUSIC SYSTEM
+========================= */
+let previewAudio = null;
+const musicSelect = document.getElementById("bgMusicSelect");
+
+// Load saved music
+const savedMusic = localStorage.getItem(MUSIC_KEY);
+if(savedMusic){
+  musicSelect.value = savedMusic;
+}
+
+function playMusicPreview(){
+  const url = musicSelect.value;
+  if(!url) return alert("Please select a song first 🎵");
+
+  stopMusicPreview();
+  previewAudio = new Audio(url);
+  previewAudio.volume = 0.6;
+  previewAudio.play();
+}
+
+function stopMusicPreview(){
+  if(previewAudio){
+    previewAudio.pause();
+    previewAudio.currentTime = 0;
+    previewAudio = null;
+  }
+}
+
+function saveBgMusic(){
+  const url = musicSelect.value;
+  localStorage.setItem(MUSIC_KEY, url || "");
+  document.getElementById("musicSavedMsg").style.display = "block";
+  setTimeout(()=>{
+    document.getElementById("musicSavedMsg").style.display = "none";
+  },1500);
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  render();
+  loadMessages();
+});
+
+</script>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

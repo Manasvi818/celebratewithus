@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cherished Time — Editor • CelebrateWithUs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://widget.cloudinary.com/v2.0/global/all.js">
+
+</script>
+
+<style>
+body{
+  margin:0;
+  font-family:"Poppins",sans-serif;
+  background:linear-gradient(135deg,#e6ecd9,#dde6cf,#eef3e6);
+  padding:20px;
+  color:#4a5a45;
+}
+
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  background:#f6f8f1;
+  padding:26px;
+  border-radius:26px;
+  box-shadow:0 20px 40px rgba(90,110,80,.18);
+}
+
+h1{
+  font-family:"Playfair Display",serif;
+  font-size:52px;
+  text-align:center;
+  margin-bottom:6px;
+  letter-spacing:2px;
+  color:#5b6f52;
+}
+
+h2,h3{
+  text-align:center;
+  font-family:"Playfair Display",serif;
+  color:#6b8060;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:18px;
+}
+
+.card{
+  background:#ffffff;
+  padding:16px;
+  border-radius:18px;
+  box-shadow:0 10px 24px rgba(90,110,80,.15);
+}
+
+.card img,
+.card video,
+.card audio{
+  width:100%;
+  border-radius:14px;
+}
+
+input, textarea, select{
+  background:#f3f6ed;
+  color:#4a5a45;
+  border:1px solid #c9d5bd;
+  padding:10px;
+  border-radius:12px;
+}
+
+.btn{
+  padding:10px 26px;
+  border-radius:999px;
+  border:none;
+  background:#8fa07a;
+  color:#ffffff;
+  font-weight:500;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.btn:hover{
+  background:#7b8f68;
+}
+
+.ghost{
+  background:transparent;
+  color:#6b8060;
+  border:1px solid #b9c7ac;
+}
+
+.singleMessage{
+  background:#ffffff;
+  padding:14px;
+  border-radius:16px;
+  margin-bottom:12px;
+  box-shadow:0 8px 20px rgba(90,110,80,.12);
+}
+
+.msgBtns{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:8px;
+}
+
+.msgBtns button{
+  border:none;
+  background:#8fa07a;
+  color:#ffffff;
+  padding:4px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;
+}
+
+#allMessagesBox{
+  background:#f3f6ed;
+  padding:18px;
+  border-radius:18px;
+  min-height:160px;
+  margin-top:14px;
+  white-space:pre-wrap;
+  font-family:"Playfair Display";
+  font-size:15px;
+  box-shadow:0 10px 24px rgba(90,110,80,.15);
+}
+
+#msgPopup{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.35);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.popupInner{
+  background:#ffffff;
+  width:340px;
+  padding:24px;
+  border-radius:22px;
+  text-align:center;
+  font-family:"Playfair Display";
+  box-shadow:0 20px 40px rgba(90,110,80,.25);
+}
+
+.site-footer{
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+  font-size:14px;
+  color:var(--muted);
+  background:rgba(255,255,255,0.4);
+  border-top:1px solid var(--border);
+  backdrop-filter: blur(6px);
+}
+
+body.night .site-footer{
+  background:rgba(0,0,0,0.25);
+  color:#b9c7b4;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<h1>Cherished Time</h1>
+<h2>🌿 Save the moments that shaped you 🌿</h2>
+
+<!-- MUSIC -->
+<h2 style="margin-top:30px;">🎧 Background Music</h2>
+
+<div class="card" style="text-align:center;">
+  <p>Select a calm track for your memories</p>
+
+  <select id="bgMusicSelect" style="padding:10px;width:100%;border-radius:12px;">
+    <option value="">No Music</option>
+     <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1767464726/ambient-home.mp3_b1bro0.mp3">
+    Ambient Home ☁️
+  </option>
+
+  <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1767464748/calm-peace.mp3_d9njbu.mp3">
+    Calm & Peace 🌿
+  </option>
+
+  <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1767464737/graceful-classic.mp3_z8doju.mp3">
+    Graceful Classic 🎻
+  </option>
+
+  <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1767464733/happy-family.mp3_ltzvhw.mp3">
+    Happy Family 😊
+  </option>
+
+  <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1767464736/hopeful-future.mp3_zmpadw.mp3">
+    Hopeful Future 🌈
+  </option>
+
+  <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1767464734/joyful-moments.mp3_mrt3yj.mp3">
+    Joyful Moments ✨
+  </option>
+
+  <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1767464735/nostalgia.mp3_kiqu6f.mp3">
+    Nostalgia 🌙
+  </option>
+
+  <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1767464746/parental-love.mp3_idv4fy.mp3">
+    Parental Love 👨‍👩‍👧
+  </option>
+
+  <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1767464752/togetherness.mp3_icrfo4.mp3">
+    Togetherness 💞
+  </option>
+
+  <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1767464745/warm-memories.mp3_dlvzch.mp3">
+    Warm Memories 🤍
+  </option>
+  </select>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;">
+    <button class="btn" onclick="playMusicPreview()">▶ Play</button>
+    <button class="btn ghost" onclick="stopMusicPreview()">⏸ Pause</button>
+    <button class="btn" onclick="saveBgMusic()">💾 Save Music</button>
+
+    <button class="btn" onclick="openWidget('image')">📸 Image</button>
+    <button class="btn" onclick="openWidget('video')">🎥 Video</button>
+
+    <label class="btn ghost">
+      Local Upload
+      <input type="file" hidden accept="image/*,video/*,audio/*" onchange="uploadLocal(event)">
+    </label>
+  </div>
+
+  <p id="musicSavedMsg" style="display:none;color:#9adede;margin-top:8px;">
+    Music saved ✨
+  </p>
+</div>
+
+<h2 style="margin-top:24px;">📖 Memory Gallery</h2>
+<div id="mediaGrid" class="grid"></div>
+
+<div style="display:flex;gap:10px;margin-top:22px;">
+  <button class="btn ghost" onclick="clearAll()">Delete All</button>
+  <button class="btn" onclick="autoSave()">Save</button>
+</div>
+
+<h3 style="margin-top:32px;">🔐 Private Viewer Password</h3>
+<input id="newPass" placeholder="cherish123" style="padding:10px;width:240px;border-radius:12px;">
+<button class="btn" onclick="savePass()">Save</button>
+<p id="passSaved" style="display:none;color:#9adede;margin-top:6px;">Password saved ✨</p>
+
+<h3 style="margin-top:32px;">💭 Written Memories</h3>
+
+<div style="display:flex;gap:10px;justify-content:center;">
+  <button id="msgOpenBtn" class="btn">Add Memory</button>
+  <button class="btn ghost" onclick="saveMessages()">💾 Save</button>
+</div>
+
+<div id="allMessagesBox"></div>
+
+<!-- popup -->
+<div id="msgPopup">
+  <div class="popupInner">
+    <h3>Write gently 🌿</h3>
+    <textarea id="msgInput" style="width:100%;height:120px;padding:12px;border-radius:12px;"></textarea>
+    <button id="msgSaveBtn" class="btn" style="margin-top:12px;">Save</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+
+/* STORAGE KEYS */
+const STORAGE_KEY="cherished_gallery";
+const MSG_KEY="cherished_messages";
+const MUSIC_KEY="cherished_music";
+
+let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+function saveAll(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  console.log("Saved data:", items);
+}
+
+function autoSave(){
+  localStorage.setItem("cherished_gallery", JSON.stringify(items));
+}
+
+function clearAll(){ items=[]; autoSave(); render(); }
+
+function render(){
+  mediaGrid.innerHTML = "";
+
+  items.forEach((o, i) => {
+    const d = document.createElement("div");
+    d.className = "card";
+
+    let el;
+    if (o.type === "video") {
+      el = document.createElement("video");
+      el.src = o.url;
+      el.controls = true;
+    } else if (o.type === "audio") {
+      el = document.createElement("audio");
+      el.src = o.url;
+      el.controls = true;
+    } else {
+      el = document.createElement("img");
+      el.src = o.url;
+    }
+
+    // Caption
+    const inp = document.createElement("input");
+    inp.placeholder = "Caption...";
+    inp.value = o.caption || "";
+    inp.onchange = e => {
+      o.caption = e.target.value;
+      autoSave();
+    };
+
+    // ✅ Message (THIS is what viewer reads)
+    const msg = document.createElement("textarea");
+    msg.placeholder = "Write a memory for this photo...";
+    msg.value = o.message || "";
+    msg.style.marginTop = "8px";
+    msg.onchange = e => {
+      o.message = e.target.value;
+      autoSave();
+    };
+
+    // Delete
+    const del = document.createElement("button");
+    del.textContent = "Delete";
+    del.className = "btn ghost";
+    del.onclick = () => {
+      items.splice(i, 1);
+      autoSave();
+      render();
+    };
+
+    d.append(el, inp, msg, del);
+    mediaGrid.appendChild(d);
+  });
+}
+
+
+
+/* uploads */
+function uploadLocal(e){
+ let f=e.target.files[0];
+ if(!f) return;
+ let r=new FileReader();
+ r.onload=x=>{
+  let t = f.type.startsWith("video")
+  ? "video"
+  : f.type.startsWith("audio")
+  ? "audio"
+  : "image";
+  items.push({url:x.target.result,type:t,caption:""});
+  autoSave();render(); 
+ };
+ r.readAsDataURL(f);
+}
+
+/* messages */
+function loadMessages(){
+ let txt=localStorage.getItem(MSG_KEY)||"";
+ allMessagesBox.innerHTML="";
+ if(!txt.trim()){ allMessagesBox.innerText="(No memories yet)"; return; }
+ txt.split(/\r?\n\s*---\s*\r?\n/).forEach((m,i)=>{
+   let d=document.createElement("div");
+   d.className="singleMessage";
+   d.innerHTML=`<div>${m}</div>
+   <div class="msgBtns">
+     <button onclick="editMsg(${i})">✏️</button>
+     <button onclick="deleteMsg(${i})">🗑️</button>
+   </div>`;
+   allMessagesBox.appendChild(d);
+ });
+}
+
+msgOpenBtn.onclick=()=>msgPopup.style.display="flex";
+msgSaveBtn.onclick=()=>{
+ let m=msgInput.value.trim(); if(!m) return;
+ let old=localStorage.getItem(MSG_KEY)||"";
+ localStorage.setItem(MSG_KEY, old?old+"\n---\n"+m:m);
+ msgInput.value="";
+ msgPopup.style.display="none";
+ loadMessages();
+};
+
+msgPopup.onclick=e=>{ if(e.target===msgPopup) msgPopup.style.display="none"; };
+
+function deleteMsg(i){
+ let a=(localStorage.getItem(MSG_KEY)||"").split(/\r?\n\s*---\s*\r?\n/)
+ a.splice(i,1);
+ localStorage.setItem(MSG_KEY,a.join("\n---\n"));
+ loadMessages();
+}
+function editMsg(i){
+ let a=(localStorage.getItem(MSG_KEY)||"").split(/\r?\n\s*---\s*\r?\n/)
+ let u=prompt("Edit memory",a[i]);
+ if(u){ a[i]=u.trim(); localStorage.setItem(MSG_KEY,a.join("\n---\n")); loadMessages(); }
+}
+
+/* music */
+let previewAudio=null;
+bgMusicSelect.value=localStorage.getItem(MUSIC_KEY)||"";
+
+function playMusicPreview(){
+ if(!bgMusicSelect.value) return;
+ stopMusicPreview();
+ previewAudio=new Audio(bgMusicSelect.value);
+ previewAudio.volume=.6;
+ previewAudio.play();
+}
+function stopMusicPreview(){
+ if(previewAudio){ previewAudio.pause(); previewAudio=null; }
+}
+function saveBgMusic(){
+ localStorage.setItem(MUSIC_KEY,bgMusicSelect.value||"");
+ musicSavedMsg.style.display="block";
+ setTimeout(()=>musicSavedMsg.style.display="none",1500);
+}
+
+function savePass(){
+  const passBox = document.getElementById("newPass");
+  const value = passBox.value.trim();
+
+  if(!value){
+    alert("Please enter a password first!");
+    return;
+  }
+
+  localStorage.setItem("viewerPassword_cherishedTimes", value);
+
+  passSaved.style.display="block";
+  setTimeout(()=>passSaved.style.display="none",1500);
+}
+
+
+function saveMessages(){
+ alert("Memories saved ✨");
+}
+
+function openWidget(type){
+ cloudinary.openUploadWidget({
+  cloudName:"di8n4lsjz",
+  uploadPreset:"cherished_times",
+  folder:"cherished_times",
+  resourceType: "auto",
+  multiple:true
+ },(e,r)=>{
+  if(!e && r && r.event==="success"){
+    items.push({
+      url:r.info.secure_url,
+      type:r.info.resource_type,
+      caption:""
+    });
+     autoSave()();render();
+  }
+ });
+}
+window.addEventListener("load", () => {
+  items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  render();
+});
+loadMessages();
+</script>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

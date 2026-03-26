@@ -1,0 +1,96 @@
+const payBtn = document.getElementById("rzpButton");
+
+if (payBtn) {
+    payBtn.addEventListener("click", openCheckout);
+}
+
+async function openCheckout() {
+    try {
+        const res = await fetch("http://127.0.0.1:4000/create-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                amountINR: 599,
+                notes: {
+                    templateId: localStorage.getItem("selectedTemplate") || "unknown"
+                }
+            }),
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+            alert("Failed to create order");
+            return;
+        }
+
+        const options = {
+    key: data.keyId,
+    amount: data.amount,
+    currency: data.currency,
+    order_id: data.orderId,
+    name: "Celebratewithus",
+    description: "Template Purchase ₹599",
+
+    handler: function (response) {
+        verifyPayment(response);
+    },
+
+    theme: { color: "#6366F1" },
+
+     method: {
+        upi: true
+    },
+    // ✅ ADD HERE (inside options)
+    modal: {
+        ondismiss: function () {
+            alert("Payment popup closed.");
+        }
+    }
+};
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+        rzp.on("payment.failed", function () {
+            alert("Payment failed — please try again.");
+        });
+
+    } catch (error) {
+    console.error("ERROR:", error);
+    alert("Something went wrong: " + error.message);
+}
+}
+
+async function verifyPayment(response) {
+    try {
+        const res = await fetch("http://127.0.0.1:4000/verify-payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(response),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            alert("Payment Verified! 🎉");
+
+            const templateId = localStorage.getItem("selectedTemplate");
+
+            if (!templateId) {
+                alert("No template selected.");
+                return;
+            }
+
+            // ✅ Download trigger
+            window.location.href = `http://localhost:4000/download?template=${templateId}`;
+
+        } else {
+            alert("Payment verification failed.");
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Something went wrong verifying payment.");
+    }
+}

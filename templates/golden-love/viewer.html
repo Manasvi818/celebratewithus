@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+  --bg-main:#fbf7ef;
+  --gold-soft:#e7c77f;
+  --gold:#d4a017;
+  --navy-soft:#1f2a38;
+  --text-main:#6e5730;
+}
+
+*{
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  margin:0;
+  background:linear-gradient(135deg,#fbf7ef,#f5ead6,#fffaf2);
+  color:var(--text-main);
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* 🌟 subtle constellation background */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    radial-gradient(circle at 15% 25%, rgba(212,160,23,.15) 2px, transparent 3px),
+    radial-gradient(circle at 70% 60%, rgba(212,160,23,.12) 2px, transparent 3px),
+    radial-gradient(circle at 40% 80%, rgba(212,160,23,.10) 2px, transparent 3px);
+  background-size:300px 300px;
+  pointer-events:none;
+  animation:starShift 20s linear infinite;
+}
+
+@keyframes starShift{
+  from{background-position:0 0;}
+  to{background-position:300px 300px;}
+}
+
+/* HERO */
+.hero{
+  padding:30px 20px 40px;
+  text-align:center;
+  margin-top:-20px;
+}
+
+.title{
+  font-family:'Allura',cursive;
+  font-size:8rem;
+   margin-bottom:0;    /* Remove bottom gap */
+  line-height:1;
+  color:var(--gold);
+  text-shadow:0 0 25px rgba(212,160,23,.35);
+}
+
+.subtitle{
+  font-family:'Libre Baskerville',serif;
+  letter-spacing:4px;
+  font-size:16px;
+   margin-top:8px; 
+  opacity:.7;
+  text-transform:uppercase;
+}
+
+/* GALLERY */
+.gallery{
+  max-width:1150px;
+  margin:auto;
+  padding:10px 20px 30px;
+}
+
+.grid{
+  display:flex;
+  flex-direction:column;
+  gap:32px;
+}
+
+@media(max-width:700px){
+  .grid{grid-template-columns:1fr;}
+}
+
+.card{
+  background:white;
+  border-radius:26px;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.08);
+  transition:.4s ease;
+  position:relative;
+}
+
+.card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border:2px solid rgba(212,160,23,.15);
+  border-radius:26px;
+  pointer-events:none;
+}
+
+.card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 30px 70px rgba(212,160,23,.25);
+}
+
+.card img,
+.card video{
+  width:100%;
+  height:280px;
+  object-fit:cover;
+}
+
+.caption{
+  padding:18px;
+  text-align:center;
+  font-style:italic;
+  color:#8a6d3b;
+}
+
+/* MESSAGE SECTION */
+.message-box{
+  margin:70px 0;
+  text-align:center;
+}
+
+.pink-msg-box{
+  width:min(92%,950px);
+  margin:auto;
+  padding:50px;
+  border-radius:32px;
+  background:linear-gradient(145deg,#fffdf8,#f5ead6);
+  box-shadow:0 25px 70px rgba(212,160,23,.15);
+  font-size:18px;
+  line-height:1.8;
+  transition:opacity .3s;
+}
+
+/* CONTROL BUTTONS */
+.controlBox{
+  background:linear-gradient(45deg,#e7c77f,#d4a017);
+  color:white;
+  padding:12px 22px;
+  border-radius:40px;
+  cursor:pointer;
+  box-shadow:0 12px 30px rgba(212,160,23,.35);
+  transition:.3s;
+}
+
+.controlBox:hover{
+  transform:scale(1.1);
+}
+
+/* ZOOM */
+#zoomModal{
+  position:fixed;
+  inset:0;
+  background:rgba(255,250,240,.95);
+  backdrop-filter:blur(8px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+}
+
+#zoomModal img{
+  max-width:90%;
+  max-height:85%;
+  border-radius:26px;
+  box-shadow:0 0 70px rgba(212,160,23,.35);
+}
+
+#zoomClose{
+  position:absolute;
+  top:25px;
+  right:30px;
+  font-size:28px;
+  color:var(--gold);
+  cursor:pointer;
+}
+
+.loveWord{
+  position:fixed;
+  bottom:-40px;
+  font-family:'Libre Baskerville', serif;
+  font-size:14px;
+  letter-spacing:2px;
+  color:rgba(212,160,23,.8);
+  animation:floatUp 10s linear forwards;
+  pointer-events:none;
+  z-index:9997;
+}
+
+@keyframes floatUp{
+  from{
+    transform:translateY(0);
+    opacity:0;
+  }
+  10%{opacity:1;}
+  to{
+    transform:translateY(-120vh);
+    opacity:0;
+  }
+}
+
+.floating-heart{
+  position:fixed;
+  bottom:-30px;
+  font-size:20px;
+  pointer-events:none;
+  z-index:9998;
+  animation:heartFloat 8s linear forwards;
+}
+
+@keyframes heartFloat{
+  from{
+    transform:translateY(0);
+    opacity:0;
+  }
+  10%{opacity:1;}
+  to{
+    transform:translateY(-120vh);
+    opacity:0;
+  }
+}
+
+#topControls{
+  position:fixed;
+  top:20px;
+  right:25px;
+  display:flex;
+  gap:14px;
+  z-index:9999;
+  flex-direction:column;
+}
+
+.msg-title{
+  text-align:center;
+  font-family:'Allura', cursive;
+  font-size:3.2rem;
+  color:var(--gold);
+  margin-bottom:35px;
+  text-shadow:0 5px 20px rgba(212,160,23,.25);
+   margin:10px 0 15px; 
+}
+
+#lockScreen h3{
+  font-family:'Allura',cursive;
+  font-size:2.8rem;
+  color:var(--gold);
+  margin-bottom:10px;
+}
+
+.sparkle{
+  position:fixed;
+  width:10px;
+  height:10px;
+  background:radial-gradient(circle,#fff8c6,#ffd700,#d4a017);
+  border-radius:50%;
+  pointer-events:none;
+  animation:goldSparkle 1s ease-out forwards;
+  box-shadow:0 0 20px rgba(255,215,0,.9);
+  z-index:9999;
+}
+
+@keyframes goldSparkle{
+  from{
+    transform:scale(1);
+    opacity:1;
+  }
+  to{
+    transform:scale(0.2) translateY(-15px);
+    opacity:0;
+  }
+}
+
+.site-footer{
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+  font-size:14px;
+  color:var(--maroon);
+  opacity:.8;
+}
+
+.card video {
+  width: 100%;
+  max-height: 280px;
+}
+</style>
+</head>
+
+<body>
+
+  <section class="hero">
+  <h1 class="title">Golden Love</h1>
+  <h2 class="subtitle">Written in the stars ✨</h2>
+</section>
+
+<div id="lockScreen" style="
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,#fbf7ef,#f5ead6,#fffaf2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+">
+
+  <div style="
+    padding:30px;
+    border-radius:22px;
+    text-align:center;
+   background:linear-gradient(145deg,#fffdf8,#f5ead6);
+color:#6e5730;
+box-shadow:0 25px 70px rgba(212,160,23,.25);
+border:1px solid rgba(212,160,23,.2);
+    width:420px;
+max-width:90%;
+  ">
+
+    <h3>🕯️ Private Golden Love</h3>
+
+    <div class="pass-wrap">
+  <input
+    id="passInput"
+    type="password"
+    placeholder="Enter password"
+  >
+  <span id="togglePass">👁️</span>
+</div>
+
+
+    <button onclick="checkPassword()" style="
+      margin-top:16px;
+      padding:10px 22px;
+      border-radius:30px;
+      border:none;
+      background:#ffb703;
+      cursor:pointer;
+    ">
+      Enter 🕯️
+    </button>
+
+    <p id="wrongPass" style="display:none;color:#ff9f1a;margin-top:10px;">
+      Wrong password 🤍
+    </p>
+
+    <div style="
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-top:10px;
+">
+
+  <p id="hintText" style="
+    display:none;
+    font-size:13px;
+    color:#ffd27d;
+    opacity:0.9;
+    text-shadow:0 0 8px rgba(255,200,120,.6);
+    margin:0;
+  ">
+    💡 <span id="hintValue"></span>
+  </p>
+
+</div>
+
+  </div>
+</div>
+
+<section class="gallery">
+  <h2 class="msg-title">Moments by the flame </h2>
+
+  <div class="grid"></div>
+</section>
+
+<section class="message-box">
+  <h2 class="msg-title">Leave a little feeling here </h2>
+ <div id="viewerMessage" class="pink-msg-box">
+    A quiet feeling rests here 🤍
+  </div>
+
+</section>
+
+
+<!-- TOP CONTROL BOX -->
+<div id="topControls">
+
+  <div class="controlBox" id="musicToggle">
+    🎶 Music
+  </div>
+
+  <div class="controlBox" id="sparkleToggle">
+    ✨ Sparkles
+  </div>
+
+</div>
+
+<!-- sparkle layer -->
+<div id="sparkle-layer"></div>
+<script>
+  const STORAGE_KEY = "golden_gallery";
+const MSG_KEY = "golden_messages";
+
+document.addEventListener("DOMContentLoaded", () => {
+/* Floating Hearts */
+setInterval(()=>{
+  const heart=document.createElement("div");
+  heart.className="floating-heart";
+  heart.innerHTML="💛";
+  heart.style.left=Math.random()*100+"vw";
+  heart.style.animationDuration=(4+Math.random()*4)+"s";
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),8000);
+},900);
+
+  /* 🔐 PASSWORD */
+  const savedPass = localStorage.getItem("viewerPassword_golden");
+
+  window.checkPassword = function () {
+  const input = document.getElementById("passInput").value;
+
+  if (!savedPass || savedPass === "") {
+    document.getElementById("lockScreen").style.display = "none";
+    startMusic(); // ✅ ADD THIS
+    return;
+  }
+
+  if (input === savedPass) {
+    document.getElementById("lockScreen").style.display = "none";
+
+    startMusic(); // ✅ ADD THIS
+
+  } else {
+    document.getElementById("wrongPass").style.display = "block";
+
+    if (hint && hint.trim() !== "") {
+      hintText.style.display = "block";
+    }
+  }
+};
+
+
+  /* 🎶 MUSIC */
+  const savedMusic = localStorage.getItem("golden_music");
+  let bgAudio = null;
+  let playing = false;
+
+  const musicToggle = document.getElementById("musicToggle");
+
+  musicToggle.onclick = () => {
+    if (!savedMusic) {
+      musicToggle.innerText = "🤍 No Music";
+      return;
+    }
+
+    if (!bgAudio) {
+      bgAudio = new Audio(savedMusic);
+      bgAudio.loop = true;
+      bgAudio.volume = 0.6;
+    }
+
+    if (playing) {
+      bgAudio.pause();
+      playing = false;
+      musicToggle.innerText = "🎶 Music";
+    } else {
+      bgAudio.play();
+      playing = true;
+      musicToggle.innerText = "⏸ Music";
+    }
+  };
+
+  function startMusic(){
+  if (!savedMusic) return;
+
+  if (!bgAudio){
+    bgAudio = new Audio(savedMusic);
+    bgAudio.loop = true;
+    bgAudio.volume = 0.5;
+  }
+
+  bgAudio.muted = true;
+
+bgAudio.play()
+  .then(() => {
+    // unmute after play starts
+    setTimeout(() => {
+      bgAudio.muted = false;
+    }, 300);
+  })
+  .catch(() => {
+    console.log("Autoplay blocked");
+  });
+  playing = true;
+
+  const musicToggle = document.getElementById("musicToggle");
+  musicToggle.innerText = "⏸ Music";
+}
+
+ /* 👁️ PASSWORD HINT TOGGLE */
+const hintText = document.getElementById("hintText");
+const hintValue = document.getElementById("hintValue");
+const hint = localStorage.getItem("viewerPassword_hint");
+
+if (hintText && hintValue && hint && hint.trim() !== "") {
+  hintValue.innerText = hint;
+}
+
+const passInput = document.getElementById("passInput");
+const togglePass = document.getElementById("togglePass");
+
+togglePass.onclick = () => {
+  const hidden = passInput.type === "password";
+  passInput.type = hidden ? "text" : "password";
+  togglePass.innerText = hidden ? "🙈" : "👁️";
+};
+
+
+/* 🖼️ LOAD GALLERY + MESSAGES */
+const grid = document.querySelector(".grid");
+const viewerMessage = document.getElementById("viewerMessage");
+
+const items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+const messages = JSON.parse(localStorage.getItem(MSG_KEY) || "[]");
+
+if (items.length === 0) {
+  viewerMessage.innerText = "No lovely moments yet 🤍";
+}
+
+// ✅ Default message section
+if (messages.length > 0) {
+  viewerMessage.innerHTML = messages
+    .map(m => `💌 ${m}`)
+    .join("<br><br>");
+} else if (items.length > 0) {
+  viewerMessage.innerText = items[0].memory || "A quiet feeling rests here 🤍";
+} else {
+  viewerMessage.innerText = "No lovely moments yet 🤍";
+}
+
+grid.innerHTML = "";
+
+const videoContainer = document.createElement("div");
+const imageContainer = document.createElement("div");
+
+videoContainer.style.display = "flex";
+videoContainer.style.flexDirection = "column";
+videoContainer.style.gap = "32px";
+
+imageContainer.style.display = "grid";
+imageContainer.style.gridTemplateColumns = "repeat(2,1fr)";
+imageContainer.style.gap = "32px";
+
+if(items.length === 0){
+  grid.innerHTML = `
+    <p style="grid-column:1/-1;text-align:center;opacity:.7;">
+      No moments added yet 🕯️
+    </p>
+  `;
+}
+
+
+items.forEach((item, index) => {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  let media;
+  if (item.type === "video") {
+  media = document.createElement("video");
+
+  media.controls = true;
+  media.preload = "metadata";
+  media.playsInline = true;
+
+  const source = document.createElement("source");
+  source.src = item.url;
+  source.type = "video/mp4"; // Cloudinary usually serves mp4
+
+  media.appendChild(source);
+
+   media.innerHTML += "Your browser does not support video.";
+}
+
+else {
+  media = document.createElement("img");
+  media.src = item.url;
+}
+  media.onclick = () => {
+  // zoom only for images
+  if(item.type !== "video"){
+    openZoom(item.url, item.caption);
+  }
+
+  viewerMessage.style.opacity = 0;
+
+  setTimeout(() => {
+    viewerMessage.innerText =
+  item.memory || messages[index] || messages[0] || "A quiet feeling rests here 🤍";
+    viewerMessage.style.opacity = 1;
+  }, 200);
+};
+
+ card.appendChild(media); // ✅ IMAGE FIRST
+  // caption
+if (item.caption && item.caption.trim() !== "") {
+  const cap = document.createElement("div");
+  cap.className = "caption";
+  cap.innerText = item.caption;
+  card.appendChild(cap);
+}
+
+// ✅ memory
+if (item.memory && item.memory.trim() !== "") {
+  const mem = document.createElement("div");
+  mem.className = "caption";
+  mem.style.opacity = "0.95";
+  mem.style.fontStyle = "normal";
+  mem.style.color = "#ffe8c8";
+  mem.innerText = item.memory;
+  card.appendChild(mem);
+}
+
+if(item.type === "video"){
+  videoContainer.appendChild(card);   // 🎥 full row
+} else {
+  imageContainer.appendChild(card);   // 🖼 2 per row
+}
+
+});
+
+grid.appendChild(videoContainer);
+grid.appendChild(imageContainer);
+
+/* ✨ GOLDEN SPARKLE SYSTEM */
+let sparkleOn = false;
+let bgInterval = null;
+
+const sparkleBtn = document.getElementById("sparkleToggle");
+
+/* Cursor sparkle */
+function cursorSparkle(e){
+  const sparkle = document.createElement("div");
+  sparkle.className = "sparkle";
+  sparkle.style.left = e.clientX + "px";
+  sparkle.style.top = e.clientY + "px";
+  document.body.appendChild(sparkle);
+  setTimeout(()=>sparkle.remove(),800);
+}
+
+/* Background sparkle */
+function backgroundSparkle(){
+  const sparkle = document.createElement("div");
+  sparkle.className = "sparkle";
+  sparkle.style.left = Math.random()*100 + "vw";
+  sparkle.style.top = Math.random()*100 + "vh";
+  document.body.appendChild(sparkle);
+  setTimeout(()=>sparkle.remove(),1500);
+}
+
+sparkleBtn.onclick = () => {
+  sparkleOn = !sparkleOn;
+
+  if (sparkleOn){
+    sparkleBtn.innerText = "✨ Sparkles ON";
+
+    document.addEventListener("mousemove", cursorSparkle);
+
+    bgInterval = setInterval(backgroundSparkle, 300);
+  } 
+  else {
+    sparkleBtn.innerText = "✨ Sparkles";
+
+    document.removeEventListener("mousemove", cursorSparkle);
+
+    clearInterval(bgInterval);
+  }
+};
+
+  /* 🔥 FLAME CURSOR + TRAIL */
+const flame = document.getElementById("flame");
+
+document.addEventListener("mousemove", e => {
+  flame.style.left = e.clientX + "px";
+  flame.style.top = e.clientY + "px";
+
+  const trail = document.createElement("div");
+  trail.className = "flameTrail";
+  trail.style.left = e.clientX + "px";
+  trail.style.top = e.clientY + "px";
+  document.body.appendChild(trail);
+  setTimeout(() => trail.remove(), 800);
+
+  const sparkCount = Math.random() > 0.6 ? 2 : 1;
+
+  for (let i = 0; i < sparkCount; i++) {
+    const spark = document.createElement("div");
+    spark.className = "goldSpark";
+    spark.style.left = e.clientX + (Math.random() * 10 - 5) + "px";
+    spark.style.top = e.clientY + (Math.random() * 10 - 5) + "px";
+    document.body.appendChild(spark);
+    setTimeout(() => spark.remove(), 600);
+  }
+});
+
+/* 🔍 ZOOM MODAL LOGIC */
+const zoomModal = document.getElementById("zoomModal");
+const zoomImg = document.getElementById("zoomImg");
+const zoomCaption = document.getElementById("zoomCaption");
+const zoomClose = document.getElementById("zoomClose");
+
+function openZoom(src, caption){
+  zoomImg.src = src;
+  zoomCaption.innerText = caption || "";
+  zoomModal.style.display = "flex";
+}
+
+function closeZoom(){
+  zoomModal.style.display = "none";
+  zoomImg.src = "";
+  zoomCaption.innerText = "";
+}
+
+zoomClose.onclick = closeZoom;
+
+zoomModal.onclick = (e) => {
+  if(e.target === zoomModal) closeZoom();
+};
+
+document.addEventListener("keydown", (e) => {
+  if(e.key === "Escape") closeZoom();
+});
+
+  /* 💌 FLOATING WORDS */
+ const loveWords = [
+  "forever",
+  "always you",
+  "soft warmth",
+  "our moment",
+  "quiet love",
+  "gentle hearts",
+  "golden silence",
+  "safe with you",
+  "just us",
+  "together",
+  "slow love",
+  "warm nights",
+  "your presence",
+  "my calm",
+  "my peace",
+  "endless glow",
+  "soft smiles",
+  "held gently",
+  "unspoken love",
+  "heart home",
+  "you feel like home",
+  "where I belong",
+  "still with you",
+  "only us here"
+];
+
+
+  setInterval(() => {
+    const word = document.createElement("div");
+    word.className = "loveWord";
+    word.innerText =
+      loveWords[Math.floor(Math.random() * loveWords.length)];
+    word.style.left = Math.random() * 90 + "vw";
+    document.body.appendChild(word);
+
+    setTimeout(() => word.remove(), 10000);
+  }, 5000);
+
+});
+
+
+</script>
+<div id="flame"></div>
+
+<!-- 🔍 ZOOM MODAL -->
+<div id="zoomModal">
+  <span id="zoomClose">✕</span>
+
+  <div id="zoomBox">
+    <img id="zoomImg" />
+    <div id="zoomCaption"></div>
+  </div>
+</div>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+
+</body>
+</html>

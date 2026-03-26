@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Royal Aura — Editor</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+
+<script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+
+<style>
+
+:root{
+
+--royalBlue:#0B4A8F;
+--midnight:#082F5B;
+--gold:#D4A64A;
+--lightGold:#E8C878;
+--antiqueGold:#B9892E;
+--amber:#F2B24C;
+--cream:#F6E7C6;
+--shadowBlue:#031C35;
+
+}
+
+body{
+margin:0;
+font-family:system-ui;
+
+background:linear-gradient(160deg,var(--midnight),var(--royalBlue));
+
+color:var(--cream);
+padding:20px;
+}
+
+.wrap{
+
+max-width:1100px;
+margin:auto;
+
+background:#082F5B;
+
+border-radius:22px;
+
+padding:24px;
+
+border:1px solid var(--antiqueGold);
+
+box-shadow:0 18px 45px rgba(0,0,0,.5);
+}
+
+h1{
+
+font-family:"Cinzel";
+
+text-align:center;
+
+font-size:48px;
+
+color:var(--gold);
+
+letter-spacing:3px;
+
+margin-bottom:6px;
+}
+
+.subText{
+
+text-align:center;
+
+font-family:"Playfair Display";
+
+color:var(--lightGold);
+
+margin-bottom:22px;
+}
+
+h2,h3{
+
+text-align:center;
+
+font-family:"Playfair Display";
+
+}
+
+/* buttons */
+
+.btn{
+
+padding:10px 18px;
+
+border-radius:14px;
+
+border:none;
+
+background:linear-gradient(135deg,var(--antiqueGold),var(--lightGold),var(--gold));
+
+color:var(--shadowBlue);
+
+font-weight:700;
+
+cursor:pointer;
+}
+
+.btn:hover{
+
+transform:scale(1.05);
+}
+
+.ghost{
+
+background:var(--shadowBlue);
+
+border:1px solid var(--antiqueGold);
+
+color:var(--lightGold);
+}
+
+/* cards */
+
+.card{
+
+background:var(--shadowBlue);
+
+border-radius:16px;
+
+padding:14px;
+
+border:1px solid var(--antiqueGold);
+
+}
+
+.grid{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+gap:14px;
+}
+
+.card img,
+.card video{
+
+width:100%;
+
+border-radius:10px;
+
+border:1px solid var(--antiqueGold);
+}
+
+/* input */
+
+input,
+textarea,
+select{
+
+width:100%;
+
+padding:10px;
+
+border-radius:12px;
+
+border:1px solid var(--antiqueGold);
+
+background:#031C35;
+
+color:var(--cream);
+
+margin-top:8px;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+
+border-color:var(--lightGold);
+}
+
+/* messages */
+
+#allMessagesBox{
+
+background:#031C35;
+
+border-radius:16px;
+
+padding:14px;
+
+margin-top:10px;
+
+border:1px solid var(--antiqueGold);
+}
+
+.singleMessage{
+
+background:#082F5B;
+
+padding:10px;
+
+border-radius:12px;
+
+margin-bottom:8px;
+
+border-left:4px solid var(--gold);
+}
+
+.msgBtns{
+
+display:flex;
+
+justify-content:flex-end;
+
+gap:8px;
+
+margin-top:6px;
+}
+
+.msgBtns button{
+
+border:none;
+
+background:var(--gold);
+
+color:#031C35;
+
+padding:4px 10px;
+
+border-radius:8px;
+
+cursor:pointer;
+}
+
+/* popup */
+
+#msgPopup{
+
+display:none;
+
+position:fixed;
+
+inset:0;
+
+background:rgba(0,0,0,.6);
+
+justify-content:center;
+
+align-items:center;
+}
+
+.popupInner{
+background:#082F5B;
+width:420px;       /* wider popup */
+  max-width:90vw;
+padding:20px;
+border-radius:16px;
+border:1px solid var(--gold);
+text-align:center;
+}
+
+.site-footer{
+  text-align:center;
+  margin-top:40px;
+  padding:18px;
+  font-size:14px;
+  color:#F6E7C6;
+  font-family:"Playfair Display";
+}
+
+#msgInput{
+  min-height:140px;   /* increase typing area */
+  height:160px;       /* fixed height */
+  resize:vertical;    /* allow user to expand */
+  font-size:15px;
+  line-height:1.5;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<h1>Royal Aura</h1>
+<p class="subText">Moments to Treasure ✨</p>
+
+<h2>🎵 Background Music</h2>
+
+<div class="card">
+
+<select id="bgMusicSelect">
+<option value="">No Music</option>
+<<option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771542/Naadify_v7cfwz.mp3">Naadify</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771542/IndieRaag_aoboya.mp3">IndieRaag</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771536/FolkFuel_retru9.mp3">FolkFuel</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771536/SargamX_pn2nes.mp3">SargamX</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771535/BeatBaithak_bklvs6.mp3">BeatBaithak</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771527/DesiBeats_ujphzf.mp3">DesiBeats</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771533/RaagRush_t1o4ju.mp3">RaagRush</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771527/DesiBeats_ujphzf.mp3">DesiBeats</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771526/SurSnap_yhzctb.mp3">SurSnap</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771525/SwagSwar_zbdrjr.mp3">SwagSwar</option>
+     <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771525/TaalPop_mmjs5s.mp3">TaalPop</option>
+</select>
+
+<br><br>
+
+<button class="btn" onclick="playMusicPreview()">Preview</button>
+<button class="btn ghost" onclick="stopMusicPreview()">Stop</button>
+<button class="btn" onclick="saveBgMusic()">Save Music</button>
+
+</div>
+
+<h2>📸 Upload Media</h2>
+
+<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+
+<button class="btn" onclick="openWidget('image')">📷 Image</button>
+<button class="btn" onclick="openWidget('video')">🎬 Video</button>
+
+<label class="btn ghost">
+Local Upload
+<input type="file" id="localFile" accept="image/*,video/*" style="display:none" onchange="uploadLocal(event)">
+</label>
+
+</div>
+
+<h2>Media List</h2>
+
+<div id="mediaGrid" class="grid"></div>
+
+<div style="display:flex;gap:10px;justify-content:center;margin-top:18px">
+
+<button class="btn ghost" onclick="clearAll()">Delete All</button>
+
+<button class="btn" onclick="saveAll()">Save</button>
+
+</div>
+
+<h3>🔑 Set Viewer Password</h3>
+
+<div style="display:flex;gap:10px;justify-content:center">
+
+<input id="newPass" placeholder="royal">
+
+<button class="btn" onclick="savePass()">Save Password</button>
+
+</div>
+
+<h3>💬 Messages</h3>
+
+<div style="display:flex;justify-content:center">
+
+<button id="msgOpenBtn" class="btn">Add Message</button>
+
+</div>
+
+<div id="allMessagesBox">(No messages yet)</div>
+
+<div id="msgPopup">
+
+<div class="popupInner">
+
+<h3>Write Message</h3>
+
+<textarea id="msgInput"></textarea>
+
+<br><br>
+
+<button id="msgSaveBtn" class="btn">Save</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const STORAGE_KEY="royal_media";
+const MSG_KEY="royal_messages";
+const MUSIC_KEY="royal_music";
+let items=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
+
+function render(){
+let box=document.getElementById("mediaGrid");
+box.innerHTML="";
+items.forEach((obj,i)=>{
+const d=document.createElement("div");
+d.className="card";
+let el;
+if(obj.type==="video"){
+el=document.createElement("video");
+el.src=obj.url;
+el.controls=true;
+}else{
+el=document.createElement("img");
+el.src=obj.url;
+}
+const inp=document.createElement("input");
+inp.value=obj.caption||"";
+inp.placeholder="Caption";
+inp.onchange=e=>{
+obj.caption=e.target.value;
+autoSave();
+};
+
+const del=document.createElement("button");
+del.textContent="Delete";
+del.className="btn ghost";
+del.onclick=()=>{
+items.splice(i,1);
+
+autoSave();
+render()
+};
+
+d.appendChild(el);
+d.appendChild(inp);
+d.appendChild(del);
+box.appendChild(d);
+});
+}
+render();
+
+function saveAll(){
+localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
+}
+
+function clearAll(){
+items=[];
+autoSave();
+render();
+
+
+}
+function uploadLocal(e){
+const file=e.target.files[0];
+const reader=new FileReader();
+reader.onload=v=>{
+items.push({
+url:v.target.result,
+type:file.type.includes("video")?"video":"image",
+caption:""
+});
+
+autoSave();
+render();
+};
+reader.readAsDataURL(file);
+}
+
+function savePass(){
+  const newPassword = document.getElementById("newPass").value.trim();
+  if(newPassword === ""){
+    alert("Password unchanged");
+    return;
+  }
+  localStorage.setItem("viewerPassword_royalaura", newPassword);
+  alert("Password updated successfully 🔐");
+  document.getElementById("newPass").value = "";
+}
+
+/* MUSIC SYSTEM */
+
+let previewAudio = null;
+
+/* Preview music */
+function playMusicPreview(){
+  const song = document.getElementById("bgMusicSelect").value;
+  if(!song){
+    alert("Please select a music track first 🎵");
+    return;
+  }
+  if(previewAudio){
+    previewAudio.pause();
+  }
+  previewAudio = new Audio(song);
+  previewAudio.loop = true;
+  previewAudio.volume = 0.7;
+  previewAudio.play();
+}
+
+/* Stop preview */
+function stopMusicPreview(){
+  if(previewAudio){
+    previewAudio.pause();
+    previewAudio.currentTime = 0;
+  }
+}
+
+/* Save selected music */
+function saveBgMusic(){
+  const song = document.getElementById("bgMusicSelect").value;
+  if(!song){
+    alert("Please select a music track first 🎵");
+    return;
+  }
+  localStorage.setItem("royal_music", song);
+  alert("Music saved successfully 🎶");
+}
+
+/* CLOUDINARY UPLOAD */
+function openWidget(type){
+const widget = cloudinary.createUploadWidget({
+    cloudName: "di8n4lsjz",
+    uploadPreset: "royal_aura",
+    folder: "royal_aura",
+    sources: ["local","camera","url"],
+    resourceType: type === "video" ? "video" : "image",
+    multiple: true
+  },
+  (error,result)=>{
+    if(!error && result && result.event==="success"){
+      items.push({
+        url: result.info.secure_url,
+        type: result.info.resource_type === "video" ? "video" : "image",
+        caption:""
+      });
+      
+      autoSave();
+      render();
+    }
+
+  });
+
+  widget.open();
+
+}
+
+/* =========================
+   MESSAGE SYSTEM
+========================= */
+function loadMessages(){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let box = document.getElementById("allMessagesBox");
+  box.innerHTML = "";
+
+  if(txt.trim()===""){
+    box.innerText = "(No messages yet)";
+    return;
+  }
+
+  let messages = txt.split("\n---\n");
+
+  messages.forEach((msg, index)=>{
+    let div = document.createElement("div");
+    div.className = "singleMessage";
+
+    div.innerHTML = `
+      <div class="msgText">${msg}</div>
+      <div class="msgBtns">
+        <button onclick="editMsg(${index})">✏️</button>
+        <button onclick="deleteMsg(${index})">🗑️</button>
+      </div>
+    `;
+
+    box.appendChild(div);
+  });
+}
+loadMessages();
+
+msgOpenBtn.onclick = ()=>{
+  document.getElementById("msgPopup").style.display="flex";
+};
+
+msgSaveBtn.onclick = ()=>{
+  let newMsg=document.getElementById("msgInput").value.trim();
+  if(newMsg==="") return;
+
+  let old=localStorage.getItem(MSG_KEY) || "";
+  let updated = old ? old + "\n---\n" + newMsg : newMsg;
+
+  localStorage.setItem(MSG_KEY, updated);
+
+  document.getElementById("msgInput").value="";
+  document.getElementById("msgPopup").style.display="none";
+  loadMessages();
+};
+
+function deleteMsg(index){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let messages = txt.split("\n---\n");
+
+  messages.splice(index, 1);
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+
+  loadMessages();
+}
+
+function editMsg(index){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let messages = txt.split("\n---\n");
+
+  let updated = prompt("Edit message:", messages[index]);
+  if(updated === null) return;
+  if(updated.trim()==="") return;
+
+  messages[index] = updated.trim();
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  loadMessages();
+}
+
+msgPopup.onclick = e=>{
+  if(e.target === msgPopup){
+    msgPopup.style.display="none";
+  }
+};
+
+function autoSave(){
+  localStorage.setItem("royal_media", JSON.stringify(items));
+}
+
+</script>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

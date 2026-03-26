@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Template Preview</title>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body style="text-align:center; padding:40px;">
+<div class="preview-box">
+
+  <h1 id="previewTitle" class="template-title"></h1>
+  <img id="templateImage" src="" alt="Template Preview" />
+</div>
+
+  <div class="price-box">₹599</div>
+
+  
+  <div class="action-buttons">
+  <button onclick="goBack()">⬅ Back</button>
+  <button onclick="buyNow()">💳 Buy</button>
+  <button onclick="alert('Liked!')">❤️ Like</button>
+</div>
+  
+<!-- Load data first -->
+<script src="scripts/templates-data.js"></script>
+
+<!-- Then app logic -->
+<script src="scripts/app.js"></script>
+
+
+  <!-- ✅ THEN USE IT -->
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const templateId = params.get("template");
+
+    const template = window.TEMPLATES.find(t => t.id === templateId);
+
+    if (template) {
+      document.getElementById("previewTitle").innerText = template.title;
+      document.getElementById("templateImage").src = template.image;
+    }
+        function goBack() {
+  window.history.back();
+}
+
+function buyNow() {
+  window.location.href = "payment.html";
+}
+    
+  </script>
+
+</body>
+</html>

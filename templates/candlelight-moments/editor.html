@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Candlelight Moments — Editor • CelebrateWithUs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:"Poppins",sans-serif;
+  background:linear-gradient(135deg,#2b1b12,#4b2d1f,#1a0f0a);
+  padding:20px;
+  color:#f6e6c9;
+}
+
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  background:#1e120c;
+  padding:22px;
+  border-radius:22px;
+  box-shadow:0 15px 40px rgba(255,190,120,.25);
+}
+
+h1{
+  font-family:"Great Vibes",cursive;
+  font-size:58px;
+  text-align:center;
+  margin-bottom:6px;
+  color:#ffcf87;
+}
+
+h2,h3{
+  text-align:center;
+  font-family:"Playfair Display",serif;
+  color:#ffd9a0;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:14px;
+}
+
+.card{
+  background:#2a190f;
+  padding:14px;
+  border-radius:16px;
+  box-shadow:0 6px 18px rgba(255,180,90,.25);
+}
+
+.card img,
+.card video,
+.card audio{
+  width:100%;
+  border-radius:12px;
+}
+
+input, textarea, select{
+  background:#1a0f0a;
+  color:#ffe8be;
+  border:1px solid #ffcc88;
+}
+
+.btn{
+  padding:10px 22px;
+  border-radius:999px;
+  border:none;
+  background:#ffb347;
+  color:#3b1f00;
+  font-weight:600;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.btn:hover{
+  background:#ffa21f;
+}
+
+.ghost{
+  background:transparent;
+  color:#ffd9a0;
+  border:1px solid #ffcc88;
+}
+
+.singleMessage{
+  background:#26160d;
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:10px;
+}
+
+.msgBtns{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:6px;
+}
+
+.msgBtns button{
+  border:none;
+  background:#ffb347;
+  color:#3b1f00;
+  padding:4px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;
+}
+
+#allMessagesBox{
+  background:#1a0f0a;
+  padding:16px;
+  border-radius:14px;
+  min-height:160px;
+  margin-top:12px;
+  white-space:pre-wrap;
+  font-family:"Playfair Display";
+  font-size:15px;
+  box-shadow:0 6px 18px rgba(255,180,90,.25);
+}
+
+#msgPopup{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.popupInner{
+  background:#2a190f;
+  width:330px;
+  padding:22px;
+  border-radius:18px;
+  text-align:center;
+  font-family:"Playfair Display";
+}
+
+.site-footer{
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+  font-size:14px;
+  color:#ffd8a8;
+  opacity:0.8;
+}
+
+.site-footer p{
+  margin:0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<h1>Candlelight Moments</h1>
+<h2>🕯️ Create Your Romantic Evening Memories 🕯️</h2>
+
+<!-- MUSIC -->
+<h2 style="margin-top:30px;">🎶 Candlelight Background Music</h2>
+
+<div class="card" style="text-align:center;">
+  <p>Choose a soft melody for your candlelight night</p>
+
+  <select id="bgMusicSelect" style="padding:10px;width:100%;border-radius:12px;">
+    <option value="">No Music</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024745/Pink_Silence_cpqqba.mp3">Pink Silence💞</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024741/Lights_cfhsxj.mp3">Lights🌸</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024740/One_Love_pq1obq.mp3">One Love💕</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024734/Velvet_Moments_kkpzlk.mp3">Velvet Moments🤍</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024733/Falling_Slowly_czfydq.mp3">Falling Slowly💞</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024730/Sweet_psqzg1.mp3">Sweet🌸</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024729/sweetvibe_lnfwkn.mp3">Sweet vibe💕</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024725/Heart_in_Bloom_fgj5oc.mp3">Heart in Bloom🤍</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024722/Whisper_of_You_wpcufk.mp3">Whisper of You💕</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024718/Spring_Flowers_xjmnsd.mp3">Spring Flowers🤍</option>
+  </select>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;">
+    <button class="btn" onclick="playMusicPreview()">▶ Play</button>
+    <button class="btn ghost" onclick="stopMusicPreview()">⏸ Pause</button>
+    <button class="btn" onclick="saveBgMusic()">💾 Save Music</button>
+
+    <button class="btn" onclick="openWidget('image')">🕯️ Image</button>
+    <button class="btn" onclick="openWidget('video')">🎥 Video</button>
+
+    <label class="btn ghost">
+      Local Upload
+      <input type="file" hidden accept="image/*,video/*" onchange="uploadLocal(event)">
+    </label>
+  </div>
+
+  <p id="musicSavedMsg" style="display:none;color:#ffcc88;margin-top:8px;">
+    Music saved for candlelight night ✨
+  </p>
+</div>
+
+<h2 style="margin-top:24px;">✨ Candlelight Gallery</h2>
+<div id="mediaGrid" class="grid"></div>
+
+<div style="display:flex;gap:10px;margin-top:22px;">
+  <button class="btn ghost" onclick="clearAll()">Delete All</button>
+  <button class="btn" onclick="autoSave()">Save</button>
+</div>
+
+<h3 style="margin-top:32px;">🔐 Private Viewer Password</h3>
+
+<input id="newPass"
+  placeholder="candlelove"
+  style="padding:10px;width:240px;border-radius:12px;"
+>
+<button class="btn" onclick="savePass()">Save</button>
+
+<p id="passSaved" style="display:none;color:#ffcc88;margin-top:6px;">
+  Password saved ✨
+</p>
+
+<!-- ✅ ADD THIS (HINT INPUT) JUST BELOW PASSWORD -->
+<input id="passHint"
+  placeholder="Password hint (optional)"
+  style="padding:10px;width:240px;border-radius:12px;margin-top:10px;"
+>
+<button class="btn ghost" onclick="saveHint()">Save Hint</button>
+
+<p id="hintSaved" style="display:none;color:#ffcc88;margin-top:6px;">
+  Hint saved ✨
+</p>
+
+
+<h3 style="margin-top:32px;">💌 Candlelight Messages</h3>
+
+<div style="display:flex;gap:10px;justify-content:center;">
+  <button id="msgOpenBtn" class="btn">Add Message</button>
+  <button class="btn ghost" onclick="saveMessages()">💾 Save</button>
+</div>
+
+<div id="allMessagesBox"></div>
+
+<!-- popup -->
+<div id="msgPopup">
+  <div class="popupInner">
+    <h3>Write softly 🕯️</h3>
+    <textarea id="msgInput" style="width:100%;height:120px;padding:12px;border-radius:12px;"></textarea>
+    <button id="msgSaveBtn" class="btn" style="margin-top:12px;">Save</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+/* SAME LOGIC AS BLUSH LOVE */
+
+const STORAGE_KEY="candle_gallery";
+const MSG_KEY="candle_messages";
+const MUSIC_KEY="candle_music";
+
+window.addEventListener("load", () => {
+  items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  render();
+});
+
+function saveAll(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  console.log("Saved:", items);
+
+  function autoSave(){
+  localStorage.setItem("candle_gallery", JSON.stringify(items));
+}
+}
+function clearAll(){ items=[]; autoSave(); render(); }
+
+function render(){
+  mediaGrid.innerHTML="";
+  items.forEach((o,i)=>{
+    let d=document.createElement("div");
+    d.className="card";
+
+    let el;
+    if(o.type==="video"){
+      el=document.createElement("video");
+      el.src=o.url;
+      el.controls=true;
+    }
+    else{
+      el=document.createElement("img");
+      el.src=o.url;
+    }
+
+    // Caption
+    let inp=document.createElement("input");
+    inp.placeholder="Caption...";
+    inp.value=o.caption||"";
+    inp.oninput=e=>{
+      o.caption=e.target.value;
+      autoSave();
+    };
+
+    // ✅ Memory textarea
+    let mem=document.createElement("textarea");
+    mem.placeholder="Write a memory for this photo...";
+    mem.style.width="100%";
+    mem.style.height="90px";
+    mem.style.marginTop="10px";
+    mem.style.padding="10px";
+    mem.style.borderRadius="12px";
+    mem.value=o.memory||"";
+    mem.oninput=e=>{
+      o.memory=e.target.value;
+      autoSave();
+    };
+
+    // Delete
+    let del=document.createElement("button");
+    del.textContent="Delete";
+    del.className="btn ghost";
+    del.style.marginTop="10px";
+    del.onclick=()=>{
+      items.splice(i,1);
+      autoSave();
+      render();
+      
+    };
+
+    d.append(el, inp, mem, del);
+    mediaGrid.appendChild(d);
+  });
+}
+
+
+/* uploads */
+function uploadLocal(e){
+ let f=e.target.files[0];
+ if(!f) return;
+ let r=new FileReader();
+ r.onload=x=>{
+  let t = f.type.startsWith("video") ? "video" : "image";
+  items.push({url: x.target.result,type: t,caption: "",memory: ""});
+  autoSave();
+ render(); 
+};
+ r.readAsDataURL(f);
+}
+
+/* messages */
+function loadMessages(){
+ let txt=localStorage.getItem(MSG_KEY)||"";
+ allMessagesBox.innerHTML="";
+ if(!txt.trim()){ allMessagesBox.innerText="(No messages yet)"; return; }
+ txt.split("\n---\n").forEach((m,i)=>{
+   let d=document.createElement("div");
+   d.className="singleMessage";
+   d.innerHTML=`<div>${m}</div>
+   <div class="msgBtns">
+     <button onclick="editMsg(${i})">✏️</button>
+     <button onclick="deleteMsg(${i})">🗑️</button>
+   </div>`;
+   allMessagesBox.appendChild(d);
+ });
+}
+
+msgOpenBtn.onclick=()=>msgPopup.style.display="flex";
+msgSaveBtn.onclick=()=>{
+ let m=msgInput.value.trim(); if(!m) return;
+ let old=localStorage.getItem(MSG_KEY)||"";
+ localStorage.setItem(MSG_KEY, old?old+"\n---\n"+m:m);
+ msgInput.value="";
+ msgPopup.style.display="none";
+ loadMessages();
+};
+
+msgPopup.onclick=e=>{ if(e.target===msgPopup) msgPopup.style.display="none"; };
+
+function deleteMsg(i){
+ let a=(localStorage.getItem(MSG_KEY)||"").split("\n---\n");
+ a.splice(i,1);
+ localStorage.setItem(MSG_KEY,a.join("\n---\n"));
+ loadMessages();
+}
+function editMsg(i){
+ let a=(localStorage.getItem(MSG_KEY)||"").split("\n---\n");
+ let u=prompt("Edit message",a[i]);
+ if(u){ a[i]=u.trim(); localStorage.setItem(MSG_KEY,a.join("\n---\n")); loadMessages(); }
+}
+
+/* music */
+let previewAudio=null;
+bgMusicSelect.value=localStorage.getItem(MUSIC_KEY)||"";
+
+function playMusicPreview(){
+ if(!bgMusicSelect.value) return;
+ stopMusicPreview();
+ previewAudio=new Audio(bgMusicSelect.value);
+ previewAudio.volume=.6;
+ previewAudio.play();
+}
+function stopMusicPreview(){
+ if(previewAudio){ previewAudio.pause(); previewAudio=null; }
+}
+function saveBgMusic(){
+ localStorage.setItem(MUSIC_KEY,bgMusicSelect.value||"");
+ musicSavedMsg.style.display="block";
+ setTimeout(()=>musicSavedMsg.style.display="none",1500);
+}
+
+function savePass(){
+ localStorage.setItem("viewerPassword_candle",newPass.value);
+ passSaved.style.display="block";
+ setTimeout(()=>passSaved.style.display="none",1500);
+}
+function saveHint(){
+  localStorage.setItem("viewerPassword_hint", passHint.value);
+
+  hintSaved.style.display="block";
+  setTimeout(()=>hintSaved.style.display="none",1500);
+}
+
+function saveMessages(){
+ alert("Messages saved ✨");
+}
+
+function openWidget(type){
+ cloudinary.openUploadWidget({
+  cloudName:"di8n4lsjz",
+  uploadPreset:"candlelight_moments",
+  folder:"candlelight_moments",
+  resourceType:type,
+  multiple:true
+ },(e,r)=>{
+  if(!e && r && r.event==="success"){
+    items.push({
+      url:r.info.secure_url,
+      type:r.info.resource_type,
+      caption:"",
+      memory: ""
+    });
+     autoSave();
+  render();}
+ });
+}
+
+loadMessages();
+render();
+</script>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

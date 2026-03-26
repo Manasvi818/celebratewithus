@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blush Love Viewer 💌</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+
+<style>
+:root {
+    --grad-start: #FF8FAB;
+  --grad-end: #FFB7A5;
+  --text-main: #b34b6a;
+--text-soft: #ff5c8a;
+--card-bg: rgba(255,255,255,0.85);
+--text-dark: #7a233e;
+--text-light: #ffffff;
+--message-text: var(--text-main);
+
+}
+
+@keyframes pop {
+  from { transform: scale(0.85); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+  transition: background 0.6s ease;
+}
+.cursive-heading{
+  font-family: "Great Vibes", cursive !important;
+  font-size: 52px;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.img-msg {
+  margin: 12px auto 8px;
+  display: block;
+  background: #FF8FAB;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.img-msg:hover {
+  background: #FF5C8A;
+  transform: scale(1.05);
+}
+
+/* HERO */
+.hero {
+  background: transparent;
+  min-height: 38vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+  padding: 20px;
+}
+
+.hero p {
+  margin-top: 8px;
+  color: #777;
+}
+
+.title {
+  font-family: 'Playfair Display', serif;
+  font-size: 7rem;
+  font-weight: 600;
+   color: var(--text-main);
+  margin-top: 0;
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+  text-shadow: 0 6px 20px rgba(255,92,138,0.35);
+}
+
+.subtitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--text-main);
+  line-height: 1.3;
+   margin: 6px 0 8px;
+   max-width: 700px;
+  text-align: center;
+  white-space: normal;
+}
+
+/* ROMANTIC BUTTONS */
+.buttons {
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.love-btn {
+  background: var(--strawberry);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 40px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+  position: relative;
+}
+
+.love-send-btn {
+  margin-top: 18px;
+  background: linear-gradient(135deg, #ff8fab, #ff5c8a);
+  color: white;
+  border: none;
+  padding: 14px 38px;
+  border-radius: 40px;
+  font-size: 16px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  box-shadow: 0 12px 25px rgba(255, 92, 138, 0.45);
+  transition: 0.35s ease;
+}
+
+.love-send-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 16px 30px rgba(255, 92, 138, 0.6);
+}
+
+.love-send-btn:active {
+  transform: scale(0.97);
+}
+
+
+.love-btn::after {
+  content: "💌";
+  margin-left: 8px;
+}
+
+.love-btn:hover {
+  transform: scale(1.05);
+  background: var(--bubblegum);
+}
+
+/* GALLERY */
+.gallery {
+  padding: 25px 20px;
+  max-width: 1100px;
+  margin: auto;
+  padding-top: 10x;
+  margin-top: -25px;
+}
+
+.gallery h2 {
+  text-align: center;
+  color: var(--text-main);
+   margin-top: 0;
+  margin-bottom: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.card.video {
+  grid-column: span 2;
+}
+
+@media (max-width: 650px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+.card {
+   background: var(--card-bg);
+  backdrop-filter: blur(6px);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  cursor: pointer;
+}
+
+.card img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  transition: 0.4s;
+}
+
+.card:hover img {
+  transform: scale(1.08);
+}
+
+.caption {
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+#confetti-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2147483647; /* max browser z-index */
+}
+
+.confetti {
+  position: absolute;
+  width: 12px;
+  height: 18px;
+  top: -20px;
+  background: var(--c);
+  
+  border-radius: 4px;
+
+  animation: fall 4s linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* MESSAGE SECTION */
+.message-box {
+   background: transparent;
+   color: var(--text-main);
+   text-align: center;
+  margin-top: 30px;
+
+}
+
+.message-box h3 {
+  color: var(--text-main);
+  margin-bottom: 15px;
+}
+
+.pink-msg-box{
+  background: #ffd6e8;
+  border-radius: 22px;
+
+  width: min(96%, 1200px);   /* stretches, but keeps border space */
+  margin: 0 auto 20px;
+
+  padding: 26px 30px;
+  font-size: 16px;
+  color: var(--message-text);
+  line-height: 1.7;
+
+  box-shadow: 0 10px 25px rgba(255, 140, 180, 0.35);
+  animation: pop 0.35s ease;
+}
+
+textarea {
+  width: 90%;
+  max-width: 500px;
+  height: 120px;
+  border-radius: 16px;
+  border: none;
+  padding: 15px;
+  outline: none;
+  font-size: 14px;
+}
+
+.send-btn {
+  margin-top: 15px;
+  background: var(--bubblegum);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+/* NIGHT MODE */
+.night {
+  background: var(--night-bg);
+  color: var(--moon-glow);
+}
+
+.night .hero {
+  background: linear-gradient(180deg, #3a1220, #2b0f1a);
+}
+
+.night .card {
+  background: #3a1220;
+}
+
+.img-msg {
+  transition: 0.3s ease;
+}
+
+.theme-btn{
+  display:block;
+  width:100%;
+  margin:8px 0;
+  padding:10px;
+  border:none;
+  border-radius:18px;
+  background:#ffe3ef;
+  cursor:pointer;
+  font-size:14px;
+  transition:0.25s;
+}
+
+.theme-btn:hover{
+  background:#ffb7d1;
+  transform:scale(1.03);
+}
+
+.toggle {
+  background: #ff8fab;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+  min-width: 120px;
+}
+
+.toggle:hover {
+  transform: scale(1.05);
+  background: #ff5c8a;
+}
+
+.card video {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.site-footer{
+  text-align:center;
+  padding:20px;
+  margin-top:50px;
+  font-size:13px;
+  color:#b34b6a;
+  opacity:0.8;
+}
+</style>
+</head>
+
+<body>
+  <!-- PASSWORD LOCK -->
+<div id="passwordOverlay" style="
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,#ff8fab,#ffb7a5);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:99999;
+  font-family:'Playfair Display';
+">
+
+  <h1 style="
+    font-size:46px;
+    color:white;
+    margin-bottom:10px;
+    text-shadow:0 6px 18px rgba(0,0,0,.25);
+  ">
+    Blush Love 💗
+  </h1>
+
+  <p style="color:white;margin-bottom:20px;">
+    Enter the secret password
+  </p>
+
+  <input
+    id="viewerPass"
+    type="password"
+    placeholder="Password"
+    style="
+      padding:14px;
+      width:240px;
+      border-radius:14px;
+      border:none;
+      outline:none;
+      font-size:16px;
+      text-align:center;
+    "
+  >
+
+  <button
+    onclick="unlockViewer()"
+    style="
+      margin-top:18px;
+      padding:12px 36px;
+      border:none;
+      border-radius:30px;
+      background:white;
+      color:#ff5c8a;
+      font-weight:600;
+      font-size:16px;
+      cursor:pointer;
+    "
+  >
+    Unlock 💌
+  </button>
+
+  <p id="wrongPass" style="
+    display:none;
+    color:#fff;
+    margin-top:12px;
+    background:rgba(255,0,0,.25);
+    padding:6px 16px;
+    border-radius:20px;
+  ">
+    Wrong password 💔
+  </p>
+
+</div>
+
+<div id="confetti-layer"></div>
+ <div style="position:fixed; top:20px; right:20px; display:flex; flex-direction:column; gap:10px; z-index:9999;">
+  
+  <div class="toggle" onclick="openTheme()">🎨 Theme</div>
+
+  <div class="toggle" onclick="toggleConfetti()">
+    🎉 Confetti: <span id="confettiState">OFF</span>
+  </div>
+
+  <div class="toggle" onclick="openMusic()">
+    🎵 Music
+  </div>
+
+</div>
+
+
+<!-- HERO -->
+<section class="hero">
+  <h1 class="title">Blush Love</h1>
+
+  <h2 class="subtitle">
+    Some feelings don’t need words.They just need a safe place to stay.
+  </h2>
+
+</section>
+
+<!-- GALLERY -->
+<section class="gallery">
+ <h2 class="cursive-heading">Moments that blush 🌸</h2>
+
+   <div class="grid"></div>
+</section>
+
+<!-- MESSAGE -->
+<section class="message-box">
+  <h3 class="cursive-heading">Leave a little feeling here 💌</h3>
+
+  <div class="pink-msg-box" id="viewerMessage">
+    A little message is waiting to be written 💗
+  </div>
+
+  <button class="love-send-btn" onclick="sendLove()">
+  💌 Send with love
+</button>
+
+</section>
+
+<!-- SWEET MESSAGE POPUP -->
+<div id="msgOverlay" style="
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999999;
+">
+  <div id="msgBox" style="
+    background:white;
+    padding:24px 28px;
+    border-radius:22px;
+    width:260px;
+    text-align:center;
+    font-family:'Playfair Display';
+    animation:pop 0.25s ease;
+  ">
+    <div id="msgText" style="
+      font-size:17px;
+      color:#b34b6a;
+      margin-bottom:18px;
+    ">
+      sweet message here
+    </div>
+
+    <button id="closeMsg" style="
+      background:#FF8FAB;
+      border:none;
+      border-radius:20px;
+      padding:8px 26px;
+      color:white;
+      font-size:14px;
+      cursor:pointer;
+    ">
+      Close
+    </button>
+
+  </div>
+</div>
+<div id="themePanel" style="
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+">
+
+  <div style="
+    background:white;
+    padding:24px;
+    border-radius:26px;
+    width:260px;
+    text-align:center;
+    animation:pop 0.25s ease;
+  ">
+
+  
+    <h3 style="color:#ff5c8a;margin-bottom:18px;">
+      Choose your vibe 💗
+    </h3>
+
+<button class="theme-btn" onclick="setTheme('#FF8FAB','#FFB7A5')">
+🍓 Soft Strawberry → 🍑 Peach
+</button>
+
+<button class="theme-btn" onclick="setTheme('#FF5C8A','#FFD6E8')">
+💕 Strong Pink → Baby
+</button>
+
+<button class="theme-btn" onclick="setTheme('#FF8FAB','#FFFDF9')">
+🌸 Strawberry → Vanilla
+</button>
+
+<button class="theme-btn" onclick="setTheme('#FFB7A5','#FFFDF9')">
+🍑 Peach → Vanilla
+</button>
+
+<button class="theme-btn" onclick="setTheme('#FF5C8A','#FFB7A5')">
+💗 Bold Love Blend
+</button>
+
+  </div>
+</div>
+ 
+<!-- CONFETTI PANEL -->
+<div id="confettiPanel" style="
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+">
+  <div style="
+    background:white;
+    padding:24px;
+    border-radius:26px;
+    width:260px;
+    text-align:center;
+    animation:pop 0.25s ease;
+  ">
+    <h3 style="color:#ff5c8a;margin-bottom:18px;">
+      Confetti intensity 🎉
+    </h3>
+
+    <button class="theme-btn" onclick="setConfetti(6)">💕 Low</button>
+    <button class="theme-btn" onclick="setConfetti(12)">💖 Medium</button>
+    <button class="theme-btn" onclick="setConfetti(24)">💥 Heavy</button>
+    
+    <div style="margin-top:20px;">
+      <h4 style="color:#b34b6a; margin-bottom:8px;">Confetti: <span id="panelConfettiState">OFF</span></h4>
+      <button class="theme-btn" onclick="togglePanelConfetti()">Toggle On/Off</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ZOOM MODAL -->
+<div id="zoomOverlay" style="
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.75);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:9999999;
+  padding:20px;
+">
+
+  <div style="
+    max-width:90vw;
+    max-height:75vh;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 20px 50px rgba(0,0,0,0.45);
+  " id="zoomMediaBox">
+  </div>
+
+  <div id="zoomCaption" style="
+    margin-top:16px;
+    max-width:90vw;
+    text-align:center;
+    color:white;
+    font-size:15px;
+    line-height:1.5;
+    font-family:'Poppins', sans-serif;
+  ">
+  </div>
+  
+</div>
+
+<script>
+  let confettiAmount =
+  parseInt(localStorage.getItem("blush_confetti")) || 12;
+
+
+  function openTheme(){
+  document.getElementById("themePanel").style.display = "flex";
+}
+
+function closeTheme(){
+  document.getElementById("themePanel").style.display = "none";
+}
+
+function setTheme(start, end) {
+  document.documentElement.style.setProperty("--grad-start", start);
+  document.documentElement.style.setProperty("--grad-end", end);
+
+  // auto matching text colors
+  document.documentElement.style.setProperty("--text-soft", start);
+  document.documentElement.style.setProperty("--text-main", end);
+
+  // DEFAULT → normal text
+  let messageColor = "var(--text-main)";
+
+  // 🍑 Peach → Vanilla
+  if (start === "#FFB7A5" && end === "#FFFDF9") {
+    messageColor = "#ff9f7f"; // peach
+  }
+
+  // 🌸 Strawberry → Vanilla
+  else if (start === "#FF8FAB" && end === "#FFFDF9") {
+    messageColor = "#b34b6a"; // rose pink
+  }
+
+   // 💕 Strong Pink → Baby  
+  else if (start === "#FF5C8A" && end === "#FFD6E8") {
+    messageColor = "#d14b73"; // strong rose pink
+  }
+
+  document.documentElement.style.setProperty(
+    "--message-text",
+    messageColor
+  );
+
+  localStorage.setItem("blush_grad_start", start);
+  localStorage.setItem("blush_grad_end", end);
+
+  closeTheme();
+}
+
+// load saved theme
+const savedTheme = localStorage.getItem("blush_theme");
+if(savedTheme){
+  document.documentElement.style.setProperty("--theme-bg", savedTheme);
+}
+
+let confettiInterval = null;
+let confettiOn = false;
+
+function startConfetti() {
+  if (confettiInterval) return;
+
+  const colors = [
+    "#ff8fab",
+    "#ff5c8a",
+    "#ffd6e8",
+    "#ffb7c5",
+    "#ffc0cb"
+  ];
+
+  confettiInterval = setInterval(() => {
+    for (let i = 0; i < confettiAmount; i++) {
+      const c = document.createElement("div");
+      c.className = "confetti";
+
+      c.style.left = Math.random() * 100 + "vw";
+      c.style.setProperty(
+        "--c",
+        colors[Math.floor(Math.random() * colors.length)]
+      );
+
+      c.style.animationDuration =
+        3 + Math.random() * 3 + "s";
+
+      document.getElementById("confetti-layer").appendChild(c);
+
+      setTimeout(() => c.remove(), 7000);
+    }
+  }, 450);
+}
+
+function stopConfetti() {
+  clearInterval(confettiInterval);
+  confettiInterval = null;
+}
+
+function toggleConfetti() {
+  confettiOn = !confettiOn;
+
+  const label = document.getElementById("confettiState");
+
+  if (confettiOn) {
+    label.innerText = "ON";
+    startConfetti();
+  } else {
+    label.innerText = "OFF";
+    stopConfetti();
+  }
+}
+function togglePanelConfetti() {
+  confettiOn = !confettiOn;
+  document.getElementById('panelConfettiState').innerText = confettiOn ? "ON" : "OFF";
+  document.getElementById('confettiState').innerText = confettiOn ? "ON" : "OFF";
+
+  if (confettiOn) {
+    startConfetti();
+  } else {
+    stopConfetti();
+  }
+}
+
+  function sendLove() {
+  launchConfettiOnce();
+}
+
+function launchConfettiOnce() {
+  startConfetti();
+  setTimeout(stopConfetti, 3500);
+}
+
+
+function toggleNight() {
+  document.body.classList.toggle("night");
+}
+
+const cuteMessages = [
+  "You are the star of every moment 💫",
+  "Friendship like ours = lifetime subscription ❤️",
+  "This smile deserves its own fanbase 😍",
+  "Warning: Cuteness overload detected 💖",
+  "Your vibe is goals ✨",
+  "Memories like this = heart wallpaper 💘",
+  "Smile! The universe is taking notes 🌙",
+  "You light up every frame like magic ✨",
+  "Someday we'll miss these days the most 🥹",
+  "Time will pass… but this memory stays forever 📸",
+  "If happiness had a picture — this is it 🧡",
+  "A moment frozen. A feeling forever ❣️",
+  "Yes, they should cast us in a movie 🎬",
+  "Too cute. Please calm down 😭💖",
+  "If I had a dollar for every good moment like this… I'd be rich 💸",
+  "Freeze. Frame. Feel. — Memory captured 📷",
+  "Time moves, but this moment stays 🕰️",
+  "One day this photo will make us cry a happy tear 💧",
+  "We’re living the stories future us will miss 🥹",
+  "This picture = a chapter worth rereading 📚",
+  "Life won’t always feel like this… that’s why it’s precious 🌙🤍",
+  "We’ll grow, we’ll change — but this stays 🧡",
+  "Your smile is my new favorite aesthetic ✨",
+  "Pretty moments look even prettier because of you 💘",
+  "Your energy feels like sunshine ☀️",
+  "You're the softest chapter in my story 📖🤍",
+  "Beauty? You redefine it effortlessly 💋",
+  "You + this moment = art 🎨",
+  "You glow differently when you're happy ✨",
+  "No filter in the world can match your vibe 🌸",
+  "Honestly? You're magic nobody can explain 🪄",
+  "Pinterest wishes it had pictures like this 🌙✨"
+];
+
+const msgOverlay = document.getElementById("msgOverlay");
+const msgText = document.getElementById("msgText");
+const closeMsg = document.getElementById("closeMsg");
+
+function changeMessage() {
+  msgText.innerText =
+    cuteMessages[Math.floor(Math.random() * cuteMessages.length)];
+  msgOverlay.style.display = "flex";
+}
+
+closeMsg.onclick = () => {
+  msgOverlay.style.display = "none";
+};
+
+const mediaList =
+  JSON.parse(localStorage.getItem("blush_photos_v1")) || [];
+
+const grid = document.querySelector(".grid");
+
+mediaList.forEach(x => {
+
+  if (x.type === "image" || x.type === "video") {
+
+
+    const card = document.createElement("div");
+card.className = x.type === "video" ? "card video" : "card";
+
+card.innerHTML = `
+  ${x.type === "video"
+    ? `<video src="${x.url}" controls onclick="event.stopPropagation()"></video>`
+    : `<img src="${x.url}">`
+  }
+
+  <button class="img-msg" onclick="event.stopPropagation(); changeMessage()">
+    tap gently 💗
+  </button>
+
+  <div class="caption">
+    ${x.caption || ""}
+  </div>
+`;
+card.addEventListener("click", () => {
+  openZoom(x.type, x.url, x.caption);
+});
+
+
+    grid.appendChild(card);
+  }
+});
+
+const allMessages =
+  localStorage.getItem("blush_messages") || "";
+
+const viewerBox = document.getElementById("viewerMessage");
+
+if (allMessages.trim() === "") {
+  viewerBox.innerText = "A little message is waiting to be written ";
+} else {
+  const list = allMessages.split("\n---\n");
+
+  viewerBox.innerHTML = "";
+
+  list.forEach(msg => {
+    const p = document.createElement("div");
+    p.style.marginBottom = "12px";
+    p.style.padding = "10px 14px";
+    p.style.borderRadius = "14px";
+    p.style.background = "rgba(255,255,255,0.6)";
+    p.style.boxShadow = "0 6px 16px rgba(255,120,160,0.25)";
+    p.style.animation = "pop 0.3s ease";
+
+    p.innerText = msg;
+
+    viewerBox.appendChild(p);
+  });
+}
+
+
+const savedStart = localStorage.getItem("blush_grad_start");
+const savedEnd = localStorage.getItem("blush_grad_end");
+
+if (savedStart && savedEnd) {
+  document.documentElement.style.setProperty("--grad-start", savedStart);
+  document.documentElement.style.setProperty("--grad-end", savedEnd);
+}
+
+function openConfetti() {
+  document.getElementById("panelConfettiState").innerText = confettiOn ? "ON" : "OFF";
+  document.getElementById("confettiPanel").style.display = "flex";
+}
+
+
+function closeConfetti(){
+  document.getElementById("confettiPanel").style.display = "none";
+}
+
+function setConfetti(amount){
+  confettiAmount = amount;
+  localStorage.setItem("blush_confetti", amount);
+  closeConfetti();
+}
+
+/* ===============================
+   PASSWORD SYSTEM — BLUSH LOVE
+================================ */
+
+const VIEWER_PASS =
+  localStorage.getItem("viewerPassword_blushLove") || "love";
+
+function unlockViewer() {
+  const input = document.getElementById("viewerPass").value;
+
+  if (input === VIEWER_PASS) {
+    document.getElementById("passwordOverlay").style.display = "none";
+
+    // auto play background music if saved
+    const savedMusic =
+      localStorage.getItem("blush_bg_music");
+
+    if (savedMusic) {
+  bgAudio = new Audio(savedMusic);
+  bgAudio.loop = true;
+  bgAudio.volume = 0.6;
+  bgAudio.play();
+  isPlaying = true;
+  document.getElementById("musicBtn").innerText = "⏸ Pause Music";
+}
+
+  } else {
+    document.getElementById("wrongPass").style.display = "block";
+  }
+}
+
+/* ===============================
+   MUSIC SYSTEM — BLUSH LOVE
+================================ */
+
+let bgAudio = null;
+let isPlaying = false;
+
+function openMusic(){
+  document.getElementById("musicPanel").style.display = "flex";
+}
+
+function closeMusic(){
+  document.getElementById("musicPanel").style.display = "none";
+}
+
+function toggleMusic(){
+  const song = localStorage.getItem("blush_bg_music");
+
+  if(!song){
+    alert("No music selected 💗");
+    return;
+  }
+
+ if (bgAudio && bgAudio.src !== song) {
+    bgAudio.pause();
+    bgAudio = null;
+    isPlaying = false;
+  }
+
+  if(!bgAudio){
+    bgAudio = new Audio(song);
+    bgAudio.loop = true;
+    bgAudio.volume = 0.6;
+  }
+
+  if(isPlaying){
+    bgAudio.pause();
+    document.getElementById("musicBtn").innerText = "▶ Play Music";
+  }else{
+    bgAudio.play();
+    document.getElementById("musicBtn").innerText = "⏸ Pause Music";
+  }
+
+  isPlaying = !isPlaying;
+}
+
+const zoomOverlay = document.getElementById("zoomOverlay");
+const zoomMediaBox = document.getElementById("zoomMediaBox");
+const zoomCaption = document.getElementById("zoomCaption");
+
+function openZoom(type, url, caption) {
+  zoomOverlay.style.display = "flex";
+
+  if (type === "video") {
+    zoomMediaBox.innerHTML = `
+      <video src="${url}" controls autoplay style="
+        width:90vw;
+        max-width:900px;
+        max-height:75vh;
+        object-fit:contain;
+        background:black;
+      "></video>
+    `;
+  } else {
+    zoomMediaBox.innerHTML = `
+      <img src="${url}" style="
+        width:90vw;
+        max-width:900px;
+        max-height:75vh;
+        object-fit:contain;
+        display:block;
+      ">
+    `;
+  }
+
+  zoomCaption.innerText = caption || "";
+}
+
+function closeZoom() {
+  zoomOverlay.style.display = "none";
+  zoomMediaBox.innerHTML = "";
+  zoomCaption.innerText = "";
+}
+
+// close zoom when clicking outside media
+zoomOverlay.addEventListener("click", (e) => {
+  if (e.target === zoomOverlay) closeZoom();
+});
+
+document.getElementById("musicPanel").addEventListener("click", (e) => {
+  if (e.target.id === "musicPanel") {
+    closeMusic();
+  }
+});
+
+</script>
+<!-- MUSIC PANEL -->
+<div id="musicPanel" style="
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999999;
+">
+
+  <div style="
+    background:white;
+    padding:24px;
+    border-radius:26px;
+    width:260px;
+    text-align:center;
+    animation:pop 0.25s ease;
+  ">
+
+    <h3 style="color:#ff5c8a;margin-bottom:18px;">
+      Background Music 🎶
+    </h3>
+
+    <button id="musicBtn"
+      style="
+        width:100%;
+        padding:12px;
+        border:none;
+        border-radius:18px;
+        background:#ff8fab;
+        color:white;
+        font-size:15px;
+        cursor:pointer;
+      "
+      onclick="toggleMusic()">
+      ▶ Play Music
+    </button>
+
+<button
+  style="
+    margin-top:12px;
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:18px;
+    background:#ffd6e8;
+    color:#b34b6a;
+    font-size:14px;
+    cursor:pointer;
+  "
+  onclick="closeMusic()">
+  ❌ Close
+</button>
+  </div>
+</div>
+
+
+  
+
+</div>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

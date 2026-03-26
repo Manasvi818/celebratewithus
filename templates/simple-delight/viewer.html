@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Delight • Viewer</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+  :root{
+
+/* Backgrounds */
+--bg-main:#F6F1E6;
+--bg-card:#EFE7D8;
+--bg-panel:#E6DCCB;
+
+/* Text */
+--text:#5a3e2b;
+
+/* Accent colors */
+--accent:#E8742B;
+--accent-btn:#F08A3C;
+--accent-hover:#F5A65B;
+
+/* Confetti palette */
+--confetti-red:#E55B3C;
+--confetti-yellow:#F4C542;
+--confetti-blue:#6FB6C8;
+--confetti-mint:#7DB6A4;
+--confetti-peach:#F2A07C;
+
+/* Photo frames */
+--frame:#FFFFFF;
+--frame-border:#E5DDCF;
+--frame-shadow:#D9D2C4;
+
+}
+
+body{
+  margin:0;
+  font-family:"Quicksand",sans-serif;
+  background:#F6F1E6;
+}
+
+/* Simple Delight glow background */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,159,28,.25), transparent 60%),
+    radial-gradient(circle at 80% 30%, rgba(255,191,105,.25), transparent 60%),
+    radial-gradient(circle at 50% 85%, rgba(231,111,81,.15), transparent 60%);
+  z-index:-1;
+}
+
+.page{
+  max-width:1100px;
+  margin:auto;
+  padding:30px 20px 80px;
+}
+
+header{
+  margin-top:30px;
+  background:var(--bg-card);
+  backdrop-filter:blur(10px);
+  padding:30px;
+  border-radius:28px;
+  text-align:center;
+  box-shadow:0 14px 32px rgba(0,0,0,.08);
+}
+
+header h1{
+  font-family:"Baloo 2",cursive;
+  font-size:56px;
+  margin:0;
+  color:var(--accent);
+}
+
+header p{
+  margin-top:0;
+  opacity:.8;
+}
+
+section{
+  margin-top:30px;
+  background:var(--bg-panel);
+  padding:25px;
+  border-radius:28px;
+  box-shadow:0 14px 32px rgba(0,0,0,.08);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+
+.polaroid{
+  background:var(--frame);
+  border-radius:18px;
+  padding:14px;
+  text-align:center;
+  border:2px solid var(--frame-border);
+  box-shadow:0 8px 16px var(--frame-shadow);
+  transition:.3s ease;
+}
+
+.polaroid:hover{
+  transform:translateY(-8px);
+}
+
+.polaroid img,
+.polaroid video{
+  width:100%;
+  border-radius:14px;
+}
+
+.caption{
+  margin-top:10px;
+  font-size:.85rem;
+  opacity:.8;
+}
+
+section h3{
+  font-family: 'Great Vibes', cursive;
+  font-size: 40px;
+  font-weight: normal;
+  letter-spacing: 1px;
+  color: #b45309;
+  text-align: center;
+  text-shadow: 0 6px 18px rgba(255,180,120,0.4);
+}
+
+/* 🌈 SKY STATES */
+body.sunrise { background:linear-gradient(180deg,#fff6cc,#ffe7c7); }
+body.morning { background:linear-gradient(180deg,#fff3a8,#ffd27d); }
+body.golden  { background:linear-gradient(180deg,#ffd6a5,#ffb4a2); }
+body.sunset  { background:linear-gradient(180deg,#ffc6ff,#ff99c8); }
+
+/* ☀️ Floating Sun Rays */
+.sun-rays{
+  position:fixed;
+  top:-120px;
+  left:50%;
+  width:600px;
+  height:600px;
+  transform:translateX(-50%);
+  background:radial-gradient(circle,rgba(255,200,80,.4),transparent 60%);
+  animation:rotateSun 30s linear infinite;
+  pointer-events:none;
+  z-index:-1;
+}
+@keyframes rotateSun{
+  from{ transform:translateX(-50%) rotate(0deg); }
+  to{ transform:translateX(-50%) rotate(360deg); }
+}
+
+/* LOCK SCREEN */
+#lockScreen{
+  position:fixed;
+  inset:0;
+  background:var(--bg-main);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+/* lock card */
+.lockBox{
+  background:var(--bg-panel);
+  padding:34px;
+  border-radius:28px;
+  text-align:center;
+  width:320px;
+  box-shadow:0 20px 40px rgba(0,0,0,.12);
+}
+
+/* title */
+.lockBox h2{
+  font-family:"Baloo 2";
+  color:var(--accent);
+}
+
+/* password field */
+.lockBox input{
+  width:100%;
+  padding:12px;
+  border-radius:999px;
+  border:2px solid var(--accent-hover);
+  margin-top:12px;
+  background:#ffffff;
+  outline:none;
+  font-family:"Quicksand";
+}
+
+/* unlock button */
+.lockBox button{
+  margin-top:14px;
+  padding:10px 20px;
+  border-radius:999px;
+  border:none;
+  background:linear-gradient(135deg,var(--accent-btn),var(--accent-hover));
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.2s ease;
+}
+
+.lockBox button:hover{
+  transform:scale(1.05);
+}
+
+.balloon{
+  position:absolute;
+  width:60px;
+  height:85px;
+  border-radius:50% 50% 45% 45%;
+  animation:floatBalloon 5s ease-in-out infinite;
+  cursor:pointer;
+}
+.balloon::after{
+  content:"";
+  position:absolute;
+  top:85px;
+  left:50%;
+  width:2px;
+  height:40px;
+  background:rgba(120,90,70,.5);
+  transform:translateX(-50%);
+}
+
+@keyframes floatBalloon{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-30px); }
+}
+
+.confetti{
+  position:fixed;
+  width:8px;
+  height:8px;
+  background:red;
+  animation:confettiFall 1.2s ease forwards;
+  z-index:99999;
+}
+@keyframes confettiFall{
+  to{
+    transform:translateY(200px) rotate(360deg);
+    opacity:0;
+  }
+}
+
+.trail{
+  position:fixed;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  pointer-events:none;
+  animation:trailFade .6s ease forwards;
+  box-shadow:0 0 10px rgba(255,180,100,0.5);
+  z-index:99999;
+}
+
+@keyframes trailFade{
+  to{
+    opacity:0;
+    transform:scale(0.2);
+  }
+}
+
+/* MUSIC BUTTON */
+#musicToggle{
+  position:fixed;
+  top:16px;
+  right:16px;
+  z-index:999;
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  border:none;
+  background:linear-gradient(135deg,var(--accent-btn),var(--accent-hover));
+  cursor:pointer;
+  font-size:18px;
+}
+
+
+/* LIGHTBOX */
+.lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s ease;
+}
+.lightbox.open{
+  opacity:1;
+  pointer-events:all;
+
+}
+.lightbox-inner{
+  background:white;
+  padding:20px;
+  border-radius:22px;
+  max-width:80%;
+}
+.lightbox img{
+  max-width:100%;
+  border-radius:16px;
+}
+
+.timeline-card{
+  margin-top:30px;
+  background:rgba(255,255,255,.6);
+  padding:25px;
+  border-radius:28px;
+  box-shadow:0 14px 32px rgba(0,0,0,.08);
+}
+
+.timeline-track{
+  height:8px;
+  border-radius:999px;
+  background:linear-gradient(
+    90deg,
+    #F4C542,
+    #F08A3C,
+    #F5A65B
+  );
+}
+
+.timeline-indicator{
+  position:absolute;
+  top:50%;
+  left:0%;
+  transform:translate(-50%,-50%);
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:radial-gradient(circle,#fff,#F2C94C,#D4A017);
+  box-shadow:0 0 25px rgba(242,201,76,.9);
+  transition:0.6s cubic-bezier(.4,0,.2,1);
+}
+
+.timeline-items{
+  display:flex;
+  justify-content:space-between;
+  margin-top:20px;
+}
+
+.timeline-item{
+  cursor:pointer;
+  font-size:14px;
+  opacity:.6;
+  transition:.3s ease;
+}
+
+.timeline-item.active{
+  opacity:1;
+  font-weight:bold;
+  color:var(--gold);
+}
+
+.videoBox{
+  width:100%;
+  margin-bottom:20px;
+}
+
+.videoBox video{
+  width:100%;
+  aspect-ratio:16/9;
+  border-radius:18px;
+  object-fit:cover;
+}
+
+.site-footer{
+  text-align:center;
+  margin-top:40px;
+  padding:18px;
+  font-size:14px;
+  color:#5a3e2b;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOCK -->
+<div id="lockScreen">
+  <div class="lockBox">
+    <h2 style="font-family:'Baloo 2';color:#e76f51;">Simple Delight</h2>
+    <p>Enter password to unlock ☀️</p>
+    <input id="passInput" type="password" placeholder="Password">
+    <button onclick="checkPassword()">Unlock</button>
+  </div>
+</div>
+
+<button id="musicToggle">▶️</button>
+<audio id="bgMusic" loop></audio>
+
+<div id="viewerPage" style="display:none;">
+<div class="page">
+
+<header>
+  <h1>Simple Delight</h1>
+  <p>Confetti of happy memories.</p>
+</header>
+
+<section>
+  <h3>Petals & Pixels</h3>
+  <div id="videoContainer"></div>
+<div id="gallery" class="grid"></div>
+</section>
+
+<section class="timeline-card" id="timelineSection">
+  <h3>
+Journey of Joy
+</h3>
+  <div class="timeline-track-wrap">
+    <div class="timeline-track">
+      <div class="timeline-indicator" id="timelineDot"></div>
+    </div>
+  </div>
+
+  <div class="timeline-items" id="timelineItems"></div>
+</section>
+
+<section>
+  <h3> Floating Joy Balloons</h3>
+  <div id="balloonsArea" style="position:relative;
+  height:120px;
+  margin-top:-10px;">
+  </div>
+</section>
+
+<section>
+  <h3>Whispered Smiles</h3>
+  <div id="messages"></div>
+</section>
+
+</div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-inner">
+    <img id="lightboxImg">
+    <p id="lightboxCap"></p>
+  </div>
+</div>
+
+<script>
+const MEDIA_KEY="simple_media";
+const MSG_KEY="simple_messages";
+const MUSIC_KEY="simple_music";
+const PASS_KEY="viewerPassword_simpledelight";
+const musicToggle = document.getElementById("musicToggle");
+const mediaGrid = document.getElementById("mediaGrid");
+let isPlaying=false;
+
+/* PASSWORD */
+function checkPassword(){
+  const saved=localStorage.getItem(PASS_KEY);
+  const entered=document.getElementById("passInput").value.trim();
+
+  if(!saved){ alert("Password not set in editor."); return; }
+  if(entered!==saved){ alert("Wrong password ❌"); return; }
+
+  document.getElementById("lockScreen").style.display="none";
+  document.getElementById("viewerPage").style.display="block";
+
+  loadGallery();
+  loadMessages();
+  loadMusic();
+}
+
+/* GALLERY */
+function loadGallery(){
+  const items = JSON.parse(localStorage.getItem(MEDIA_KEY) || "[]");
+
+  const videoContainer = document.getElementById("videoContainer");
+  const gallery = document.getElementById("gallery");
+
+  videoContainer.innerHTML = "";
+  gallery.innerHTML = "";
+
+  if(!items.length){
+    gallery.innerHTML = "<p>No memories yet 🌼</p>";
+    return;
+  }
+
+  // 🎥 VIDEOS (FULL ROW)
+  items.forEach(item=>{
+    if(item.type === "video"){
+      videoContainer.innerHTML += `
+        <div class="videoBox">
+          <video src="${item.url}" controls></video>
+          <div class="caption">${item.caption || ""}</div>
+        </div>
+      `;
+    }
+  });
+
+  // 🖼 IMAGES (2 PER ROW)
+  items.forEach(item=>{
+    if(item.type === "image"){
+      const card = document.createElement("div");
+      card.className = "polaroid";
+
+      card.innerHTML = `
+        <img src="${item.url}">
+        <div class="caption">${item.caption || ""}</div>
+      `;
+
+      gallery.appendChild(card);
+    }
+  });
+}
+
+lightbox.onclick=()=>lightbox.classList.remove("open");
+
+/* MESSAGES */
+function loadMessages(){
+  const raw=localStorage.getItem(MSG_KEY);
+  const box=document.getElementById("messages");
+box.innerHTML = "";   // ✅ IMPORTANT
+  if(!raw){
+    box.innerHTML="<p>No messages yet 💛</p>";
+    return;
+  }
+
+  raw.split("\n---\n").forEach(msg=>{
+    const div=document.createElement("div");
+    div.style.background="#fff3d6";
+    div.style.padding="12px";
+    div.style.borderRadius="16px";
+    div.style.marginBottom="10px";
+    div.textContent=msg;
+    box.appendChild(div);
+  });
+}
+
+/* MUSIC */
+function loadMusic(){
+  const url=localStorage.getItem(MUSIC_KEY);
+  const audio=document.getElementById("bgMusic");
+  if(url){
+    audio.src=url;
+    audio.volume=0.6;
+    audio.play();
+    musicToggle.textContent="⏸";
+    isPlaying=true;
+  }
+}
+
+musicToggle.onclick=()=>{
+  const audio=document.getElementById("bgMusic");
+
+  if(!audio.src){
+    alert("No music selected in editor 🎵");
+    return;
+  }
+
+  if(audio.paused){
+    audio.play();
+    musicToggle.textContent="⏸";
+  }else{
+    audio.pause();
+    musicToggle.textContent="▶️";
+  }
+};
+
+/* 🌈 SKY AUTO TIME CHANGE */
+function setSkyByTime(){
+  const hour = new Date().getHours();
+  document.body.classList.remove("sunrise","morning","golden","sunset");
+
+  if(hour < 10) document.body.classList.add("sunrise");
+  else if(hour < 15) document.body.classList.add("morning");
+  else if(hour < 18) document.body.classList.add("golden");
+  else document.body.classList.add("sunset");
+}
+
+/* ☀️ Add Sun Rays */
+const sun = document.createElement("div");
+sun.className="sun-rays";
+document.body.appendChild(sun);
+
+/* 🎈 Spawn Balloons */
+function spawnBalloons(){
+  const area=document.getElementById("balloonsArea");
+  if(!area) return;
+
+  const colors=["#ffe08a","#ff9a9a","#ffccb3","#ffd6ff"];
+  for(let i=0;i<6;i++){
+    const b=document.createElement("div");
+    b.className="balloon";
+    b.style.left=(i*15+10)+"%";
+    b.style.bottom="20px";
+    b.style.background=colors[i%colors.length];
+    b.onclick=()=>b.remove();
+    area.appendChild(b);
+  }
+}
+
+/* ✨ Confetti Burst */
+function confettiBurst(){
+  const colors=["#E55B3C","#F4C542","#6FB6C8","#7DB6A4","#F2A07C"];
+  for(let i=0;i<80;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.top="0px";
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),1200);
+  }
+}
+
+/* ✨ Simple Delight Cursor Trail */
+
+const delightColors=[
+"#F08A3C",  // party orange
+"#F5A65B",  // soft glow
+"#F4C542",  // sunny yellow
+"#7DB6A4",  // mint
+"#F2A07C"   // peach
+];
+
+let trailIndex=0;
+
+document.addEventListener("mousemove",e=>{
+
+  const sparkle=document.createElement("div");
+  sparkle.className="trail";
+
+  sparkle.style.left=e.clientX+"px";
+  sparkle.style.top=e.clientY+"px";
+
+  sparkle.style.background=
+    delightColors[trailIndex % delightColors.length];
+
+  sparkle.style.width="8px";
+  sparkle.style.height="8px";
+  sparkle.style.borderRadius="50%";
+
+  trailIndex++;
+
+  document.body.appendChild(sparkle);
+
+  setTimeout(()=>sparkle.remove(),600);
+
+});
+
+/* 🔓 Enhance Unlock */
+const oldUnlock = checkPassword;
+checkPassword = function(){
+  oldUnlock();
+  if(document.getElementById("viewerPage").style.display==="block"){
+    setSkyByTime();
+    spawnBalloons();
+    confettiBurst();
+  }
+};
+const timelineStages = [
+  { label:"🌞 Morning Bless", pos:"0%", theme:"sunrise" },
+  { label:"🌼 Afternoon Heat", pos:"33%", theme:"morning" },
+  { label:"🍃 Evening Chill", pos:"66%", theme:"golden" },
+  { label:"🌙 Night", pos:"100%", theme:"sunset" }
+];
+
+const timelineItems = document.getElementById("timelineItems");
+const timelineDot = document.getElementById("timelineDot");
+const timelineTrack = document.querySelector(".timeline-track");
+
+timelineStages.forEach((stage,i)=>{
+  const div = document.createElement("div");
+  div.className = "timeline-item";
+  div.textContent = stage.label;
+
+  if(i===0) div.classList.add("active");
+
+  div.onclick = ()=>{
+  document.querySelectorAll(".timeline-item")
+    .forEach(el=>el.classList.remove("active"));
+
+  div.classList.add("active");
+
+  timelineDot.style.left = stage.pos;
+  confettiBurst();
+
+  applyTheme(stage.theme);   // ← this changes the background
+  updateTimelineColor(stage.theme);
+  
+};
+
+  timelineItems.appendChild(div);
+});
+
+function applyTheme(theme){
+  document.body.className = theme;
+}
+
+function updateTimelineColor(theme){
+
+  if(theme==="gold"){
+    timelineTrack.style.background =
+      "linear-gradient(90deg,#D4A017,#F2C94C)";
+  }
+
+  if(theme==="maroon"){
+    timelineTrack.style.background =
+      "linear-gradient(90deg,#7B1E2B,#8E2434)";
+  }
+
+  if(theme==="midnight"){
+    timelineTrack.style.background =
+      "linear-gradient(90deg,#F2C94C,#ffffff)";
+  }
+}
+
+</script>
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

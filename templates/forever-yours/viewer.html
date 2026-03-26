@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forever Yours 💜</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --lav1:#5f4b8b;
+  --lav2:#8a6ccf;
+  --lav3:#e6ddff;
+  --soft:#f3edff;
+  --card:rgba(255,255,255,.15);
+}
+
+*{box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+  margin:0;
+  background:linear-gradient(-45deg, var(--lav1), var(--lav2), var(--lav3), #cbb7ff);
+  background-size:400% 400%;
+  animation:gradientShift 35s ease infinite;
+  color:white;
+  overflow-x:hidden;
+}
+
+.single-message{
+  border:1px solid rgba(255,255,255,0.35);   /* thin soft white border */
+  border-radius:12px;
+  padding:15px 20px;
+  margin-bottom:15px;
+  background:rgba(255,255,255,0.08);
+}
+
+@keyframes gradientShift{
+  0%{
+    background-position:0% 50%;
+  }
+  50%{
+    background-position:100% 50%;
+  }
+  100%{
+    background-position:0% 50%;
+  }
+}
+.cursor-sparkle{
+  position:fixed;
+  pointer-events:none;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:radial-gradient(circle,#ffffff,#d8c9ff,#b18cff);
+  box-shadow:0 0 10px #d8c9ff,0 0 20px #b18cff;
+  animation:cursorFade 0.8s linear forwards;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes cursorFade{
+  to{
+    opacity:0;
+    transform:translateY(-15px) scale(.5);
+  }
+}
+/* LOCK SCREEN */
+#lockScreen{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,var(--lav1),var(--lav2));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+}
+
+.lockBox{
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(12px);
+  padding:30px;
+  border-radius:22px;
+  text-align:center;
+  width:300px;
+  box-shadow:0 0 40px rgba(0,0,0,.3);
+}
+
+.lockBox input{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:none;
+  margin-top:10px;
+}
+
+.lockBox button{
+  margin-top:14px;
+  padding:10px 20px;
+  border-radius:30px;
+  border:none;
+  background:#cbb7ff;
+  cursor:pointer;
+}
+
+/* HERO */
+.hero{
+  text-align:center;
+  padding:20px 20px 10px;  /* reduced bottom space */
+}
+
+.hero h1{
+  font-family:'Allura',cursive;
+  font-size:110px;          /* bigger title */
+  margin-bottom:8px;       /* less gap */
+}
+
+.hero p{
+  font-family:'Playfair Display';
+  opacity:.9;
+  font-size:20px;
+  margin-top:0;            /* remove extra spacing */
+}
+
+/* GALLERY */
+.gallery{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);   /* 2 columns */
+  gap:25px;
+  max-width:900px;
+  margin:auto;
+}
+
+.card{
+  background:var(--card);
+  backdrop-filter:blur(10px);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 15px 40px rgba(0,0,0,.3);
+}
+
+/* Video full row */
+.card.video-card{
+  grid-column: span 2;
+}
+
+.card.video-card video{
+  height:350px;   /* bigger for video */
+}
+
+.card img,
+.card video{
+  width:100%;
+  height:260px;
+  object-fit:cover;
+  cursor:pointer;
+}
+
+.caption{
+  padding:10px;
+  font-family:'Playfair Display';
+  text-align:center;
+}
+
+.section-title{
+  text-align:center;
+  font-family:'Allura', cursive;
+  font-size:55px;
+  margin:30px 0 20px;
+  color:#ffffff;
+  text-shadow:0 0 20px rgba(255,255,255,.3);
+}
+
+/* MESSAGE BOX */
+.message-box{
+  max-width:1100px;   /* wider */
+  width:90%;         /* responsive */
+  margin:60px auto;
+  padding:40px;
+  border-radius:25px;
+  background:rgba(255,255,255,.25);
+  backdrop-filter:blur(12px);
+  text-align:center;
+  font-family:'Playfair Display';
+  font-size:18px;
+  line-height:1.8;
+}
+
+/* TOP CONTROLS */
+#topControls{
+  position:fixed;
+  top:20px;
+  right:20px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  z-index:9999;
+}
+.controlBox{
+  background:linear-gradient(180deg,#ffcc66,#f4a623);
+  color:#3b1f00;
+  padding:14px 28px;
+  border-radius:50px;
+  cursor:pointer;
+  font-size:16px;
+  font-weight:600;
+  letter-spacing:.5px;
+  box-shadow:
+    0 10px 25px rgba(255,170,60,.45),
+    0 0 25px rgba(255,200,100,.35);
+  transition:.25s ease;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.controlBox:hover{
+  transform:scale(1.05);
+}
+
+.controlBox.active{
+  background:linear-gradient(180deg,#ffb347,#ff8c00);
+  box-shadow:
+    0 12px 30px rgba(255,140,0,.55),
+    0 0 30px rgba(255,180,60,.45);
+}
+
+/* SPARKLES */
+#sparkle-layer{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+
+.sparkle{
+  position:absolute;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:white;
+  animation:spark 4s linear forwards;
+}
+
+@keyframes spark{
+  from{transform:translateY(100vh);opacity:1;}
+  to{transform:translateY(-20vh);opacity:0;}
+}
+
+/* FLOATING WORDS */
+.loveWord{
+  position:fixed;
+  bottom:-30px;
+  font-family:'Playfair Display';
+  font-size:14px;
+  animation:floatWord 10s linear forwards;
+}
+
+@keyframes floatWord{
+  from{transform:translateY(0);opacity:0;}
+  10%{opacity:1;}
+  to{transform:translateY(-120vh);opacity:0;}
+}
+
+/* Message fade animation */
+.message-box{
+  transition: opacity .3s ease;
+}
+
+/* ZOOM MODAL */
+#zoomModal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999999;
+}
+
+#zoomModal img{
+  max-width:90%;
+  max-height:80%;
+  border-radius:18px;
+}
+
+.site-footer{
+  text-align:center;
+  padding:25px 10px;
+  margin-top:40px;
+  font-size:14px;
+  color:#f3edff;
+  opacity:0.8;
+  font-family:'Playfair Display';
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOCK -->
+<div id="lockScreen">
+  <div class="lockBox">
+    <h3>💜 Private Forever</h3>
+    <input id="passInput" type="password" placeholder="Enter password">
+    <button onclick="checkPassword()">Enter</button>
+    <p id="wrongPass" style="display:none;color:pink;">Wrong password</p>
+  </div>
+</div>
+
+<section class="hero">
+  <h1>Forever Yours</h1>
+  <p>Lavender dreams wrapped in eternal love 💜</p>
+</section>
+
+<section class="gallery">
+  <h2 class="section-title">Our Lavender Moments</h2>
+  <div class="grid"></div>
+</section>
+
+<section class="messages-section">
+  <h2 class="section-title">Love Notes</h2>
+  <div class="message-box" id="viewerMessage">
+    </div>
+
+<div id="topControls">
+  <div class="controlBox" id="musicToggle">🎶 Music</div>
+  <div class="controlBox" id="sparkleToggle">✨ Sparkles</div>
+</div>
+
+<div id="sparkle-layer"></div>
+
+<!-- ZOOM -->
+<div id="zoomModal" onclick="this.style.display='none'">
+  <img id="zoomImg">
+</div>
+<script>
+const STORAGE_KEY="forever_gallery";
+const MSG_KEY="forever_messages";
+
+function getSavedPass(){
+  return localStorage.getItem("viewerPassword_forever");
+}
+
+/* PASSWORD */
+function checkPassword(){
+
+  const savedPass = getSavedPass();
+
+  if(!savedPass){
+    wrongPass.innerText = "No password set. Please set it in editor page 💜";
+    wrongPass.style.display = "block";
+    return;
+  }
+
+  if(passInput.value === savedPass){
+    lockScreen.style.display="none";
+    startFloatingWords();
+    startSparkles();
+    startMusic();
+  }else{
+    wrongPass.innerText = "Wrong password 💜";
+    wrongPass.style.display="block";
+  }
+}
+
+/* LOAD DATA */
+const grid=document.querySelector(".grid");
+const viewerMessage=document.getElementById("viewerMessage");
+const sparkleLayer=document.getElementById("sparkle-layer");
+
+const items=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
+const messages=(localStorage.getItem(MSG_KEY)||"")
+  .split("\n---\n")
+  .filter(m=>m.trim()!=="");
+
+/* SHOW MESSAGE SECTION */
+if(messages.length>0){
+  viewerMessage.innerHTML = "";
+
+  messages.forEach(msg=>{
+    const div = document.createElement("div");
+    div.className = "single-message";
+    div.innerText = msg;
+    viewerMessage.appendChild(div);
+  });
+
+}else{
+  viewerMessage.innerText="A quiet feeling rests here 💜";
+}
+
+/* RENDER GALLERY */
+items.forEach((item,i)=>{
+  const card=document.createElement("div");
+card.className="card";
+
+if(item.type==="video"){
+  card.classList.add("video-card");  // ✅ full width
+}
+
+  let media;
+  if(item.type==="video"){
+    media=document.createElement("video");
+    media.src=item.url;
+    media.controls=true;
+  }else{
+    media=document.createElement("img");
+    media.src=item.url;
+  }
+
+  media.onclick=()=>{
+    if(item.type!=="video"){
+      zoomImg.src=item.url;
+      zoomModal.style.display="flex";
+    }
+
+    viewerMessage.style.opacity=0;
+
+    setTimeout(()=>{
+      viewerMessage.innerText =
+        item.memory || messages[i] || messages[0] || "A quiet feeling rests here 💜";
+      viewerMessage.style.opacity=1;
+    },200);
+  };
+
+  card.appendChild(media);
+
+  if(item.caption){
+    const cap=document.createElement("div");
+    cap.className="caption";
+    cap.innerText=item.caption;
+    card.appendChild(cap);
+  }
+
+  grid.appendChild(card);
+});
+
+/* LAVENDER SPARKLE CURSOR */
+let lastSparkleTime = 0;
+
+document.addEventListener("mousemove", (e) => {
+  const now = Date.now();
+
+  // limit sparkle creation for smoother effect
+  if (now - lastSparkleTime < 20) return;
+  lastSparkleTime = now;
+
+  const sparkle = document.createElement("div");
+  sparkle.className = "cursor-sparkle";
+
+  // use clientX/clientY for accurate positioning
+  sparkle.style.left = (e.clientX - 4) + "px";
+  sparkle.style.top  = (e.clientY - 4) + "px";
+
+  document.body.appendChild(sparkle);
+
+  setTimeout(() => sparkle.remove(), 800);
+});
+
+/* MUSIC */
+let audio=null;
+const savedMusic=localStorage.getItem("forever_music");
+
+function startMusic(){
+  if(!savedMusic) return;
+
+  audio=new Audio(savedMusic);
+  audio.loop=true;
+  audio.volume=0.6;
+
+  audio.play().then(()=>{
+    musicToggle.innerText="⏸ Music";
+    musicToggle.classList.add("active");
+  }).catch(()=>{});
+}
+
+musicToggle.onclick=()=>{
+  if(!audio) return;
+
+  if(audio.paused){
+    audio.play();
+    musicToggle.innerText="⏸ Music";
+    musicToggle.classList.add("active");
+  }else{
+    audio.pause();
+    musicToggle.innerText="🎶 Music";
+    musicToggle.classList.remove("active");
+  }
+};
+
+/* SPARKLES */
+let sparkleInterval=null;
+
+function startSparkles(){
+  sparkleInterval=setInterval(()=>{
+    const s=document.createElement("div");
+    s.className="sparkle";
+    s.style.left=Math.random()*100+"vw";
+    sparkleLayer.appendChild(s);
+    setTimeout(()=>s.remove(),4000);
+  },300);
+}
+
+sparkleToggle.onclick=()=>{
+  if(sparkleInterval){
+    clearInterval(sparkleInterval);
+    sparkleInterval=null;
+    sparkleToggle.innerText="✨ Sparkles";
+    sparkleToggle.classList.remove("active");
+  }else{
+    startSparkles();
+    sparkleToggle.innerText="✨ Sparkles ON";
+    sparkleToggle.classList.add("active");
+  }
+};
+
+/* FLOATING WORDS */
+const words=["forever","always you","lavender love","our quiet world","eternal","just us"];
+
+function startFloatingWords(){
+  setInterval(()=>{
+    const w=document.createElement("div");
+    w.className="loveWord";
+    w.innerText=words[Math.floor(Math.random()*words.length)];
+    w.style.left=Math.random()*90+"vw";
+    document.body.appendChild(w);
+    setTimeout(()=>w.remove(),10000);
+  },5000);
+}
+</script>
+
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

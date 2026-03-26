@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Golden Mandala — Viewer • CelebrateWithUs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#fff7df;
+  --bg2:#fff2c2;
+  --dark:#1a120b;
+  --card:#fffaf0;
+  --cardDark:#24180e;
+  --text:#6b3f1c;
+  --textDark:#ffe6b6;
+
+  --gold:#d79b2b;
+  --gold2:#ffcc66;
+  --shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+body{
+  margin:0;
+  font-family:system-ui, sans-serif;
+  background: radial-gradient(circle at top, var(--bg2), var(--bg));
+  color:var(--text);
+  transition:.35s ease;
+  overflow-x:hidden;
+}
+
+body.night{
+  background: radial-gradient(circle at top, #2b1a0c, #120a05);
+  color:var(--textDark);
+}
+
+/* ===== MANDALA BACKGROUND ===== */
+.bgMandala{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:.35;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(215,155,43,.18), transparent 55%),
+    radial-gradient(circle at 80% 20%, rgba(255,204,102,.12), transparent 55%),
+    radial-gradient(circle at 15% 85%, rgba(215,155,43,.12), transparent 55%),
+    radial-gradient(circle at 85% 80%, rgba(255,204,102,.10), transparent 55%);
+}
+
+.bgMandala::before,
+.bgMandala::after{
+  content:"";
+  position:absolute;
+  width:520px;
+  height:520px;
+  background:
+    radial-gradient(circle, rgba(215,155,43,.22), transparent 60%),
+    repeating-radial-gradient(circle,
+      rgba(215,155,43,.25) 0 2px,
+      transparent 2px 18px);
+  border-radius:50%;
+  filter:blur(.2px);
+  opacity:.35;
+}
+
+.bgMandala::before{
+  top:-180px;
+  left:-180px;
+}
+
+.bgMandala::after{
+  bottom:-190px;
+  right:-190px;
+}
+
+body.night .bgMandala{
+  opacity:.22;
+}
+
+/* ===== DECOR CANVAS ===== */
+#decorCanvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:1;
+}
+
+/* ===== PAGE WRAP ===== */
+.page{
+  max-width:1080px;
+  margin:auto;
+  padding:20px;
+  position:relative;
+  z-index:2;
+}
+
+/* ===== TOP BUTTONS ===== */
+.decorBtn{
+  position:fixed;
+  top:18px;
+  right:18px;
+  background:linear-gradient(135deg, var(--gold), #ffb84d);
+  border:none;
+  padding:10px 20px;
+  border-radius:999px;
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+  z-index:3000;
+  box-shadow:0 10px 25px rgba(215,155,43,.35);
+}
+
+.decorBtn:active{transform:scale(.98);}
+
+#musicOpenBtn{
+  top:64px;
+}
+
+/* ===== TITLE AREA ===== */
+.title-wrap{
+  position:relative;
+  z-index:200;
+  text-align:center;
+  margin-top:12px;
+  margin-bottom:18px;
+  padding:14px 12px 10px;
+}
+
+.title-wrap::before{
+  content:"";
+  position:absolute;
+  inset:-20px;
+  background:linear-gradient(
+    to bottom,
+    rgba(255,247,223,0.95),
+    rgba(255,247,223,0.85),
+    rgba(255,247,223,0)
+  );
+  z-index:-1;
+}
+
+body.night .title-wrap::before{
+  background:linear-gradient(
+    to bottom,
+    rgba(18,10,5,0.92),
+    rgba(18,10,5,0.78),
+    rgba(18,10,5,0)
+  );
+}
+
+.hero-title{
+  font-family:"Great Vibes", cursive;
+  font-size:78px;
+  margin:0;
+  letter-spacing:1px;
+  line-height:1.05;
+  color:var(--gold);
+  text-shadow:0 10px 22px rgba(0,0,0,.12);
+}
+
+body.night .hero-title{
+  color:#ffd48a;
+  text-shadow:0 14px 30px rgba(0,0,0,.55);
+}
+
+.subtitle{
+  font-family:"Great Vibes", cursive;
+  font-size:34px;
+  margin:6px 0 6px;
+  color:#7a4c1f;
+}
+
+body.night .subtitle{
+  color:#ffe2b4;
+}
+
+
+.mini-icons{
+  margin-top:6px;
+}
+
+.mini-icons span{
+  font-size: clamp(12px, 2.5vw, 18px);  /* ✅ auto resize */
+  margin: 0 clamp(2px, 0.8vw, 6px);
+  color:#d79b2b;
+}
+
+
+body.night .mini-icons span{
+  color:#ffd48a;
+}
+
+#videoContainer{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  margin-bottom:20px;
+}
+
+.site-footer{
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+  font-size:14px;
+  color:#6b3f1c;
+  opacity:.8;
+}
+/* ===== GRID ===== */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+@media(max-width:720px){
+  .grid{grid-template-columns:1fr;}
+  .hero-title{font-size:46px;}
+}
+
+/* ===== VIDEO ===== */
+.videoBox video{
+  width:100%;
+  border-radius:18px;
+  max-height:340px;
+  object-fit:cover;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+
+/* ===== PHOTO CARD ===== */
+.card{
+  background:rgba(255,250,240,.9);
+  border-radius:18px;
+  padding:10px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  border:1px solid rgba(215,155,43,.18);
+  backdrop-filter: blur(6px);
+}
+
+body.night .card{
+  background:rgba(36,24,14,.92);
+  border:1px solid rgba(255,204,102,.15);
+}
+
+.card img{
+  width:100%;
+  aspect-ratio:1/1;
+  border-radius:14px;
+  object-fit:cover;
+  cursor:pointer;
+}
+
+.photoCaption{
+  font-family:"Playfair Display";
+  font-size:15px;
+  margin:8px 0 6px;
+  color:#6b3f1c;
+}
+
+body.night .photoCaption{color:#ffe6b6;}
+
+.tapBtn{
+  margin:10px auto 6px;
+  display:block;
+  background:linear-gradient(135deg, var(--gold), #ffb84d);
+  border:none;
+  border-radius:999px;
+  padding:7px 18px;
+  font-size:13px;
+  color:white;
+  cursor:pointer;
+  font-family:"Playfair Display";
+  transition:.25s ease;
+  box-shadow:0 10px 20px rgba(215,155,43,.25);
+}
+
+.tapBtn:hover{transform:scale(1.05);}
+
+/* ===== MESSAGES ===== */
+.sectionTitle{
+  text-align:center;
+  margin-top:30px;
+  font-family:"Cinzel";
+  color:var(--gold);
+  letter-spacing:1px;
+}
+
+body.night .sectionTitle{
+  color:#ffd48a;
+}
+
+.stickyNote{
+  background:rgba(255,250,240,.9);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:12px;
+  font-family:"Playfair Display";
+  line-height:1.6;
+  box-shadow:var(--shadow);
+  border:1px solid rgba(215,155,43,.14);
+}
+
+body.night .stickyNote{
+  background:rgba(36,24,14,.92);
+  color:#ffe6b6;
+  border:1px solid rgba(255,204,102,.12);
+}
+
+/* ===== OVERLAYS ===== */
+#msgOverlay,
+#imgZoomOverlay,
+#decorOverlay,
+#musicOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+#msgBox,
+#decorCard,
+#musicCard{
+  background:white;
+  padding:18px;
+  border-radius:18px;
+  width:280px;
+  text-align:center;
+  font-family:"Playfair Display";
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
+}
+
+body.night #msgBox,
+body.night #decorCard,
+body.night #musicCard{
+  background:#24180e;
+  color:#ffe6b6;
+}
+
+.btnSmall{
+  background:linear-gradient(135deg, var(--gold), #ffb84d);
+  border:none;
+  border-radius:12px;
+  padding:9px 14px;
+  margin:6px 4px;
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.btnSmall:active{transform:scale(.98);}
+
+#msgText{
+  white-space:pre-line;
+  font-size:16px;
+}
+
+#closeMsg{
+  margin-top:12px;
+  width:100%;
+}
+
+/* ===== IMAGE ZOOM ===== */
+.imgZoomContent{
+  max-width:92%;
+  text-align:center;
+  animation:zoomIn .25s ease;
+}
+#zoomImg{
+  max-width:100%;
+  max-height:75vh;
+  border-radius:18px;
+}
+#zoomCaption{
+  margin-top:10px;
+  font-family:"Playfair Display";
+  color:#fff1d6;
+}
+
+@keyframes zoomIn{
+  from{transform:scale(.88);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+/* ===== PASSWORD ===== */
+#passwordOverlay{
+  position:fixed;
+  inset:0;
+  background: radial-gradient(circle at top, #ffe8a8, #fff3d5);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:99999;
+  font-family:"Playfair Display";
+  text-align:center;
+  padding:16px;
+}
+
+body.night #passwordOverlay{
+  background: radial-gradient(circle at top, #2b1a0c, #120a05);
+  color:#ffe6b6;
+}
+
+#passwordOverlay h2{
+  font-family:"Cinzel";
+  margin-bottom:10px;
+  color:var(--gold);
+  letter-spacing:1px;
+}
+
+#passwordOverlay input{
+  padding:12px;
+  width:240px;
+  border-radius:12px;
+  border:1px solid rgba(215,155,43,.6);
+  font-size:16px;
+  outline:none;
+}
+
+#passwordOverlay button{
+  margin-top:14px;
+  padding:10px 28px;
+  border:none;
+  border-radius:999px;
+  background:linear-gradient(135deg, var(--gold), #ffb84d);
+  color:white;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 12px 25px rgba(215,155,43,.25);
+}
+
+#wrongPass{
+  display:none;
+  color:#b30000;
+  margin-top:8px;
+  font-weight:700;
+}
+
+.site-footer{
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+  font-size:14px;
+  color:#6b3f1c;
+  opacity:.8;
+}
+</style>
+</head>
+
+<body>
+<div class="bgMandala"></div>
+<canvas id="decorCanvas"></canvas>
+
+<!-- PASSWORD -->
+<div id="passwordOverlay">
+  <h2>Enter Password</h2>
+  <p style="margin-top:0;opacity:.85;">Unlock your golden memories ✨</p>
+  <input id="pass" type="password" placeholder="Password">
+  <button onclick="unlock()">Unlock</button>
+  <p id="wrongPass">Incorrect password</p>
+</div>
+
+<button id="decorBtn" class="decorBtn">✨ Decorations</button>
+<button id="musicOpenBtn" class="decorBtn">🎵 Music</button>
+
+<div class="page">
+
+  <div class="title-wrap">
+    <h1 class="hero-title">Golden Mandala</h1>
+    <p class="subtitle">A collection of cherished moments</p>
+
+    <div class="mini-icons">
+      <span>🪔</span>
+      <span>✨</span>
+      <span>🌙</span>
+      <span>✨</span>
+      <span>🪔</span>
+      <span>✨</span>
+      <span>🌙</span>
+      <span>✨</span>
+      <span>🪔</span>
+      <span>✨</span>
+      <span>🌙</span>
+      <span>✨</span>
+      <span>🪔</span>
+      <span>✨</span>
+      <span>🌙</span>
+      <span>✨</span>
+      <span>🪔</span>
+      <span>✨</span>
+      <span>🌙</span>
+      <span>✨</span>
+      <span>🪔</span>
+      <span>✨</span>
+      <span>🌙</span>
+      <span>✨</span>
+      <span>🪔</span>
+    </div>
+  </div>
+
+  <!-- VIDEOS -->
+  <div id="videoContainer"></div>
+
+  <!-- PHOTOS -->
+  <h2 class="sectionTitle">Moments in Frames</h2>
+<div id="photoGrid" class="grid"></div>
+
+  <!-- MESSAGES -->
+  <h2 class="sectionTitle">Moments in Messages</h2>
+  <div id="messageList"></div>
+
+</div>
+
+<!-- SURPRISE POPUP -->
+<div id="msgOverlay">
+  <div id="msgBox">
+    <div id="msgText"></div>
+    <button id="closeMsg" class="btnSmall">Close</button>
+  </div>
+</div>
+
+<!-- IMAGE ZOOM -->
+<div id="imgZoomOverlay">
+  <div class="imgZoomContent">
+    <img id="zoomImg">
+    <p id="zoomCaption"></p>
+  </div>
+</div>
+
+<!-- DECORATIONS -->
+<div id="decorOverlay">
+  <div id="decorCard">
+    <h3 style="margin-top:0;font-family:Cinzel;color:#d79b2b;">Decorations</h3>
+
+    <p style="margin:10px 0 4px;">Mode</p>
+    <button class="btnSmall" id="dayBtn">Day</button>
+    <button class="btnSmall" id="nightBtn">Night</button>
+
+    <p style="margin:10px 0 4px;">Decoration / sec</p>
+    <input id="rate" type="range" min="0" max="10" value="4" style="width:100%;">
+
+    <p style="margin:10px 0 4px;">Decoration size</p>
+    <input id="size" type="range" min="12" max="80" value="30" style="width:100%;">
+
+    <p style="margin:10px 0 4px;">Burst style</p>
+    <select id="burst" style="width:100%;padding:10px;border-radius:12px;">
+      <option>Sparkles</option>
+      <option>Lotus</option>
+      <option>Leaves</option>
+    </select>
+
+    <button id="applyBtn" class="btnSmall" style="width:100%;margin-top:10px;">Apply</button>
+  </div>
+</div>
+
+<!-- MUSIC BOX -->
+<div id="musicOverlay">
+  <div id="musicCard">
+    <h3 style="margin-top:0;font-family:Cinzel;color:#d79b2b;">Music</h3>
+    <p style="margin-top:0;">Background Music</p>
+
+    <button id="musicBtn"
+            class="btnSmall"
+            style="width:100%;"
+            onclick="toggleMusic()">
+      ▶ Play Music
+    </button>
+
+    <button class="btnSmall"
+            style="width:100%;margin-top:10px;background:#ddd;color:#333;"
+            onclick="musicOverlay.style.display='none'">
+      Close
+    </button>
+  </div>
+</div>
+
+<script>
+/* ========= MUSIC ========= */
+let bgAudio = null;
+const song = localStorage.getItem("gm_bg_music"); // (Golden Mandala music key)
+
+function playMusic(){
+  if(!song) return;
+  if(!bgAudio){
+    bgAudio = new Audio(song);
+    bgAudio.loop = true;
+    bgAudio.volume = 0.65;
+  }
+  bgAudio.play();
+}
+
+let isPlaying = false;
+
+function toggleMusic(){
+  if(!song) return;
+
+  if(!bgAudio){
+    playMusic();
+    musicBtn.textContent = "⏸ Pause Music";
+    isPlaying = true;
+    return;
+  }
+
+  if(isPlaying){
+    bgAudio.pause();
+    musicBtn.textContent = "▶ Play Music";
+  }else{
+    bgAudio.play();
+    musicBtn.textContent = "⏸ Pause Music";
+  }
+
+  isPlaying = !isPlaying;
+}
+
+/* ========= PASSWORD ========= */
+const PASS = localStorage.getItem("viewerPassword_goldenMandala") || "golden";
+
+function unlock(){
+  if(pass.value === PASS){
+    passwordOverlay.style.display="none";
+    playMusic();
+
+    musicBtn.textContent = "⏸ Pause Music";
+    isPlaying = true;
+  }else{
+    wrongPass.style.display="block";
+  }
+}
+
+/* ========= DATA ========= */
+const KEY="gm_photos_v1";
+const data = JSON.parse(localStorage.getItem(KEY)||"[]");
+
+/* ========= RENDER ========= */
+function render(){
+  videoContainer.innerHTML="";
+  photoGrid.innerHTML="";
+
+  data.forEach(x=>{
+    if(x.type==="video"){
+      videoContainer.innerHTML+=`
+        <div class="videoBox">
+          <video src="${x.url}" controls></video>
+        </div>
+      `;
+    }
+  });
+
+  data.forEach((x,i)=>{
+    if(x.type==="image"){
+      const cap = x.caption || "";
+      const d = document.createElement("div");
+      d.className="card";
+      d.innerHTML=`
+        <img src="${x.url}" onclick="openZoom('${x.url}',\`${cap}\`)">
+
+        <button class="tapBtn" onclick="showRandom(${i})">
+          Surprise ✨
+        </button>
+
+        <p class="photoCaption">${cap}</p>
+      `;
+      photoGrid.appendChild(d);
+    }
+  });
+}
+render();
+
+/* ========= ZOOM ========= */
+function openZoom(src,cap){
+  zoomImg.src=src;
+  zoomCaption.textContent=cap;
+  imgZoomOverlay.style.display="flex";
+}
+
+imgZoomOverlay.onclick=e=>{
+  if(e.target.id==="imgZoomOverlay"){
+    imgZoomOverlay.style.display="none";
+  }
+};
+
+/* ========= SURPRISE ========= */
+const cuteMessages=[
+  "You bring happiness — like golden light ✨",
+  "This moment is pure warmth 🪔",
+  "Memories like this deserve a mandala frame 🌸",
+  "Your smile is the real festival 💛",
+  "If joy had a color… it would be this photo 🌙",
+  "A golden moment, forever saved 📸",
+  "This picture feels like a blessing ✨",
+  "Some days become forever — this is one 🧡",
+  "Your vibe is the diya that lights everything 🪔",
+  "We’ll miss these days the most 🥹",
+  "This memory is a treasure 💫",
+  "The universe is smiling with us 🌟"
+];
+
+function showRandom(i){
+  msgText.textContent = cuteMessages[Math.floor(Math.random()*cuteMessages.length)];
+  msgOverlay.style.display="flex";
+}
+closeMsg.onclick=()=>msgOverlay.style.display="none";
+
+/* ========= LOAD MESSAGES ========= */
+function loadMessages(){
+  const txt=localStorage.getItem("gm_main_message")||"";
+  if(!txt.trim()) return;
+
+  txt.split("---").forEach(m=>{
+    const d=document.createElement("div");
+    d.className="stickyNote";
+    d.textContent=m.trim();
+    messageList.appendChild(d);
+  });
+}
+loadMessages();
+
+/* ========= DECORATIONS ========= */
+const c = decorCanvas;
+const ctx = c.getContext("2d");
+let W, H, particles = [];
+
+function resizeCanvas(){
+  W = c.width = innerWidth;
+  H = c.height = innerHeight;
+}
+resizeCanvas();
+window.onresize = resizeCanvas;
+
+let decorCfg = {
+  mode: "day",
+  rate: 4,
+  size: 30,
+  burst: "Sparkles"
+};
+
+decorBtn.onclick = () => decorOverlay.style.display = "flex";
+decorOverlay.onclick = e => {
+  if(e.target === decorOverlay) decorOverlay.style.display = "none";
+};
+
+dayBtn.onclick = () => {
+  document.body.classList.remove("night");
+  decorCfg.mode = "day";
+};
+
+nightBtn.onclick = () => {
+  document.body.classList.add("night");
+  decorCfg.mode = "night";
+};
+
+applyBtn.onclick = () => {
+  decorCfg.rate = +rate.value;
+  decorCfg.size = +size.value;
+  decorCfg.burst = burst.value;
+  decorOverlay.style.display = "none";
+};
+
+function drawFireworkSparkle(ctx, x, y, size, rot, isNight){
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rot);
+
+  // Day vs Night sparkle tone
+  const base = isNight ? "rgba(204,119,34," : "rgba(255,215,0,"; // ochre / gold
+
+  // Strong glow
+  ctx.globalCompositeOperation = "lighter";
+  ctx.shadowBlur = isNight ? 26 : 22;
+  ctx.shadowColor = isNight ? "#CC7722" : "#FFD700";
+
+  // --- Core glow circle ---
+  let g = ctx.createRadialGradient(0,0,0, 0,0,size*1.6);
+  g.addColorStop(0, base + "0.95)");
+  g.addColorStop(0.25, base + "0.55)");
+  g.addColorStop(1, base + "0)");
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(0, 0, size*1.4, 0, Math.PI*2);
+  ctx.fill();
+
+  // --- Rays (firework lines) ---
+  ctx.lineWidth = Math.max(1.2, size/10);
+  for(let i=0;i<10;i++){
+    const ang = (Math.PI*2/10)*i;
+    const len = size*(1.4 + Math.random()*1.4);
+
+    ctx.strokeStyle = base + (0.25 + Math.random()*0.35) + ")";
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineTo(Math.cos(ang)*len, Math.sin(ang)*len);
+    ctx.stroke();
+  }
+
+  // --- Tiny flicker dots ---
+  for(let i=0;i<6;i++){
+    const dx = (Math.random()*2-1)*size*1.4;
+    const dy = (Math.random()*2-1)*size*1.4;
+
+    ctx.fillStyle = base + (0.35 + Math.random()*0.45) + ")";
+    ctx.beginPath();
+    ctx.arc(dx, dy, Math.max(1.2, size/7), 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+  ctx.globalCompositeOperation = "source-over";
+}
+
+
+function spawnDecor(){
+
+  /* 🌸 LOTUS PETALS */
+  if(decorCfg.burst === "Lotus" && Math.random() < decorCfg.rate / 18){
+    particles.push({
+      x: Math.random()*W,
+      y: H + 30,
+      r: decorCfg.size,
+      t: "lotus",
+      drift: (Math.random()*0.7 - 0.35),
+      rot: Math.random()*Math.PI,
+      spin: (Math.random()*0.03 - 0.015)
+    });
+  }
+
+  /* 🍂 GOLDEN LEAVES */
+  if(decorCfg.burst === "Leaves" && Math.random() < decorCfg.rate / 18){
+    particles.push({
+      x: Math.random()*W,
+      y: H + 30,
+      r: decorCfg.size,
+      t: "leaf",
+      drift: (Math.random()*0.7 - 0.35),
+      rot: Math.random()*Math.PI,
+      spin: (Math.random()*0.04 - 0.02)
+    });
+  }
+
+  /* ✨ GLITTER DUST SPARKLES */
+  if(decorCfg.burst === "Sparkles"){
+    const count = Math.floor(decorCfg.rate * 2.2);
+
+    for(let i=0; i<count; i++){
+      particles.push({
+        x: Math.random()*W,
+        y: Math.random()*H,
+        r: 1 + Math.random()*(decorCfg.size/18),
+        t: "glitter",
+        life: 0.7 + Math.random()*0.6,
+        fade: 0.003 + Math.random()*0.006,
+        drift: (Math.random()*0.35 - 0.175),
+        tw: Math.random()*Math.PI*2
+      });
+    }
+  }
+}
+
+
+function drawGlitterDot(p){
+  const isNight = document.body.classList.contains("night");
+
+  // Day gold vs Night yellow-ochre
+  const color = isNight ? "#CC7722" : "#FFD700";
+
+  // Twinkle
+  const twinkle = 0.55 + 0.45 * Math.sin(p.tw);
+
+  ctx.save();
+  ctx.globalAlpha = Math.max(0, p.life) * twinkle;
+
+  ctx.fillStyle = color;
+  ctx.shadowColor = color;
+  ctx.shadowBlur = isNight ? 14 : 10;
+
+  ctx.beginPath();
+  ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawLotus(ctx, x, y, size, rot, isNight){
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rot);
+
+  const fill = isNight ? "#ffb6d5" : "#ff7fb8";
+  const glow = isNight ? "#ffd48a" : "#ffcc66";
+
+  ctx.shadowColor = glow;
+  ctx.shadowBlur = 14;
+
+  ctx.fillStyle = fill;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, size*0.55, size*0.25, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // petals
+  for(let i=0;i<5;i++){
+    ctx.rotate((Math.PI*2)/5);
+    ctx.beginPath();
+    ctx.ellipse(0, -size*0.35, size*0.22, size*0.45, 0, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawLeaf(ctx, x, y, size, rot, isNight){
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rot);
+
+  const fill = isNight ? "#CC7722" : "#FFD700";
+
+  ctx.fillStyle = fill;
+  ctx.shadowColor = fill;
+  ctx.shadowBlur = 16;
+
+  ctx.beginPath();
+  ctx.moveTo(0, -size*0.6);
+  ctx.quadraticCurveTo(size*0.55, 0, 0, size*0.6);
+  ctx.quadraticCurveTo(-size*0.55, 0, 0, -size*0.6);
+  ctx.closePath();
+  ctx.fill();
+
+  // mid line
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = "rgba(255,255,255,0.35)";
+  ctx.lineWidth = Math.max(1, size/18);
+  ctx.beginPath();
+  ctx.moveTo(0, -size*0.55);
+  ctx.lineTo(0, size*0.55);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawDecor(){
+  const isNight = document.body.classList.contains("night"); // ✅ FIX
+  ctx.clearRect(0,0,W,H);
+
+  particles.forEach((p,i)=>{
+
+    /* 🌸 LOTUS */
+    if(p.t==="lotus"){
+      drawLotus(ctx, p.x, p.y, p.r, p.rot, isNight);
+
+      p.y -= 1.0;
+      p.x += p.drift;
+      p.rot += p.spin;
+
+      if(p.y < -80) particles.splice(i,1);
+      return;
+    }
+
+    /* 🍂 LEAF */
+    if(p.t==="leaf"){
+      drawLeaf(ctx, p.x, p.y, p.r, p.rot, isNight);
+
+      p.y -= 1.15;
+      p.x += p.drift;
+      p.rot += p.spin;
+
+      if(p.y < -80) particles.splice(i,1);
+      return;
+    }
+
+    /* ✨ GLITTER */
+    if(p.t==="glitter"){
+      p.life -= p.fade;
+      if(p.life <= 0){
+        particles.splice(i,1);
+        return;
+      }
+
+      p.tw += 0.12;
+
+      p.y -= 0.35 + Math.random()*0.25;
+      p.x += p.drift;
+
+      if(p.x < -10) p.x = W + 10;
+      if(p.x > W + 10) p.x = -10;
+
+      drawGlitterDot(p);
+
+      if(p.y < -20) particles.splice(i,1);
+      return;
+    }
+
+  });
+}
+
+(function loop(){
+  requestAnimationFrame(loop);
+  spawnDecor();
+  drawDecor();
+})();
+
+/* ========= MUSIC OVERLAY ========= */
+musicOpenBtn.onclick = () => {
+  musicOverlay.style.display = "flex";
+};
+
+musicOverlay.onclick = e => {
+  if(e.target === musicOverlay){
+    musicOverlay.style.display = "none";
+  }
+};
+</script>
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Forever Yours — Editor • CelebrateWithUs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:"Poppins",sans-serif;
+  background:linear-gradient(135deg,#5f4b8b,#8a6ccf,#e6ddff);
+  padding:20px;
+  color:#f5f0ff;
+}
+
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  background:#4b3b75;
+  padding:22px;
+  border-radius:24px;
+  box-shadow:0 15px 45px rgba(150,120,255,.35);
+}
+
+h1{
+  font-family:"Allura",cursive;
+  font-size:60px;
+  text-align:center;
+  margin-bottom:6px;
+  color:#e6ddff;
+}
+
+h2,h3{
+  text-align:center;
+  font-family:"Playfair Display",serif;
+  color:#f0e9ff;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:14px;
+}
+
+.card{
+  background:#5e4b9a;
+  padding:14px;
+  border-radius:18px;
+  box-shadow:0 8px 22px rgba(170,140,255,.35);
+}
+
+.card img,
+.card video{
+  width:100%;
+  border-radius:14px;
+}
+
+input, textarea, select{
+  background:#3d2f66;
+  color:#ffffff;
+  border:1px solid #cbb7ff;
+}
+
+.btn{
+  padding:10px 22px;
+  border-radius:999px;
+  border:none;
+  background:#cbb7ff;
+  color:#3d2f66;
+  font-weight:600;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.btn:hover{
+  background:#b49bff;
+}
+
+.ghost{
+  background:transparent;
+  color:#e6ddff;
+  border:1px solid #cbb7ff;
+}
+
+.singleMessage{
+  background:#5e4b9a;
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:10px;
+}
+
+.msgBtns{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:6px;
+}
+
+.msgBtns button{
+  border:none;
+  background:#cbb7ff;
+  color:#3d2f66;
+  padding:4px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;
+}
+
+#allMessagesBox{
+  background:#3d2f66;
+  padding:16px;
+  border-radius:14px;
+  min-height:160px;
+  margin-top:12px;
+  white-space:pre-wrap;
+  font-family:"Playfair Display";
+  font-size:15px;
+  box-shadow:0 6px 18px rgba(170,140,255,.35);
+}
+
+.site-footer{
+  text-align:center;
+  padding:25px 10px;
+  margin-top:40px;
+  font-size:14px;
+  color:#f3edff;
+  opacity:0.8;
+  font-family:'Playfair Display';
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<h1>Forever Yours</h1>
+<h2>💞 Create a Love That Never Fades 💞</h2>
+
+<!-- MUSIC -->
+<h2 style="margin-top:30px;">🎶 Eternal Love Music</h2>
+
+<div class="card" style="text-align:center;">
+<select id="bgMusicSelect" style="padding:10px;width:100%;border-radius:12px;">
+<option value="">No Music</option>
+<option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024745/Pink_Silence_cpqqba.mp3">Pink Silence💞</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024741/Lights_cfhsxj.mp3">Lights🌸</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024740/One_Love_pq1obq.mp3">One Love💕</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024734/Velvet_Moments_kkpzlk.mp3">Velvet Moments🤍</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024733/Falling_Slowly_czfydq.mp3">Falling Slowly💞</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024730/Sweet_psqzg1.mp3">Sweet🌸</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024729/sweetvibe_lnfwkn.mp3">Sweet vibe💕</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024725/Heart_in_Bloom_fgj5oc.mp3">Heart in Bloom🤍</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024722/Whisper_of_You_wpcufk.mp3">Whisper of You💕</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024718/Spring_Flowers_xjmnsd.mp3">Spring Flowers🤍</option>
+</select>
+
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;">
+<button class="btn" onclick="playMusicPreview()">▶ Play</button>
+<button class="btn ghost" onclick="stopMusicPreview()">⏸ Pause</button>
+<button class="btn" onclick="saveBgMusic()">💾 Save Music</button>
+
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;">
+
+<label class="btn ghost">
+Upload from Device
+<input type="file" hidden accept="image/*,video/*" onchange="uploadLocal(event)">
+</label>
+
+<button class="btn" onclick="openWidget()">
+☁️ Upload from Cloudinary
+</button>
+</div>
+</div>
+
+<h2 style="margin-top:24px;">🌹 Forever Gallery</h2>
+<div id="mediaGrid" class="grid"></div>
+
+<div style="display:flex;gap:10px;margin-top:22px;">
+<button class="btn ghost" onclick="clearAll()">Delete All</button>
+<button class="btn" onclick="autoSave()">Save</button>
+</div>
+
+<h3 style="margin-top:32px;">🔐 Private Viewer Password</h3>
+<input id="newPass" placeholder="foreverlove" style="padding:10px;width:240px;border-radius:12px;">
+<button class="btn" onclick="savePass()">Save</button>
+
+<h3 style="margin-top:32px;">💌 Love Letters</h3>
+
+<div style="display:flex;gap:10px;justify-content:center;">
+<button id="msgOpenBtn" class="btn">Add Message</button>
+</div>
+
+<div id="allMessagesBox"></div>
+
+</div>
+
+<script>
+const STORAGE_KEY="forever_gallery";
+const MSG_KEY="forever_messages";
+const MUSIC_KEY="forever_music";
+
+let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+function saveAll(){
+  if(items && items.length > 0){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  }
+}
+
+function autoSave(){
+  localStorage.setItem("forever_gallery", JSON.stringify(items));
+}
+function clearAll(){ items=[]; autoSave(); render(); }
+
+function render(){
+  items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  mediaGrid.innerHTML="";
+
+  items.forEach((o,i)=>{
+    let d=document.createElement("div");
+    d.className="card";
+
+    let el;
+    if(o.type==="video"){
+      el=document.createElement("video");
+      el.src=o.url;
+      el.controls=true;
+    }else{
+      el=document.createElement("img");
+      el.src=o.url;
+    }
+
+    /* ✅ Caption Input */
+    let capInput=document.createElement("input");
+    capInput.placeholder="Write a caption...";
+    capInput.style.marginTop="10px";
+    capInput.style.width="100%";
+    capInput.style.padding="8px";
+    capInput.style.borderRadius="10px";
+    capInput.value=o.caption || "";
+
+    capInput.oninput=(e)=>{
+      o.caption=e.target.value;
+      autoSave();
+    };
+
+    let del=document.createElement("button");
+    del.textContent="Delete";
+    del.className="btn ghost";
+    del.style.marginTop="10px";
+    del.onclick=()=>{
+      items.splice(i,1);
+      
+      autoSave();
+      render();
+    };
+
+    d.append(el,capInput,del);
+    mediaGrid.appendChild(d);
+  });
+}
+
+/* Cloudinary Upload */
+function openWidget(){
+  cloudinary.openUploadWidget({
+    cloudName: "di8n4lsjz",
+    uploadPreset: "forever_yours",
+    folder: "forever_yours",
+    resourceType: "auto",
+    multiple: true
+  }, (error, result) => {
+
+    if (!error && result && result.event === "success") {
+
+      const type = result.info.resource_type === "video" ? "video" : "image";
+
+      items.push({
+        url: result.info.secure_url,
+        type: type,
+        caption: ""
+      });
+
+      
+      autoSave();
+      render();
+    }
+  });
+}
+
+/* Local Upload */
+function uploadLocal(e){
+  let f = e.target.files[0];
+  if(!f) return;
+
+  let r = new FileReader();
+
+  r.onload = (x) => {
+
+    let type = f.type.startsWith("video") ? "video" : "image";
+
+    items.push({
+      url: x.target.result,
+      type: type,
+      caption: ""
+    });
+
+    autoSave();
+    render();
+  };
+
+  r.readAsDataURL(f);
+}
+
+let previewAudio=null;
+bgMusicSelect.value=localStorage.getItem(MUSIC_KEY)||"";
+
+function playMusicPreview(){
+if(!bgMusicSelect.value) return;
+stopMusicPreview();
+previewAudio=new Audio(bgMusicSelect.value);
+previewAudio.volume=.6;
+previewAudio.play();
+}
+function stopMusicPreview(){
+if(previewAudio){ previewAudio.pause(); previewAudio=null; }
+}
+function saveBgMusic(){
+localStorage.setItem(MUSIC_KEY,bgMusicSelect.value||"");
+alert("Music saved 💞");
+}
+
+function savePass(){
+localStorage.setItem("viewerPassword_forever",newPass.value);
+alert("Password saved 💞");
+}
+
+msgOpenBtn.onclick=()=>{
+  let m = prompt("Write your love letter 💌");
+  if(!m) return;
+
+  let txt = localStorage.getItem(MSG_KEY) || "";
+
+if(!txt){
+  allMessagesBox.innerText = "(No love letters yet)";
+  return;
+}
+  let arr = txt ? txt.split("\n---\n") : [];
+
+  arr.push(m);
+  saveMessages(arr);
+};
+
+function loadMessages(){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let arr = txt.split("\n---\n").filter(m => m.trim() !== "");
+
+  allMessagesBox.innerHTML = "";
+
+  if(arr.length === 0){
+    allMessagesBox.innerText = "(No love letters yet)";
+    return;
+  }
+
+  arr.forEach((msg, index)=>{
+    let box = document.createElement("div");
+    box.className = "singleMessage";
+
+    let text = document.createElement("div");
+    text.innerText = msg;
+
+    let btnWrap = document.createElement("div");
+    btnWrap.className = "msgBtns";
+
+    /* EDIT BUTTON */
+    let editBtn = document.createElement("button");
+    editBtn.innerText = "Edit";
+    editBtn.onclick = ()=>{
+      let updated = prompt("Edit your message 💌", msg);
+      if(updated === null) return;
+
+      arr[index] = updated;
+      saveMessages(arr);
+    };
+
+    /* DELETE BUTTON */
+    let delBtn = document.createElement("button");
+    delBtn.innerText = "Delete";
+    delBtn.onclick = ()=>{
+      if(confirm("Delete this message?")){
+        arr.splice(index,1);
+        saveMessages(arr);
+      }
+    };
+
+    btnWrap.append(editBtn, delBtn);
+    box.append(text, btnWrap);
+    allMessagesBox.appendChild(box);
+  });
+}
+function saveMessages(arr){
+  localStorage.setItem(MSG_KEY, arr.join("\n---\n"));
+  loadMessages();
+}
+
+
+window.addEventListener("DOMContentLoaded", () => {
+  items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  render();
+  loadMessages();
+});
+
+</script>
+
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

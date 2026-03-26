@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blush Love — Editor • CelebrateWithUs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:"Poppins",sans-serif;
+  background:linear-gradient(135deg,#ffe4ef,#fff0f6);
+  padding:20px;
+  color:#7a2e4a;
+}
+
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  background:#fff;
+  padding:22px;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(255,182,193,.35);
+}
+
+h1{
+  font-family:"Great Vibes",cursive;
+  font-size:56px;
+  text-align:center;
+  margin-bottom:6px;
+  color:#c94b7c;
+}
+
+h2,h3{
+  text-align:center;
+  font-family:"Playfair Display",serif;
+  color:#a93d67;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:12px;
+}
+
+.card{
+  background:#fff4f8;
+  padding:12px;
+  border-radius:14px;
+  box-shadow:0 4px 14px rgba(255,160,190,.25);
+}
+
+.card img,
+.card video,
+.card audio{
+  width:100%;
+  border-radius:12px;
+}
+
+.btn{
+  padding:10px 20px;
+  border-radius:999px;
+  border:none;
+  background:#ff8fb4;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.btn:hover{
+  background:#ff6fa1;
+}
+
+.ghost{
+  background:white;
+  color:#a93d67;
+  border:1px solid #ffc1d6;
+}
+
+.singleMessage{
+  background:#fff0f6;
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:10px;
+}
+
+.msgBtns{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:6px;
+}
+
+.msgBtns button{
+  border:none;
+  background:#ff8fb4;
+  color:white;
+  padding:4px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;
+}
+
+#allMessagesBox{
+  background:white;
+  padding:16px;
+  border-radius:14px;
+  min-height:160px;
+  margin-top:12px;
+  white-space:pre-wrap;
+  font-family:"Playfair Display";
+  font-size:15px;
+  box-shadow:0 4px 14px rgba(255,180,200,.25);
+}
+
+#msgPopup{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(255,160,190,.45);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.popupInner{
+  background:white;
+  width:320px;
+  padding:22px;
+  border-radius:18px;
+  text-align:center;
+  font-family:"Playfair Display";
+}
+
+.popupInner textarea{
+  width:100%;
+  height:120px;
+  padding:12px;
+  border:1px solid #ffc1d6;
+  border-radius:12px;
+  outline:none;
+}
+
+.site-footer{
+  text-align:center;
+  padding:20px;
+  margin-top:50px;
+  font-size:13px;
+  color:#b34b6a;
+  opacity:0.8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<h1>Blush Love</h1>
+<h2>💗 Upload Your Love Memories 💗</h2>
+
+<!-- BACKGROUND MUSIC -->
+<h2 style="margin-top:30px;">🎶 Love Background Music</h2>
+
+<div class="card" style="text-align:center;">
+  <p>Select one romantic melody for your love page</p>
+
+  <select id="bgMusicSelect" style="padding:10px;width:100%;border-radius:12px;border:1px solid #ffc1d6;">
+    <option value="">No Music</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024745/Pink_Silence_cpqqba.mp3">Pink Silence💞</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024741/Lights_cfhsxj.mp3">Lights🌸</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024740/One_Love_pq1obq.mp3">One Love💕</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024734/Velvet_Moments_kkpzlk.mp3">Velvet Moments🤍</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024733/Falling_Slowly_czfydq.mp3">Falling Slowly💞</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024730/Sweet_psqzg1.mp3">Sweet🌸</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024729/sweetvibe_lnfwkn.mp3">Sweet vibe💕</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024725/Heart_in_Bloom_fgj5oc.mp3">Heart in Bloom🤍</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024722/Whisper_of_You_wpcufk.mp3">Whisper of You💕</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024718/Spring_Flowers_xjmnsd.mp3">Spring Flowers🤍</option>
+  </select>
+
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:18px;">
+     <button class="btn" onclick="playMusicPreview()">▶️ Play</button>
+  <button class="btn ghost" onclick="stopMusicPreview()">⏸ Pause</button>
+  <button class="btn" onclick="saveBgMusic()">💾 Save Music</button>
+<button class="btn" onclick="openWidget('image')">📸 Image</button>
+<button class="btn" onclick="openWidget('video')">🎥 Video</button>
+
+ <label class="btn ghost">
+    Local Upload
+    <input type="file" style="display:none" 
+    accept="image/*,video/*" 
+    onchange="uploadLocal(event)">
+  </label>
+</div>
+
+  <p id="musicSavedMsg" style="display:none;color:#c94b7c;margin-top:8px;">
+    Music saved with love 💗
+  </p>
+</div>
+
+
+<h2 style="margin-top:22px;">💞 Memory Gallery</h2>
+<div id="mediaGrid" class="grid"></div>
+
+<div style="display:flex;gap:10px;margin-top:22px;">
+  <button class="btn ghost" onclick="clearAll()">Delete All</button>
+  <button class="btn" onclick="autoSave()">Save</button>
+  <button class="btn">💾 Save Gallery</button>
+
+</div>
+
+<h3 style="margin-top:32px;">🔐 Viewer Password</h3>
+<input id="newPass" placeholder="love" style="padding:10px;width:240px;border-radius:12px;border:1px solid #ffc1d6;">
+<button class="btn" onclick="savePass()">Save</button>
+<p id="passSaved" style="display:none;color:#c94b7c;margin-top:6px;">Password updated 💗</p>
+
+<h3 style="margin-top:32px;">💌 Love Messages</h3>
+<div style="display:flex;gap:10px;justify-content:center;">
+<button id="msgOpenBtn" class="btn">Add Message</button>
+<button class="btn ghost" onclick="saveMessages()">💾 Save Messages</button>
+</div>
+<div id="allMessagesBox"></div>
+
+<!-- popup -->
+<div id="msgPopup">
+  <div class="popupInner">
+    <h3>Write from your heart 💗</h3>
+    <textarea id="msgInput"></textarea>
+    <button id="msgSaveBtn" class="btn" style="margin-top:12px;">Save Message</button>
+  </div>
+</div>
+
+</div>
+
+<!-- SCRIPT -->
+<script>
+/* EVERYTHING SAME LOGIC AS YOUR ORIGINAL */
+const STORAGE_KEY="blush_photos_v1";
+const MSG_KEY="blush_messages";
+const MUSIC_KEY="blush_bg_music";
+
+let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+function saveAll(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+function autoSave(){
+  localStorage.setItem("blush_photos_v1", JSON.stringify(items));
+}
+function clearAll(){ items=[]; autoSave(); render(); }
+
+ function render(){
+  let box = document.getElementById("mediaGrid");
+  box.innerHTML = "";
+
+  items.forEach((o,i)=>{
+    let d = document.createElement("div");
+    d.className = "card";
+
+    let el;
+    if(o.type==="video"){
+      el = document.createElement("video");
+      el.src = o.url;
+      el.controls = true;
+    } else {
+      el = document.createElement("img");
+      el.src = o.url;
+    }
+
+    let inp = document.createElement("input");
+    inp.placeholder = "Caption...";
+    inp.value = o.caption || "";
+    inp.onchange = e=>{
+      o.caption = e.target.value;
+      autoSave();
+    };
+
+    let del = document.createElement("button");
+    del.textContent = "Delete";
+    del.className = "btn ghost";
+    del.onclick = ()=>{
+      items.splice(i,1);
+      autoSave();
+      render();
+    };
+
+    d.append(el, inp, del);
+    box.appendChild(d);
+  });
+}
+
+function uploadLocal(e){
+ let f=e.target.files[0]; if(!f) return;
+ let r=new FileReader();
+ r.onload=x=>{
+  let t = f.type.startsWith("video") ? "video" : "image";
+  items.push({url:x.target.result,type:t,caption:""});
+  render(); autoSave();
+ };
+ r.readAsDataURL(f);
+}
+
+/* messages */
+function loadMessages(){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let box = document.getElementById("allMessagesBox");
+  box.innerHTML = "";
+
+  if(txt.trim() === ""){
+    box.innerText = "(No messages yet)";
+    return;
+  }
+
+  let messages = txt.split("\n---\n");
+
+  messages.forEach((msg, index) => {
+    let div = document.createElement("div");
+    div.className = "singleMessage";
+
+    div.innerHTML = `
+      <div>${msg}</div>
+
+      <div class="msgBtns">
+        <button onclick="editMsg(${index})">✏️ Edit</button>
+        <button onclick="deleteMsg(${index})">🗑️ Delete</button>
+      </div>
+    `;
+
+    box.appendChild(div);
+  });
+}
+
+msgOpenBtn.onclick=()=>msgPopup.style.display="flex";
+msgSaveBtn.onclick=()=>{
+ let m=msgInput.value.trim(); if(!m) return;
+ let old=localStorage.getItem(MSG_KEY)||"";
+ localStorage.setItem(MSG_KEY, old?old+"\n---\n"+m:m);
+ msgInput.value="";
+ msgPopup.style.display="none";
+ loadMessages();
+};
+msgPopup.onclick=e=>{ if(e.target===msgPopup) msgPopup.style.display="none"; };
+
+function deleteMsg(index){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let messages = txt.split("\n---\n");
+
+  messages.splice(index, 1);
+
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  loadMessages();
+}
+
+function editMsg(index){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let messages = txt.split("\n---\n");
+
+  let updated = prompt("Edit your message 💗", messages[index]);
+
+  if(updated === null) return;
+  if(updated.trim() === "") return;
+
+  messages[index] = updated.trim();
+
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  loadMessages();
+}
+
+/* music */
+let previewAudio=null;
+const musicSelect=document.getElementById("bgMusicSelect");
+musicSelect.value=localStorage.getItem(MUSIC_KEY)||"";
+
+function playMusicPreview(){
+ if(!musicSelect.value) return;
+ stopMusicPreview();
+ previewAudio=new Audio(musicSelect.value);
+ previewAudio.volume=.6;
+ previewAudio.play();
+}
+function stopMusicPreview(){
+ if(previewAudio){ previewAudio.pause(); previewAudio=null; }
+}
+function saveBgMusic(){
+ localStorage.setItem(MUSIC_KEY,musicSelect.value||"");
+ musicSavedMsg.style.display="block";
+ setTimeout(()=>musicSavedMsg.style.display="none",1500);
+}
+
+function savePass(){
+ localStorage.setItem("viewerPassword_blushLove",newPass.value);
+ passSaved.style.display="block";
+ setTimeout(()=>passSaved.style.display="none",1500);
+}
+function saveMessages(){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  localStorage.setItem(MSG_KEY, txt);
+  alert("Messages saved with love 💗");
+}
+function openWidget(type) {
+  cloudinary.openUploadWidget({
+    cloudName: "di8n4lsjz",
+    uploadPreset: "blush_love",
+    folder: "blush_love",
+    resourceType: "auto",
+    sources: ["local", "camera", "url", "google_drive", "dropbox"],
+    multiple: true,
+    maxFileSize: 20 * 1024 * 1024
+  }, (error, result) => {
+    if (!error && result && result.event === "success") {
+      items.push({
+  url: result.info.secure_url,
+  type: result.info.resource_type === "video" ? "video" : "image",
+  caption: ""
+});
+autoSave();
+      render();
+      
+      
+    }
+  });
+}
+window.addEventListener("load", () => {
+  items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  render();
+});
+loadMessages();
+</script>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Color Carnival — Editor • CelebrateWithUs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:"Poppins",sans-serif;
+  background:linear-gradient(135deg,#fff1f8,#fff7e6,#e6fff7,#eef2ff);
+  padding:20px;
+  color:#2c2c2c;
+}
+
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  background:#ffffffcc;
+  backdrop-filter: blur(10px);
+  padding:26px;
+  border-radius:26px;
+  box-shadow:0 20px 50px rgba(0,0,0,.12);
+  border:1px solid rgba(255,255,255,.7);
+}
+
+h1{
+  font-family:"Pacifico",cursive;
+  font-size:56px;
+  text-align:center;
+  margin-bottom:6px;
+  letter-spacing:1px;
+  color:#ff3d8d;
+}
+
+h2,h3{
+  text-align:center;
+  font-family:"Playfair Display",serif;
+  color:#4a2c5b;
+}
+
+.sub{
+  text-align:center;
+  margin-top:0;
+  color:#444;
+  font-size:15px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:18px;
+}
+
+.card{
+  background:#ffffff;
+  padding:16px;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  border:1px solid rgba(0,0,0,.05);
+}
+
+.card img,
+.card video,
+.card audio{
+  width:100%;
+  border-radius:16px;
+}
+
+input, textarea, select{
+  background:#f7f7ff;
+  color:#2c2c2c;
+  border:1px solid #e2e2ff;
+  padding:10px;
+  border-radius:14px;
+  outline:none;
+  width:100%;
+  box-sizing:border-box;
+}
+
+textarea{
+  resize:vertical;
+  min-height:90px;
+}
+
+.btn{
+  padding:10px 26px;
+  border-radius:999px;
+  border:none;
+  background:linear-gradient(90deg,#ff3d8d,#ffb703,#00c2ff);
+  color:#ffffff;
+  font-weight:600;
+  cursor:pointer;
+  transition:.25s;
+  box-shadow:0 10px 25px rgba(255,61,141,.15);
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+  opacity:.95;
+}
+
+
+.singleMessage{
+  background:#ffffff;
+  padding:14px;
+  border-radius:18px;
+  margin-bottom:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.07);
+  border:1px solid rgba(0,0,0,.05);
+}
+
+.msgBtns{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:8px;
+}
+
+.msgBtns button{
+  border:none;
+  background:linear-gradient(90deg,#ff3d8d,#00c2ff);
+  color:#ffffff;
+  padding:5px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:13px;
+}
+
+#allMessagesBox{
+  background:#f7f7ff;
+  padding:18px;
+  border-radius:18px;
+  min-height:160px;
+  margin-top:14px;
+  white-space:pre-wrap;
+  font-family:"Playfair Display";
+  font-size:15px;
+  box-shadow:0 10px 24px rgba(0,0,0,.07);
+}
+
+#msgPopup{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.4);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.popupInner{
+  background:#ffffff;
+  width:360px;
+  padding:24px;
+  border-radius:24px;
+  text-align:center;
+  font-family:"Playfair Display";
+  box-shadow:0 20px 50px rgba(0,0,0,.18);
+}
+
+.rowBtns{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:18px;
+}
+
+.note{
+  text-align:center;
+  font-size:13px;
+  color:#555;
+  margin-top:10px;
+}
+
+.site-footer{
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+  font-size:14px;
+  color:#555;
+  background:rgba(255,255,255,0.6);
+  border-top:1px solid rgba(0,0,0,0.08);
+  backdrop-filter: blur(6px);
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <h1>Color Carnival</h1>
+  <p class="sub">🎨 Add colorful memories, music, photos, and private notes ✨</p>
+
+  <!-- MUSIC -->
+  <h2 style="margin-top:30px;">🎧 Background Music</h2>
+
+  <div class="card" style="text-align:center;">
+    <p>Select a fun track for your carnival vibe</p>
+
+    <select id="bgMusicSelect">
+      <option value="">No Music</option>
+      <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1771235768/Party_Mode_ON_zfk36r.mp3">Party Mode ON</option>
+      <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1771235760/Confetti_Explosion_ui9h2p.mp3">Confetti Explosion</option>
+      <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1771235730/Chiptune_Confetti_vl8qeg.mp3">Chiptune Confetti</option>
+      <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1771235728/Hyperactive_Hamster_ix0sei.mp3">Hyperactive Hamster</option>
+      <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1771235723/Groove_Balloon_csxgys.mp3">Groove Balloon</option>
+      <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1771235702/Button_Mash_Beats_l7pcxu.mp3">Button Mash Beats</option>
+      <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1771235694/Festival_Frenzy_zjuycu.mp3">Festival Frenzy</option>
+      <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1771235685/Disco_Donut_jymzj6.mp3">Disco Donut</option>
+      <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1771235661/Glitterstorm_Anthem_jc0vb3.mp3">Glitterstorm Anthem</option>
+      <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1771235657/Rainbow_Riot_w9qpgb.mp3">Rainbow Riot</option>
+    </select>
+
+    <div class="rowBtns">
+      <button class="btn" onclick="playMusicPreview()">▶ Play</button>
+      <button class="btn ghost" onclick="stopMusicPreview()">⏸ Pause</button>
+      <button class="btn" onclick="saveBgMusic()">💾 Save Music</button>
+
+      <button class="btn" onclick="openWidget('image')">📸 Image</button>
+      <button class="btn" onclick="openWidget('video')">🎥 Video</button>
+
+      <label class="btn ghost">
+        Local Upload
+        <input type="file" hidden accept="image/*,video/*,audio/*" onchange="uploadLocal(event)">
+      </label>
+    </div>
+
+    <p id="musicSavedMsg" style="display:none;color:#00b894;margin-top:8px;font-weight:600;">
+      Music saved ✨
+    </p>
+
+    <p class="note">Tip: Cloudinary uploads stay online. Local uploads stay only in this browser.</p>
+  </div>
+
+  <h2 style="margin-top:24px;">📖 Carnival Gallery</h2>
+  <div id="mediaGrid" class="grid"></div>
+
+  <div style="display:flex;gap:10px;margin-top:22px;justify-content:center;flex-wrap:wrap;">
+    <button class="btn ghost" onclick="clearAll()">Delete All</button>
+    <button class="btn" onclick="autoSave()">Save</button>
+  </div>
+
+  <h3 style="margin-top:32px;">🔐 Private Viewer Password</h3>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+    <input id="newPass" placeholder="carnival123" style="max-width:260px;">
+    <button class="btn" onclick="savePass()">Save</button>
+  </div>
+  <p id="passSaved" style="display:none;color:#00b894;margin-top:6px;text-align:center;font-weight:600;">Password saved ✨</p>
+
+  <h3 style="margin-top:32px;">💭 Written Memories</h3>
+
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+    <button id="msgOpenBtn" class="btn">Add Memory</button>
+    <button class="btn ghost" onclick="saveMessages()">💾 Save</button>
+  </div>
+
+  <div id="allMessagesBox"></div>
+
+  <!-- popup -->
+  <div id="msgPopup">
+    <div class="popupInner">
+      <h3>Write your memory 🎨✨</h3>
+      <textarea id="msgInput" placeholder="Type here..."></textarea>
+      <button id="msgSaveBtn" class="btn" style="margin-top:12px;">Save</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* STORAGE KEYS */
+const STORAGE_KEY="colorCarnival_gallery";
+const MSG_KEY="colorCarnival_messages";
+const MUSIC_KEY="colorCarnival_music";
+
+let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+function saveAll(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
+}
+
+function autoSave(){
+  localStorage.setItem("colorCarnival_gallery", JSON.stringify(items));
+}
+
+function clearAll(){
+  if(!confirm("Delete everything from Color Carnival editor?")) return;
+  items=[];
+  autoSave();
+  render();
+}
+
+function render(){
+  mediaGrid.innerHTML = "";
+
+  items.forEach((o, i) => {
+    const d = document.createElement("div");
+    d.className = "card";
+
+    let el;
+    if (o.type === "video") {
+      el = document.createElement("video");
+      el.src = o.url;
+      el.controls = true;
+    } else if (o.type === "audio") {
+      el = document.createElement("audio");
+      el.src = o.url;
+      el.controls = true;
+    } else {
+      el = document.createElement("img");
+      el.src = o.url;
+    }
+
+    // Caption
+    const inp = document.createElement("input");
+    inp.placeholder = "Caption...";
+    inp.value = o.caption || "";
+    inp.onchange = e => {
+      o.caption = e.target.value;
+      autoSave();
+    };
+
+    // Message for that photo/video
+    const msg = document.createElement("textarea");
+    msg.placeholder = "Write a memory for this photo...";
+    msg.value = o.message || "";
+    msg.style.marginTop = "10px";
+    msg.onchange = e => {
+      o.message = e.target.value;
+      autoSave();
+    };
+
+    // Delete
+    const del = document.createElement("button");
+    del.textContent = "Delete";
+    del.className = "btn ghost";
+    del.style.marginTop = "10px";
+    del.onclick = () => {
+      items.splice(i, 1);
+      autoSave();
+      render();
+    };
+
+    d.append(el, inp, msg, del);
+    mediaGrid.appendChild(d);
+  });
+}
+
+/* uploads */
+function uploadLocal(e){
+  let f=e.target.files[0];
+  if(!f) return;
+
+  let r=new FileReader();
+  r.onload=x=>{
+    let t = f.type.startsWith("video")
+  ? "video"
+  : f.type.startsWith("audio")
+  ? "audio"
+  : "image";
+    items.push({url:x.target.result,type:t,caption:"",message:""});
+    autoSave();
+    render();
+
+  };
+  r.readAsDataURL(f);
+}
+
+/* messages */
+function loadMessages(){
+  let txt=localStorage.getItem(MSG_KEY)||"";
+  allMessagesBox.innerHTML="";
+
+  if(!txt.trim()){
+    allMessagesBox.innerText="(No memories yet)";
+    return;
+  }
+
+  txt.split(/\r?\n\s*---\s*\r?\n/).forEach((m,i)=>{
+    let d=document.createElement("div");
+    d.className="singleMessage";
+    d.innerHTML=`
+      <div>${m}</div>
+      <div class="msgBtns">
+        <button onclick="editMsg(${i})">✏️</button>
+        <button onclick="deleteMsg(${i})">🗑️</button>
+      </div>`;
+    allMessagesBox.appendChild(d);
+  });
+}
+
+msgOpenBtn.onclick=()=>msgPopup.style.display="flex";
+
+msgSaveBtn.onclick=()=>{
+  let m=msgInput.value.trim();
+  if(!m) return;
+
+  let old=localStorage.getItem(MSG_KEY)||"";
+  localStorage.setItem(MSG_KEY, old ? old+"\n---\n"+m : m);
+
+  msgInput.value="";
+  msgPopup.style.display="none";
+  loadMessages();
+};
+
+msgPopup.onclick=e=>{
+  if(e.target===msgPopup) msgPopup.style.display="none";
+};
+
+function deleteMsg(i){
+  let a=(localStorage.getItem(MSG_KEY)||"").split(/\r?\n\s*---\s*\r?\n/);
+  a.splice(i,1);
+  localStorage.setItem(MSG_KEY,a.join("\n---\n"));
+  loadMessages();
+}
+
+function editMsg(i){
+  let a=(localStorage.getItem(MSG_KEY)||"").split(/\r?\n\s*---\s*\r?\n/);
+  let u=prompt("Edit memory",a[i]);
+  if(u){
+    a[i]=u.trim();
+    localStorage.setItem(MSG_KEY,a.join("\n---\n"));
+    loadMessages();
+  }
+}
+
+/* music */
+let previewAudio=null;
+bgMusicSelect.value=localStorage.getItem(MUSIC_KEY)||"";
+
+function playMusicPreview(){
+  if(!bgMusicSelect.value) return;
+  stopMusicPreview();
+  previewAudio=new Audio(bgMusicSelect.value);
+  previewAudio.volume=.65;
+  previewAudio.play();
+}
+
+function stopMusicPreview(){
+  if(previewAudio){
+    previewAudio.pause();
+    previewAudio=null;
+  }
+}
+
+function saveBgMusic(){
+  localStorage.setItem(MUSIC_KEY,bgMusicSelect.value||"");
+  musicSavedMsg.style.display="block";
+  setTimeout(()=>musicSavedMsg.style.display="none",1500);
+}
+
+/* password */
+function savePass(){
+  const passBox = document.getElementById("newPass");
+  const value = passBox.value.trim();
+
+  if(!value){
+    alert("Please enter a password first!");
+    return;
+  }
+
+  localStorage.setItem("viewerPassword_colorCarnival", value);
+
+  passSaved.style.display="block";
+  setTimeout(()=>passSaved.style.display="none",1500);
+}
+
+function saveMessages(){
+  alert("Memories saved ✨");
+}
+
+/* cloudinary */
+function openWidget(type){
+  cloudinary.openUploadWidget({
+    cloudName:"di8n4lsjz",
+    uploadPreset:"color_carnival",
+    folder:"color_carnival",
+    resourceType:"auto",
+    multiple:true
+  },(e,r)=>{
+    if(!e && r && r.event==="success"){
+      items.push({
+        url:r.info.secure_url,
+        type:r.info.resource_type,
+        caption:"",
+        message:""
+      });   
+      autoSave();
+      render();
+    }
+  });
+}
+
+window.addEventListener("load", () => {
+  items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  render();
+});
+render();
+loadMessages();
+</script>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

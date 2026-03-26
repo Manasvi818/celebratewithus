@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Laugh Riot — Viewer • CelebrateWithUs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
+
+<style>
+:root{
+
+  /* Background */
+  --bg1:#F6CB04;   /* Bright Comic Yellow */
+  --bg2:#EBAC04;   /* Warm Golden Yellow */
+
+  /* Text */
+  --text:#1E1E13;  /* Dark Outline */
+  --muted:#64561B; /* Olive Shadow */
+
+  /* Accent colors */
+  --neon:#02AFDE;  /* Comic Blue */
+  --neon2:#F06916; /* Orange Pop */
+  --pink:#9F671C;  /* Brown Accent */
+
+  /* Cards */
+  --card:#F7F2E3;  /* Soft Cream */
+  --border:#1E1E13;
+
+  /* Comic shadow */
+  --shadow:5px 5px 0 #64561B;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui, sans-serif;
+  background:linear-gradient(135deg,#F6CB04,#EBAC04);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* Electric background */
+body::before,
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-2;
+}
+body::before{
+  background:
+    radial-gradient(circle at 18% 20%, rgba(0,245,255,.20), transparent 60%),
+    radial-gradient(circle at 80% 18%, rgba(60,123,255,.20), transparent 65%),
+    radial-gradient(circle at 25% 85%, rgba(255,45,247,.12), transparent 60%),
+    radial-gradient(circle at 92% 82%, rgba(0,245,255,.12), transparent 65%);
+}
+body::after{
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(0,245,255,.08) 0 2px,
+      transparent 2px 18px);
+  opacity:.20;
+}
+
+/* Decoration canvas */
+#decorCanvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:50;
+}
+
+/* Layout */
+.page{
+  max-width:1100px;
+  margin:auto;
+  padding:18px;
+  position:relative;
+  z-index:100;
+}
+
+.wrap{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(0,245,255,.18);
+  border-radius:26px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  backdrop-filter: blur(14px);
+}
+
+/* Title */
+.hero-title{
+  font-family:"Orbitron";
+  font-size:64px;
+  line-height:1.02;
+  letter-spacing:3px;
+  margin:0;
+  text-align:center;
+  color:#F06916;
+  text-shadow:4px 4px 0 #F7F2E3;
+}
+
+.subtitle{
+  margin:12px 0 0;
+  text-align:center;
+  font-family:"Allura", cursive;
+  font-size:34px;
+  color:#9F671C;
+}
+
+/* Fixed right corner buttons */
+.cornerBtns{
+  position:fixed;
+  top:18px;
+  right:18px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  z-index:5000;
+}
+
+/* Mobile: keep inside screen */
+@media(max-width:520px){
+  .cornerBtns{
+    top:12px;
+    right:12px;
+  }
+}
+
+.actionBtn{
+  border:none;
+  border-radius:999px;
+  padding:12px 18px;
+  cursor:pointer;
+  font-weight:900;
+  font-size:15px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(0,245,255,.22);
+  color:var(--text);
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+  transition:.18s ease;
+}
+.actionBtn:hover{ transform:scale(1.03); }
+
+/* Section */
+.sectionTitle{
+  text-align:center;
+  margin:26px 0 14px;
+  font-family:"Playfair Display";
+  font-size:28px;
+  color:rgba(234,246,255,.92);
+}
+/* Cursive titles for Gallery + Messages */
+.cursiveTitle{
+  font-family:"Allura", cursive !important;
+  font-size:44px;
+  font-weight:400;
+  letter-spacing:1px;
+  color:rgba(234,246,255,.95);
+  text-shadow:0 0 18px rgba(0,245,255,.18);
+}
+
+/* Videos */
+.videoBox video{
+  width:100%;
+  border-radius:18px;
+  max-height:340px;
+  object-fit:cover;
+  margin-bottom:14px;
+  border:1px solid rgba(0,245,255,.16);
+  box-shadow:0 0 18px rgba(0,245,255,.10);
+}
+
+/* Photos */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:14px;
+}
+@media(max-width:980px){ .grid{grid-template-columns:repeat(2, 1fr);} }
+@media(max-width:560px){ .grid{grid-template-columns:1fr;} }
+
+.card{
+  background:#F7F2E3;
+  border:3px solid #1E1E13;
+  border-radius:16px;
+  padding:10px;
+  text-align:center;
+  box-shadow:6px 6px 0 #64561B;
+  transition:.18s ease;
+}
+.card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(0,245,255,.25);
+}
+
+.card img{
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:cover;
+  border-radius:16px;
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 0 18px rgba(0,245,255,.10);
+}
+
+.photoCaption{
+  font-family:"Playfair Display";
+  font-size:15px;
+  margin:8px 0 0;
+  color:#1E1E13; 
+   font-weight:600;
+}
+
+.tapBtn{
+  margin:10px auto 4px;
+  display:block;
+  background:#F06916;
+  border:3px solid #1E1E13;
+  border-radius:12px;
+  padding:7px 18px;
+  font-size:13px;
+  color:white;
+  cursor:pointer;
+  font-family:"Playfair Display";
+  font-weight:900;
+  box-shadow:3px 3px 0 #64561B;
+}
+.tapBtn:hover{ transform:scale(1.05); }
+
+/* Messages */
+.stickyNote{
+  background:#02AFDE;
+  color:white;
+  border:3px solid #1E1E13;
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:12px;
+  font-family:"Playfair Display";
+  line-height:1.55;
+  box-shadow:5px 5px 0 #64561B;
+}
+
+/* Password input + eye */
+.passWrap{
+  position:relative;
+  width:260px;
+ justify-content:space-between;
+  border-radius:16px;
+  border:3px solid #1E1E13;
+  background:#F7F2E3;
+
+  height:52px;
+
+  box-shadow:5px 5px 0 #64561B;
+
+  display:flex;
+  align-items:center;
+}
+
+
+.passWrap input{
+  flex:1;
+
+  height:100%;
+  border:none;
+  outline:none;
+
+  background:transparent;
+
+  color:#1E1E13;
+
+  padding:0 14px;
+
+  font-size:16px;
+}
+
+
+.passWrap input::placeholder{
+  color:#64561B;
+}
+
+
+
+
+
+/* Password overlay */
+#passwordOverlay{
+  position:fixed;
+  inset:0;
+   background:linear-gradient(135deg,#F6CB04,#EBAC04);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:9999;
+  font-family:"Playfair Display";
+}
+#passwordOverlay h2{
+  font-family:"Orbitron";
+  color:#1E1E13;
+  font-size:44px;
+  text-shadow:3px 3px 0 #F7F2E3;
+}
+#passwordOverlay input{
+  border-radius:14px;
+  border:1px solid rgba(0,245,255,.22);
+  font-size:16px;
+  outline:none;
+  background:rgba(255,255,255,.06);
+  color:#1E1E13; 
+}
+#passwordOverlay button{
+  margin-top:18px;
+  padding:12px 34px;
+  border-radius:14px;
+  border:3px solid #1E1E13;
+  background:#F06916;
+  color:white;
+  font-weight:900;
+  font-size:16px;
+  cursor:pointer;
+  box-shadow:5px 5px 0 #64561B;
+}
+
+#wrongPass{
+  display:none;
+  color:#ff6b6b;
+  margin-top:10px;
+  font-weight:800;
+}
+
+/* Overlays */
+#msgOverlay,
+#imgZoomOverlay,
+#decorOverlay,
+#musicOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  padding:18px;
+}
+
+.popupCard{
+  width:min(320px,95vw);
+
+  background:#F06916;
+
+  border:3px solid #1E1E13;
+  border-radius:18px;
+
+  padding:18px;
+  text-align:center;
+
+  font-family:"Playfair Display";
+
+  box-shadow:6px 6px 0 #64561B;
+}
+
+.popupCard h3{
+  margin:0 0 10px;
+  font-family:"Orbitron";
+  color:#1E1E13;
+}
+
+.btnSmall{
+  background:#F06916;
+
+  border:3px solid #1E1E13;
+  border-radius:12px;
+
+  padding:10px 14px;
+
+  color:white;
+  font-weight:900;
+
+  cursor:pointer;
+
+  box-shadow:3px 3px 0 #64561B;
+}
+
+.btnSmall.ghost{
+  background:#02AFDE;
+
+  border:3px solid #1E1E13;
+
+  color:white;
+
+  box-shadow:3px 3px 0 #64561B;
+}
+
+#msgText{ white-space:pre-line; color:rgba(234,246,255,.88); }
+
+#zoomImg{
+  max-width:100%;
+  max-height:75vh;
+  border-radius:18px;
+  border:1px solid rgba(0,245,255,.18);
+}
+#zoomCaption{
+  margin-top:10px;
+  font-family:"Playfair Display";
+  color:rgba(234,246,255,.88);
+}
+
+/* Controls */
+.popupCard input[type="range"]{ width:100%; }
+
+/* slider track */
+.popupCard input[type="range"]::-webkit-slider-runnable-track{
+  background:#02AFDE;   /* Comic blue */
+  height:6px;
+  border-radius:6px;
+}
+
+/* slider thumb */
+.popupCard input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  background:#F06916;   /* Orange pop */
+  border:3px solid #1E1E13;
+  height:18px;
+  width:18px;
+  border-radius:50%;
+  margin-top:-6px;
+}
+
+.popupCard select{
+  width:100%;
+  padding:10px;
+
+  border-radius:12px;
+  border:3px solid #1E1E13;
+
+  background:#F7F2E3;
+  color:#1E1E13;
+
+  outline:none;
+}
+.popupCard option{ background:#070018; color:white; }
+
+.videoBox{
+  width:100%;
+  max-width:900px;   /* controls total size */
+  margin:0 auto 20px;  /* center + spacing */
+}
+
+.videoBox video{
+width:100%;
+max-width:100%;
+aspect-ratio:16/9;
+border-radius:18px;
+object-fit:cover;
+border:4px solid #F2D7B5; 
+}
+
+.site-footer{
+text-align:center;
+margin-top:40px;
+padding:18px;
+font-size:14px;
+color:#1E1E13;
+font-family:"Playfair Display";
+}
+
+.videoBox p{
+margin-top:8px;
+text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="decorCanvas"></canvas>
+
+<!-- PASSWORD -->
+<div id="passwordOverlay">
+  <h2>Laugh Riot ⚡</h2>
+  <p style="margin-top:-6px;color:rgba(234,246,255,.75)">Enter password to unlock ✨</p>
+  <div class="passWrap">
+  <input id="pass" type="password" placeholder="Password">
+
+</div>
+
+  <button onclick="unlock()">Unlock</button>
+  <p id="wrongPass">Incorrect password</p>
+</div>
+
+<div class="page">
+  <div class="wrap">
+
+    <!-- TITLE + SUBTITLE -->
+    <h1 class="hero-title">LAUGH RIOT</h1>
+    <p class="subtitle">Giggles, Goofiness & Good Times</p>
+
+    <!-- GALLERY SECTION -->
+   <h2 class="sectionTitle cursiveTitle" id="galleryTitle">The Joke Box </h2>
+
+    <div id="videoContainer"></div>
+    <div id="photoGrid" class="grid"></div>
+
+    <!-- MESSAGE SECTION -->
+    <h2 class="sectionTitle cursiveTitle" id="messageTitle">Joke Junction</h2>
+    <div id="messageList"></div>
+
+  </div>
+</div>
+
+<!-- FIXED RIGHT CORNER BUTTONS -->
+<div class="cornerBtns">
+  <button id="decorBtn" class="actionBtn">✨ Decorations</button>
+  <button id="musicOpenBtn" class="actionBtn">🎵 Music</button>
+</div>
+
+<!-- SURPRISE POPUP -->
+<div id="msgOverlay">
+  <div class="popupCard">
+    <h3>⚡ Surprise</h3>
+    <div id="msgText"></div>
+    <button id="closeMsg" class="btnSmall" style="width:100%;margin-top:12px;">Close</button>
+  </div>
+</div>
+
+<!-- IMAGE ZOOM -->
+<div id="imgZoomOverlay">
+  <div class="popupCard" style="width:min(820px,95vw);">
+    <img id="zoomImg">
+    <p id="zoomCaption"></p>
+    <button class="btnSmall ghost" style="width:100%;margin-top:10px;" onclick="imgZoomOverlay.style.display='none'">
+      Close
+    </button>
+  </div>
+</div>
+
+<!-- DECORATIONS -->
+<div id="decorOverlay">
+  <div class="popupCard">
+    <h3>Decorations</h3>
+
+    <p style="margin:10px 0 6px;color:rgba(234,246,255,.75)">Style</p>
+    <select id="burst">
+  <option>Comic Burst</option>
+  <option>Laugh Bubbles</option>
+  <option>BOOM Pop</option>
+</select>
+
+    <p style="margin:12px 0 6px;color:rgba(234,246,255,.75)">Decorations / sec</p>
+    <input id="rate" type="range" min="0" max="12" value="4">
+
+    <p style="margin:12px 0 6px;color:rgba(234,246,255,.75)">Decoration size</p>
+    <input id="size" type="range" min="10" max="90" value="34">
+
+    <button id="applyBtn" class="btnSmall" style="width:100%;margin-top:12px;">Apply</button>
+    <button class="btnSmall ghost" style="width:100%;margin-top:10px;" onclick="decorOverlay.style.display='none'">
+      Close
+    </button>
+  </div>
+</div>
+
+<!-- MUSIC -->
+<div id="musicOverlay">
+  <div class="popupCard">
+    <h3>Music</h3>
+    <p style="margin-top:-4px;color:rgba(234,246,255,.75)">Background Music</p>
+
+    <button id="musicBtn"
+            class="btnSmall"
+            style="width:100%;"
+            onclick="toggleMusic()">
+      ▶ Play Music
+    </button>
+
+    <button class="btnSmall ghost"
+            style="width:100%;margin-top:10px;"
+            onclick="musicOverlay.style.display='none'">
+      Close
+    </button>
+  </div>
+</div>
+
+<script>
+  function autoSave(){
+  localStorage.setItem("laugh_media", JSON.stringify(items));
+}
+/* =========================
+   STORAGE KEYS (MATCH EDITOR)
+========================= */
+const MEDIA_KEY = "laugh_media";
+const MSG_KEY   = "laugh_messages";
+const MUSIC_KEY = "laugh_music";
+const PASS_KEY  = "viewerPassword_laughriot";
+
+/* ensure localStorage exists */
+if(!localStorage.getItem(MEDIA_KEY)){
+  localStorage.setItem(MEDIA_KEY,"[]");
+}
+
+/* LOAD DATA */
+const data = JSON.parse(localStorage.getItem(MEDIA_KEY) || "[]");
+const savedSong = localStorage.getItem(MUSIC_KEY) || "";
+const savedPass = localStorage.getItem(PASS_KEY) || "";
+
+/* MUSIC */
+let bgAudio = null;
+let isPlaying = false;
+
+function playMusic(){
+  if(!savedSong) return;
+
+  if(!bgAudio){
+    bgAudio = new Audio(savedSong);
+    bgAudio.loop = true;
+    bgAudio.volume = 0.65;
+  }
+  bgAudio.play().catch(()=>{});
+}
+
+function toggleMusic(){
+  if(!savedSong){
+    alert("No music saved in Editor 🎵");
+    return;
+  }
+
+  if(!bgAudio){
+    playMusic();
+    musicBtn.textContent = "⏸ Pause Music";
+    isPlaying = true;
+    return;
+  }
+
+  if(isPlaying){
+    bgAudio.pause();
+    musicBtn.textContent = "▶ Play Music";
+  }else{
+    bgAudio.play().catch(()=>{});
+    musicBtn.textContent = "⏸ Pause Music";
+  }
+  isPlaying = !isPlaying;
+}
+
+/* PASSWORD */
+function unlock(){
+
+  const input = document.getElementById("pass").value.trim();
+  const savedPass = localStorage.getItem("viewerPassword_laughriot") || "";
+
+  if(savedPass === ""){
+    document.getElementById("passwordOverlay").style.display="none";
+    playMusic();
+isPlaying = true;
+    return;
+  }
+
+  if(input === savedPass){
+    document.getElementById("passwordOverlay").style.display="none";
+    playMusic();
+isPlaying = true;
+  }else{
+    document.getElementById("wrongPass").style.display="block";
+  }
+
+}
+
+pass.addEventListener("keydown",(e)=>{ if(e.key==="Enter") unlock(); });
+
+/* RENDER */
+function render(){
+  videoContainer.innerHTML="";
+  photoGrid.innerHTML="";
+  messageList.innerHTML="";
+
+  data.forEach(x=>{
+    if(x.type==="video"){
+  videoContainer.innerHTML += `
+    <div class="videoBox">
+      <div style="width:100%;">
+        <video src="${x.url}" controls></video>
+        <p class="photoCaption">${x.caption || ""}</p>
+      </div>
+    </div>
+  `;
+}
+  });
+
+  data.forEach((x,i)=>{
+    if(x.type==="image"){
+      const cap=(x.caption||"").replaceAll("`","'");
+      const d=document.createElement("div");
+      d.className="card";
+      d.innerHTML=`
+        <img src="${x.url}" onclick="openZoom('${x.url}',\`${cap}\`)">
+        <button class="tapBtn" onclick="showRandom(${i})">Surprise ⚡</button>
+        <p class="photoCaption">${x.caption || ""}</p>
+      `;
+      photoGrid.appendChild(d);
+    }
+  });
+
+  if(!data.length){
+    photoGrid.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;opacity:.75;font-family:Playfair Display;padding:20px;">
+        No media found 😭<br>
+        Upload photos/videos from the Editor first ⚡
+      </div>
+    `;
+  }
+}
+loadMessages();
+
+/* START RENDER AFTER EVERYTHING LOADED */
+render();
+
+/* ZOOM */
+function openZoom(src,cap){
+  zoomImg.src=src;
+  zoomCaption.textContent=cap || "";
+  imgZoomOverlay.style.display="flex";
+}
+imgZoomOverlay.onclick=e=>{
+  if(e.target.id==="imgZoomOverlay"){
+    imgZoomOverlay.style.display="none";
+  }
+};
+
+/* SURPRISE */
+const cuteMessages=[
+  "You glow different when you're happy ⚡✨",
+  "This moment looks like neon magic 💙",
+  "Main character energy detected 😭🔥",
+  "This memory is literally electric ⚡",
+  "One day we’ll miss this night the most 🥹",
+  "No filter can match this vibe 💙",
+  "A moment frozen… a feeling forever 📸✨",
+  "We’re collecting memories like lightning ⚡"
+];
+
+function showRandom(i){
+  msgText.textContent = cuteMessages[Math.floor(Math.random()*cuteMessages.length)];
+  msgOverlay.style.display="flex";
+}
+closeMsg.onclick=()=>msgOverlay.style.display="none";
+
+/* LOAD MESSAGES */
+function loadMessages(){
+  const txt = localStorage.getItem(MSG_KEY) || "";
+  if(!txt.trim()){
+    messageList.innerHTML = `<div style="text-align:center;opacity:.75;font-family:Playfair Display;">
+      (No messages yet)
+    </div>`;
+    return;
+  }
+
+  txt.split("\n---\n").forEach(m=>{
+    const d=document.createElement("div");
+    d.className="stickyNote";
+    d.textContent=m.trim();
+    messageList.appendChild(d);
+  });
+}
+loadMessages();
+
+
+/* OVERLAYS */
+decorBtn.onclick = ()=> decorOverlay.style.display="flex";
+decorOverlay.onclick = e=>{ if(e.target===decorOverlay) decorOverlay.style.display="none"; };
+
+musicOpenBtn.onclick = ()=> musicOverlay.style.display="flex";
+musicOverlay.onclick = e=>{ if(e.target===musicOverlay) musicOverlay.style.display="none"; };
+
+/* DECORATIONS */
+const c = decorCanvas;
+const ctx = c.getContext("2d");
+let W,H,particles=[];
+
+function resizeCanvas(){
+  W = c.width = innerWidth;
+  H = c.height = innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+let decorCfg={ rate:5, size:50, burst:"Comic Burst" };
+
+applyBtn.onclick=()=>{
+  decorCfg.rate = +rate.value;
+  decorCfg.size = +size.value;
+  decorCfg.burst = burst.value;
+  decorOverlay.style.display="none";
+};
+
+function spawnDecor(){
+  const chance = decorCfg.rate / 18;
+  if(Math.random() > chance) return;
+
+  particles.push({
+    x:Math.random()*W,
+    y:H+30,
+    r:decorCfg.size,
+    t:decorCfg.burst,
+    vx:(Math.random()-.5)*0.6,
+    vy:1.4+Math.random()*1.4,
+    life:1
+  });
+}
+
+function drawLightning(x,y,r){
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.strokeStyle="rgba(0,245,255,.85)";
+  ctx.shadowColor="rgba(0,245,255,.7)";
+  ctx.shadowBlur=18;
+  ctx.lineWidth=3;
+
+  ctx.beginPath();
+  ctx.moveTo(0,0);
+  ctx.lineTo(-r*0.2,-r*0.35);
+  ctx.lineTo(r*0.15,-r*0.35);
+  ctx.lineTo(-r*0.1,-r*0.85);
+  ctx.lineTo(r*0.35,-r*0.45);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawStar(cx, cy, spikes, outerRadius, innerRadius){
+  let rot = Math.PI/2*3;
+  let step = Math.PI/spikes;
+
+  ctx.beginPath();
+  ctx.moveTo(cx, cy - outerRadius);
+  for(let i=0;i<spikes;i++){
+    ctx.lineTo(cx + Math.cos(rot)*outerRadius, cy + Math.sin(rot)*outerRadius);
+    rot += step;
+    ctx.lineTo(cx + Math.cos(rot)*innerRadius, cy + Math.sin(rot)*innerRadius);
+    rot += step;
+  }
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawDecor(){
+  ctx.clearRect(0,0,W,H);
+
+  particles.forEach((p,i)=>{
+    ctx.save();
+    ctx.globalAlpha=p.life;
+
+    if(p.t==="Comic Burst"){
+
+  ctx.fillStyle="#F06916";
+  ctx.strokeStyle="#1E1E13";
+  ctx.lineWidth=3;
+
+  ctx.beginPath();
+  ctx.arc(p.x,p.y,p.r/3,0,Math.PI*2);
+  ctx.fill();
+  ctx.stroke();
+
+}
+
+if(p.t==="Laugh Bubbles"){
+
+  const texts=["HAHA","LOL","HEHE"];
+
+  ctx.font="bold "+(p.r/1.8)+"px Comic Sans MS";
+  ctx.fillStyle="#02AFDE";
+  ctx.strokeStyle="#1E1E13";
+  ctx.lineWidth=3;
+
+  const word=texts[Math.floor(Math.random()*texts.length)];
+
+  ctx.strokeText(word,p.x,p.y);
+  ctx.fillText(word,p.x,p.y);
+
+}
+
+if(p.t==="BOOM Pop"){
+
+  ctx.fillStyle="#F6CB04";
+  ctx.strokeStyle="#1E1E13";
+  ctx.lineWidth=3;
+
+  ctx.beginPath();
+
+  for(let i=0;i<10;i++){
+    const angle=(Math.PI*2/10)*i;
+    const r=i%2? p.r/2 : p.r;
+    const x=p.x + Math.cos(angle)*r;
+    const y=p.y + Math.sin(angle)*r;
+
+    if(i===0) ctx.moveTo(x,y);
+    else ctx.lineTo(x,y);
+  }
+
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+}
+    ctx.restore();
+
+    p.y -= p.vy;
+    p.x += p.vx;
+    p.life -= 0.006;
+
+    if(p.y < -60 || p.life <= 0) particles.splice(i,1);
+  });
+}
+
+(function loop(){
+  requestAnimationFrame(loop);
+  spawnDecor();
+  drawDecor();
+})();
+</script>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

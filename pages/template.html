@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Template Viewer / Editor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../styles/main.css" />
+  <link rel="stylesheet" href="../styles/template.css">
+</head>
+<div class="template-view">
+  <img id="templateImage" src="" alt="Template Image" />
+  <h2 id="templateTitle"></h2>
+</div>
+<body>
+
+<footer class="site-footer">
+  <p>© 2025 CelebrateWithUs.web</p>
+</footer>
+
+<!-- ✅ IMPORTANT: Correct paths -->
+<script src="../scripts/templates-data.js"></script>
+<script src="../scripts/app.js"></script>
+
+<script>
+function getTemplateId() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("id");
+}
+
+function loadTemplate() {
+  const id = getTemplateId();
+
+  if (!id) {
+    console.error("No template ID found in URL");
+    return;
+  }
+
+  const template = window.TEMPLATES.find(t => t.id === id);
+
+  if (!template) {
+    console.error("Template not found");
+    return;
+  }
+
+  // ✅ Load preview page inside iframe
+  document.getElementById("templateFrame").src =
+    "../preview.html?template=" + template.id;
+
+  document.getElementById("templateTitle").innerText = template.title;
+}
+
+loadTemplate();
+</script>
+
+</body>
+</html>

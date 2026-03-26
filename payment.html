@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Complete Your Purchase</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <main class="payment-page">
+    <h1 class="payment-title">Complete Your Purchase 💳</h1>
+    <p class="muted">
+  After payment, both <strong>Editor Page</strong> and <strong>Viewer Page</strong> will be downloaded on your device.
+</p>
+
+    <button id="rzpButton" class="btn primary big">Pay ₹599 Now</button>
+
+    <p class="muted">
+  If you face any query or issue, reach out to us at <strong>celebratewithus10@gmail.com</strong>
+</p>
+
+    <a href="index.html" class="back-btn">← Back</a>
+  </main>
+
+  <!-- VERY IMPORTANT: Razorpay Checkout Script -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <!-- Your payment logic -->
+  <script src="scripts/payment.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,244 @@
+/* HEADER */
+.viewer-header {
+display: flex;
+padding: 15px 20px;
+}
+
+.back {
+background: #ffffff;
+padding: 8px 14px;
+border-radius: 8px;
+text-decoration: none;
+color: #333;
+box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.back:hover {
+background: #ececec;
+}
+
+/* MAIN LAYOUT */
+.viewer-container {
+display: flex;
+gap: 20px;
+padding: 20px;
+}
+
+.viewer-left {
+flex: 2;
+}
+
+.editor-right {
+flex: 1;
+}
+
+/* TEMPLATE CARD */
+.template-card {
+background: #fff;
+border-radius: 16px;
+padding: 15px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* IMAGE */
+#templateMainImage {
+width: 50%;
+height: 250px;
+object-fit: cover;
+border-radius: 12px;
+ max-width: 400px;
+
+}
+
+/* TITLE */
+#templateTitle {
+margin-top: 10px;
+font-size: 18px;
+}
+
+/* TAGLINE */
+.muted {
+color: #777;
+font-size: 14px;
+}
+
+/* PRICE BOX */
+.price-box {
+background: #f1f3ff;
+color: #3f51b5;
+padding: 8px 12px;
+border-radius: 8px;
+margin-top: 10px;
+display: inline-block;
+font-weight: 600;
+}
+
+/* PAYMENT BOX */
+.payment-box {
+margin-top: 15px;
+}
+
+.pay-btn {
+display: block;
+text-align: center;
+background: #3f51b5;
+color: white;
+padding: 10px;
+border-radius: 10px;
+text-decoration: none;
+}
+
+.pay-btn:hover {
+background: #303f9f;
+}
+
+/* NAV BUTTONS */
+.nav-next {
+margin-top: 15px;
+display: flex;
+justify-content: space-between;
+}
+
+.btn {
+padding: 10px 15px;
+border-radius: 10px;
+border: none;
+cursor: pointer;
+}
+
+.primary {
+background: #3f51b5;
+color: white;
+}
+
+.secondary {
+background: #eeeeee;
+}
+
+/* EDITOR BOX */
+.editor-box {
+background: #fff;
+padding: 15px;
+border-radius: 12px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.editor-box input {
+width: 100%;
+padding: 8px;
+margin-top: 5px;
+margin-bottom: 10px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+.viewer-container {
+flex-direction: column;
+}
+}
+
+
+.custom-layout {
+  display: flex;
+  height: 100vh;
+}
+
+/* LEFT SIDE */
+.left-panel {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* RIGHT SIDE */
+.right-panel {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* IMAGE */
+.right-panel img {
+  width: 80%;
+  max-height: 500px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+/* BUTTONS */
+.btn {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #222;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn:hover {
+  background: #444;
+}
+.action-buttons {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.action-buttons button {
+  padding: 10px 18px;
+  margin: 8px;
+  border-radius: 8px;
+  border: none;
+  background: orange;
+  color: white;
+  cursor: pointer;
+}
+/* 🎯 Apply to entire preview section */
+.template-preview {
+  font-family: 'Playfair Display', serif;
+  color: #7A5C8E;
+}
+
+/* 🏷️ Template Title (like "Easy Breezy") */
+.template-preview h1,
+.template-preview .template-title {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* 📌 Section headings inside preview */
+.template-preview h2 {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+/* 📝 Normal text (captions, messages, etc.) */
+.template-preview p {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* 🔘 Buttons inside preview */
+.template-preview button {
+  font-size: 14px;
+}
+
+.template-title {
+  font-family: 'Playfair Display', serif;
+  color: #7A5C8E;
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.preview-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

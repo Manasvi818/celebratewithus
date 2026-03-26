@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Golden Love — Editor</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Libre+Baskerville:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+
+<style>
+:root{
+  --bg:#fbf7ef;
+  --gold:#d4a017;
+  --gold-soft:#e7c77f;
+  --text:#6e5730;
+}
+
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:linear-gradient(135deg,#fbf7ef,#f5ead6,#fffaf2);
+  color:var(--text);
+  padding:30px;
+}
+
+/* subtle golden dots */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(212,160,23,.12) 2px, transparent 3px),
+    radial-gradient(circle at 70% 70%, rgba(212,160,23,.10) 2px, transparent 3px);
+  background-size:300px 300px;
+  pointer-events:none;
+}
+
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  background:linear-gradient(145deg,#fffdf8,#f5ead6);
+  padding:40px;
+  border-radius:32px;
+  box-shadow:0 25px 70px rgba(212,160,23,.15);
+}
+
+h1{
+  font-family:'Allura',cursive;
+  font-size:5rem;
+  text-align:center;
+  color:var(--gold);
+  text-shadow:0 0 25px rgba(212,160,23,.35);
+  margin-bottom:10px;
+}
+
+h2,h3{
+  text-align:center;
+  font-family:'Libre Baskerville',serif;
+  color:#8a6d3b;
+}
+
+.grid{
+  display:flex;
+  flex-direction:column;
+  gap:30px;
+}
+
+.video-row{
+  width:100%;
+}
+
+.image-row{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:30px;
+}
+
+@media(max-width:700px){
+  .image-row{
+    grid-template-columns:1fr;
+  }
+}
+
+.card{
+  background:white;
+  padding:18px;
+  border-radius:24px;
+  box-shadow:0 20px 60px rgba(0,0,0,.08);
+}
+
+.card img,
+.card video{
+  width:100%;
+  border-radius:18px;
+}
+
+input, textarea, select{
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  border-radius:14px;
+  border:1px solid rgba(212,160,23,.3);
+  background:#fffdf8;
+  color:#6e5730;
+}
+
+.btn{
+  padding:10px 22px;
+  border-radius:40px;
+  border:none;
+  background:linear-gradient(45deg,#e7c77f,#d4a017);
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  transition:.3s;
+  box-shadow:0 12px 30px rgba(212,160,23,.25);
+}
+
+.btn:hover{
+  transform:scale(1.05);
+}
+
+.ghost{
+  background:transparent;
+  border:1px solid rgba(212,160,23,.4);
+  color:#8a6d3b;
+}
+
+/* MESSAGE POPUP */
+#msgPopup{
+  position:fixed;
+  inset:0;
+  background:rgba(255,250,240,.9);
+  backdrop-filter:blur(6px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.popupInner{
+  width:min(92%,500px);
+  background:linear-gradient(145deg,#fffdf8,#f5ead6);
+  padding:30px;
+  border-radius:28px;
+  box-shadow:0 25px 70px rgba(212,160,23,.25);
+  text-align:center;
+}
+
+.site-footer{
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+  font-size:14px;
+  color:var(--maroon);
+  opacity:.8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<h1>Golden Love</h1>
+<h2>Create your golden story 💛</h2>
+
+<!-- MUSIC -->
+<h2 style="margin-top:30px;">🎶 Background Music</h2>
+
+<div class="card">
+<select id="bgMusicSelect">
+<option value="">No Music</option>
+<option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024745/Pink_Silence_cpqqba.mp3">Pink Silence💞</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024741/Lights_cfhsxj.mp3">Lights🌸</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024740/One_Love_pq1obq.mp3">One Love💕</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024734/Velvet_Moments_kkpzlk.mp3">Velvet Moments🤍</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024733/Falling_Slowly_czfydq.mp3">Falling Slowly💞</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024730/Sweet_psqzg1.mp3">Sweet🌸</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024729/sweetvibe_lnfwkn.mp3">Sweet vibe💕</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024725/Heart_in_Bloom_fgj5oc.mp3">Heart in Bloom🤍</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024722/Whisper_of_You_wpcufk.mp3">Whisper of You💕</option>
+    <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024718/Spring_Flowers_xjmnsd.mp3">Spring Flowers🤍</option>
+</select>
+
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+
+<button class="btn ghost" onclick="previewMusic()">▶️ Preview</button>
+
+<button class="btn ghost" onclick="stopMusic()">⏹ Stop</button>
+
+<button class="btn" onclick="saveMusic()">Save Music</button>
+
+<button class="btn ghost" onclick="openWidget('image')">📷 Image</button>
+
+<button class="btn ghost" onclick="openWidget('video')">🎥 Video</button>
+<label class="btn ghost">
+Local Upload
+<input type="file" hidden accept="image/*,video/*" onchange="uploadLocal(event)">
+</label>
+</div>
+</div>
+
+<!-- GALLERY -->
+<h2 style="margin-top:30px;">✨ Golden Gallery</h2>
+<div id="mediaGrid" class="grid"></div>
+
+<div style="margin-top:20px;display:flex;gap:10px;">
+<button class="btn ghost" onclick="clearAll()">Delete All</button>
+<button class="btn" onclick="autoSave()">Save</button>
+</div>
+
+<!-- PASSWORD -->
+<h3 style="margin-top:30px;">🔐 Viewer Password</h3>
+<input id="newPass" placeholder="gold">
+<button class="btn" onclick="savePass()">Save Password</button>
+
+<!-- MESSAGES -->
+<h3 style="margin-top:30px;">💌 Golden Messages</h3>
+<div style="text-align:center;">
+<button class="btn" id="msgOpenBtn">Add Message</button>
+</div>
+
+<div id="messagesContainer" style="margin-top:20px;"></div>
+</div>
+
+<!-- MESSAGE POPUP -->
+<div id="msgPopup">
+<div class="popupInner">
+<h3>Write softly 💛</h3>
+<textarea id="msgInput" style="height:120px;"></textarea>
+<button class="btn" id="msgSaveBtn" style="margin-top:12px;">Save</button>
+</div>
+</div>
+
+<script>
+const STORAGE_KEY="golden_gallery";
+const MSG_KEY="golden_messages";
+const MUSIC_KEY="golden_music";
+
+let items=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
+
+function saveAll(){
+localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
+}
+
+function autoSave(){
+  localStorage.setItem("golden_gallery", JSON.stringify(items));
+}
+
+function clearAll(){
+items=[];
+autoSave();
+render();
+}
+
+function render(){
+
+  mediaGrid.innerHTML = "";
+
+  const videoContainer = document.createElement("div");
+  const imageContainer = document.createElement("div");
+
+  videoContainer.className = "video-row";
+  imageContainer.className = "image-row";
+
+  items.forEach((o,i)=>{
+
+    let d = document.createElement("div");
+    d.className = "card";
+
+    let el = o.type==="video"
+      ? Object.assign(document.createElement("video"),{src:o.url,controls:true})
+      : Object.assign(document.createElement("img"),{src:o.url});
+
+    let cap = document.createElement("input");
+    cap.placeholder="Caption...";
+    cap.value=o.caption||"";
+    cap.oninput=e=>{o.caption=e.target.value;autoSave()();};
+
+    let mem = document.createElement("textarea");
+    mem.placeholder="Memory...";
+    mem.style.height="80px";
+    mem.value=o.memory||"";
+    mem.oninput=e=>{o.memory=e.target.value;autoSave()();};
+
+    let del = document.createElement("button");
+    del.textContent="Delete";
+    del.className="btn ghost";
+    del.style.marginTop="10px";
+    del.onclick=()=>{items.splice(i,1);autoSave();render();};
+
+    d.append(el,cap,mem,del);
+
+    if(o.type==="video"){
+      videoContainer.appendChild(d);  // 🎥 full row
+    } else {
+      imageContainer.appendChild(d);  // 🖼 2 per row
+    }
+
+  });
+
+  mediaGrid.appendChild(videoContainer);
+  mediaGrid.appendChild(imageContainer);
+}
+
+function uploadLocal(e){
+let f=e.target.files[0];
+if(!f)return;
+let r=new FileReader();
+r.onload=x=>{
+items.push({
+url:x.target.result,
+type: f.type.startsWith("video") ? "video" : "image",
+caption:"",
+memory:""
+});
+
+autoSave();
+render();};
+r.readAsDataURL(f);
+}
+
+function openWidget(type){
+cloudinary.openUploadWidget({
+cloudName:"di8n4lsjz",
+uploadPreset:"golden_love",
+folder:"golden_love",
+resourceType:type,
+multiple:true
+},(error,result)=>{
+if(!error && result && result.event==="success"){
+items.push({
+url:result.info.secure_url,
+type: result.info.resource_type || (result.info.format === "mp4" ? "video" : "image"),
+caption:"",
+memory:""
+});
+
+autoSave();
+render();
+}
+});
+}
+
+function savePass(){
+localStorage.setItem("viewerPassword_golden",newPass.value);
+alert("Password saved 💛");
+}
+
+function saveMusic(){
+localStorage.setItem(MUSIC_KEY,bgMusicSelect.value||"");
+alert("Music saved 🎶");
+}
+
+let previewAudio = null;
+
+function previewMusic(){
+
+const selected = document.getElementById("bgMusicSelect").value;
+
+if(!selected){
+alert("Select a music first ❤️");
+return;
+}
+
+if(previewAudio){
+previewAudio.pause();
+previewAudio.currentTime = 0;
+}
+
+previewAudio = new Audio(selected);
+previewAudio.volume = 0.6;
+previewAudio.play();
+
+}
+
+function stopMusic(){
+
+if(previewAudio){
+previewAudio.pause();
+previewAudio.currentTime = 0;
+}
+
+}
+
+/* 💌 PERSISTENT MESSAGE SYSTEM */
+
+let messages = JSON.parse(localStorage.getItem(MSG_KEY) || "[]");
+
+const msgOpenBtn = document.getElementById("msgOpenBtn");
+const msgPopup = document.getElementById("msgPopup");
+const msgInput = document.getElementById("msgInput");
+const msgSaveBtn = document.getElementById("msgSaveBtn");
+const messagesContainer = document.getElementById("messagesContainer");
+
+if(!messagesContainer){
+  console.error("messagesContainer not found");
+}
+function renderMessages(){
+  messagesContainer.innerHTML = "";
+
+  if(messages.length === 0){
+    messagesContainer.innerHTML = "<p style='text-align:center;opacity:.6;'>No messages yet 💛</p>";
+    return;
+  }
+
+  messages.forEach((text,index)=>{
+    const box = document.createElement("div");
+    box.style.cssText = `
+      background:white;
+      padding:16px;
+      border-radius:18px;
+      margin-bottom:12px;
+      box-shadow:0 15px 40px rgba(212,160,23,.15);
+      font-family:'Libre Baskerville';
+    `;
+
+    const msgText = document.createElement("div");
+    msgText.innerText = text;
+
+    const btnWrap = document.createElement("div");
+    btnWrap.style.cssText="margin-top:10px;display:flex;gap:8px;justify-content:flex-end;";
+
+    const editBtn = document.createElement("button");
+    editBtn.textContent="Edit";
+    editBtn.className="btn ghost";
+    editBtn.onclick=()=>{
+      msgInput.value = text;
+      msgPopup.style.display="flex";
+      messages.splice(index,1);
+      localStorage.setItem(MSG_KEY, JSON.stringify(messages));
+      renderMessages();
+    };
+
+    const delBtn = document.createElement("button");
+    delBtn.textContent="Delete";
+    delBtn.className="btn ghost";
+    delBtn.onclick=()=>{
+      messages.splice(index,1);
+      localStorage.setItem(MSG_KEY, JSON.stringify(messages));
+      renderMessages();
+    };
+
+    btnWrap.append(editBtn,delBtn);
+    box.append(msgText,btnWrap);
+    messagesContainer.appendChild(box);
+  });
+}
+
+msgOpenBtn.onclick=()=>{
+  msgInput.value="";
+  msgPopup.style.display="flex";
+};
+
+msgSaveBtn.onclick=()=>{
+  const text = msgInput.value.trim();
+  if(!text) return;
+
+  messages.push(text);
+  localStorage.setItem(MSG_KEY, JSON.stringify(messages));
+  msgPopup.style.display="none";
+  renderMessages();
+  render();
+};
+
+msgPopup.onclick=(e)=>{
+  if(e.target===msgPopup){
+    msgPopup.style.display="none";
+  }
+};
+
+window.addEventListener("DOMContentLoaded", () => {
+  items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  messages = JSON.parse(localStorage.getItem(MSG_KEY) || "[]");
+  
+  renderMessages();
+  render();
+});
+  
+</script>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+</body>
+</html>

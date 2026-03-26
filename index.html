@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AmazePages — Templates</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+
+  <!-- Fading / Sliding Animations -->
+  <style>
+    .hidden { display:none; opacity:0; }
+    .fade-slide {
+      display:block !important;
+      animation: fadeSlideDown 0.55s cubic-bezier(.25,.1,.25,1) forwards;
+    }
+    @keyframes fadeSlideDown {
+      0% { opacity:0; transform:translateY(-12px); filter:blur(6px); }
+      100%{ opacity:1; transform:translateY(0); filter:blur(0px); }
+    }
+
+    /* 🌸 Pink Pastel Gradient Glow Line */
+    .color-line {
+      width: 0;
+      height: 4px;
+      max-width: 650px;
+      background: linear-gradient(to right, #ff8ecf, #ffb7dd, #ffd6e8, #ffe4f2);
+      margin: 14px auto 0;
+      border-radius: 6px;
+      animation: grow-line 1.8s forwards ease-in-out, glow 3s infinite alternate ease-in-out;
+    }
+
+    @keyframes grow-line {
+      from { width: 0; }
+      to   { width: 650px; }
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 4px rgba(255,139,207,0.25); }
+      to   { box-shadow: 0 0 12px rgba(255,139,207,0.9); }
+    }
+  </style>
+
+  <!-- HERO SECTION -->
+  <header class="hero">
+    <div class="hero-inner">
+
+      <p class="welcome-1">Welcome</p>
+      <p class="welcome-2">to</p>
+      <h3 class="welcome-3">CelebrateWithUs</h3>
+
+      <!-- 🌸 Glowing Pastel Line -->
+      <div class="color-line"></div>
+
+      <h1 class="main-heading">Create Personalized Webpages for Your Special Occasions</h1>
+      <p class="subtitle">Turn birthdays, anniversaries, and celebrations into digital memories.</p>
+      <button id="startBtn" class="start-btn">Start Creating</button>
+
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- CHOOSE VIBE -->
+    <section class="choose-vibe" id="vibe-section">
+      <h2>Choose Your Occasion Vibe</h2>
+      <p class="muted">Select how you want your celebration to feel:</p>
+
+      <div class="vibes" id="vibeButtons">
+        <button class="vibe-btn" data-vibe="casual">Casual</button>
+        <button class="vibe-btn" data-vibe="romantic">Romantic</button>
+        <button class="vibe-btn" data-vibe="traditional">Traditional</button>
+        <button class="vibe-btn" data-vibe="family">Family-Time</button>
+        <button class="vibe-btn" data-vibe="fun">Fun / Quirky</button>
+      </div>
+    </section>
+
+    <!-- TEMPLATES (Hidden by default) -->
+    <section class="templates hidden" id="templates-section">
+      <h2>Pick Your Favorite Template</h2>
+      <p class="muted">Choose one that fits your celebration vibe:</p>
+      <div id="templatesGrid" class="templates-grid"></div>
+      
+    </section>
+
+    <!-- TEMPLATE PREVIEW -->
+<section class="template-preview hidden" id="preview-section">
+  <h2>Preview</h2>
+
+  <div class="preview-box">
+  <h1 class="template-title" id="previewTitle">Easy Breezy</h1>
+  <img id="previewImage" src="" alt="Template Preview" />
+</div>
+
+  
+</section>
+
+    <!-- PRICING -->
+    <section class="pricing">
+      <h2>Simple & Transparent Pricing</h2>
+      <div class="pricing-card">
+        <div class="price-box">₹599</div>
+<p class="muted">Pre-Made Template Webpage</p>
+        <p class="muted">Choose a template, add your photos, captions, and messages.</p>
+        <p class="muted">Includes Viewer Link (Public) + Editor Link (Private Token).</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="scripts/templates-data.js"></script>
+  <script src="scripts/app.js"></script>
+
+  <!-- Smooth Scroll -->
+  <script>
+    document.getElementById("startBtn").addEventListener("click", () => {
+      document.getElementById("vibe-section").scrollIntoView({ behavior: "smooth" });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Always Together — Viewer • CelebrateWithUs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  /* Prevent decorations from covering title */
+.title-wrap::before{
+  content:"";
+  position:absolute;
+  inset:-20px;
+  background:linear-gradient(
+    to bottom,
+    rgba(255,247,242,0.95),
+    rgba(255,247,242,0.85),
+    rgba(255,247,242,0)
+  );
+  z-index:-1;
+}
+
+body.night .title-wrap::before{
+  background:linear-gradient(
+    to bottom,
+    rgba(25,17,19,0.95),
+    rgba(25,17,19,0.85),
+    rgba(25,17,19,0)
+  );
+}
+.sectionTitle{
+  text-align:center;
+  font-family:"Great Vibes", cursive;
+  font-size:52px;
+  margin:18px 0 12px;
+  color:#f2a67f;
+  letter-spacing:1px;
+  font-weight:400;
+}
+
+body.night .sectionTitle{
+  color:#ffb6c9;
+}
+
+  .title-wrap{
+  position:relative;
+  z-index:200;
+   text-align:center;
+  margin-top:10px;
+  margin-bottom:16px;
+}
+
+  /* Soft peach title */
+.soft-title{
+  background:none !important;
+  color:#f2a67f;
+  letter-spacing:1px;
+  text-shadow:0 2px 8px rgba(0,0,0,0.15);
+}
+
+body.night .soft-title{
+  color:#ffc1d4;
+  text-shadow:0 2px 12px rgba(0,0,0,0.6);
+}
+
+
+/* Subtitle tone */
+.soft-sub{
+  color:#6a4a3c;
+}
+
+/* Hearts under title */
+.title-wrap{
+  text-align:center;
+  margin-bottom:28px;
+}
+
+.mini-hearts{
+  margin-top:4px;
+}
+
+.mini-hearts span{
+  color:#f2a67f;
+  font-size:14px;
+  margin:0 4px;
+}
+
+/* Night mode tuning */
+body.night .soft-title,
+body.night .mini-hearts span{
+  color:#ffb6c9;
+}
+body.night .soft-sub{
+  color:#ffe4ec;
+}
+
+  /* Decorations Button */
+.decorBtn{
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:#ff9bb3;
+  border:none;
+  padding:10px 22px;
+  border-radius:30px;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  z-index:3000;
+}
+
+/* Decorations Overlay */
+#decorOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.4);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+#decorCard{
+  background:white;
+  width:280px;
+  padding:18px;
+  border-radius:16px;
+  font-family:"Playfair Display";
+}
+/* MUSIC OVERLAY */
+#musicOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.4);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+#musicCard{
+  background:white;
+  width:260px;
+  padding:18px;
+  border-radius:16px;
+  text-align:center;
+  font-family:"Playfair Display";
+}
+
+body.night #musicCard{
+  background:#2b1818;
+  color:white;
+}
+
+body.night #decorCard{
+  background:#2b1818;
+  color:white;
+}
+
+.btnSmall{
+  background:#ff9bb3;
+  border:none;
+  border-radius:10px;
+  padding:8px 14px;
+  margin:6px 4px;
+  color:white;
+}
+
+/* Decoration Canvas */
+#decorCanvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:50;
+}
+
+:root{
+  --light-bg:#fff7f2;
+  --dark-bg:#191113;
+  --text:#5a3c38;
+  --dark-text:#ffe4ec;
+  --pink:#ff9bb3;
+}
+
+body{
+  margin:0;
+  font-family:Poppins,sans-serif;
+  background:var(--light-bg);
+  color:var(--text);
+  transition:.4s;
+}
+body.night{
+  background:var(--dark-bg);
+  color:var(--dark-text);
+}
+
+/* PASSWORD */
+#passwordOverlay{
+  position:fixed; inset:0;
+  background:#ffd6e8;
+  display:flex; justify-content:center; align-items:center;
+  flex-direction:column;
+  z-index:9999;
+  font-family:"Playfair Display";
+}
+#passwordOverlay input{
+  padding:12px; width:240px;
+  border-radius:10px;
+  border:1px solid #d39;
+  font-size:16px;
+}
+#passwordOverlay button{
+  margin-top:14px;
+  padding:10px 26px;
+  border:none;
+  border-radius:25px;
+  background:#ff7b9a;
+  color:white;
+  font-weight:600;
+}
+#wrongPass{display:none;color:red;margin-top:8px}
+
+/* LAYOUT */
+.page{
+  max-width:1080px;
+  margin:auto;
+  padding:20px;
+}
+.hero-title{
+  font-family:"Merienda One",cursive;
+  font-size:74px;
+  text-align:center;
+  background:linear-gradient(45deg,#ff8d72,#ffb199,#ffc7c6);
+  margin-bottom:4px;      /* was larger */
+  line-height:1.05;       /* tighter text */
+} 
+.subtitle{
+  text-align:center;
+  font-family:"Playfair Display";
+  font-size:20px;
+  margin-top:2px;         /* reduce top gap */
+  margin-bottom:6px;
+  line-height:1.3;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+/* MEDIA */
+.videoBox video{
+  width:100%;
+  border-radius:18px;
+  max-height:320px;
+  object-fit:cover;
+  margin-bottom:14px;
+}
+.card{
+  background:white;
+  border-radius:16px;
+  padding:8px;
+  text-align:center;
+  box-shadow:0 2px 6px rgba(0,0,0,.06);
+}
+body.night .card{background:#2d1b1c;color:white;}
+
+.card img{
+  width:100%;
+  aspect-ratio:1/1;
+  border-radius:12px;
+  object-fit:cover;
+  cursor:pointer;
+}
+
+.photoCaption{
+  font-family:"Playfair Display";
+  font-size:15px;
+  margin:6px 0;
+}
+body.night .photoCaption{color:#ffd8e4;}
+
+.surpriseBtn{
+  background:var(--pink);
+  border:none;
+  border-radius:18px;
+  padding:6px 14px;
+  color:white;
+  cursor:pointer;
+}
+
+.tapBtn{
+  margin:8px auto 4px;
+  display:block;
+  background:#ff9bb3;
+  border:none;
+  border-radius:22px;
+  padding:6px 18px;
+  font-size:13px;
+  color:white;
+  cursor:pointer;
+  font-family:"Playfair Display";
+  transition:.25s ease;
+}
+
+.tapBtn:hover{
+  transform:scale(1.05);
+  background:#ff7fa3;
+}
+
+body.night .tapBtn{
+  background:#ff7fa3;
+}
+
+/* MESSAGES */
+.stickyNote{
+  background:#fff6fa;
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:12px;
+  font-family:"Playfair Display";
+  line-height:1.5;
+}
+body.night .stickyNote{
+  background:#2b1818;
+  color:#ffe4ec;
+}
+
+/* SURPRISE POPUP */
+#msgOverlay{
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.45);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+#msgBox{
+  background:white;
+  padding:20px;
+  border-radius:16px;
+  width:260px;
+  text-align:center;
+  font-family:"Playfair Display";
+}
+body.night #msgBox{
+  background:#2b1818;
+  color:white;
+}
+#msgText{
+  white-space:pre-line;
+}
+body.night #msgText{color:#ffe4ec;}
+#closeMsg{
+  margin-top:12px;
+  background:#ff9bb3;
+  border:none;
+  border-radius:12px;
+  padding:8px 20px;
+  color:white;
+}
+
+/* IMAGE ZOOM */
+#imgZoomOverlay{
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.7);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+.imgZoomContent{
+  max-width:90%;
+  text-align:center;
+  animation:zoomIn .25s ease;
+}
+#zoomImg{
+  max-width:100%;
+  max-height:75vh;
+  border-radius:16px;
+}
+#zoomCaption{
+  margin-top:10px;
+  font-family:"Playfair Display";
+  color:#ffe4ec;
+}
+@keyframes zoomIn{
+  from{transform:scale(.85);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.site-footer{
+  text-align:center;
+  padding:16px;
+  margin-top:40px;
+  font-size:13px;
+  color:#8a5a55;
+  opacity:0.8;
+}
+
+</style>
+</head>
+
+<body>
+<canvas id="decorCanvas"></canvas>
+
+<!-- PASSWORD -->
+<div id="passwordOverlay">
+  <h2>Enter Password</h2>
+  <input id="pass" type="password" placeholder="Password">
+  <button onclick="unlock()">Unlock</button>
+  <p id="wrongPass">Incorrect password</p>
+</div>
+
+<div class="page">
+<button id="decorBtn" class="decorBtn">✨ Decorations</button>
+<button id="musicOpenBtn" class="decorBtn" style="top:70px;">
+  🎵 Music
+</button>
+<div class="title-wrap">
+  <h1 class="hero-title soft-title">Always Together</h1>
+  <p class="subtitle soft-sub">A collection of cherished moments</p>
+
+  <div class="mini-hearts">
+    <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+     <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+     <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+     <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+     <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+     <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+     <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+     <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+     <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+     <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+     <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+     <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+     <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+     <span>❤</span>
+    <span>❤</span>
+  </div>
+</div>
+<h2 class="sectionTitle">Memory Lane</h2>
+
+<!-- VIDEOS -->
+<div id="videoContainer"></div>
+
+<!-- PHOTOS -->
+<div id="photoGrid" class="grid"></div>
+
+<!-- MESSAGES -->
+<h2 class="sectionTitle" style="margin-top:30px;">Love Notes</h2>
+
+<div id="messageList"></div>
+
+<!-- SURPRISE POPUP -->
+<div id="msgOverlay">
+  <div id="msgBox">
+    <div id="msgText"></div>
+    <button id="closeMsg">Close</button>
+  </div>
+</div>
+
+<!-- IMAGE ZOOM -->
+<div id="imgZoomOverlay">
+  <div class="imgZoomContent">
+    <img id="zoomImg">
+    <p id="zoomCaption"></p>
+  </div>
+</div>
+<div id="decorOverlay">
+  <div id="decorCard">
+    <h3>Decorations</h3>
+
+    <p>Mode</p>
+    <button class="btnSmall" id="dayBtn">Day</button>
+    <button class="btnSmall" id="nightBtn">Night</button>
+
+    <p>Decoration / sec</p>
+    <input id="rate" type="range" min="0" max="10" value="3">
+
+    <p>Decoration size</p>
+    <input id="size" type="range" min="10" max="80" value="30">
+
+    <p>Burst style</p>
+    <select id="burst">
+      <option>Hearts</option>
+      <option>Sparkles</option>
+    </select>
+
+    <button id="applyBtn" class="btnSmall" style="width:100%">Apply</button>
+  </div>
+</div>
+
+<script>
+/* MUSIC */
+let bgAudio = null;
+const song = localStorage.getItem("at_bg_music");
+
+function playMusic(){
+  if(!song) return;
+
+  if(!bgAudio){
+    bgAudio = new Audio(song);
+    bgAudio.loop = true;
+    bgAudio.volume = 0.6;
+  }
+  bgAudio.play();
+}
+
+let isPlaying = false;
+
+function toggleMusic(){
+  if(!song) return;
+
+  if(!bgAudio){
+    playMusic();
+    musicBtn.textContent = "⏸ Pause Music";
+    isPlaying = true;
+    return;
+  }
+
+  if(isPlaying){
+    bgAudio.pause();
+    musicBtn.textContent = "▶ Play Music";
+  }else{
+    bgAudio.play();
+    musicBtn.textContent = "⏸ Pause Music";
+  }
+
+  isPlaying = !isPlaying;
+}
+
+
+/* PASSWORD */
+const PASS = localStorage.getItem("viewerPassword_alwaysTogether") || "sweet";
+function unlock(){
+  if(pass.value === PASS){
+    passwordOverlay.style.display="none";
+    playMusic();
+
+    const btn = document.getElementById("musicBtn");
+    if(btn){
+      btn.textContent = "⏸ Pause Music";
+    }
+    isPlaying = true;
+  }else{
+    wrongPass.style.display="block";
+  }
+}
+
+/* DATA */
+const STORAGE_KEY="at_photos_v1";
+const data = JSON.parse(localStorage.getItem(KEY)||"[]");
+
+/* RENDER */
+function render(){
+  videoContainer.innerHTML="";
+  photoGrid.innerHTML="";
+
+  data.forEach(x=>{
+    if(x.type==="video"){
+      videoContainer.innerHTML+=`
+        <div class="videoBox">
+          <video src="${x.url}" controls></video>
+        </div>
+      `;
+    }
+  });
+
+  data.forEach((x,i)=>{
+    if(x.type==="image"){
+      const cap=x.caption||"";
+      const d=document.createElement("div");
+      d.className="card";
+      d.innerHTML=`
+  <img src="${x.url}" onclick="openZoom('${x.url}',\`${cap}\`)">
+
+  <button class="tapBtn" onclick="showRandom(${i})">
+    Surprise ✨
+  </button>
+
+  <p class="photoCaption">${cap}</p>
+`;
+      photoGrid.appendChild(d);
+    }
+  });
+}
+render();
+
+/* ZOOM */
+function openZoom(src,cap){
+  zoomImg.src=src;
+  zoomCaption.textContent=cap;
+  imgZoomOverlay.style.display="flex";
+}
+imgZoomOverlay.onclick=e=>{
+  if(e.target.id==="imgZoomOverlay"){
+    imgZoomOverlay.style.display="none";
+  }
+};
+
+/* SURPRISE */
+const cuteMessages=[
+  "You are the star of every moment 💫",
+  "Friendship like ours = lifetime subscription ❤️",
+  "This smile deserves its own fanbase 😍",
+  "Warning: Cuteness overload detected 💖",
+  "Your vibe is goals ✨",
+  "Memories like this = heart wallpaper 💘",
+  "Smile! The universe is taking notes 🌙",
+  "You light up every frame like magic ✨",
+  "Someday we'll miss these days the most 🥹",
+  "Time will pass… but this memory stays forever 📸",
+  "If happiness had a picture — this is it 🧡",
+  "A moment frozen. A feeling forever ❣️",
+  "Yes, they should cast us in a movie 🎬",
+  "Too cute. Please calm down 😭💖",
+  "If I had a dollar for every good moment like this… I'd be rich 💸",
+  "Freeze. Frame. Feel. — Memory captured 📷",
+  "Time moves, but this moment stays 🕰️",
+  "One day this photo will make us cry a happy tear 💧",
+  "We’re living the stories future us will miss 🥹",
+  "This picture = a chapter worth rereading 📚",
+  "Life won’t always feel like this… that’s why it’s precious 🌙🤍",
+  "We’ll grow, we’ll change — but this stays 🧡",
+  "Your smile is my new favorite aesthetic ✨",
+  "Pretty moments look even prettier because of you 💘",
+  "Your energy feels like sunshine ☀️",
+  "You're the softest chapter in my story 📖🤍",
+  "Beauty? You redefine it effortlessly 💋",
+  "You + this moment = art 🎨",
+  "You glow differently when you're happy ✨",
+  "No filter in the world can match your vibe 🌸",
+  "Honestly? You're magic nobody can explain 🪄",
+  "Pinterest wishes it had pictures like this 🌙✨"
+];
+function showRandom(i){
+  msgText.textContent = cuteMessages[Math.floor(Math.random()*cuteMessages.length)];
+  msgOverlay.style.display="flex";
+}
+closeMsg.onclick=()=>msgOverlay.style.display="none";
+
+/* LOAD MESSAGES */
+function loadMessages(){
+  const txt=localStorage.getItem("at_main_message")||"";
+  if(!txt.trim()) return;
+txt.split("\n---\n").forEach(m=>{
+    const d=document.createElement("div");
+    d.className="stickyNote";
+    d.textContent=m.trim();
+    messageList.appendChild(d);
+  });
+}
+loadMessages();
+/* DECORATIONS */
+const c = decorCanvas;
+const ctx = c.getContext("2d");
+let W, H, particles = [];
+
+function resizeCanvas(){
+  W = c.width = innerWidth;
+  H = c.height = innerHeight;
+}
+resizeCanvas();
+window.onresize = resizeCanvas;
+
+let decorCfg = {
+  mode: "day",
+  rate: 3,
+  size: 30,
+  burst: "Hearts"
+};
+
+decorBtn.onclick = () => decorOverlay.style.display = "flex";
+decorOverlay.onclick = e => {
+  if(e.target === decorOverlay) decorOverlay.style.display = "none";
+};
+
+dayBtn.onclick = () => {
+  document.body.classList.remove("night");
+  decorCfg.mode = "day";
+};
+
+nightBtn.onclick = () => {
+  document.body.classList.add("night");
+  decorCfg.mode = "night";
+};
+
+applyBtn.onclick = () => {
+  decorCfg.rate = +rate.value;
+  decorCfg.size = +size.value;
+  decorCfg.burst = burst.value;
+  decorOverlay.style.display = "none";
+};
+
+function spawnDecor(){
+  if(decorCfg.burst === "Hearts" && Math.random() < decorCfg.rate / 18){
+    particles.push({x:Math.random()*W,y:H,r:decorCfg.size,t:"heart"});
+  }
+  if(decorCfg.burst === "Sparkles" && Math.random() < decorCfg.rate / 12){
+  particles.push({
+    x: Math.random() * W,
+    y: H,
+    r: decorCfg.size,
+    t: "star",
+    rot: Math.random() * Math.PI
+  });
+}
+
+}
+function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius){
+  let rot = Math.PI / 2 * 3;
+  let x = cx;
+  let y = cy;
+  let step = Math.PI / spikes;
+
+  ctx.beginPath();
+  ctx.moveTo(cx, cy - outerRadius);
+  for(let i=0; i<spikes; i++){
+    x = cx + Math.cos(rot) * outerRadius;
+    y = cy + Math.sin(rot) * outerRadius;
+    ctx.lineTo(x, y);
+    rot += step;
+
+    x = cx + Math.cos(rot) * innerRadius;
+    y = cy + Math.sin(rot) * innerRadius;
+    ctx.lineTo(x, y);
+    rot += step;
+  }
+  ctx.lineTo(cx, cy - outerRadius);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawDecor(){
+  ctx.clearRect(0,0,W,H);
+  particles.forEach((p,i)=>{
+    if(p.t==="heart"){
+      ctx.font = p.r+"px serif";
+      ctx.fillStyle = "#ff9bb3";
+      ctx.fillText("♥",p.x,p.y);
+    }else if(p.t === "star"){
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  ctx.rotate(p.rot);
+
+  ctx.fillStyle = "#FFD700";          // gold
+  ctx.shadowColor = "#FFD700";
+  ctx.shadowBlur = 15;
+
+  drawStar(ctx, 0, 0, 5, p.r, p.r/2);
+  ctx.restore();
+}
+
+    p.y -= 1.2;
+    if(p.y < -40) particles.splice(i,1);
+  });
+}
+
+(function loop(){
+  requestAnimationFrame(loop);
+  spawnDecor();
+  drawDecor();
+})();
+
+musicOpenBtn.onclick = () => {
+  musicOverlay.style.display = "flex";
+};
+
+musicOverlay.onclick = e => {
+  if(e.target === musicOverlay){
+    musicOverlay.style.display = "none";
+  }
+};
+
+</script>
+<!-- MUSIC BOX -->
+<div id="musicOverlay">
+  <div id="musicCard">
+    <h3>Music</h3>
+    <p>Background Music</p>
+
+    <button id="musicBtn"
+            class="btnSmall"
+            style="width:100%;"
+            onclick="toggleMusic()">
+      ▶ Play Music
+    </button>
+
+    <button class="btnSmall"
+            style="width:100%;margin-top:10px;background:#ccc;color:#333;"
+            onclick="musicOverlay.style.display='none'">
+      Close
+    </button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+
+</body>
+</html>
