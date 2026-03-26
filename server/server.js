@@ -233,23 +233,28 @@ console.log("Assets exists:", require("fs").existsSync(path.join(__dirname, "../
 
   archive.pipe(res);
 
-  // ✅ ADD HTML FILES
-  const templatePath = path.join(__dirname, "../templates", templateId);
+// 🔽 REPLACE EVERYTHING BELOW THIS
+
+const fs = require("fs");
+
+const templatePath = path.join(__dirname, "../templates", templateId);
+
+console.log("Template ID:", templateId);
+console.log("Path:", templatePath);
+console.log("Exists:", fs.existsSync(templatePath));
+
+if (!fs.existsSync(templatePath)) {
+  return res.status(404).send("Template not found ❌");
+}
 
 archive.file(path.join(templatePath, "viewer.html"), { name: "viewer.html" });
 archive.file(path.join(templatePath, "editor.html"), { name: "editor.html" });
 
-  
+archive.directory(path.join(__dirname, "../assets"), "assets");
+archive.directory(path.join(__dirname, "../styles"), "styles");
+archive.directory(path.join(__dirname, "../scripts"), "scripts");
 
-  archive.finalize();
-});
+// 🔼 END REPLACE
 
-
-// ⬇️ STATIC AFTER
-app.use(express.static(__dirname));
-// ------------------------------------------------------
-// START SERVER
-// ------------------------------------------------------
-app.listen(PORT, () => {
-  console.log(`Server ready ✔  running at http://localhost:${PORT}`);
+archive.finalize();
 });
