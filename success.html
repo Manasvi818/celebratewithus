@@ -13,8 +13,13 @@
 
 <br><br>
 
-<button onclick="tip()">Buy Me a Coffee ☕</button>
+<button onclick="tip()">Support Us ☕</button>
+<h3>Support Us ☕</h3>
 
+<button onclick="tip(1500)">₹15</button>
+<button onclick="tip(3000)">₹30</button>
+<button onclick="tip(4500)">₹45</button>
+<p id="selectedTip"></p>
 <!-- ✅ ADD SCRIPT HERE -->
 <script>
 const BASE_URL = "https://celebratewithus.onrender.com";
@@ -31,10 +36,13 @@ if (data) {
 }
 
 // TIP FUNCTION
-function tip() {
+function tip(amount) {
+  document.getElementById("selectedTip").innerText =
+    "You are tipping ₹" + (amount / 100);
+
   const options = {
     key: "rzp_test_RgMhzhClr8HSaT",
-    amount: 5000,
+    amount: amount,
     name: "Support Us",
     description: "Tip",
     handler: function () {
