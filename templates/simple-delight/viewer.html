@@ -591,17 +591,34 @@ document.body.appendChild(sun);
 
 /* 🎈 Spawn Balloons */
 function spawnBalloons(){
-  const area=document.getElementById("balloonsArea");
+  const area = document.getElementById("balloonsArea");
   if(!area) return;
 
-  const colors=["#ffe08a","#ff9a9a","#ffccb3","#ffd6ff"];
-  for(let i=0;i<6;i++){
-    const b=document.createElement("div");
-    b.className="balloon";
-    b.style.left=(i*15+10)+"%";
-    b.style.bottom="20px";
-    b.style.background=colors[i%colors.length];
-    b.onclick=()=>b.remove();
+  area.innerHTML = ""; // clear old balloons
+
+  const colors = ["#ffe08a","#ff9a9a","#ffccb3","#ffd6ff"];
+  let total = 6;
+  let popped = 0;
+
+  for(let i=0;i<total;i++){
+    const b = document.createElement("div");
+    b.className = "balloon";
+    b.style.left = (i*15+10) + "%";
+    b.style.bottom = "20px";
+    b.style.background = colors[i % colors.length];
+
+    b.onclick = () => {
+      b.remove();
+      popped++;
+
+      // ✅ when all balloons popped
+      if(popped === total){
+        setTimeout(() => {
+          spawnBalloons(); // respawn after 3 sec
+        }, 3000);
+      }
+    };
+
     area.appendChild(b);
   }
 }
