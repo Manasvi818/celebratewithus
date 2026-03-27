@@ -61,7 +61,10 @@ app.use(express.static(path.join(__dirname, "..")));
 
 // 🔐 PROTECTED (optional)
 app.use("/assets", isPaid, express.static(path.join(__dirname, "../assets")));
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
+});
 
 app.use("/invoices", express.static("invoices"));
 // ------------------------------------------------------
