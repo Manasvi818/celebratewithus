@@ -1,12 +1,18 @@
 
+const mongoose = require("mongoose");
+require("dotenv").config();
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected ✅"))
+  .catch(err => console.log("MongoDB Error ❌", err));
+
 console.log("🚀 SERVER FILE RUNNING");
 
-// ✅ FIX dotenv path
-require("dotenv").config({ path: __dirname + "/.env" });
+const couponController = require("./coupon");
+
+
 
 // ✅ ADD DEBUG HERE
 console.log("KEY ID:", process.env.RAZORPAY_KEY_ID);
-console.log("KEY SECRET:", process.env.RAZORPAY_KEY_SECRET);
 
 const express = require("express");
 const session = require("express-session");
@@ -62,9 +68,7 @@ app.use(express.static(path.join(__dirname, "..")));
 // 🔐 PROTECTED (optional)
 app.use("/assets", isPaid, express.static(path.join(__dirname, "../assets")));
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
-});
+
 
 app.use("/invoices", express.static("invoices"));
 // ------------------------------------------------------
@@ -327,3 +331,9 @@ app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
 
+app.post("/apply-coupon", async (req, res) => {
+  const { code } = req.body;
+
+  const result = await couponController.applyCoupon(code);
+  res.json(result);
+});
