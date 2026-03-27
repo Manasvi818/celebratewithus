@@ -66,7 +66,11 @@ async function verifyPayment(response) {
         const res = await fetch(`${BASE_URL}/verify-payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(response),
+            body: JSON.stringify({
+  razorpay_order_id: response.razorpay_order_id,
+  razorpay_payment_id: response.razorpay_payment_id,
+  razorpay_signature: response.razorpay_signature
+})
         });
 
         const data = await res.json();
