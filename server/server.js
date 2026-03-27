@@ -9,10 +9,20 @@ console.log("KEY ID:", process.env.RAZORPAY_KEY_ID);
 console.log("KEY SECRET:", process.env.RAZORPAY_KEY_SECRET);
 
 const express = require("express");
+const session = require("express-session");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const cors = require("cors");
 const app = express();  
+app.use(session({
+  secret: "my-secret-key",   // change later
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: false   // change to true after deployment (HTTPS)
+  }
+}));
 app.use(cors({
   origin: "*",
 }));
@@ -35,10 +45,18 @@ const cloudinary = require("cloudinary").v2;      // cloudinary SDK
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// ------------------------------------------------------
-// EXPRESS STATIC (so /templates, /assets load correctly)
-// ------------------------------------------------------
-app.use(express.static(__dirname));
+// 🔐 allow assets ONLY after payment (you will connect session later)
+function isPaid(req, res, next) {
+  if (req.session.isPaid) {
+    return next();
+  }
+  return res.status(403).send("Access denied - please pay");
+}
+
+// allow only these folders (controlled)
+app.use("/assets", isPaid, express.static(path.join(__dirname, "assets")));
+app.use("/styles", isPaid, express.static(path.join(__dirname, "styles")));
+app.use("/scripts", isPaid, express.static(path.join(__dirname, "scripts")));
 
 const PORT = process.env.PORT || 4000;
 
@@ -151,9 +169,10 @@ app.post("/verify-payment", (req, res) => {
     } = req.body;
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-      return res
-        .status(400)
-        .json({ success: false, error: "Missing required params" });
+      return res.status(400).json({
+        success: false,
+        error: "Missing required params"
+      });
     }
 
     const generated_signature = crypto
@@ -164,8 +183,13 @@ app.post("/verify-payment", (req, res) => {
     const isValid = generated_signature === razorpay_signature;
 
     if (isValid) {
-      res.json({
+
+      // ✅ STORE SESSION
+      req.session.isPaid = true;
+
+      return res.json({
         success: true,
+        redirect: "/editor",
         message: "Payment verified successfully",
         data: {
           razorpay_order_id,
@@ -173,15 +197,22 @@ app.post("/verify-payment", (req, res) => {
           metadata: metadata || null,
         },
       });
+
     } else {
-      res.status(400).json({
+
+      return res.status(400).json({
         success: false,
         error: "Invalid signature - verification failed",
       });
+
     }
+
   } catch (err) {
     console.error("verify-payment error:", err);
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
   }
 });
 
@@ -217,7 +248,7 @@ app.post("/webhook", (req, res) => {
 // DOWNLOAD TEMPLATE (ZIP)
 // ------------------------------------------------------
 // ✅ DOWNLOAD ROUTE FIRST
-app.get("/download", (req, res) => {
+app.get("/download", isPaid, (req, res) => {
   try {
     const fs = require("fs");
     const templateId = req.query.template || "template";
@@ -250,10 +281,7 @@ app.get("/download", (req, res) => {
     archive.file(path.join(templatePath, "viewer.html"), { name: "viewer.html" });
     archive.file(path.join(templatePath, "editor.html"), { name: "editor.html" });
 
-    // ✅ ADD ASSETS
-    archive.directory(path.join(process.cwd(), "assets"), "assets");
-    archive.directory(path.join(process.cwd(), "styles"), "styles");
-    archive.directory(path.join(process.cwd(), "scripts"), "scripts");
+    
 
     archive.finalize();
 
@@ -261,6 +289,15 @@ app.get("/download", (req, res) => {
     console.error("Download error:", err);
     res.status(500).send("Something went wrong");
   }
+});
+
+// 🔒 PROTECTED PAGES
+app.get("/editor", isPaid, (req, res) => {
+  res.sendFile(path.join(__dirname, "templates/simple-delight/editor.html"));
+});
+
+app.get("/viewer", isPaid, (req, res) => {
+  res.sendFile(path.join(__dirname, "templates/simple-delight/viewer.html"));
 });
 
 app.listen(PORT, "0.0.0.0", () => {
