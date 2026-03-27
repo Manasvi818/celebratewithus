@@ -53,11 +53,12 @@ function isPaid(req, res, next) {
   return res.status(403).send("Access denied - please pay");
 }
 
-// allow only these folders (controlled)
-app.use("/assets", isPaid, express.static(path.join(__dirname, "assets")));
-app.use("/styles", isPaid, express.static(path.join(__dirname, "styles")));
-app.use("/scripts", isPaid, express.static(path.join(__dirname, "scripts")));
+// ✅ PUBLIC (needed for website to load)
+app.use("/styles", express.static(path.join(__dirname, "../styles")));
+app.use("/scripts", express.static(path.join(__dirname, "../scripts")));
 
+// 🔐 PROTECTED (optional)
+app.use("/assets", isPaid, express.static(path.join(__dirname, "../assets")));
 const PORT = process.env.PORT || 4000;
 
 
@@ -118,7 +119,7 @@ const razorpay = new Razorpay({
 // HEALTH CHECK
 // ------------------------------------------------------
 app.get("/", (req, res) => {
-  res.send("Razorpay + Cloudinary server running ✔");
+  res.sendFile(path.join(__dirname, "../payment.html"));
 });
 
 

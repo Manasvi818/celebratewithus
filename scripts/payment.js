@@ -39,9 +39,7 @@ async function openCheckout() {
 
     theme: { color: "#6366F1" },
 
-     method: {
-        upi: true
-    },
+    
     // ✅ ADD HERE (inside options)
     modal: {
         ondismiss: function () {
