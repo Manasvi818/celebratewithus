@@ -57,6 +57,8 @@ function isPaid(req, res, next) {
 app.use("/styles", express.static(path.join(__dirname, "../styles")));
 app.use("/scripts", express.static(path.join(__dirname, "../scripts")));
 
+app.use(express.static(path.join(__dirname, "..")));
+
 // 🔐 PROTECTED (optional)
 app.use("/assets", isPaid, express.static(path.join(__dirname, "../assets")));
 const PORT = process.env.PORT || 4000;
@@ -119,9 +121,12 @@ const razorpay = new Razorpay({
 // HEALTH CHECK
 // ------------------------------------------------------
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../payment.html"));
+  res.sendFile(path.join(__dirname, "../index.html"));
 });
 
+app.get("/payment", (req, res) => {
+  res.sendFile(path.join(__dirname, "../payment.html"));
+});
 
 // ------------------------------------------------------
 // CREATE ORDER
@@ -301,6 +306,8 @@ app.get("/viewer", isPaid, (req, res) => {
   res.sendFile(path.join(__dirname, "templates/simple-delight/viewer.html"));
 });
 
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
+
