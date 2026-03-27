@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Success</title>
+</head>
+<body>
+
+<h2>Payment Successful 🎉</h2>
+
+<p id="couponText"></p>
+
+<a id="invoiceLink" target="_blank">Download Invoice</a>
+
+<br><br>
+
+<button onclick="tip()">Buy Me a Coffee ☕</button>
+
+<!-- ✅ ADD SCRIPT HERE -->
+<script>
+const BASE_URL = "https://celebratewithus.onrender.com";
+
+// GET DATA
+const data = JSON.parse(localStorage.getItem("paymentData"));
+
+if (data) {
+  document.getElementById("couponText").innerText =
+    "Your Coupon Code: " + data.coupon;
+
+  document.getElementById("invoiceLink").href =
+    BASE_URL + "/" + data.invoice;
+}
+
+// TIP FUNCTION
+function tip() {
+  const options = {
+    key: "rzp_test_RgMhzhClr8HSaT",
+    amount: 5000,
+    name: "Support Us",
+    description: "Tip",
+    handler: function () {
+      alert("Thanks ❤️");
+    }
+  };
+
+  const rzp = new Razorpay(options);
+  rzp.open();
+}
+</script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</body>
+</html>

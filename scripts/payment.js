@@ -1,12 +1,15 @@
+
 console.log("Razorpay loaded:", typeof Razorpay);
 const payBtn = document.getElementById("rzpButton");
 const BASE_URL = "https://celebratewithus.onrender.com";
+
+let finalAmount = 59900; // ₹599 in paise
+let usedCoupon = null;
 
 if (payBtn) {
     payBtn.addEventListener("click", openCheckout);
 }
 
-const rzp = new Razorpay(options);
 
 async function openCheckout() {
     try {
@@ -14,7 +17,8 @@ async function openCheckout() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                amountINR: 599,
+                amountINR: finalAmount / 100,
+                
                 notes: {
                     templateId: localStorage.getItem("selectedTemplate") || "unknown"
                 }
@@ -72,26 +76,38 @@ async function verifyPayment(response) {
             body: JSON.stringify({
   razorpay_order_id: response.razorpay_order_id,
   razorpay_payment_id: response.razorpay_payment_id,
-  razorpay_signature: response.razorpay_signature
+  razorpay_signature: response.razorpay_signature,
+
+  // ✅ ADD THESE
+  name: localStorage.getItem("userName") || "Guest",
+  email: localStorage.getItem("userEmail") || "guest@email.com",
+  amount: 599,
+  couponCode: localStorage.getItem("usedCoupon") || null
 })
         });
 
         const data = await res.json();
 
         if (data.success) {
-            alert("Payment Verified! 🎉");
+    alert("Payment Verified! 🎉");
 
-            const templateId = localStorage.getItem("selectedTemplate");
+    // ✅ SAVE invoice + coupon
+    localStorage.setItem("paymentData", JSON.stringify({
+        invoice: data.invoice,
+        coupon: data.coupon
+    }));
 
-            if (!templateId) {
-                alert("No template selected.");
-                return;
-            }
+    const templateId = localStorage.getItem("selectedTemplate");
 
-            // ✅ Download trigger
-            window.location.href = `${BASE_URL}/download?template=${templateId}`;
+    if (!templateId) {
+        alert("No template selected.");
+        return;
+    }
 
-        } else {
+    // ✅ Redirect to success page (NOT download directly)
+    window.location.href = "success.html";
+}
+        else {
             alert("Payment verification failed.");
         }
 
@@ -99,4 +115,29 @@ async function verifyPayment(response) {
         console.error(err);
         alert("Something went wrong verifying payment.");
     }
+}
+
+async function applyCoupon() {
+  const code = document.getElementById("coupon").value;
+
+  const res = await fetch(`${BASE_URL}/apply-coupon`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ code })
+  });
+
+  const data = await res.json();
+
+  if (data.valid) {
+    usedCoupon = code;
+
+    finalAmount = finalAmount - (finalAmount * data.discount / 100);
+
+    document.getElementById("discountMsg").innerText =
+      `Discount applied: ${data.discount}%`;
+
+    localStorage.setItem("usedCoupon", code);
+  } else {
+    alert("Invalid or used coupon");
+  }
 }

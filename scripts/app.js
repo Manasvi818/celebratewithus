@@ -12,6 +12,7 @@ const vibeButtons = document.querySelectorAll(".vibe-btn");
 const startBtn = document.getElementById("startBtn");
 const vibeSection = document.querySelector(".choose-vibe");
 const templatesGrid = document.getElementById("templatesGrid");
+const { applyCoupon } = require("./coupon");
 // ===============================
 // 1️⃣ Start Button Scroll to Vibes
 // ===============================
@@ -216,3 +217,10 @@ function selectTemplate(id) {
   localStorage.setItem("selectedTemplate", id);
   window.location.href = `preview.html?template=${id}`;
 }
+
+app.post("/apply-coupon", (req, res) => {
+  const { code } = req.body;
+
+  const result = applyCoupon(code);
+  res.json(result);
+});

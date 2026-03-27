@@ -63,7 +63,7 @@ app.use(express.static(path.join(__dirname, "..")));
 app.use("/assets", isPaid, express.static(path.join(__dirname, "../assets")));
 const PORT = process.env.PORT || 4000;
 
-
+app.use("/invoices", express.static("invoices"));
 // ------------------------------------------------------
 // CLOUDINARY CONFIG
 // ------------------------------------------------------
@@ -161,6 +161,8 @@ app.post("/create-order", async (req, res) => {
   }
 });
 
+const { createCoupon, markUsed } = require("./coupon");
+const { generateInvoice } = require("./invoice");
 
 // ------------------------------------------------------
 // VERIFY PAYMENT
@@ -190,21 +192,32 @@ app.post("/verify-payment", (req, res) => {
 
     if (isValid) {
 
-      // ✅ STORE SESSION
-      req.session.isPaid = true;
+  req.session.isPaid = true;
 
-      return res.json({
-        success: true,
-        redirect: "/editor",
-        message: "Payment verified successfully",
-        data: {
-          razorpay_order_id,
-          razorpay_payment_id,
-          metadata: metadata || null,
-        },
-      });
+  // ✅ GET DATA FROM FRONTEND
+  const { name, email, amount, couponCode } = req.body;
 
-    } else {
+  // ✅ MARK COUPON USED
+  if (couponCode) {
+    markUsed(couponCode);
+  }
+
+  // ✅ GENERATE INVOICE
+  const invoicePath = generateInvoice(name, email, amount);
+
+  // ✅ CREATE NEW COUPON
+  const newCoupon = createCoupon(email);
+
+  return res.json({
+    success: true,
+    message: "Payment verified successfully",
+
+    // ✅ SEND THESE TO FRONTEND
+    invoice: invoicePath,
+    coupon: newCoupon.code
+  });
+
+} else {
 
       return res.status(400).json({
         success: false,
