@@ -1,9 +1,12 @@
+console.log("Razorpay loaded:", typeof Razorpay);
 const payBtn = document.getElementById("rzpButton");
 const BASE_URL = "https://celebratewithus.onrender.com";
 
 if (payBtn) {
     payBtn.addEventListener("click", openCheckout);
 }
+
+const rzp = new Razorpay(options);
 
 async function openCheckout() {
     try {
