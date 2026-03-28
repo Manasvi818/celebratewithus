@@ -217,25 +217,22 @@ console.log("Invoice Path Sent:", invoicePath);
   // ✅ CREATE NEW COUPON
   const newCoupon = createCoupon(email);
 
-  return res.json({
+   return res.json({
     success: true,
     message: "Payment verified successfully",
-
-    // ✅ SEND THESE TO FRONTEND
     invoice: invoicePath,
     coupon: newCoupon.code,
-
     download: `/download?template=${template || "simple-delight"}`
   });
 
 } else {
 
-      return res.status(400).json({
-        success: false,
-        error: "Invalid signature - verification failed",
-      });
+  return res.status(400).json({
+    success: false,
+    error: "Invalid signature - verification failed",
+  });
 
-    }
+}
 
   } catch (err) {
     console.error("verify-payment error:", err);
