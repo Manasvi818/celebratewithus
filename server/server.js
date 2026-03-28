@@ -295,7 +295,7 @@ app.get("/download", (req, res) => {
 
     console.log("🔥 Downloading template:", templateId);
 
-    const templatePath = path.join(process.cwd(), "templates", templateId);
+    const templatePath = path.join(__dirname, "../templates", templateId);
     const viewerPath = path.join(templatePath, "viewer.html");
     const editorPath = path.join(templatePath, "editor.html");
 
@@ -308,10 +308,9 @@ app.get("/download", (req, res) => {
     }
 
     // ✅ CHECK FILES (THIS WAS MISSING → CAUSED 502)
-    if (!fs.existsSync(viewerPath) || !fs.existsSync(editorPath)) {
-      console.log("❌ Required files missing inside template");
-      return res.status(404).send("Template files missing");
-    }
+   if (!fs.existsSync(viewerPath) || !fs.existsSync(editorPath)) {
+  return res.status(404).send("Template files missing");
+}
 
     res.setHeader("Content-Disposition", `attachment; filename=${templateId}.zip`);
     res.setHeader("Content-Type", "application/zip");
@@ -325,8 +324,7 @@ app.get("/download", (req, res) => {
 
     archive.pipe(res);
 
-    archive.file(viewerPath, { name: "viewer.html" });
-    archive.file(editorPath, { name: "editor.html" });
+    archive.directory(templatePath, false);
 
     archive.finalize();
 
@@ -339,11 +337,11 @@ app.get("/download", (req, res) => {
 
 // 🔒 PROTECTED PAGES
 app.get("/editor", isPaid, (req, res) => {
-  res.sendFile(path.join(__dirname, "templates/simple-delight/editor.html"));
+  res.sendFile(path.join(__dirname, "../templates/simple-delight/editor.html"));
 });
 
 app.get("/viewer", isPaid, (req, res) => {
-  res.sendFile(path.join(__dirname, "templates/simple-delight/viewer.html"));
+  res.sendFile(path.join(__dirname, "../templates/simple-delight/viewer.html"));
 });
 
 
