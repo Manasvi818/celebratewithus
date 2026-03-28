@@ -278,25 +278,26 @@ app.post("/webhook", (req, res) => {
 app.get("/download", isPaid, (req, res) => {
   try {
     const fs = require("fs");
-    const templateId = req.query.template || "template";
+    const templateId = req.query.template || "simple-delight";
 
     console.log("🔥 Downloading template:", templateId);
 
     const templatePath = path.join(process.cwd(), "templates", templateId);
-
-// ✅ ADD THIS DEBUG
-console.log("Resolved template path:", templatePath);
-if (!fs.existsSync(templatePath)) {
-  console.log("❌ Template folder not found:", templatePath);
-  return res.status(404).send("Template not found");
-}
+    const viewerPath = path.join(templatePath, "viewer.html");
+    const editorPath = path.join(templatePath, "editor.html");
 
     console.log("Template Path:", templatePath);
 
-    // ✅ SAFE CHECK (no crash)
+    // ✅ CHECK FOLDER
     if (!fs.existsSync(templatePath)) {
-      console.log("❌ Template not found");
-      return res.status(404).json({ error: "Template not found" });
+      console.log("❌ Template folder missing");
+      return res.status(404).send("Template folder not found");
+    }
+
+    // ✅ CHECK FILES (THIS WAS MISSING → CAUSED 502)
+    if (!fs.existsSync(viewerPath) || !fs.existsSync(editorPath)) {
+      console.log("❌ Required files missing inside template");
+      return res.status(404).send("Template files missing");
     }
 
     res.setHeader("Content-Disposition", `attachment; filename=${templateId}.zip`);
@@ -305,23 +306,20 @@ if (!fs.existsSync(templatePath)) {
     const archive = archiver("zip", { zlib: { level: 9 } });
 
     archive.on("error", (err) => {
-      console.error("Archive error:", err);
+      console.error("❌ Archive error:", err);
       res.status(500).send("ZIP creation failed");
     });
 
     archive.pipe(res);
 
-    // ✅ ADD FILES
-    archive.file(path.join(templatePath, "viewer.html"), { name: "viewer.html" });
-    archive.file(path.join(templatePath, "editor.html"), { name: "editor.html" });
-
-    
+    archive.file(viewerPath, { name: "viewer.html" });
+    archive.file(editorPath, { name: "editor.html" });
 
     archive.finalize();
 
   } catch (err) {
-    console.error("Download error:", err);
-    res.status(500).send("Something went wrong");
+    console.error("🔥 CRASH in /download:", err);
+    res.status(500).send("Server crash");
   }
 });
 

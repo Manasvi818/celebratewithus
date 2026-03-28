@@ -31,8 +31,19 @@
   <!-- Your payment logic -->
   <script src="scripts/payment.js"></script>
 
-<input type="text" id="coupon" placeholder="Enter coupon code">
-<button onclick="applyCoupon()">Apply</button>
+<div class="coupon-box">
+  <input 
+    type="text" 
+    id="coupon" 
+    class="coupon-input" 
+    placeholder="Enter coupon code"
+  >
+
+  <button class="coupon-btn" onclick="applyCoupon()">
+    Apply
+  </button>
+</div>
+
 <p id="discountMsg"></p>
 
 </body>
