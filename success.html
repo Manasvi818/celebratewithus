@@ -1,28 +1,156 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Success</title>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ✅ ADD THIS LINE HERE -->
+  <link rel="stylesheet" href="/styles/main.css">
+
+   <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <title>Payment Success</title>
+
 </head>
 <body>
 
-<h2>Payment Successful 🎉</h2>
+<div class="container">
+  <h1>Payment Successful 🎉</h1>
 
-<p id="couponText"></p>
+  <p>Your Coupon Code: <span id="coupon"></span></p>
 
-<a id="invoiceLink" target="_blank">Download Invoice</a>
+  <a id="invoiceLink" class="btn-primary" target="_blank">
+  Download Invoice
+</a>
 
-<br><br>
+  <br><br>
+
+  <button class="btn-secondary" onclick="goHome()">
+  ← Back
+</button>
+</div>
 
 <button onclick="tip()">Support Us ☕</button>
 <h3>Support Us ☕</h3>
 
-<button onclick="tip(1500)">₹15</button>
-<button onclick="tip(3000)">₹30</button>
-<button onclick="tip(4500)">₹45</button>
+<div>
+  <button class="tip-btn">₹15</button>
+  <button class="tip-btn">₹30</button>
+  <button class="tip-btn">₹45</button>
+</div>
 <p id="selectedTip"></p>
+<style>
+
+  body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #6366F1, #A5B4FC);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: white;
+      text-align: center;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      width: 90%;
+      max-width: 400px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .coupon {
+      margin: 20px 0;
+      font-size: 20px;
+      font-weight: bold;
+      background: white;
+      color: #6366F1;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    a, button {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+/* 🌸 PRIMARY BUTTON (like Pay ₹599 Now) */
+.btn-primary {
+    background: #22c55e;
+      color: white;
+  border: none;
+  padding: 14px 30px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+/* hover effect */
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+/* 🌸 SECONDARY BUTTON (Back button style) */
+.btn-secondary {
+  background: white;
+      color: #6366F1;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #bfdbfe;
+}
+
+/* 🌸 SMALL BUTTONS (₹15 ₹30 ₹45 style) */
+.tip-btn {
+  background: #f1f5f9;
+  border: 1px solid #ccc;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 5px;
+  transition: 0.2s;
+}
+
+.tip-btn:hover {
+  background: #e2e8f0;
+}
+</style>
 <!-- ✅ ADD SCRIPT HERE -->
+
+<!-- 🎉 CONFETTI SCRIPT -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 <script>
 const BASE_URL = "https://celebratewithus.onrender.com";
+
+
+
 
 // GET DATA
 const data = JSON.parse(localStorage.getItem("paymentData"));
@@ -52,6 +180,41 @@ function tip(amount) {
 
   const rzp = new Razorpay(options);
   rzp.open();
+
+  const data = JSON.parse(localStorage.getItem("paymentData"));
+
+document.getElementById("coupon").innerText = data.coupon || "N/A";
+
+document.getElementById("invoiceLink").href =
+  BASE_URL + data.invoice;
+
+// ✅ DOWNLOAD ZIP
+if (data.download) {
+  setTimeout(() => {
+    window.open(BASE_URL + data.download, "_blank");
+  }, 1200);
+}
+}
+
+
+// 🎉 CONFETTI EFFECT
+confetti({
+  particleCount: 120,
+  spread: 70,
+  origin: { y: 0.6 }
+});
+
+// 🎉 Repeat burst
+setTimeout(() => {
+  confetti({
+    particleCount: 80,
+    spread: 100
+  });
+}, 800);
+
+// 🏠 Go back
+function goHome() {
+  window.location.href = "index.html";
 }
 </script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

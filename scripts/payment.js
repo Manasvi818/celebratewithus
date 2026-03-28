@@ -2,7 +2,7 @@
 console.log("Razorpay loaded:", typeof Razorpay);
 const payBtn = document.getElementById("rzpButton");
 const BASE_URL = "https://celebratewithus.onrender.com";
-
+const selectedTemplate = localStorage.getItem("selectedTemplate");
 let finalAmount = 59900; // ₹599 in paise
 let usedCoupon = null;
 
@@ -82,7 +82,8 @@ async function verifyPayment(response) {
   name: localStorage.getItem("userName") || "Guest",
   email: localStorage.getItem("userEmail") || "guest@email.com",
   amount: 599,
-  couponCode: localStorage.getItem("usedCoupon") || null
+  couponCode: localStorage.getItem("usedCoupon") || null,
+   template: selectedTemplate   
 })
         });
 
@@ -140,4 +141,8 @@ async function applyCoupon() {
   } else {
     alert("Invalid or used coupon");
   }
+}
+
+function selectVibe(vibe) {
+  localStorage.setItem("selectedTemplate", vibe);
 }

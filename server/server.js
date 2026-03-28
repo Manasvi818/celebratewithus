@@ -202,7 +202,7 @@ app.post("/verify-payment", (req, res) => {
   req.session.isPaid = true;
 
   // ✅ GET DATA FROM FRONTEND
-  const { name, email, amount, couponCode } = req.body;
+  const { name, email, amount, couponCode, template } = req.body;
 
   // ✅ MARK COUPON USED
   if (couponCode) {
