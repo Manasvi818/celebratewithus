@@ -36,7 +36,7 @@
 <h3>Support Us ☕</h3>
 
 <div>
-  button onclick="tip()">₹15</button>
+  <button onclick="tip()">₹15</button>
 <button onclick="tip()">₹30</button>
 <button onclick="tip()">₹45</button>
 </div>
@@ -149,11 +149,22 @@
 <script>
 const BASE_URL = "https://celebratewithus.onrender.com";
 
+const data = JSON.parse(localStorage.getItem("paymentData") || "{}");
 
+// ✅ invoice
+if (data.invoice) {
+  document.getElementById("invoiceLink").href =
+    BASE_URL + data.invoice;
+}
 
+// ✅ AUTO ZIP DOWNLOAD (THIS WAS MISSING)
+if (data.download) {
+  console.log("Downloading ZIP:", data.download);
 
-// GET DATA
-const data = JSON.parse(localStorage.getItem("paymentData"));
+  setTimeout(() => {
+    window.location.href = BASE_URL + data.download;
+  }, 1000);
+}
 
 if (data) {
   document.getElementById("couponText").innerText =
