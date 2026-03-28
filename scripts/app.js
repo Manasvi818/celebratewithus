@@ -12,7 +12,7 @@ const vibeButtons = document.querySelectorAll(".vibe-btn");
 const startBtn = document.getElementById("startBtn");
 const vibeSection = document.querySelector(".choose-vibe");
 const templatesGrid = document.getElementById("templatesGrid");
-const { applyCoupon } = require("./coupon");
+
 // ===============================
 // 1️⃣ Start Button Scroll to Vibes
 // ===============================
