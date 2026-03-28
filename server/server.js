@@ -284,6 +284,13 @@ app.get("/download", isPaid, (req, res) => {
 
     const templatePath = path.join(process.cwd(), "templates", templateId);
 
+// ✅ ADD THIS DEBUG
+console.log("Resolved template path:", templatePath);
+if (!fs.existsSync(templatePath)) {
+  console.log("❌ Template folder not found:", templatePath);
+  return res.status(404).send("Template not found");
+}
+
     console.log("Template Path:", templatePath);
 
     // ✅ SAFE CHECK (no crash)
