@@ -288,7 +288,7 @@ app.post("/webhook", (req, res) => {
 // DOWNLOAD TEMPLATE (ZIP)
 // ------------------------------------------------------
 // ✅ DOWNLOAD ROUTE FIRST
-app.get("/download", isPaid, (req, res) => {
+app.get("/download", (req, res) => {
   try {
     const fs = require("fs");
     const templateId = req.query.template || "simple-delight";
