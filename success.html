@@ -31,20 +31,23 @@
 
   <br><br>
 
-  <button class="btn-secondary" onclick="goHome()">
-  ← Back
-</button>
-</div>
-
-
-<h3>Buy me a Coffee ☕</h3>
+<h3>Support Us ☕</h3>
 
 <div>
-  <button onclick="tip()">₹15</button>
-<button onclick="tip()">₹30</button>
-<button onclick="tip()">₹45</button>
+  <button class="tip-btn" onclick="tip(1500)">₹15</button>
+  <button class="tip-btn" onclick="tip(3000)">₹30</button>
+  <button class="tip-btn" onclick="tip(4500)">₹45</button>
 </div>
+
 <p id="selectedTip"></p>
+
+<br>
+
+<button class="btn-secondary" onclick="goHome()">
+  ← Back
+</button>
+
+
 <style>
 
   body {
@@ -189,30 +192,16 @@ function tip(amount) {
   const options = {
     key: "rzp_test_RgMhzhClr8HSaT",
     amount: amount,
-    name: "Buy me a Coffee",
+    name: "Support Us ☕",
     description: "Tip",
     handler: function () {
-      alert("Thanks ❤️");
+      alert("Thanks for your support ❤️");
     }
   };
 
   const rzp = new Razorpay(options);
   rzp.open();
 
-  const data = JSON.parse(localStorage.getItem("paymentData"));
-
-document.getElementById("coupon").innerText = data.coupon || "N/A";
-
-document.getElementById("invoiceLink").href =
-  BASE_URL + data.invoice;
-
-// ✅ DOWNLOAD ZIP
-if (data.download) {
-  setTimeout(() => {
-    window.open(BASE_URL + data.download, "_blank");
-  }, 1200);
-}
-}
 
 
 // 🎉 CONFETTI EFFECT
