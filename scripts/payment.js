@@ -83,7 +83,7 @@ async function verifyPayment(response) {
   email: localStorage.getItem("userEmail") || "guest@email.com",
   amount: 599,
   couponCode: localStorage.getItem("usedCoupon") || null,
-   template: selectedTemplate   
+   template: localStorage.getItem("selectedTemplate") || "simple-delight"
 })
         });
 
@@ -95,7 +95,8 @@ async function verifyPayment(response) {
     // ✅ SAVE invoice + coupon
     localStorage.setItem("paymentData", JSON.stringify({
         invoice: data.invoice,
-        coupon: data.coupon
+        coupon: data.coupon,
+        download: data.download   
     }));
 
     const templateId = localStorage.getItem("selectedTemplate");

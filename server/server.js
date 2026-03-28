@@ -174,7 +174,7 @@ const { generateInvoice } = require("./invoice");
 // ------------------------------------------------------
 // VERIFY PAYMENT
 // ------------------------------------------------------
-app.post("/verify-payment", (req, res) => {
+app.post("/verify-payment", async (req, res) => {
   try {
     const {
       razorpay_order_id,
@@ -212,6 +212,8 @@ app.post("/verify-payment", (req, res) => {
   // ✅ GENERATE INVOICE
   const invoicePath = generateInvoice(name, email, amount);
 
+console.log("Invoice Path Sent:", invoicePath);
+
   // ✅ CREATE NEW COUPON
   const newCoupon = createCoupon(email);
 
@@ -221,7 +223,9 @@ app.post("/verify-payment", (req, res) => {
 
     // ✅ SEND THESE TO FRONTEND
     invoice: invoicePath,
-    coupon: newCoupon.code
+    coupon: newCoupon.code,
+
+    download: `/download?template=${template || "simple-delight"}`
   });
 
 } else {

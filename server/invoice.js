@@ -2,10 +2,20 @@ const fs = require("fs");
 const path = require("path");
 
 function generateInvoice(name, email, amount) {
-  const fileName = `invoice_${Date.now()}.txt`;
-  const filePath = path.join(__dirname, "../invoices", fileName);
+  try {
+    // ✅ Absolute safe path
+    const invoicesDir = path.join(process.cwd(), "invoices");
 
-  const content = `
+    // ✅ Ensure folder exists
+    if (!fs.existsSync(invoicesDir)) {
+      fs.mkdirSync(invoicesDir, { recursive: true });
+      console.log("📁 invoices folder created");
+    }
+
+    const fileName = `invoice_${Date.now()}.txt`;
+    const filePath = path.join(invoicesDir, fileName);
+
+    const content = `
 Invoice Receipt
 -------------------------
 Name: ${name}
@@ -14,14 +24,16 @@ Amount: ₹${amount}
 Date: ${new Date().toLocaleString()}
 `;
 
-  // ensure folder exists
-  if (!fs.existsSync(path.join(__dirname, "../invoices"))) {
-    fs.mkdirSync(path.join(__dirname, "../invoices"));
+    fs.writeFileSync(filePath, content);
+
+    console.log("✅ Invoice created:", filePath);
+
+    return `/invoices/${fileName}`;
+
+  } catch (err) {
+    console.error("❌ Invoice error:", err);
+    return null;
   }
-
-  fs.writeFileSync(filePath, content);
-
-  return `/invoices/${fileName}`;
 }
 
 module.exports = { generateInvoice };
