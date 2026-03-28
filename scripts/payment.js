@@ -69,6 +69,15 @@ async function openCheckout() {
 }
 
 async function verifyPayment(response) {
+
+    // ✅ ADD THIS DEBUG HERE
+    console.log("Sending to backend:", {
+        razorpay_order_id: response.razorpay_order_id,
+        razorpay_payment_id: response.razorpay_payment_id,
+        razorpay_signature: response.razorpay_signature
+    });
+
+
     try {
         const res = await fetch(`${BASE_URL}/verify-payment`, {
             method: "POST",

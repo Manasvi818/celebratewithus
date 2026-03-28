@@ -183,6 +183,13 @@ app.post("/verify-payment", async (req, res) => {
       metadata
     } = req.body;
 
+// ✅ ADD THIS EXACTLY HERE
+console.log("Received from frontend:", {
+  razorpay_order_id,
+  razorpay_payment_id,
+  razorpay_signature
+});
+
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return res.status(400).json({
         success: false,
