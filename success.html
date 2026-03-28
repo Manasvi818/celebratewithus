@@ -176,15 +176,28 @@ if (data.invoice) {
     BASE_URL + data.invoice;
 }
 
-// ✅ auto download zip
+// ✅ download ZIP
 if (data.download) {
   setTimeout(() => {
     window.open(BASE_URL + data.download, "_blank");
   }, 1200);
 }
 
+// 🎉 CONFETTI EFFECT (RUN ON PAGE LOAD)
+confetti({
+  particleCount: 120,
+  spread: 70,
+  origin: { y: 0.6 }
+});
 
-// TIP FUNCTION
+setTimeout(() => {
+  confetti({
+    particleCount: 80,
+    spread: 100
+  });
+}, 800);
+
+// 💸 TIP FUNCTION (FIXED)
 function tip(amount) {
   document.getElementById("selectedTip").innerText =
     "You are tipping ₹" + (amount / 100);
@@ -201,30 +214,14 @@ function tip(amount) {
 
   const rzp = new Razorpay(options);
   rzp.open();
+}
 
-
-
-// 🎉 CONFETTI EFFECT
-confetti({
-  particleCount: 120,
-  spread: 70,
-  origin: { y: 0.6 }
-});
-
-// 🎉 Repeat burst
-setTimeout(() => {
-  confetti({
-    particleCount: 80,
-    spread: 100
-  });
-}, 800);
-
-// 🏠 Go back
+// 🏠 BACK BUTTON
 function goHome() {
   window.location.href = "index.html";
 }
 
-// ✅ PUT THIS JUST BELOW (OUTSIDE)
+// 📋 COPY COUPON
 function copyCoupon() {
   const code = document.getElementById("coupon").innerText;
   navigator.clipboard.writeText(code);
