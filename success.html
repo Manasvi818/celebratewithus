@@ -36,7 +36,7 @@
 </button>
 </div>
 
-<
+
 <h3>Buy me a Coffee ☕</h3>
 
 <div>
@@ -164,28 +164,22 @@ const BASE_URL = "https://celebratewithus.onrender.com";
 
 const data = JSON.parse(localStorage.getItem("paymentData") || "{}");
 
+// ✅ coupon
+document.getElementById("coupon").innerText = data.coupon || "N/A";
+
 // ✅ invoice
 if (data.invoice) {
   document.getElementById("invoiceLink").href =
     BASE_URL + data.invoice;
 }
 
-// ✅ AUTO ZIP DOWNLOAD (THIS WAS MISSING)
+// ✅ auto download zip
 if (data.download) {
-  console.log("Downloading ZIP:", data.download);
-
   setTimeout(() => {
-    window.location.href = BASE_URL + data.download;
-  }, 1000);
+    window.open(BASE_URL + data.download, "_blank");
+  }, 1200);
 }
 
-if (data) {
-  document.getElementById("couponText").innerText =
-    "Your Coupon Code: " + data.coupon;
-
-  document.getElementById("invoiceLink").href =
-    BASE_URL + "/" + data.invoice;
-}
 
 // TIP FUNCTION
 function tip(amount) {
@@ -239,12 +233,13 @@ setTimeout(() => {
 // 🏠 Go back
 function goHome() {
   window.location.href = "index.html";
+}
 
-  function copyCoupon() {
+// ✅ PUT THIS JUST BELOW (OUTSIDE)
+function copyCoupon() {
   const code = document.getElementById("coupon").innerText;
   navigator.clipboard.writeText(code);
   alert("Coupon copied!");
-}
 }
 </script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
