@@ -70,7 +70,7 @@ app.use("/assets", isPaid, express.static(path.join(__dirname, "../assets")));
 const PORT = process.env.PORT || 3000;
 
 
-app.use("/invoices", express.static("invoices"));
+app.use("/invoices", express.static(path.join(__dirname, "../invoices")));
 // ------------------------------------------------------
 // CLOUDINARY CONFIG
 // ------------------------------------------------------
