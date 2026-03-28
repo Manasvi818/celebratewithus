@@ -5,12 +5,18 @@ function generateCoupon() {
 }
 
 async function createCoupon(email) {
-  const code = generateCoupon();
+  let code;
+  let exists = true;
+
+  while (exists) {
+    code = generateCoupon();
+    const existing = await Coupon.findOne({ code });
+    if (!existing) exists = false;
+  }
 
   const coupon = await Coupon.create({
     code,
     discount: 20,
-    used: false,
     email
   });
 

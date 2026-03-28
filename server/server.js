@@ -198,12 +198,18 @@ console.log("Received from frontend:", {
     }
 
     const generated_signature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-      .update(razorpay_order_id + "|" + razorpay_payment_id)
-      .digest("hex");
+  .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+  .update(razorpay_order_id + "|" + razorpay_payment_id)
+  .digest("hex");
 
-    const isValid = generated_signature === razorpay_signature;
+// ✅ ADD THIS LINE (THIS IS WHAT YOU MISSED)
+const isValid = generated_signature === razorpay_signature;
 
+// ✅ DEBUG (VERY IMPORTANT)
+console.log("Generated:", generated_signature);
+console.log("Received:", razorpay_signature);
+
+    
     if (isValid) {
 
   req.session.isPaid = true;

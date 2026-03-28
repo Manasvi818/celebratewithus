@@ -1,37 +1,43 @@
 const fs = require("fs");
 const path = require("path");
+const PDFDocument = require("pdfkit");
 
 function generateInvoice(name, email, amount) {
   try {
-    // ✅ SAME path as Express static
     const invoicesDir = path.join(process.cwd(), "invoices");
 
-    // ✅ create folder if missing
     if (!fs.existsSync(invoicesDir)) {
       fs.mkdirSync(invoicesDir, { recursive: true });
-      console.log("📁 invoices folder created");
     }
 
-    const fileName = `invoice_${Date.now()}.txt`;
+    const fileName = `invoice_${Date.now()}.pdf`;
     const filePath = path.join(invoicesDir, fileName);
 
-    const content = `
-Invoice Receipt
--------------------------
-Name: ${name}
-Email: ${email}
-Amount: ₹${amount}
-Date: ${new Date().toLocaleString()}
-`;
+    const doc = new PDFDocument();
 
-    fs.writeFileSync(filePath, content);
+    const stream = fs.createWriteStream(filePath);
+    doc.pipe(stream);
 
-    console.log("✅ Invoice created:", filePath);
+    // 🧾 DESIGN
+    doc.fontSize(20).text("Invoice Receipt", { align: "center" });
+    doc.moveDown();
+
+    doc.fontSize(12).text(`Name: ${name}`);
+    doc.text(`Email: ${email}`);
+    doc.text(`Amount: ₹${amount}`);
+    doc.text(`Date: ${new Date().toLocaleString()}`);
+
+    doc.moveDown();
+    doc.text("Thank you for your purchase ❤️", { align: "center" });
+
+    doc.end();
+
+    console.log("✅ PDF Invoice created:", filePath);
 
     return `/invoices/${fileName}`;
 
   } catch (err) {
-    console.error("❌ Invoice error:", err);
+    console.error("❌ PDF error:", err);
     return null;
   }
 }
