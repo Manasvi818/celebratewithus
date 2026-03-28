@@ -215,7 +215,7 @@ app.post("/verify-payment", async (req, res) => {
 console.log("Invoice Path Sent:", invoicePath);
 
   // ✅ CREATE NEW COUPON
-  const newCoupon = createCoupon(email);
+  const newCoupon = await createCoupon(email);
 
    return res.json({
     success: true,
@@ -322,6 +322,7 @@ app.get("/download", isPaid, (req, res) => {
     res.status(500).send("Server crash");
   }
 });
+
 
 // 🔒 PROTECTED PAGES
 app.get("/editor", isPaid, (req, res) => {

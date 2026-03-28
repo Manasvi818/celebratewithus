@@ -19,7 +19,11 @@
 <div class="container">
   <h1>Payment Successful 🎉</h1>
 
-  <p>Your Coupon Code: <span id="coupon"></span></p>
+  <div class="coupon-box">
+  🎁 Your Coupon Code:
+  <span id="coupon" class="coupon-highlight"></span>
+  <button onclick="copyCoupon()">Copy</button>
+</div>
 
   <a id="invoiceLink" class="btn-primary" target="_blank">
   Download Invoice
@@ -33,7 +37,7 @@
 </div>
 
 <
-<h3>Support Us ☕</h3>
+<h3>Buy me a Coffee ☕</h3>
 
 <div>
   <button onclick="tip()">₹15</button>
@@ -140,6 +144,15 @@
 .tip-btn:hover {
   background: #e2e8f0;
 }
+
+.coupon-highlight {
+  background: white;
+  color: #6366F1;
+  padding: 6px 12px;
+  border-radius: 8px;
+  margin-left: 8px;
+  font-weight: bold;
+}
 </style>
 <!-- ✅ ADD SCRIPT HERE -->
 
@@ -182,7 +195,7 @@ function tip(amount) {
   const options = {
     key: "rzp_test_RgMhzhClr8HSaT",
     amount: amount,
-    name: "Support Us",
+    name: "Buy me a Coffee",
     description: "Tip",
     handler: function () {
       alert("Thanks ❤️");
@@ -226,6 +239,12 @@ setTimeout(() => {
 // 🏠 Go back
 function goHome() {
   window.location.href = "index.html";
+
+  function copyCoupon() {
+  const code = document.getElementById("coupon").innerText;
+  navigator.clipboard.writeText(code);
+  alert("Coupon copied!");
+}
 }
 </script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
