@@ -3,10 +3,10 @@ const path = require("path");
 
 function generateInvoice(name, email, amount) {
   try {
-    // ✅ Absolute safe path
+    // ✅ SAME path as Express static
     const invoicesDir = path.join(process.cwd(), "invoices");
 
-    // ✅ Ensure folder exists
+    // ✅ create folder if missing
     if (!fs.existsSync(invoicesDir)) {
       fs.mkdirSync(invoicesDir, { recursive: true });
       console.log("📁 invoices folder created");
