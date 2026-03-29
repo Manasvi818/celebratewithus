@@ -234,8 +234,10 @@ try {
 } catch (err) {
   console.error("INVOICE ERROR:", err);
 
-  // fallback (important)
-  invoicePath = "/invoices/test.pdf";
+  return res.status(500).json({
+    success: false,
+    error: "Invoice generation failed"
+  });
 }
 
   let newCoupon = { code: "WELCOME10" };
