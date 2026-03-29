@@ -177,11 +177,17 @@ const data = JSON.parse(localStorage.getItem("paymentData"));
 // ✅ coupon
 document.getElementById("coupon").innerText = data.coupon || "N/A";
 
-// ✅ invoice
-if (data.invoice) {
+// ✅ invoice (FIXED)
+if (data.invoiceUrl) {
   document.getElementById("invoiceLink").href =
-    BASE_URL + data.invoice;
+    BASE_URL + data.invoiceUrl;
 }
+
+document.getElementById("invoiceLink").onclick = () => {
+  if (data.invoiceUrl) {
+    window.open(BASE_URL + data.invoiceUrl, "_blank");
+  }
+};
 
 // ✅ download ZIP
 if (data && data.download) {
