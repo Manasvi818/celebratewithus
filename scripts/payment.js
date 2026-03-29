@@ -40,24 +40,38 @@ async function openCheckout() {
     name: "Celebratewithus",
     description: "Template Purchase ₹599",
 
-    handler: async function (response) {
+ handler: async function (response) {
 
   const verify = await fetch(`${BASE_URL}/verify-payment`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(response)
+    body: JSON.stringify({
+      ...response,
+      name: localStorage.getItem("userName") || "Guest",
+      email: localStorage.getItem("userEmail") || "guest@email.com",
+      amount: 599,
+      couponCode: localStorage.getItem("usedCoupon") || null,
+      template: localStorage.getItem("selectedTemplate") || "simple-delight"
+    })
   });
 
   const result = await verify.json();
 
   console.log("VERIFY RESULT:", result);
 
-   if (result.success) {
-    window.location.href = result.invoiceUrl;  // ✅ PDF
-  }
+  if (result.success) {
 
+    // ✅ SAVE DATA (IMPORTANT)
+    localStorage.setItem("paymentData", JSON.stringify(result));
+
+    // ✅ REDIRECT TO SUCCESS PAGE
+    window.location.href = "success.html";
+
+  } else {
+    alert("Payment verification failed");
+  }
 },
 
     theme: { color: "#6366F1" },
