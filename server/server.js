@@ -227,11 +227,21 @@ console.log("Received:", razorpay_signature);
   // ✅ GENERATE INVOICE
   const now = new Date();
 
-const invoicePath = await generateInvoice({
-  payment_id: razorpay_payment_id,
-  date: now.toLocaleDateString("en-IN"),
-  time: now.toLocaleTimeString("en-IN")
-});
+let invoicePath;
+
+try {
+  invoicePath = await generateInvoice({
+    payment_id: razorpay_payment_id,
+    date: now.toLocaleDateString("en-IN"),
+    time: now.toLocaleTimeString("en-IN")
+  });
+} catch (err) {
+  console.error("INVOICE ERROR:", err);
+  return res.status(500).json({
+    success: false,
+    error: "Invoice generation failed"
+  });
+}
 console.log("Invoice Path Sent:", invoicePath);
 
   // ✅ CREATE NEW COUPON
