@@ -403,7 +403,7 @@ console.log("👉 LOGO PATH:", logoPath);
     logoPath,
      doc.page.width - 120, // 👉 pushes to right
     doc.y + 10,           // 👉 just below title
-    { width: 60 }
+    { width: 100 }
   );
 } catch (err) {
   console.log("Logo not found, skipping...");
