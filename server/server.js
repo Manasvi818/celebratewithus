@@ -218,15 +218,25 @@ console.log("Received:", razorpay_signature);
 
   const { name, email, amount, couponCode, template } = req.body;
 
+  let invoicePath;
+
+try {
   const now = new Date();
 
-const invoicePath = await generateInvoice({
-  payment_id: razorpay_payment_id,
-  name,
-  email,
-  date: now.toLocaleDateString("en-IN"),
-  time: now.toLocaleTimeString("en-IN")
-});
+  invoicePath = await generateInvoice({
+    payment_id: razorpay_payment_id,
+    name,
+    email,
+    date: now.toLocaleDateString("en-IN"),
+    time: now.toLocaleTimeString("en-IN")
+  });
+
+} catch (err) {
+  console.error("INVOICE ERROR:", err);
+
+  // fallback (important)
+  invoicePath = "/invoices/test.pdf";
+}
 
   let newCoupon = { code: "WELCOME10" };
 
