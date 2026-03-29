@@ -401,7 +401,7 @@ console.log("👉 LOGO PATH:", logoPath);
 
   doc.image(
     logoPath,
-     doc.page.width - 120, // 👉 pushes to right
+     doc.page.width - 150, // 👉 pushes to right
     doc.y + 10,           // 👉 just below title
     { width: 100 }
   );
