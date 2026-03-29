@@ -38,7 +38,6 @@ app.use(cors({
 
 app.options("*", cors()); 
 console.log("CORS ENABLED ✅");
-const path = require("path");
 const archiver = require("archiver");
 const bodyParser = require("body-parser");
 
