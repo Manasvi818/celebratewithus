@@ -380,20 +380,33 @@ async function generateInvoice(data) {
     doc.rect(0, 0, doc.page.width, doc.page.height)
        .fill("#ffe4ec");
 
-    // 🧁 LOGO
-    try {
-      doc.image(path.join(__dirname, "../images/logo.png"), 50, 40, { width: 70 });
-    } catch (err) {
-      console.log("Logo not found, skipping...");
-    }
+    // 🧁 LOGO (centered)
+try {
+  const logoPath = path.join(__dirname, "../images/logo.png");
+
+  doc.image(
+    logoPath,
+    doc.page.width / 2 - 35,
+    30,
+    { width: 70 }
+  );
+} catch (err) {
+  console.log("Logo not found, skipping...");
+}
+
+// spacing
+doc.moveDown(2);
 
     // 🧾 TITLE
-    doc.fillColor("#333")
-       .fontSize(22)
-       .text("INVOICE", 400, 50);
+    doc
+  .fontSize(20)
+  .fillColor("#333")
+  .text("INVOICE", {
+    align: "center"
+  });
 
     // 🧍 CUSTOMER INFO
-    doc.moveDown(3);
+    doc.moveDown(1.5);
     doc.fontSize(12)
        .fillColor("#444")
        .text(`Name: ${data.name || "Guest"}`)
@@ -418,7 +431,7 @@ async function generateInvoice(data) {
     doc.moveDown(4);
     doc.fontSize(14)
        .fillColor("#555")
-       .text("Thank you for celebrating with us 💖", {
+       .text("Thank you for celebrating with us ❤️", {
          align: "center"
        });
 
