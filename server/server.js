@@ -382,7 +382,7 @@ async function generateInvoice(data) {
 
     // 🧁 LOGO (centered)
 try {
-  const logoPath = path.join(process.cwd(), "images/logo.png")
+  const logoPath = path.join(process.cwd(), "styles/images/logo.png")
 
 console.log("👉 LOGO PATH:", logoPath); 
 
@@ -403,7 +403,7 @@ doc.moveDown(2);
     doc
   .fontSize(20)
   .fillColor("#333")
-  .text("INVOICE", {
+  .text("INVOICE RECEIPT", {
     align: "center"
   });
 

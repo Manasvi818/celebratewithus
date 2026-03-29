@@ -28,7 +28,7 @@ function generateInvoice(name, email, amount) {
     doc.text(`Date: ${new Date().toLocaleString()}`);
 
     doc.moveDown();
-    doc.text("Thank you for your purchase ❤️", { align: "center" });
+    doc.text("Thank you for your purchase ", { align: "center" });
 
     doc.end();
 
