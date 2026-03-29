@@ -364,7 +364,7 @@ app.post("/apply-coupon", async (req, res) => {
 
 });
 
-function generateInvoice(data) {
+async function generateInvoice(data) {
   return new Promise((resolve) => {
 
     const fileName = `invoice_${Date.now()}.pdf`;
