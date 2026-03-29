@@ -20,7 +20,7 @@ function generateInvoice(name, email, amount) {
 
 // 🧁 LOGO (centered)
 try {
-  const logoPath = path.join(process.cwd(), "images/logo.png");
+  const logoPath = path.join(process.cwd(), "styles/images/logo.png");
 
   doc.image(
     logoPath,
