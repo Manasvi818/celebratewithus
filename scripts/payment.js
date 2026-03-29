@@ -40,9 +40,25 @@ async function openCheckout() {
     name: "Celebratewithus",
     description: "Template Purchase ₹599",
 
-    handler: function (response) {
-        verifyPayment(response);
+    handler: async function (response) {
+
+  const verify = await fetch(`${BASE_URL}/verify-payment`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
     },
+    body: JSON.stringify(response)
+  });
+
+  const result = await verify.json();
+
+  console.log("VERIFY RESULT:", result);
+
+   if (result.success) {
+    window.location.href = result.invoiceUrl;  // ✅ PDF
+  }
+
+},
 
     theme: { color: "#6366F1" },
 
@@ -68,65 +84,6 @@ async function openCheckout() {
 }
 }
 
-async function verifyPayment(response) {
-
-    // ✅ ADD THIS DEBUG HERE
-    console.log("Sending to backend:", {
-        razorpay_order_id: response.razorpay_order_id,
-        razorpay_payment_id: response.razorpay_payment_id,
-        razorpay_signature: response.razorpay_signature
-    });
-
-
-    try {
-        const res = await fetch(`${BASE_URL}/verify-payment`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-  razorpay_order_id: response.razorpay_order_id,
-  razorpay_payment_id: response.razorpay_payment_id,
-  razorpay_signature: response.razorpay_signature,
-
-  // ✅ ADD THESE
-  name: localStorage.getItem("userName") || "Guest",
-  email: localStorage.getItem("userEmail") || "guest@email.com",
-  amount: 599,
-  couponCode: localStorage.getItem("usedCoupon") || null,
-   template: localStorage.getItem("selectedTemplate") || "simple-delight"
-})
-        });
-
-        const data = await res.json();
-
-        if (data.success) {
-    alert("Payment Verified! 🎉");
-
-    // ✅ SAVE invoice + coupon
-    localStorage.setItem("paymentData", JSON.stringify({
-        invoice: data.invoice,
-        coupon: data.coupon,
-        download: data.download   
-    }));
-
-    const templateId = localStorage.getItem("selectedTemplate");
-
-    if (!templateId) {
-        alert("No template selected.");
-        return;
-    }
-
-    // ✅ Redirect to success page (NOT download directly)
-    window.location.href = "success.html";
-}
-        else {
-            alert("Payment verification failed.");
-        }
-
-    } catch (err) {
-        console.error(err);
-        alert("Something went wrong verifying payment.");
-    }
-}
 
 async function applyCoupon() {
   const code = document.getElementById("coupon").value;

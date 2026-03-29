@@ -1,4 +1,6 @@
-
+const PDFDocument = require("pdfkit");
+const fs = require("fs");
+const path = require("path");
 const mongoose = require("mongoose");
 require("dotenv").config();
 mongoose.connect(process.env.MONGO_URI)
@@ -20,6 +22,7 @@ const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const cors = require("cors");
 const app = express();  
+app.use(express.static(__dirname + "/.."));
 app.use(session({
   secret: "my-secret-key",   // change later
   resave: false,
@@ -169,7 +172,7 @@ app.post("/create-order", async (req, res) => {
 });
 
 const { createCoupon, markUsed } = require("./coupon");
-const { generateInvoice } = require("./invoice");
+
 
 // ------------------------------------------------------
 // VERIFY PAYMENT
@@ -223,8 +226,13 @@ console.log("Received:", razorpay_signature);
   }
 
   // ✅ GENERATE INVOICE
-  const invoicePath = generateInvoice(name, email, amount);
+  const now = new Date();
 
+const invoicePath = await generateInvoice({
+  payment_id: razorpay_payment_id,
+  date: now.toLocaleDateString("en-IN"),
+  time: now.toLocaleTimeString("en-IN")
+});
 console.log("Invoice Path Sent:", invoicePath);
 
   // ✅ CREATE NEW COUPON
@@ -233,7 +241,7 @@ console.log("Invoice Path Sent:", invoicePath);
    return res.json({
     success: true,
     message: "Payment verified successfully",
-    invoice: invoicePath,
+    invoiceUrl: invoicePath,
     coupon: newCoupon.code,
     download: `/download?template=${template || "simple-delight"}`
   });
@@ -354,4 +362,41 @@ app.post("/apply-coupon", async (req, res) => {
 
   const result = await couponController.applyCoupon(code);
   res.json(result);
+
 });
+
+function generateInvoice(data) {
+  return new Promise((resolve) => {
+
+    const fileName = `invoice_${Date.now()}.pdf`;
+    const filePath = path.join(__dirname, "../", fileName);
+
+    const doc = new PDFDocument();
+    const stream = fs.createWriteStream(filePath);
+
+    doc.pipe(stream);
+
+    // LOGO
+    doc.image(path.join(__dirname, "../images/logo.png"), 50, 40, { width: 80 });
+
+    // TITLE
+    doc.fontSize(20).text("INVOICE", 400, 50);
+
+    // DETAILS
+    doc.fontSize(12).text(`Payment ID: ${data.payment_id}`, 50, 150);
+    doc.text(`Date: ${data.date}`, 50, 170);
+    doc.text(`Time: ${data.time}`, 50, 190);
+
+    // AMOUNT
+    doc.fontSize(16).text(`Total: ₹199`, 50, 250);
+
+    doc.text("Thank you for celebrating with us 💖", 50, 320);
+
+    doc.end();
+
+    stream.on("finish", () => {
+      resolve(`/${fileName}`);
+    });
+
+  });
+}
