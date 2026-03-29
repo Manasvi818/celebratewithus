@@ -179,11 +179,13 @@ const { createCoupon, markUsed } = require("./coupon");
 app.post("/verify-payment", async (req, res) => {
   try {
     const {
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
-      metadata
-    } = req.body;
+  razorpay_order_id,
+  razorpay_payment_id,
+  razorpay_signature,
+  name,
+  email,
+  template
+} = req.body;
 
 // ✅ ADD THIS EXACTLY HERE
 console.log("Received from frontend:", {
@@ -211,7 +213,8 @@ const isValid = generated_signature === razorpay_signature;
 console.log("Generated:", generated_signature);
 console.log("Received:", razorpay_signature);
 
-    console.log("✅ PAYMENT SIGNATURE VERIFIED");
+if (isValid) {
+  console.log("✅ PAYMENT SIGNATURE VERIFIED");
 console.log("BODY:", req.body);
 console.log("Generating invoice...");
  if (isValid) {
