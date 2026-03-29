@@ -29,6 +29,12 @@
   Download Invoice
 </a>
 
+<p>Your download will start automatically...</p>
+
+<button onclick="downloadNow()" style="margin-top:20px;">
+  Download Your Template
+</button>
+
   <br><br>
 
 <h3>Support Us ☕</h3>
@@ -163,9 +169,10 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
+
 const BASE_URL = "https://celebratewithus.onrender.com";
 
-const data = JSON.parse(localStorage.getItem("paymentData") || "{}");
+const data = JSON.parse(localStorage.getItem("paymentData"));
 
 // ✅ coupon
 document.getElementById("coupon").innerText = data.coupon || "N/A";
@@ -177,10 +184,14 @@ if (data.invoice) {
 }
 
 // ✅ download ZIP
-if (data.download) {
+if (data && data.download) {
+
+  console.log("Starting auto download...");
+
   setTimeout(() => {
-    window.open(BASE_URL + data.download, "_blank");
+    window.location.href = BASE_URL + data.download;
   }, 1200);
+
 }
 
 // 🎉 CONFETTI EFFECT (RUN ON PAGE LOAD)
@@ -226,6 +237,24 @@ function copyCoupon() {
   const code = document.getElementById("coupon").innerText;
   navigator.clipboard.writeText(code);
   alert("Coupon copied!");
+}
+
+
+
+if (data && data.download) {
+
+  console.log("Starting auto download...");
+
+  setTimeout(() => {
+    window.location.href = BASE_URL + data.download;
+  }, 1200);
+
+}
+
+function downloadNow() {
+  if (data && data.download) {
+    window.location.href = BASE_URL + data.download;
+  }
 }
 </script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
