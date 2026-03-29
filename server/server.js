@@ -218,7 +218,15 @@ console.log("Received:", razorpay_signature);
 
   const { name, email, amount, couponCode, template } = req.body;
 
-  const invoicePath = "/test.pdf";
+  const now = new Date();
+
+const invoicePath = await generateInvoice({
+  payment_id: razorpay_payment_id,
+  name,
+  email,
+  date: now.toLocaleDateString("en-IN"),
+  time: now.toLocaleTimeString("en-IN")
+});
 
   let newCoupon = { code: "WELCOME10" };
 
@@ -354,36 +362,72 @@ app.post("/apply-coupon", async (req, res) => {
 });
 
 async function generateInvoice(data) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
 
     const fileName = `invoice_${Date.now()}.pdf`;
-    const filePath = path.join(__dirname, "../", fileName);
+    const filePath = path.join(__dirname, "../invoices", fileName);
 
-    const doc = new PDFDocument();
+    const doc = new PDFDocument({
+      margin: 50
+    });
+
     const stream = fs.createWriteStream(filePath);
-
     doc.pipe(stream);
 
-    // LOGO
-    doc.image(path.join(__dirname, "../images/logo.png"), 50, 40, { width: 80 });
+    // 🌸 BACKGROUND (baby pink)
+    doc.rect(0, 0, doc.page.width, doc.page.height)
+       .fill("#ffe4ec");
 
-    // TITLE
-    doc.fontSize(20).text("INVOICE", 400, 50);
+    // 🧁 LOGO
+    try {
+      doc.image(path.join(__dirname, "../images/logo.png"), 50, 40, { width: 70 });
+    } catch (err) {
+      console.log("Logo not found, skipping...");
+    }
 
-    // DETAILS
-    doc.fontSize(12).text(`Payment ID: ${data.payment_id}`, 50, 150);
-    doc.text(`Date: ${data.date}`, 50, 170);
-    doc.text(`Time: ${data.time}`, 50, 190);
+    // 🧾 TITLE
+    doc.fillColor("#333")
+       .fontSize(22)
+       .text("INVOICE", 400, 50);
 
-    // AMOUNT
-    doc.fontSize(16).text(`Total: ₹199`, 50, 250);
+    // 🧍 CUSTOMER INFO
+    doc.moveDown(3);
+    doc.fontSize(12)
+       .fillColor("#444")
+       .text(`Name: ${data.name || "Guest"}`)
+       .text(`Email: ${data.email || "guest@email.com"}`)
+       .moveDown();
 
-    doc.text("Thank you for celebrating with us 💖", 50, 320);
+    // 💳 PAYMENT INFO
+    doc.text(`Payment ID: ${data.payment_id}`)
+       .text(`Date: ${data.date}`)
+       .text(`Time: ${data.time}`);
+
+    // 💰 AMOUNT BOX
+    doc.moveDown(2);
+    doc.roundedRect(50, 250, 500, 80, 10)
+       .fill("#ffc0cb");
+
+    doc.fillColor("#000")
+       .fontSize(18)
+       .text("Total Paid: ₹599", 70, 280);
+
+    // ✨ THANK YOU
+    doc.moveDown(4);
+    doc.fontSize(14)
+       .fillColor("#555")
+       .text("Thank you for celebrating with us 💖", {
+         align: "center"
+       });
 
     doc.end();
 
     stream.on("finish", () => {
-      resolve(`/${fileName}`);
+      resolve(`/invoices/${fileName}`);
+    });
+
+    stream.on("error", (err) => {
+      reject(err);
     });
 
   });
