@@ -42,7 +42,7 @@ async function openCheckout() {
 
  handler: async function (response) {
 
-  const verify = await fetch(`/verify-payment`, {
+  const verify = await fetch(`${BASE_URL}/verify-payment`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
