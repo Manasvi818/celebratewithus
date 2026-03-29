@@ -382,7 +382,9 @@ async function generateInvoice(data) {
 
     // 🧁 LOGO (centered)
 try {
-  const logoPath = path.join(__dirname, "../images/logo.png");
+  const logoPath = path.join(process.cwd(), "images/logo.png")
+
+console.log("👉 LOGO PATH:", logoPath); 
 
   doc.image(
     logoPath,
