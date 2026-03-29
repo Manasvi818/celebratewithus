@@ -179,20 +179,13 @@ const { createCoupon, markUsed } = require("./coupon");
 app.post("/verify-payment", async (req, res) => {
   try {
     const {
-  razorpay_order_id,
-  razorpay_payment_id,
-  razorpay_signature,
-  name,
-  email,
-  template
-} = req.body;
-
-// ✅ ADD THIS EXACTLY HERE
-console.log("Received from frontend:", {
-  razorpay_order_id,
-  razorpay_payment_id,
-  razorpay_signature
-});
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      name,
+      email,
+      template
+    } = req.body;
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return res.status(400).json({
@@ -202,74 +195,63 @@ console.log("Received from frontend:", {
     }
 
     const generated_signature = crypto
-  .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-  .update(razorpay_order_id + "|" + razorpay_payment_id)
-  .digest("hex");
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(razorpay_order_id + "|" + razorpay_payment_id)
+      .digest("hex");
 
-// ✅ ADD THIS LINE (THIS IS WHAT YOU MISSED)
-const isValid = generated_signature === razorpay_signature;
+    const isValid = generated_signature === razorpay_signature;
 
-// ✅ DEBUG (VERY IMPORTANT)
-console.log("Generated:", generated_signature);
-console.log("Received:", razorpay_signature);
+    console.log("Generated:", generated_signature);
+    console.log("Received:", razorpay_signature);
 
-if (isValid) {
-  console.log("✅ PAYMENT SIGNATURE VERIFIED");
-console.log("BODY:", req.body);
-console.log("Generating invoice...");
- if (isValid) {
+    if (isValid) {
+      console.log("✅ PAYMENT VERIFIED");
 
+      let invoicePath = null;
 
-  let invoicePath = null;
+      try {
+        const now = new Date();
 
-try {
-  const now = new Date();
+        invoicePath = await generateInvoice({
+          payment_id: razorpay_payment_id,
+          name,
+          email,
+          date: now.toLocaleDateString("en-IN"),
+          time: now.toLocaleTimeString("en-IN")
+        });
 
-  invoicePath = await generateInvoice({
-    payment_id: razorpay_payment_id,
-    name,
-    email,
-    date: now.toLocaleDateString("en-IN"),
-    time: now.toLocaleTimeString("en-IN")
-  });
+      } catch (invoiceErr) {
+        console.error("INVOICE ERROR:", invoiceErr);
+      }
 
-} catch (err) {
-  console.error("INVOICE ERROR:", err);
+      let newCoupon = { code: "WELCOME10" };
 
-}
+      if (email) {
+        newCoupon = await createCoupon(email);
+      }
 
-  let newCoupon = { code: "WELCOME10" };
+      return res.json({
+        success: true,
+        message: "Payment verified successfully",
+        invoiceUrl: invoicePath || null,
+        coupon: newCoupon.code,
+        download: `/download?template=${template || "simple-delight"}`
+      });
 
-  if (email) {
-    newCoupon = await createCoupon(email);
-  }
-
-  return res.json({
-    success: true,
-    message: "Payment verified successfully",
-  invoiceUrl: invoicePath || null,
-    coupon: newCoupon.code,
-    download: `/download?template=${template || "simple-delight"}`
-  });
-
-} else {
-
-  return res.status(400).json({
-    success: false,
-    error: "Invalid signature - verification failed",
-  });
-
-}
+    } else {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid signature"
+      });
+    }
 
   } catch (err) {
-  console.error("❌ FULL VERIFY ERROR:");
-  console.error(err.stack);
-
-  res.status(500).json({
-    success: false,
-    error: err.message
-  });
-}
+    console.error("❌ VERIFY ERROR:", err);
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
 });
 
 
