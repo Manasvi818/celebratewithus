@@ -373,8 +373,16 @@ app.post("/apply-coupon", async (req, res) => {
 async function generateInvoice(data) {
   return new Promise((resolve, reject) => {
 
+    // ✅ ADD THIS BLOCK HERE
+    const invoicesDir = path.join(__dirname, "../invoices");
+
+    if (!fs.existsSync(invoicesDir)) {
+      fs.mkdirSync(invoicesDir, { recursive: true });
+    }
+
+    // ✅ THEN CONTINUE
     const fileName = `invoice_${Date.now()}.pdf`;
-    const filePath = path.join(__dirname, "../invoices", fileName);
+    const filePath = path.join(invoicesDir, fileName);
 
     const doc = new PDFDocument({
       margin: 50
