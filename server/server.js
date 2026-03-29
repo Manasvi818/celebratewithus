@@ -380,21 +380,7 @@ async function generateInvoice(data) {
     doc.rect(0, 0, doc.page.width, doc.page.height)
        .fill("#ffe4ec");
 
-    // 🧁 LOGO (centered)
-try {
-  const logoPath = path.join(process.cwd(), "styles/images/logo.png")
-
-console.log("👉 LOGO PATH:", logoPath); 
-
-  doc.image(
-    logoPath,
-    doc.page.width / 2 - 35,
-    30,
-    { width: 70 }
-  );
-} catch (err) {
-  console.log("Logo not found, skipping...");
-}
+    
 
 // spacing
 doc.moveDown(2);
@@ -407,6 +393,21 @@ doc.moveDown(2);
     align: "center"
   });
 
+  // 🧁 LOGO (centered)
+try {
+  const logoPath = path.join(process.cwd(), "styles/images/logo.png")
+
+console.log("👉 LOGO PATH:", logoPath); 
+
+  doc.image(
+    logoPath,
+     doc.page.width - 120, // 👉 pushes to right
+    doc.y + 10,           // 👉 just below title
+    { width: 60 }
+  );
+} catch (err) {
+  console.log("Logo not found, skipping...");
+}
     // 🧍 CUSTOMER INFO
     doc.moveDown(1.5);
     doc.fontSize(12)
