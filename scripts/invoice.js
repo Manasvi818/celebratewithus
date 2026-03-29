@@ -18,13 +18,37 @@ function generateInvoice(name, email, amount) {
 
     doc.pipe(stream);
 
-    // 🎨 HEADER
-    doc
-      .fontSize(22)
-      .fillColor("#4F46E5")
-      .text("CelebrateWithUs", { align: "center" });
+// 🧁 LOGO (centered)
+try {
+  const logoPath = path.join(process.cwd(), "images/logo.png");
 
-    doc.moveDown(0.5);
+  doc.image(
+    logoPath,
+    doc.page.width / 2 - 35,
+    30,
+    { width: 70 }
+  );
+} catch (err) {
+  console.log("Logo not found, skipping...");
+}
+
+// spacing after logo
+doc.moveDown(0.5);
+
+// 🎨 HEADER
+doc
+  .fontSize(22)
+  .fillColor("#4F46E5")
+  .text("CelebrateWithUs", { align: "center" });
+
+// divider line
+doc.moveDown(0.5);
+doc
+  .strokeColor("#ddd")
+  .lineWidth(1)
+  .moveTo(50, doc.y)
+  .lineTo(550, doc.y)
+  .stroke();
 
     doc
       .fontSize(10)
@@ -34,10 +58,13 @@ function generateInvoice(name, email, amount) {
     doc.moveDown(2);
 
     // 📄 INVOICE TITLE
-    doc
-      .fontSize(18)
-      .fillColor("black")
-      .text("INVOICE RECEIPT", { align: "center" });
+    doc.moveDown(1.5); // 👈 ADD THIS
+
+// 📄 INVOICE TITLE
+doc
+  .fontSize(18)
+  .fillColor("black")
+  .text("INVOICE RECEIPT", { align: "center" });
 
     doc.moveDown();
 
