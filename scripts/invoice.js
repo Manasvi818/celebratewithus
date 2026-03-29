@@ -104,7 +104,7 @@ doc
     doc
       .fontSize(10)
       .fillColor("gray")
-      .text("Thank you for your purchase ❤️", { align: "center" });
+      .text("Thank you for your purchase ", { align: "center" });
 
     doc.end();
 
