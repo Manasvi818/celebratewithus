@@ -211,7 +211,9 @@ const isValid = generated_signature === razorpay_signature;
 console.log("Generated:", generated_signature);
 console.log("Received:", razorpay_signature);
 
-    
+    console.log("✅ PAYMENT SIGNATURE VERIFIED");
+console.log("BODY:", req.body);
+console.log("Generating invoice...");
  if (isValid) {
 
 
@@ -257,12 +259,14 @@ try {
 }
 
   } catch (err) {
-    console.error("verify-payment error:", err);
-    res.status(500).json({
-      success: false,
-      error: err.message
-    });
-  }
+  console.error("❌ FULL VERIFY ERROR:");
+  console.error(err.stack);
+
+  res.status(500).json({
+    success: false,
+    error: err.message
+  });
+}
 });
 
 
