@@ -214,11 +214,8 @@ console.log("Received:", razorpay_signature);
     
  if (isValid) {
 
-  req.session.isPaid = true;
 
-  const { name, email, amount, couponCode, template } = req.body;
-
-  let invoicePath;
+  let invoicePath = null;
 
 try {
   const now = new Date();
@@ -234,10 +231,6 @@ try {
 } catch (err) {
   console.error("INVOICE ERROR:", err);
 
-  return res.status(500).json({
-    success: false,
-    error: "Invoice generation failed"
-  });
 }
 
   let newCoupon = { code: "WELCOME10" };
@@ -249,7 +242,7 @@ try {
   return res.json({
     success: true,
     message: "Payment verified successfully",
-    invoiceUrl: invoicePath,
+  invoiceUrl: invoicePath || null,
     coupon: newCoupon.code,
     download: `/download?template=${template || "simple-delight"}`
   });
