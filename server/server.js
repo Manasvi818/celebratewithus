@@ -212,42 +212,22 @@ console.log("Generated:", generated_signature);
 console.log("Received:", razorpay_signature);
 
     
-    if (isValid) {
+ if (isValid) {
 
   req.session.isPaid = true;
 
-  // ✅ GET DATA FROM FRONTEND
   const { name, email, amount, couponCode, template } = req.body;
 
-  // ✅ MARK COUPON USED
-  if (couponCode) {
-    markUsed(couponCode);
+  // ✅ TEMP FIX (skip invoice for now)
+  const invoicePath = "/test.pdf";
+
+  // ✅ coupon (only if email exists)
+  let newCoupon = { code: "WELCOME10" };
+  if (email) {
+    newCoupon = await createCoupon(email);
   }
 
-  // ✅ GENERATE INVOICE
-  const now = new Date();
-
-let invoicePath;
-
-try {
-  invoicePath = await generateInvoice({
-    payment_id: razorpay_payment_id,
-    date: now.toLocaleDateString("en-IN"),
-    time: now.toLocaleTimeString("en-IN")
-  });
-} catch (err) {
-  console.error("INVOICE ERROR:", err);
-  return res.status(500).json({
-    success: false,
-    error: "Invoice generation failed"
-  });
-}
-console.log("Invoice Path Sent:", invoicePath);
-
-  // ✅ CREATE NEW COUPON
-  const newCoupon = await createCoupon(email);
-
-   return res.json({
+  return res.json({
     success: true,
     message: "Payment verified successfully",
     invoiceUrl: invoicePath,
