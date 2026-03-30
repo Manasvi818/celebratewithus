@@ -1,4 +1,4 @@
-const res = await fetch("/create-order", {
+const res = await fetch("https://celebratewithus.onrender.com/create-order", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
@@ -20,7 +20,7 @@ var options = {
   handler: function (response) {
     console.log("Payment Success:", response);
 
-    fetch("/verify-payment", {
+   fetch("https://celebratewithus.onrender.com/verify-payment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
