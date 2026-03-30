@@ -378,7 +378,7 @@ async function generateInvoice(data) {
 
     // 🌸 BACKGROUND (baby pink)
     doc.rect(0, 0, doc.page.width, doc.page.height)
-       .fill("#ffe4ec");
+       .fill("#f8d6df");
 
     
 

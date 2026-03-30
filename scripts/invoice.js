@@ -35,6 +35,8 @@ try {
 // spacing after logo
 doc.moveDown(0.5);
 
+doc.fillColor("#000"); // reset color
+
 // 🎨 HEADER
 doc
   .fontSize(22)
