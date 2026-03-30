@@ -700,8 +700,8 @@ background: linear-gradient(135deg, #ffb7dd, #d8c8ff);
 #discountMsg {
   margin-top: 10px;
   font-size: 14px;
-  font-weight: 500;
-  color: #4ade80;
+  font-weight: bold;
+  color: black;
 }
 
 .footer-links {
