@@ -89,7 +89,7 @@ doc
 
     doc.fontSize(12);
     doc.text("Product: Celebration Template");
-    doc.text("Price: ₹599");
+    doc.text("Price: ₹149");
     doc.text("Quantity: 1");
     doc.text(`Total Paid: ₹${amount}`);
 

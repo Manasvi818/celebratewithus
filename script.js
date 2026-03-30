@@ -4,7 +4,7 @@ const res = await fetch("https://celebratewithus.onrender.com/create-order", {
     "Content-Type": "application/json"
   },
   body: JSON.stringify({
-    amountINR: 99
+    amountINR: 149
   })
 });
 

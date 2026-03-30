@@ -3,7 +3,7 @@ console.log("Razorpay loaded:", typeof Razorpay);
 const payBtn = document.getElementById("rzpButton");
 const BASE_URL = "https://celebratewithus.onrender.com";
 const selectedTemplate = localStorage.getItem("selectedTemplate");
-let finalAmount = 59900; // ₹599 in paise
+let finalAmount = 14900; // ₹149 in paise
 let usedCoupon = null;
 
 if (payBtn) {
@@ -38,7 +38,7 @@ async function openCheckout() {
     currency: data.currency,
     order_id: data.orderId,
     name: "Celebratewithus",
-    description: "Template Purchase ₹599",
+    description: "Template Purchase ₹149",
 
  handler: async function (response) {
 
@@ -53,7 +53,7 @@ async function openCheckout() {
   razorpay_signature: response.razorpay_signature,
       name: localStorage.getItem("userName") || "Guest",
       email: localStorage.getItem("userEmail") || "guest@email.com",
-      amount: 599,
+      amount: 149,
       couponCode: localStorage.getItem("usedCoupon") || null,
       template: localStorage.getItem("selectedTemplate") || "simple-delight"
     })

@@ -428,7 +428,7 @@ console.log("👉 LOGO PATH:", logoPath);
 
     doc.fillColor("#000")
        .fontSize(18)
-       .text("Total Paid: ₹599", 70, 280);
+       .text("Total Paid: ₹149", 70, 280);
 
     // ✨ THANK YOU
     doc.moveDown(4);
