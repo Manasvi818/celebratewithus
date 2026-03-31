@@ -182,12 +182,13 @@ const downloadKey = "downloaded_" + templateName;
 
 function startDownload(url) {
   if (localStorage.getItem(downloadKey) === "true") {
-    alert("You have already downloaded this webpage.");
-    return;
+    console.log("Already downloaded, blocking...");
+    return false;
   }
 
   localStorage.setItem(downloadKey, "true");
   window.location.href = url;
+  return true;
 }
 
 // ✅ coupon
@@ -258,14 +259,25 @@ if (data && data.download) {
   console.log("Starting auto download...");
 
   setTimeout(() => {
-    window.location.href = BASE_URL + data.download;
+    const success = startDownload(BASE_URL + data.download);
+
+    if (success) {
+      const btn = document.querySelector("button[onclick='downloadNow()']");
+      btn.disabled = true;
+      btn.innerText = "Downloaded ✅";
+    }
+
   }, 1200);
 
 }
 
 function downloadNow() {
-  if (data && data.download) {
-    startDownload(BASE_URL + data.download);
+  if (!data || !data.download) return;
+
+  const success = startDownload(BASE_URL + data.download);
+
+  if (!success) {
+    alert("Template already downloaded.");
   }
 }
 </script>
