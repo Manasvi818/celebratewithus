@@ -97,13 +97,20 @@ app.post("/upload", upload.single("image"), async (req, res) => {
       return res.status(400).json({ success: false, error: "No image provided" });
     }
 
-    const fileData =
-      "data:image/jpeg;base64," + req.file.buffer.toString("base64");
-
-    const result = await cloudinary.uploader.upload(fileData, {
+    const result = await new Promise((resolve, reject) => {
+  const stream = cloudinary.uploader.upload_stream(
+    {
       folder: "celebratewithus",
-      resource_type: "image",
-    });
+      resource_type: "image"
+    },
+    (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    }
+  );
+
+  stream.end(req.file.buffer);
+});
 
     res.json({
       success: true,

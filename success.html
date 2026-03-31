@@ -174,6 +174,22 @@ const BASE_URL = "https://celebratewithus.onrender.com";
 
 const data = JSON.parse(localStorage.getItem("paymentData"));
 
+const templateName = data?.download
+  ? new URLSearchParams(data.download.split('?')[1]).get('template')
+  : "default";
+
+const downloadKey = "downloaded_" + templateName;
+
+function startDownload(url) {
+  if (localStorage.getItem(downloadKey) === "true") {
+    alert("You have already downloaded this webpage.");
+    return;
+  }
+
+  localStorage.setItem(downloadKey, "true");
+  window.location.href = url;
+}
+
 // ✅ coupon
 document.getElementById("coupon").innerText = data.coupon || "N/A";
 
@@ -189,16 +205,6 @@ document.getElementById("invoiceLink").onclick = () => {
   }
 };
 
-// ✅ download ZIP
-if (data && data.download) {
-
-  console.log("Starting auto download...");
-
-  setTimeout(() => {
-    window.location.href = BASE_URL + data.download;
-  }, 1200);
-
-}
 
 // 🎉 CONFETTI EFFECT (RUN ON PAGE LOAD)
 confetti({
@@ -259,7 +265,7 @@ if (data && data.download) {
 
 function downloadNow() {
   if (data && data.download) {
-    window.location.href = BASE_URL + data.download;
+    startDownload(BASE_URL + data.download);
   }
 }
 </script>
