@@ -3,9 +3,15 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<link rel="preconnect" href="https://widget.cloudinary.com">
+<link rel="preconnect" href="https://res.cloudinary.com">
+<script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+
 <title>Always Together — Editor • CelebrateWithUs</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+
 <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
 
 <style>
@@ -227,6 +233,8 @@ h2, h3{ text-align:center; font-family:"Playfair Display",serif; }
   <p id="previewCap" style="margin-top:6px; color:#5a3c38;"></p>
 </div>
 
+<script src="/js/optimize.js"></script>
+
 <script>
 /* Keys */
 const STORAGE_KEY="at_photos_v1";
@@ -250,11 +258,13 @@ function render(){
 
     if(obj.type === "video"){
       el = document.createElement("video");
-      el.src = obj.url;
+      el.src = optimizeCloudinaryUrl(obj.url, 400);
+el.loading = "lazy";
       el.controls = true;
     } else {
       el = document.createElement("img");
-      el.src = obj.url;
+      el.src = optimizeCloudinaryUrl(obj.url, 400);
+el.loading = "lazy";
     }
 
     el.onclick = () => preview(obj);
@@ -298,15 +308,17 @@ function preview(obj){
   vid.style.display = "none";
 
   if(obj.type === "video"){
-    vid.src = obj.url;
+    vid.src = optimizeCloudinaryUrl(obj.url, 800);
     vid.style.display = "block";
   } else {
-    img.src = obj.url;
+    img.src = optimizeCloudinaryUrl(obj.url, 800);
     img.style.display = "block";
   }
 
   document.getElementById("previewCap").innerText = obj.caption || "";
 }
+
+alert("Opening cloud upload..."); // or loader
 
 /* Cloudinary Upload */
 function openWidget(type){
@@ -319,7 +331,7 @@ function openWidget(type){
   }, (error, result) => {
     if (!error && result && result.event === "success") {
       items.push({
-        url: result.info.secure_url,
+        url: optimizeCloudinaryUrl(result.info.secure_url, 500),
         type: result.info.resource_type,
         caption: ""
       });
