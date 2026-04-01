@@ -178,7 +178,7 @@ const templateName = data?.download
   ? new URLSearchParams(data.download.split('?')[1]).get('template')
   : "default";
 
-const downloadKey = "downloaded_" + templateName;
+
 
 function startDownload(url) {
   if (!url) {
@@ -186,13 +186,6 @@ function startDownload(url) {
     return false;
   }
 
-  if (localStorage.getItem(downloadKey) === "true") {
-    console.log("Already downloaded, blocking...");
-    return false;
-  }
-
-
-  
   console.log("Starting auto download...");
 
   const a = document.createElement("a");
@@ -201,11 +194,6 @@ function startDownload(url) {
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-
-  // ✅ Mark AFTER trigger (not before)
-  setTimeout(() => {
-    localStorage.setItem(downloadKey, "true");
-  }, 1500);
 
   return true;
 }
@@ -298,8 +286,8 @@ function downloadNow() {
   const success = startDownload(BASE_URL + data.download);
 
   if (!success) {
-    alert("Template already downloaded.");
-  }
+  alert("Download failed. Please try again.");
+}
 }
 </script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
