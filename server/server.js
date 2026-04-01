@@ -1,3 +1,4 @@
+const Project = require("./models/Project");
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
@@ -225,6 +226,16 @@ app.post("/verify-payment", async (req, res) => {
     if (isValid) {
       console.log("✅ PAYMENT VERIFIED");
 
+const projectId = crypto.randomBytes(6).toString("hex");
+
+await Project.create({
+  projectId,
+  data: [],
+  messages: "",
+  music: "",
+  password: "sweet"
+});
+      
       let invoicePath = null;
 
       try {
@@ -249,12 +260,10 @@ app.post("/verify-payment", async (req, res) => {
       }
 
       return res.json({
-        success: true,
-        message: "Payment verified successfully",
-        invoiceUrl: invoicePath || null,
-        coupon: newCoupon.code,
-        download: `/download?template=${template || "simple-delight"}`
-      });
+  success: true,
+  projectId,
+  editLink: `/editor/${projectId}`
+});
 
     } else {
       return res.status(400).json({
@@ -304,7 +313,7 @@ app.post("/webhook", (req, res) => {
 // DOWNLOAD TEMPLATE (ZIP)
 // ------------------------------------------------------
 // ✅ DOWNLOAD ROUTE FIRST
-app.get("/download", (req, res) => {
+app.get("/download", async (req, res) => {
   try {
     const fs = require("fs");
     const templateId = req.query.template || "simple-delight";
@@ -340,7 +349,25 @@ app.get("/download", (req, res) => {
 
     archive.pipe(res);
 
-    archive.directory(templatePath, false);
+    const projectId = req.query.projectId;
+
+const project = await Project.findOne({ projectId });
+
+const password = project?.password || "sweet";
+
+let viewerHtml = fs.readFileSync(viewerPath, "utf-8");
+
+// 🔥 inject password
+viewerHtml = viewerHtml.replace(
+  'const PASS = "sweet";',
+  `const PASS = "${password}";`
+);
+
+// add modified viewer
+archive.append(viewerHtml, { name: "viewer.html" });
+
+// add editor normally
+archive.file(editorPath, { name: "editor.html" });
 
     archive.finalize();
 
@@ -359,8 +386,6 @@ app.get("/editor", isPaid, (req, res) => {
 app.get("/viewer", isPaid, (req, res) => {
   res.sendFile(path.join(__dirname, "../templates/simple-delight/viewer.html"));
 });
-
-
 
 
 app.post("/apply-coupon", async (req, res) => {
