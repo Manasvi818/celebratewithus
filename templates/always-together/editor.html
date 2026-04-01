@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://widget.cloudinary.com">
 <link rel="preconnect" href="https://res.cloudinary.com">
 <link rel="preload" href="https://widget.cloudinary.com/v2.0/global/all.js" as="script">
-<script src="https://widget.cloudinary.com/v2.0/global/all.js" async></script>
+<script src="https://widget.cloudinary.com/v2.0/global/all.js" defer></script>
 
 <title>Always Together — Editor • CelebrateWithUs</title>
 
@@ -511,14 +511,16 @@ function saveBgMusic() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  initWidget();
 
-  // 🔥 ADD THIS BELOW
-  setTimeout(() => {
+  function waitForCloudinary(){
     if (typeof cloudinary !== "undefined") {
-      initWidget();
+      initWidget(); // ✅ only runs when ready
+    } else {
+      setTimeout(waitForCloudinary, 200);
     }
-  }, 500);
+  }
+
+  waitForCloudinary();
 });
 </script>
 <!-- FOOTER -->
