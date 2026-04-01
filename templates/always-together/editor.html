@@ -12,7 +12,6 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 
-<script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
 
 <style>
 body{
@@ -183,8 +182,8 @@ h2, h3{ text-align:center; font-family:"Playfair Display",serif; }
 
 <!-- Upload Buttons -->
 <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;">
-  <button class="btn" onclick="openWidget('image')">📸 Image</button>
-  <button class="btn" onclick="openWidget('video')">🎥 Video</button>
+  <button class="btn" onclick="openWidget()">📸 Image</button>
+<button class="btn" onclick="openWidget()">🎥 Video</button>
   <label class="btn ghost" style="padding:10px 12px;">
     Local Upload
     <input type="file" id="localFile" accept="image/*,video/*" style="display:none" onchange="uploadLocal(event)">
@@ -239,6 +238,8 @@ h2, h3{ text-align:center; font-family:"Playfair Display",serif; }
 /* Keys */
 const STORAGE_KEY="at_photos_v1";
 const MSG_KEY="at_main_message";
+
+let widget; // ✅ ADD HERE
 
 /* Load Items */
 let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
@@ -318,11 +319,9 @@ function preview(obj){
   document.getElementById("previewCap").innerText = obj.caption || "";
 }
 
-alert("Opening cloud upload..."); // or loader
 
-/* Cloudinary Upload */
-function openWidget(type){
-  cloudinary.openUploadWidget({
+function initWidget(){
+  widget = cloudinary.createUploadWidget({
     cloudName: "di8n4lsjz",
     uploadPreset: "always_together",
     folder: "always_together",
@@ -335,11 +334,19 @@ function openWidget(type){
         type: result.info.resource_type,
         caption: ""
       });
-       autoSave();
+      autoSave();
       render();
-     
     }
   });
+}
+
+/* Cloudinary Upload */
+function openWidget(){
+  if(widget){
+    widget.open(); // ⚡ instant
+  } else {
+    alert("Loading uploader... please wait");
+  }
 }
 
 
@@ -496,7 +503,7 @@ function saveBgMusic() {
   }, 1500);
 }
 
-
+window.addEventListener("load", initWidget);
 </script>
 <!-- FOOTER -->
 <footer class="site-footer">
