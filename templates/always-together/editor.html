@@ -233,9 +233,20 @@ h2, h3{ text-align:center; font-family:"Playfair Display",serif; }
   <p id="previewCap" style="margin-top:6px; color:#5a3c38;"></p>
 </div>
 
-<script src="/js/optimize.js"></script>
+
 
 <script>
+  function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  if (url.includes("/upload/f_auto")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
+
 /* Keys */
 const STORAGE_KEY="at_photos_v1";
 const MSG_KEY="at_main_message";
