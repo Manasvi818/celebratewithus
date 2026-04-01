@@ -181,13 +181,32 @@ const templateName = data?.download
 const downloadKey = "downloaded_" + templateName;
 
 function startDownload(url) {
+  if (!url) {
+    console.log("No download URL");
+    return false;
+  }
+
   if (localStorage.getItem(downloadKey) === "true") {
     console.log("Already downloaded, blocking...");
     return false;
   }
 
-  localStorage.setItem(downloadKey, "true");
-  window.location.href = url;
+
+  
+  console.log("Starting auto download...");
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "template.zip";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  // ✅ Mark AFTER trigger (not before)
+  setTimeout(() => {
+    localStorage.setItem(downloadKey, "true");
+  }, 1500);
+
   return true;
 }
 
@@ -254,10 +273,12 @@ function copyCoupon() {
 
 
 
-if (data && data.download) {
+if (!data || !data.download) {
+  console.log("No download data found");
+} else {
 
   console.log("Starting auto download...");
-
+console.log("Download URL:", BASE_URL + data.download);
   setTimeout(() => {
     const success = startDownload(BASE_URL + data.download);
 
