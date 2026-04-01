@@ -3,9 +3,20 @@ const fs = require("fs");
 const path = require("path");
 const mongoose = require("mongoose");
 require("dotenv").config();
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected ✅"))
-  .catch(err => console.log("MongoDB Error ❌", err));
+async function startServer() {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB Connected ✅");
+  } catch (err) {
+    console.log("MongoDB Error ❌", err);
+  }
+
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+}
+
+startServer();
 
 console.log("🚀 SERVER FILE RUNNING");
 
@@ -350,9 +361,7 @@ app.get("/viewer", isPaid, (req, res) => {
 });
 
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+
 
 app.post("/apply-coupon", async (req, res) => {
   const { code } = req.body;
