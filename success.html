@@ -29,11 +29,6 @@
   Download Invoice
 </a>
 
-<p>Your download will start automatically...</p>
-
-<button onclick="downloadNow()" style="margin-top:20px;">
-  Download Your Template
-</button>
 
   <br><br>
 
@@ -172,14 +167,6 @@
 
 const BASE_URL = "https://celebratewithus.onrender.com";
 
-const data = JSON.parse(localStorage.getItem("paymentData"));
-
-const templateName = data?.download
-  ? new URLSearchParams(data.download.split('?')[1]).get('template')
-  : "default";
-
-
-
 function startDownload(url) {
   if (!url) {
     console.log("No download URL");
@@ -197,22 +184,6 @@ function startDownload(url) {
 
   return true;
 }
-
-// ✅ coupon
-document.getElementById("coupon").innerText = data.coupon || "N/A";
-
-// ✅ invoice (FIXED)
-if (data.invoiceUrl) {
-  document.getElementById("invoiceLink").href =
-    BASE_URL + data.invoiceUrl;
-}
-
-document.getElementById("invoiceLink").onclick = () => {
-  if (data.invoiceUrl) {
-    window.open(BASE_URL + data.invoiceUrl, "_blank");
-  }
-};
-
 
 // 🎉 CONFETTI EFFECT (RUN ON PAGE LOAD)
 confetti({
@@ -260,35 +231,6 @@ function copyCoupon() {
 }
 
 
-
-if (!data || !data.download) {
-  console.log("No download data found");
-} else {
-
-  console.log("Starting auto download...");
-console.log("Download URL:", BASE_URL + data.download);
-  setTimeout(() => {
-    const success = startDownload(BASE_URL + data.download);
-
-    if (success) {
-      const btn = document.querySelector("button[onclick='downloadNow()']");
-      btn.disabled = true;
-      btn.innerText = "Downloaded ✅";
-    }
-
-  }, 1200);
-
-}
-
-function downloadNow() {
-  if (!data || !data.download) return;
-
-  const success = startDownload(BASE_URL + data.download);
-
-  if (!success) {
-  alert("Download failed. Please try again.");
-}
-}
 </script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>

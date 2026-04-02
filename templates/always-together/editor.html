@@ -248,13 +248,12 @@ h2, h3{ text-align:center; font-family:"Playfair Display",serif; }
 }
 
 /* Keys */
-const STORAGE_KEY="at_photos_v1";
+
 const MSG_KEY="at_main_message";
 
 let widget; // ✅ ADD HERE
 
-/* Load Items */
-let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
 
 /* Render Media */
 function render(){
@@ -386,23 +385,20 @@ function saveAll(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 }
 
-function autoSave(){
-  localStorage.setItem("at_photos_v1", JSON.stringify(items));
-}
+
 
 /* Delete */
 function clearAll(){ items=[]; autoSave(); render(); }
 
 /* Password */
 function savePass(){
- localStorage.setItem("viewerPassword_alwaysTogether", document.getElementById("newPass").value);
  passSaved.style.display="block";
  setTimeout(()=>passSaved.style.display="none",1500);
 }
 
 /* ===== MESSAGE SYSTEM ===== */
 function loadMessages(){
-  let txt = localStorage.getItem(MSG_KEY);
+
 
 if(!txt){
   allMessagesBox.innerText = "(No love letters yet)";
@@ -443,25 +439,25 @@ msgOpenBtn.onclick = ()=>{
 msgSaveBtn.onclick = ()=>{
  let newMsg=document.getElementById("msgInput").value.trim();
  if(newMsg==="") return;
- let old=localStorage.getItem(MSG_KEY) || "";
+ 
  let updated = old ? old + "\n---\n" + newMsg : newMsg;
- localStorage.setItem(MSG_KEY, updated);
+ 
  document.getElementById("msgInput").value="";
  document.getElementById("msgPopup").style.display="none";
  loadMessages();
 }
 function deleteMsg(index){
-  let txt = localStorage.getItem(MSG_KEY) || "";
+  
   let messages = txt.split("\n---\n");
 
   messages.splice(index, 1);
-  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  
 
   loadMessages();
 }
 
 function editMsg(index){
-  let txt = localStorage.getItem(MSG_KEY) || "";
+  
   let messages = txt.split("\n---\n");
 
   let updated = prompt("Edit message:", messages[index]);
@@ -469,7 +465,7 @@ function editMsg(index){
 
   if(updated.trim()==="") return;
   messages[index] = updated.trim();
-  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  
 
   loadMessages();
 }

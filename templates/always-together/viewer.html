@@ -537,7 +537,8 @@ body.night #msgText{color:#ffe4ec;}
 
 /* MUSIC */
 let bgAudio = null;
-const song = localStorage.getItem("at_bg_music");
+
+const song = ""; // or leave empty (will be injected later)
 
 function playMusic(){
   if(!song) return;
@@ -575,7 +576,8 @@ function toggleMusic(){
 
 
 /* PASSWORD */
-const PASS = localStorage.getItem("viewerPassword_alwaysTogether") || "sweet";
+const PASS = "sweet";
+
 function unlock(){
   if(pass.value === PASS){
     passwordOverlay.style.display="none";
@@ -593,7 +595,8 @@ function unlock(){
 
 /* DATA */
 const STORAGE_KEY="at_photos_v1";
-const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+let data = [];
 
 /* RENDER */
 function render(){
@@ -687,7 +690,7 @@ closeMsg.onclick=()=>msgOverlay.style.display="none";
 
 /* LOAD MESSAGES */
 function loadMessages(){
-  const txt=localStorage.getItem("at_main_message")||"";
+  const txt = ""; 
   if(!txt.trim()) return;
 txt.split("\n---\n").forEach(m=>{
     const d=document.createElement("div");
