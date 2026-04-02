@@ -107,4 +107,4 @@ async function applyCoupon() {
 function selectVibe(vibe) {
   localStorage.setItem("selectedTemplate", vibe);
 }
-    };
+    
