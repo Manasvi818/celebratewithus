@@ -12,58 +12,71 @@ if (payBtn) {
 
 
 async function openCheckout() {
-    try {
-        const res = await fetch(`${BASE_URL}/create-order`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                amountINR: finalAmount / 100,
-                
-                notes: {
-                    templateId: localStorage.getItem("selectedTemplate") || "unknown"
-                }
-            }),
-        });
-
-        const data = await res.json();
-
-        if (!data.success) {
-            alert("Failed to create order");
-            return;
-        }
-
-        const options = {
-  key: data.keyId,
-  amount: data.amount,
-  currency: data.currency,
-  order_id: data.orderId,
-  name: "Celebratewithus",
-  description: "Template Purchase ₹149",
-
-  handler: async function (response) {
-    const res = await fetch("/verify-payment", {
+  try {
+    const res = await fetch(`${BASE_URL}/create-order`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(response)
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amountINR: finalAmount / 100,
+        notes: {
+          templateId: localStorage.getItem("selectedTemplate") || "unknown"
+        }
+      }),
     });
 
     const data = await res.json();
 
-    if (data.success && data.editLink) {
-      window.location.href = data.editLink;
-    } else {
-      alert("Something went wrong");
+    if (!data.success) {
+      alert("Failed to create order");
+      return;
     }
-  },
 
-  modal: {
-    ondismiss: function () {
-      alert("Payment popup closed.");
-    }
+    const options = {
+      key: data.keyId,
+      amount: data.amount,
+      currency: data.currency,
+      order_id: data.orderId,
+      name: "Celebratewithus",
+      description: "Template Purchase ₹149",
+
+      handler: async function (response) {
+        const res = await fetch(`${BASE_URL}/verify-payment`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(response)
+        });
+
+        const result = await res.json();
+
+        if (result.success && result.editLink) {
+          window.location.href = result.editLink;
+        } else {
+          alert("Something went wrong");
+        }
+      },
+
+      modal: {
+        ondismiss: function () {
+          alert("Payment popup closed.");
+        }
+      }
+    };
+
+    // ✅ THIS WAS MISSING (VERY IMPORTANT)
+    const rzp = new Razorpay(options);
+    rzp.open();
+
+    rzp.on("payment.failed", function () {
+      alert("Payment failed — please try again.");
+    });
+
+  } catch (error) {
+    console.error("ERROR:", error);
+    alert("Something went wrong: " + error.message);
   }
-};
+}
 
 
 async function applyCoupon() {
@@ -94,3 +107,4 @@ async function applyCoupon() {
 function selectVibe(vibe) {
   localStorage.setItem("selectedTemplate", vibe);
 }
+    };
