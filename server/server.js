@@ -225,6 +225,8 @@ app.post("/verify-payment", async (req, res) => {
 
     if (isValid) {
       console.log("✅ PAYMENT VERIFIED");
+      
+   req.session.isPaid = true;   
 
 const projectId = crypto.randomBytes(6).toString("hex");
 
@@ -262,7 +264,7 @@ await Project.create({
       return res.json({
   success: true,
   projectId,
-  editLink: `/editor/${projectId}`
+  editLink: `/editor/${template}/${projectId}`
 });
 
     } else {
@@ -281,13 +283,6 @@ await Project.create({
   }
 });
 
-app.get("/editor/:template/:id", (req, res) => {
-  const { template } = req.params;
-
-  res.sendFile(
-    path.join(__dirname, `../templates/${template}/editor.html`)
-  );
-});
 
 // ------------------------------------------------------
 // OPTIONAL WEBHOOK
@@ -354,13 +349,6 @@ app.get("/download", async (req, res) => {
       res.status(500).send("ZIP creation failed");
     });
 
-    app.get("/editor/:template/:id", (req, res) => {
-  const { template } = req.params;
-
-  res.sendFile(
-    path.join(__dirname, `../templates/${template}/editor.html`)
-  );
-});
 
     archive.pipe(res);
 
@@ -393,13 +381,22 @@ archive.file(editorPath, { name: "editor.html" });
 });
 
 
-// 🔒 PROTECTED PAGES
-app.get("/editor", isPaid, (req, res) => {
-  res.sendFile(path.join(__dirname, "../templates/simple-delight/editor.html"));
+// 🔒 PROTECTED EDITOR (ALL TEMPLATES)
+app.get("/editor/:template/:id", isPaid, (req, res) => {
+  const { template } = req.params;
+
+  res.sendFile(
+    path.join(__dirname, `../templates/${template}/editor.html`)
+  );
 });
 
-app.get("/viewer", isPaid, (req, res) => {
-  res.sendFile(path.join(__dirname, "../templates/simple-delight/viewer.html"));
+// 🔒 PROTECTED VIEWER (ALL TEMPLATES)
+app.get("/viewer/:template/:id", isPaid, (req, res) => {
+  const { template } = req.params;
+
+  res.sendFile(
+    path.join(__dirname, `../templates/${template}/viewer.html`)
+  );
 });
 
 
