@@ -237,7 +237,16 @@ app.post("/verify-payment", async (req, res) => {
     if (isValid) {
       console.log("✅ PAYMENT VERIFIED");
       
-   req.session.isPaid = true;   
+   req.session.isPaid = true;
+
+// 🔥 FORCE SAVE SESSION
+req.session.save(() => {
+  return res.json({
+    success: true,
+    projectId,
+    editLink: `/editor/${template}/${projectId}`
+  });
+});
 
 const projectId = crypto.randomBytes(6).toString("hex");
 
