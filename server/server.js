@@ -405,18 +405,33 @@ archive.file(editorPath, { name: "editor.html" });
 app.get("/editor/:template/:id", (req, res) => {
   const { template } = req.params;
 
-  res.sendFile(
-    path.join(__dirname, `../templates/${template}/editor.html`)
-  );
+  const filePath = path.join(__dirname, `../templates/${template}/editor.html`);
+
+  // 🔥 DEBUG LOG (VERY IMPORTANT)
+  console.log("Opening template:", template);
+  console.log("File path:", filePath);
+
+  // ✅ SAFETY CHECK
+  if (!fs.existsSync(filePath)) {
+    console.log("❌ Template not found:", template);
+    return res.status(404).send("Template not found");
+  }
+
+  res.sendFile(filePath);
 });
 
 // 🔒 PROTECTED VIEWER (ALL TEMPLATES)
 app.get("/viewer/:template/:id", (req, res) => {
   const { template } = req.params;
 
-  res.sendFile(
-    path.join(__dirname, `../templates/${template}/viewer.html`)
-  );
+  const filePath = path.join(__dirname, `../templates/${template}/viewer.html`);
+
+  if (!fs.existsSync(filePath)) {
+    console.log("❌ Viewer template not found:", template);
+    return res.status(404).send("Template not found");
+  }
+
+  res.sendFile(filePath);
 });
 
 
