@@ -402,7 +402,7 @@ archive.file(editorPath, { name: "editor.html" });
 
 
 // 🔒 PROTECTED EDITOR (ALL TEMPLATES)
-app.get("/editor/:template/:id", isPaid, (req, res) => {
+app.get("/editor/:template/:id", (req, res) => {
   const { template } = req.params;
 
   res.sendFile(
@@ -411,7 +411,7 @@ app.get("/editor/:template/:id", isPaid, (req, res) => {
 });
 
 // 🔒 PROTECTED VIEWER (ALL TEMPLATES)
-app.get("/viewer/:template/:id", isPaid, (req, res) => {
+app.get("/viewer/:template/:id", (req, res) => {
   const { template } = req.params;
 
   res.sendFile(
