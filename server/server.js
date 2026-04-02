@@ -46,11 +46,20 @@ app.use(session({
 }
 }));
 app.use(cors({
-  origin: "https://celebratewithus.onrender.com",
+  origin: [
+    "https://www.celebratewithus.co.in",
+    "https://celebratewithus.co.in"
+  ],
   credentials: true
 }));
 
-app.options("*", cors()); 
+app.options("*", cors({
+  origin: [
+    "https://www.celebratewithus.co.in",
+    "https://celebratewithus.co.in"
+  ],
+  credentials: true
+})); 
 console.log("CORS ENABLED ✅");
 const archiver = require("archiver");
 const bodyParser = require("body-parser");
