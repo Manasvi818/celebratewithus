@@ -281,6 +281,13 @@ await Project.create({
   }
 });
 
+app.get("/editor/:template/:id", (req, res) => {
+  const { template } = req.params;
+
+  res.sendFile(
+    path.join(__dirname, `../templates/${template}/editor.html`)
+  );
+});
 
 // ------------------------------------------------------
 // OPTIONAL WEBHOOK
@@ -346,6 +353,14 @@ app.get("/download", async (req, res) => {
       console.error("❌ Archive error:", err);
       res.status(500).send("ZIP creation failed");
     });
+
+    app.get("/editor/:template/:id", (req, res) => {
+  const { template } = req.params;
+
+  res.sendFile(
+    path.join(__dirname, `../templates/${template}/editor.html`)
+  );
+});
 
     archive.pipe(res);
 
@@ -491,3 +506,4 @@ console.log("👉 LOGO PATH:", logoPath);
 
   });
 }
+
