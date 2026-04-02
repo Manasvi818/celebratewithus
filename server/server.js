@@ -40,12 +40,14 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    httpOnly: true,
-    secure: false   // change to true after deployment (HTTPS)
-  }
+  httpOnly: true,
+  secure: true,       // REQUIRED on Render (HTTPS)
+  sameSite: "none"    // REQUIRED for cross-site
+}
 }));
 app.use(cors({
-  origin: "*",
+  origin: "https://celebratewithus.onrender.com",
+  credentials: true
 }));
 
 app.options("*", cors()); 
