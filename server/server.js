@@ -208,14 +208,17 @@ const { createCoupon, markUsed } = require("./coupon");
 // ------------------------------------------------------
 app.post("/verify-payment", async (req, res) => {
   try {
-    const {
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
-      name,
-      email,
-      template
-    } = req.body;
+    let {
+  razorpay_order_id,
+  razorpay_payment_id,
+  razorpay_signature,
+  name,
+  email,
+  template
+} = req.body;
+
+// ✅ FIX HERE
+template = template?.toLowerCase().trim();
 
 console.log("🔥 TEMPLATE RECEIVED:", template);
 
@@ -418,7 +421,9 @@ const validTemplates = [
 ];
 
 app.get("/editor/:template/:id", (req, res) => {
-  const { template } = req.params;
+  let { template } = req.params;
+
+template = template?.toLowerCase().trim();
 
   console.log("🔥 EDITOR TEMPLATE:", template);
 
@@ -444,9 +449,10 @@ if (!validTemplates.includes(cleanTemplate)) {
 
 // 🔒 PROTECTED VIEWER (ALL TEMPLATES)
 app.get("/viewer/:template/:id", (req, res) => {
-  const { template } = req.params;
+  let { template } = req.params;
 
-  // ✅ VALIDATION
+  template = template?.toLowerCase().trim();
+
   if (!validTemplates.includes(template)) {
     return res.status(400).send("Invalid template");
   }
