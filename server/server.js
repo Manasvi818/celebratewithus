@@ -257,6 +257,16 @@ await Project.create({
   music: "",
   password: "sweet"
 });
+
+req.session.isPaid = true;
+
+req.session.save(() => {
+  return res.json({
+    success: true,
+    projectId,
+    editLink: `/editor/${template}/${projectId}`
+  });
+});
       
       let invoicePath = null;
 
@@ -451,19 +461,6 @@ app.get("/editor/:template/:id", (req, res) => {
 
   res.sendFile(filePath);
 });
-
-  // 🔥 DEBUG LOG (VERY IMPORTANT)
-  console.log("Opening template:", template);
-  console.log("File path:", filePath);
-
-  // ✅ SAFETY CHECK
-  if (!fs.existsSync(filePath)) {
-    console.log("❌ Template not found:", template);
-    return res.status(404).send("Template not found");
-  }
-
-  res.sendFile(filePath);
-
 
 // 🔒 PROTECTED VIEWER (ALL TEMPLATES)
 app.get("/viewer/:template/:id", (req, res) => {
