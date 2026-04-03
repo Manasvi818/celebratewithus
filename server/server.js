@@ -142,7 +142,7 @@ app.post("/upload", upload.single("image"), async (req, res) => {
 
   } catch (err) {
     console.error("Cloudinary Upload Error:", err);
-    res.status(500).json({ success: false, error: "Cloudinary upload failed" });
+    return res.status(500).json({ success: false, error: "Cloudinary upload failed" });
   }
 });
 
@@ -196,7 +196,7 @@ app.post("/create-order", async (req, res) => {
 
   } catch (err) {
     console.error("create-order error:", err);
-    res.status(500).json({ success: false, error: err.message });
+    return res.status(500).json({ success: false, error: err.message });
   }
 });
 
@@ -231,82 +231,57 @@ app.post("/verify-payment", async (req, res) => {
 
     const isValid = generated_signature === razorpay_signature;
 
-    console.log("Generated:", generated_signature);
-    console.log("Received:", razorpay_signature);
-
-    if (isValid) {
-      console.log("✅ PAYMENT VERIFIED");
-      
-   req.session.isPaid = true;
-
-// 🔥 FORCE SAVE SESSION
-req.session.save(() => {
-  return res.json({
-    success: true,
-    projectId,
-    editLink: `/editor/${template}/${projectId}`
-  });
-});
-
-const projectId = crypto.randomBytes(6).toString("hex");
-
-await Project.create({
-  projectId,
-  data: [],
-  messages: "",
-  music: "",
-  password: "sweet"
-});
-
-req.session.isPaid = true;
-
-req.session.save(() => {
-  return res.json({
-    success: true,
-    projectId,
-    editLink: `/editor/${template}/${projectId}`
-  });
-});
-      
-      let invoicePath = null;
-
-      try {
-        const now = new Date();
-
-        invoicePath = await generateInvoice({
-          payment_id: razorpay_payment_id,
-          name,
-          email,
-          date: now.toLocaleDateString("en-IN"),
-          time: now.toLocaleTimeString("en-IN")
-        });
-
-      } catch (invoiceErr) {
-        console.error("INVOICE ERROR:", invoiceErr);
-      }
-
-      let newCoupon = { code: "WELCOME10" };
-
-      if (email) {
-        newCoupon = await createCoupon(email);
-      }
-
-      return res.json({
-  success: true,
-  projectId,
-  editLink: `/editor/${template}/${projectId}`
-});
-
-    } else {
+    if (!isValid) {
       return res.status(400).json({
         success: false,
         error: "Invalid signature"
       });
     }
 
+    console.log("✅ PAYMENT VERIFIED");
+
+    const projectId = crypto.randomBytes(6).toString("hex");
+
+    await Project.create({
+      projectId,
+      data: [],
+      messages: "",
+      music: "",
+      password: "sweet"
+    });
+
+    req.session.isPaid = true;
+
+    // OPTIONAL async tasks (DO NOT send response here)
+    try {
+      const now = new Date();
+      await generateInvoice({
+        payment_id: razorpay_payment_id,
+        name,
+        email,
+        date: now.toLocaleDateString("en-IN"),
+        time: now.toLocaleTimeString("en-IN")
+      });
+
+      if (email) {
+        await createCoupon(email);
+      }
+    } catch (e) {
+      console.error("Optional task error:", e);
+    }
+
+    // ✅ ONLY ONE RESPONSE (FINAL)
+    return req.session.save(() => {
+      res.json({
+        success: true,
+        projectId,
+        editLink: `/editor/${template}/${projectId}`
+      });
+    });
+
   } catch (err) {
     console.error("❌ VERIFY ERROR:", err);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: err.message
     });
@@ -335,9 +310,9 @@ app.post("/webhook", (req, res) => {
 
   if (expectedSignature === receivedSignature) {
     console.log("Verified webhook event:", req.body.event);
-    res.status(200).json({ ok: true });
+    return res.status(200).json({ ok: true });
   } else {
-    res.status(400).json({ ok: false, message: "signature mismatch" });
+    return res.status(400).json({ ok: false, message: "signature mismatch" });
   }
 });
 
@@ -376,7 +351,7 @@ app.get("/download", async (req, res) => {
 
     archive.on("error", (err) => {
       console.error("❌ Archive error:", err);
-      res.status(500).send("ZIP creation failed");
+      return res.status(500).send("ZIP creation failed");
     });
 
 
@@ -406,7 +381,7 @@ archive.file(editorPath, { name: "editor.html" });
 
   } catch (err) {
     console.error("🔥 CRASH in /download:", err);
-    res.status(500).send("Server crash");
+    return res.status(500).send("Server crash");
   }
 });
 
