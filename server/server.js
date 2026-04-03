@@ -401,11 +401,56 @@ archive.file(editorPath, { name: "editor.html" });
 });
 
 
-// 🔒 PROTECTED EDITOR (ALL TEMPLATES)
+// ✅ VALID TEMPLATE LIST
+const validTemplates = [
+  "easy-breezy",
+  "everyday-joy",
+  "simple-delight",
+  "soft-vibes",
+  "sunny-smiles",
+  "home-happiness",
+  "always-together",
+  "warm-bonds",
+  "cherished-times",
+  "joyful-family",
+  "color-carnival",
+  "crazy-confetti",
+  "electric-energy",
+  "laugh-riot",
+  "party-pop",
+  "blush-love",
+  "candlelight-moments",
+  "forever-yours",
+  "golden-love",
+  "sweet-affection",
+  "cultural-festive",
+  "golden-mandala",
+  "royal-aura",
+  "sacred-simplicity",
+  "vintage-glory"
+];
+
 app.get("/editor/:template/:id", (req, res) => {
   const { template } = req.params;
 
+  // ✅ VALIDATION
+  if (!validTemplates.includes(template)) {
+    console.log("❌ Invalid template:", template);
+    return res.status(400).send("Invalid template");
+  }
+
   const filePath = path.join(__dirname, `../templates/${template}/editor.html`);
+
+  console.log("Opening template:", template);
+  console.log("File path:", filePath);
+
+  if (!fs.existsSync(filePath)) {
+    console.log("❌ Template not found:", template);
+    return res.status(404).send("Template not found");
+  }
+
+  res.sendFile(filePath);
+});
 
   // 🔥 DEBUG LOG (VERY IMPORTANT)
   console.log("Opening template:", template);
@@ -418,11 +463,16 @@ app.get("/editor/:template/:id", (req, res) => {
   }
 
   res.sendFile(filePath);
-});
+
 
 // 🔒 PROTECTED VIEWER (ALL TEMPLATES)
 app.get("/viewer/:template/:id", (req, res) => {
   const { template } = req.params;
+
+  // ✅ VALIDATION
+  if (!validTemplates.includes(template)) {
+    return res.status(400).send("Invalid template");
+  }
 
   const filePath = path.join(__dirname, `../templates/${template}/viewer.html`);
 
