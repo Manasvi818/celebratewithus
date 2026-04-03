@@ -217,6 +217,8 @@ app.post("/verify-payment", async (req, res) => {
       template
     } = req.body;
 
+console.log("🔥 TEMPLATE RECEIVED:", template);
+
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return res.status(400).json({
         success: false,
@@ -418,11 +420,14 @@ const validTemplates = [
 app.get("/editor/:template/:id", (req, res) => {
   const { template } = req.params;
 
+  console.log("🔥 EDITOR TEMPLATE:", template);
+
   // ✅ VALIDATION
-  if (!validTemplates.includes(template)) {
-    console.log("❌ Invalid template:", template);
-    return res.status(400).send("Invalid template");
-  }
+  const cleanTemplate = template.toLowerCase().trim();
+
+if (!validTemplates.includes(cleanTemplate)) {
+  return res.status(400).send("Invalid template");
+}
 
   const filePath = path.join(__dirname, `../templates/${template}/editor.html`);
 
