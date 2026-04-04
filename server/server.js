@@ -245,7 +245,11 @@ console.log("🔥 TEMPLATE RECEIVED:", template);
 
     console.log("✅ PAYMENT VERIFIED");
 
-    const projectId = crypto.randomBytes(6).toString("hex");
+    const templateName = template.toLowerCase().trim();
+
+// simple unique suffix
+const uniqueId = Date.now() + Math.floor(Math.random() * 1000);
+const projectId = `${templateName}-${uniqueId}`;
 
     await Project.create({
       projectId,
@@ -293,6 +297,60 @@ console.log("🔥 TEMPLATE RECEIVED:", template);
   }
 });
 
+// ------------------------------------------------------
+// SAVE PROJECT DATA
+// ------------------------------------------------------
+app.post("/save-project", async (req, res) => {
+  try {
+    const { projectId, data, messages, music } = req.body;
+
+    if (!projectId) {
+      return res.status(400).json({ success: false, error: "Missing projectId" });
+    }
+
+    const project = await Project.findOneAndUpdate(
+      { projectId },
+      {
+        data: data || [],
+        messages: messages || "",
+        music: music || ""
+      },
+      { new: true }
+    );
+
+    return res.json({ success: true });
+
+  } catch (err) {
+    console.error("SAVE ERROR:", err);
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ------------------------------------------------------
+// LOAD PROJECT DATA
+// ------------------------------------------------------
+app.get("/get-project/:projectId", async (req, res) => {
+  try {
+    const { projectId } = req.params;
+
+    const project = await Project.findOne({ projectId });
+
+    if (!project) {
+      return res.status(404).json({ success: false, error: "Project not found" });
+    }
+
+    return res.json({
+      success: true,
+      data: project.data,
+      messages: project.messages,
+      music: project.music
+    });
+
+  } catch (err) {
+    console.error("LOAD ERROR:", err);
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
 
 // ------------------------------------------------------
 // OPTIONAL WEBHOOK

@@ -236,6 +236,35 @@ h2, h3{ text-align:center; font-family:"Playfair Display",serif; }
 
 
 <script>
+  async function loadFromDB() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      items = result.data || [];
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
+      if (result.messages) {
+        localStorage.setItem("at_main_message", result.messages);
+      }
+
+      if (result.music) {
+        localStorage.setItem("at_bg_music", result.music);
+      }
+
+      console.log("✅ Loaded from DB");
+
+      render();
+      loadMessages();
+    }
+
+  } catch (err) {
+    console.error("❌ Load failed:", err);
+  }
+}
+
   function optimizeCloudinaryUrl(url, width = 500) {
   if (!url || !url.includes("res.cloudinary.com")) return url;
 
@@ -253,7 +282,7 @@ const MSG_KEY="at_main_message";
 
 let widget; // ✅ ADD HERE
 
-
+let items = [];
 
 /* Render Media */
 function render(){
@@ -380,9 +409,37 @@ function uploadLocal(e){
  r.readAsDataURL(file);
 }
 
+const projectId = window.location.pathname.split("/").pop();
+const STORAGE_KEY = `project_${projectId}`;
+
+console.log("PROJECT ID:", projectId);
+console.log("STORAGE KEY:", STORAGE_KEY);
+
 /* Save */
-function saveAll(){
+async function autoSave() {
+  // 1. Save locally
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
+  // 2. Save to MongoDB
+  try {
+    await fetch("https://celebratewithus.onrender.com/save-project", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        projectId,
+        data: items,
+        messages: localStorage.getItem("at_main_message") || "",
+        music: localStorage.getItem("at_bg_music") || ""
+      })
+    });
+
+    console.log("✅ Saved to DB");
+
+  } catch (err) {
+    console.error("❌ DB Save failed:", err);
+  }
 }
 
 
@@ -398,7 +455,7 @@ function savePass(){
 
 /* ===== MESSAGE SYSTEM ===== */
 function loadMessages(){
-
+let txt = localStorage.getItem(MSG_KEY) || "";
 
 if(!txt){
   allMessagesBox.innerText = "(No love letters yet)";
@@ -518,6 +575,8 @@ function saveBgMusic() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+
+  loadFromDB();  
 
   function waitForCloudinary(){
     if (typeof cloudinary !== "undefined") {
