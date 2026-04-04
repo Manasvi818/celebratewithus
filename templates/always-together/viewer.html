@@ -529,7 +529,7 @@ body.night #msgText{color:#ffe4ec;}
 let data = [];
 let messages = "";
 let music = "";
-let password = "sweet";
+let password = "";
 
 async function loadViewerData() {
   try {
@@ -540,7 +540,13 @@ async function loadViewerData() {
       data = result.data || [];
       messages = result.messages || "";
       music = result.music || "";
-      password = result.password || "sweet";
+      if (!result.password) {
+  alert("⚠️ No password set for this page. Please set it in editor.");
+  return;
+}
+
+password = result.password;
+PASS = password;
 
  PASS = password;      // ✅ ADD THIS
   song = music;   
@@ -548,6 +554,7 @@ async function loadViewerData() {
       console.log("✅ Viewer loaded from DB");
 
       render();
+      loadMessages();   
       setupMusic();
     }
   } catch (err) {
@@ -607,9 +614,14 @@ function toggleMusic(){
 
 
 /* PASSWORD */
-let PASS = "sweet";
+let PASS = "";
 
 function unlock(){
+  if(!PASS){
+    alert("⏳ Loading... please wait");
+    return;
+  }
+
   if(pass.value === PASS){
     passwordOverlay.style.display="none";
     playMusic();
@@ -724,7 +736,7 @@ txt.split("\n---\n").forEach(m=>{
     messageList.appendChild(d);
   });
 }
-loadMessages();
+
 /* DECORATIONS */
 const c = decorCanvas;
 const ctx = c.getContext("2d");
