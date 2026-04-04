@@ -524,6 +524,38 @@ body.night #msgText{color:#ffe4ec;}
 
 
 <script>
+  const projectId = window.location.pathname.split("/").pop();
+
+let data = [];
+let messages = "";
+let music = "";
+let password = "sweet";
+
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "sweet";
+
+ PASS = password;      // ✅ ADD THIS
+  song = music;   
+
+      console.log("✅ Viewer loaded from DB");
+
+      render();
+      loadMessages();
+      setupMusic();
+    }
+  } catch (err) {
+    console.error("❌ Viewer load failed:", err);
+  }
+}
+
   function optimizeCloudinaryUrl(url, width = 500) {
   if (!url || !url.includes("res.cloudinary.com")) return url;
 
@@ -538,7 +570,7 @@ body.night #msgText{color:#ffe4ec;}
 /* MUSIC */
 let bgAudio = null;
 
-const song = ""; // or leave empty (will be injected later)
+let song = ""; // or leave empty (will be injected later)
 
 function playMusic(){
   if(!song) return;
@@ -576,7 +608,7 @@ function toggleMusic(){
 
 
 /* PASSWORD */
-const PASS = "sweet";
+let PASS = "sweet";
 
 function unlock(){
   if(pass.value === PASS){
@@ -592,11 +624,6 @@ function unlock(){
     wrongPass.style.display="block";
   }
 }
-
-/* DATA */
-const STORAGE_KEY="at_photos_v1";
-
-let data = [];
 
 /* RENDER */
 function render(){
@@ -633,7 +660,6 @@ function render(){
     }
   });
 }
-render();
 
 /* ZOOM */
 function openZoom(src,cap){
@@ -690,7 +716,7 @@ closeMsg.onclick=()=>msgOverlay.style.display="none";
 
 /* LOAD MESSAGES */
 function loadMessages(){
-  const txt = ""; 
+  const txt = messages;
   if(!txt.trim()) return;
 txt.split("\n---\n").forEach(m=>{
     const d=document.createElement("div");
@@ -821,6 +847,14 @@ musicOverlay.onclick = e => {
   }
 };
 
+function setupMusic() {
+  if (!song) return;
+
+  bgAudio = new Audio(song);
+  bgAudio.loop = true;
+  bgAudio.volume = 0.6;
+}
+
 function goToViewer() {
   autoSave();
 
@@ -869,6 +903,11 @@ function downloadViewer() {
 
   alert("Viewer link + Editor link + Invoice downloaded ✅");
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadViewerData();
+});
+
 </script>
 <!-- MUSIC BOX -->
 <div id="musicOverlay">
