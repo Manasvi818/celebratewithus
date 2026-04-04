@@ -263,8 +263,7 @@ const projectId = `${templateName}-${uniqueId}`;
 
     // OPTIONAL async tasks (DO NOT send response here)
     try {
-      const now = new Date();
-      await generateInvoice({
+      const invoicePath = await generateInvoice({
   payment_id: razorpay_payment_id,
   name,
   email,
@@ -273,8 +272,8 @@ const projectId = `${templateName}-${uniqueId}`;
   viewerLink: `https://celebratewithus.co.in/viewer/${template}/${projectId}`,
   editorLink: `https://celebratewithus.co.in/editor/${template}/${projectId}`,
   coupon: req.body.coupon || "N/A",
-  date: now.toLocaleDateString("en-IN"),
-  time: now.toLocaleTimeString("en-IN")
+  date: new Date().toLocaleDateString("en-IN"),
+  time: new Date().toLocaleTimeString("en-IN")
 });
 
       if (email) {
@@ -562,7 +561,7 @@ async function generateInvoice(data) {
     }
 
     // ✅ THEN CONTINUE
-    const fileName = `invoice_${Date.now()}.pdf`;
+    const fileName = `invoice_${data.projectId}.pdf`;
     const filePath = path.join(invoicesDir, fileName);
 
     const doc = new PDFDocument({

@@ -244,6 +244,11 @@ console.log("PROJECT ID:", projectId);
 console.log("STORAGE KEY:", STORAGE_KEY);
 
   async function loadFromDB() {
+
+localStorage.removeItem(MSG_KEY);
+localStorage.removeItem(`music_${projectId}`);
+localStorage.removeItem(`pass_${projectId}`);
+
   try {
     const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
     const result = await res.json();
@@ -254,12 +259,16 @@ console.log("STORAGE KEY:", STORAGE_KEY);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 
       if (result.messages) {
-        localStorage.setItem("at_main_message", result.messages);
-      }
+  localStorage.setItem(MSG_KEY, result.messages);
+}
 
-      if (result.music) {
-        localStorage.setItem("at_bg_music", result.music);
-      }
+if (result.music) {
+  localStorage.setItem(`music_${projectId}`, result.music);
+}
+
+if (result.password) {
+  localStorage.setItem(`pass_${projectId}`, result.password);
+}
 
       console.log("✅ Loaded from DB");
 
@@ -640,7 +649,7 @@ Editor:
 ${editorURL}
 `;
 
-  const blob = new Blob([content], { type: "text/plain" });
+  window.open(`/invoices/invoice_${projectId}.pdf`);
   const link = document.createElement("a");
 
   link.href = URL.createObjectURL(blob);
