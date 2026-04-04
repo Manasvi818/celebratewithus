@@ -344,7 +344,6 @@ el.loading = "lazy";
     box.appendChild(d);
   });
 }
-render();
 
 /* Preview */
 function preview(obj){
@@ -501,15 +500,18 @@ msgSaveBtn.onclick = ()=>{
  
  document.getElementById("msgInput").value="";
  document.getElementById("msgPopup").style.display="none";
+ autoSave();
  loadMessages();
 }
 function deleteMsg(index){
-  
+  let txt = localStorage.getItem(MSG_KEY) || "";
   let messages = txt.split("\n---\n");
 
   messages.splice(index, 1);
-  
 
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+
+  autoSave();
   loadMessages();
 }
 
@@ -523,7 +525,7 @@ function editMsg(index){
   if(updated.trim()==="") return;
   messages[index] = updated.trim();
   
-
+autoSave();
   loadMessages();
 }
 msgPopup.onclick = e=>{
@@ -588,7 +590,52 @@ document.addEventListener("DOMContentLoaded", () => {
 
   waitForCloudinary();
 });
+
+async function downloadViewer() {
+  autoSave();
+
+  const template = window.location.pathname.split("/")[2];
+  const projectId = window.location.pathname.split("/").pop();
+
+  // 🔽 Download ZIP (viewer page)
+  window.open(
+    `https://celebratewithus.onrender.com/download?template=${template}&projectId=${projectId}`
+  );
+
+  // 🔽 Fetch invoice
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const data = await res.json();
+
+    // assuming invoice stored or you track it
+    const invoiceURL = `/invoices/invoice_${projectId}.pdf`;
+
+    setTimeout(() => {
+      window.open(invoiceURL);
+    }, 1500);
+
+  } catch (err) {
+    console.error("Invoice fetch failed:", err);
+  }
+}
 </script>
+
+<div style="text-align:center; margin-top:30px;">
+
+  <button class="btn" onclick="goToViewer()">
+    💾 Save All & Show Viewer Page
+  </button>
+
+  <button class="btn ghost" onclick="downloadViewer()">
+    ⬇️ Download Viewer Page
+  </button>
+
+  <p style="margin-top:12px; font-size:13px; color:#8a5a55;">
+    ⚠️ When you click on "Download Viewer Page", along with the viewer page you will get 
+    <b>Editor page link</b> (to access again) and <b>Invoice Receipt</b>.
+  </p>
+
+</div>
 <!-- FOOTER -->
 <footer class="site-footer">
   <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>

@@ -821,6 +821,54 @@ musicOverlay.onclick = e => {
   }
 };
 
+function goToViewer() {
+  autoSave();
+
+  const template = window.location.pathname.split("/")[2];
+  const projectId = window.location.pathname.split("/").pop();
+
+  window.location.href = `/viewer/${template}/${projectId}`;
+}
+
+function downloadViewer() {
+  autoSave();
+
+  const template = window.location.pathname.split("/")[2];
+  const projectId = window.location.pathname.split("/").pop();
+
+  const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
+  const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
+
+  const coupon = localStorage.getItem("usedCoupon") || "N/A";
+
+  const invoiceContent = `
+    CelebrateWithUs - Invoice Receipt
+
+    Project ID: ${projectId}
+    Template: ${template}
+    Amount Paid: ₹149
+    Coupon Used: ${coupon}
+
+    Viewer Link:
+    ${viewerURL}
+
+    Editor Link:
+    ${editorURL}
+
+    Thank you for your purchase ❤️
+  `;
+
+  // create text file
+  const blob = new Blob([invoiceContent], { type: "text/plain" });
+  const link = document.createElement("a");
+
+  link.href = URL.createObjectURL(blob);
+  link.download = `invoice_${projectId}.txt`;
+
+  link.click();
+
+  alert("Viewer link + Editor link + Invoice downloaded ✅");
+}
 </script>
 <!-- MUSIC BOX -->
 <div id="musicOverlay">

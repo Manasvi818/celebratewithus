@@ -265,12 +265,17 @@ const projectId = `${templateName}-${uniqueId}`;
     try {
       const now = new Date();
       await generateInvoice({
-        payment_id: razorpay_payment_id,
-        name,
-        email,
-        date: now.toLocaleDateString("en-IN"),
-        time: now.toLocaleTimeString("en-IN")
-      });
+  payment_id: razorpay_payment_id,
+  name,
+  email,
+  projectId,
+  template,
+  viewerLink: `https://celebratewithus.co.in/viewer/${template}/${projectId}`,
+  editorLink: `https://celebratewithus.co.in/editor/${template}/${projectId}`,
+  coupon: req.body.coupon || "N/A",
+  date: now.toLocaleDateString("en-IN"),
+  time: now.toLocaleTimeString("en-IN")
+});
 
       if (email) {
         await createCoupon(email);
@@ -279,14 +284,16 @@ const projectId = `${templateName}-${uniqueId}`;
       console.error("Optional task error:", e);
     }
 
-    // ✅ ONLY ONE RESPONSE (FINAL)
-    return req.session.save(() => {
-      res.json({
-        success: true,
-        projectId,
-        editLink: `/editor/${template}/${projectId}`
-      });
-    });
+   const invoicePath = await generateInvoice(...);
+
+return req.session.save(() => {
+  res.json({
+    success: true,
+    projectId,
+    editLink: `/editor/${template}/${projectId}`,
+    invoice: invoicePath   // ✅ ADD THIS
+  });
+});
 
   } catch (err) {
     console.error("❌ VERIFY ERROR:", err);
@@ -599,6 +606,23 @@ console.log("👉 LOGO PATH:", logoPath);
     doc.text(`Payment ID: ${data.payment_id}`)
        .text(`Date: ${data.date}`)
        .text(`Time: ${data.time}`);
+
+doc.moveDown();
+
+doc.text(`Project ID: ${data.projectId}`);
+doc.text(`Template: ${data.template}`);
+
+doc.moveDown();
+
+doc.fillColor("#0000EE")
+   .text(`Viewer Link: ${data.viewerLink}`, { link: data.viewerLink });
+
+doc.text(`Editor Link: ${data.editorLink}`, { link: data.editorLink });
+
+doc.moveDown();
+
+doc.fillColor("#000")
+   .text(`Coupon Used: ${data.coupon || "N/A"}`);
 
     // 💰 AMOUNT BOX
     doc.moveDown(2);
