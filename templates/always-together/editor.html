@@ -233,9 +233,15 @@ h2, h3{ text-align:center; font-family:"Playfair Display",serif; }
   <p id="previewCap" style="margin-top:6px; color:#5a3c38;"></p>
 </div>
 
-
-
 <script>
+  let items = [];
+
+  const projectId = window.location.pathname.split("/").pop();
+const STORAGE_KEY = `project_${projectId}`;
+
+console.log("PROJECT ID:", projectId);
+console.log("STORAGE KEY:", STORAGE_KEY);
+
   async function loadFromDB() {
   try {
     const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
@@ -258,6 +264,7 @@ h2, h3{ text-align:center; font-family:"Playfair Display",serif; }
 
       render();
       loadMessages();
+      
     }
 
   } catch (err) {
@@ -282,7 +289,7 @@ const MSG_KEY="at_main_message";
 
 let widget; // ✅ ADD HERE
 
-let items = [];
+
 
 /* Render Media */
 function render(){
@@ -328,7 +335,6 @@ el.loading = "lazy";
     del.onclick = ()=>{
       items.splice(i,1);
       autoSave();
-render();
     };
 
     d.appendChild(el);
@@ -408,12 +414,6 @@ function uploadLocal(e){
  }
  r.readAsDataURL(file);
 }
-
-const projectId = window.location.pathname.split("/").pop();
-const STORAGE_KEY = `project_${projectId}`;
-
-console.log("PROJECT ID:", projectId);
-console.log("STORAGE KEY:", STORAGE_KEY);
 
 /* Save */
 async function autoSave() {
