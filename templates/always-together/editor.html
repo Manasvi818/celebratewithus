@@ -624,6 +624,15 @@ async function downloadViewer() {
     console.error("Invoice fetch failed:", err);
   }
 }
+
+function goToViewer() {
+  autoSave();
+
+  const template = window.location.pathname.split("/")[2];
+  const projectId = window.location.pathname.split("/").pop();
+
+  window.location.href = `/viewer/${template}/${projectId}`;
+}
 </script>
 
 <div style="text-align:center; margin-top:30px;">
