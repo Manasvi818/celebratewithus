@@ -493,16 +493,22 @@ msgOpenBtn.onclick = ()=>{
 }
 
 msgSaveBtn.onclick = ()=>{
- let newMsg=document.getElementById("msgInput").value.trim();
- if(newMsg==="") return;
- 
- let updated = old ? old + "\n---\n" + newMsg : newMsg;
- 
- document.getElementById("msgInput").value="";
- document.getElementById("msgPopup").style.display="none";
- autoSave();
- loadMessages();
+  let newMsg = document.getElementById("msgInput").value.trim();
+  if(newMsg === "") return;
+
+  let txt = localStorage.getItem(MSG_KEY) || "";
+
+  let updated = txt ? txt + "\n---\n" + newMsg : newMsg;
+
+  localStorage.setItem(MSG_KEY, updated);
+
+  document.getElementById("msgInput").value = "";
+  document.getElementById("msgPopup").style.display = "none";
+
+  autoSave();   // ✅ IMPORTANT (saves to DB)
+  loadMessages();
 }
+
 function deleteMsg(index){
   let txt = localStorage.getItem(MSG_KEY) || "";
   let messages = txt.split("\n---\n");
