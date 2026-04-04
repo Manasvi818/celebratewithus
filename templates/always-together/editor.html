@@ -245,9 +245,6 @@ console.log("STORAGE KEY:", STORAGE_KEY);
 
   async function loadFromDB() {
 
-localStorage.removeItem(MSG_KEY);
-localStorage.removeItem(`music_${projectId}`);
-localStorage.removeItem(`pass_${projectId}`);
 
   try {
     const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
@@ -565,7 +562,7 @@ msgPopup.onclick = e=>{
 
 /* ===== BACKGROUND MUSIC SYSTEM ===== */
 let previewAudio = null;
-const MUSIC_KEY = "at_bg_music";
+const MUSIC_KEY = `music_${projectId}`;
 
 const musicSelect = document.getElementById("bgMusicSelect");
 
@@ -657,8 +654,8 @@ ${editorURL}
   link.click();
 }
 
-function goToViewer() {
-  autoSave();
+async function goToViewer() {
+  await autoSave();   // 🔥 wait for DB save
 
   const template = window.location.pathname.split("/")[2];
   const projectId = window.location.pathname.split("/").pop();
