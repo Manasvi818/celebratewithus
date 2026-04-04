@@ -217,7 +217,7 @@ app.post("/verify-payment", async (req, res) => {
   template
 } = req.body;
 
-// ✅ FIX HERE
+// ✅ fix template
 template = template?.toLowerCase().trim();
 
 console.log("🔥 TEMPLATE RECEIVED:", template);

@@ -53,3 +53,16 @@ window.TEMPLATES = [
 
 ];
 
+
+function selectVibeFromList(templateId) {
+  const exists = window.TEMPLATES.find(t => t.id === templateId);
+
+  if (!exists) {
+    alert("Invalid template selected");
+    return;
+  }
+
+  localStorage.setItem("selectedTemplate", templateId);
+
+  console.log("✅ Selected:", templateId);
+}

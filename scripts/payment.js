@@ -1,8 +1,12 @@
 
+
+console.log("TEMPLATE:", localStorage.getItem("selectedTemplate"));
+
 console.log("Razorpay loaded:", typeof Razorpay);
+
 const payBtn = document.getElementById("rzpButton");
 const BASE_URL = "https://celebratewithus.onrender.com";
-const selectedTemplate = localStorage.getItem("selectedTemplate");
+
 let finalAmount = 14900; // ₹149 in paise
 let usedCoupon = null;
 
@@ -12,6 +16,17 @@ if (payBtn) {
 
 
 async function openCheckout() {
+
+  // ✅ VALIDATION HERE (CORRECT PLACE)
+  const selectedTemplate = localStorage.getItem("selectedTemplate");
+
+  const validTemplate = window.TEMPLATES.find(t => t.id === selectedTemplate);
+
+  if (!validTemplate) {
+    alert("Please select a template first");
+    return;
+  }
+
   try {
     const res = await fetch(`${BASE_URL}/create-order`, {
       method: "POST",
@@ -19,7 +34,7 @@ async function openCheckout() {
       body: JSON.stringify({
         amountINR: finalAmount / 100,
         notes: {
-          templateId: localStorage.getItem("selectedTemplate") || "unknown"
+          templateId: selectedTemplate
         }
       }),
     });
@@ -40,12 +55,17 @@ async function openCheckout() {
       description: "Template Purchase ₹149",
 
       handler: async function (response) {
+
         const res = await fetch(`${BASE_URL}/verify-payment`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(response)
+          credentials: "include",
+          body: JSON.stringify({
+            ...response,
+            template: selectedTemplate
+          })
         });
 
         const result = await res.json();
@@ -64,7 +84,7 @@ async function openCheckout() {
       }
     };
 
-    // ✅ THIS WAS MISSING (VERY IMPORTANT)
+    // ✅ THIS IS REQUIRED
     const rzp = new Razorpay(options);
     rzp.open();
 
