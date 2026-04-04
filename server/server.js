@@ -284,7 +284,18 @@ const projectId = `${templateName}-${uniqueId}`;
       console.error("Optional task error:", e);
     }
 
-   const invoicePath = await generateInvoice(...);
+   const invoicePath = await generateInvoice({
+  payment_id: razorpay_payment_id,
+  name,
+  email,
+  projectId,
+  template,
+  viewerLink: `https://celebratewithus.co.in/viewer/${template}/${projectId}`,
+  editorLink: `https://celebratewithus.co.in/editor/${template}/${projectId}`,
+  coupon: req.body.coupon || "N/A",
+  date: new Date().toLocaleDateString("en-IN"),
+  time: new Date().toLocaleTimeString("en-IN")
+});
 
 return req.session.save(() => {
   res.json({
