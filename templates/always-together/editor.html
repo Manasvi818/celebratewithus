@@ -284,10 +284,9 @@ console.log("STORAGE KEY:", STORAGE_KEY);
 }
 
 /* Keys */
+const projectId = window.location.pathname.split("/").pop();
+const MSG_KEY = `msg_${projectId}`;
 
-const MSG_KEY="at_main_message";
-
-let widget; // ✅ ADD HERE
 
 
 
@@ -429,8 +428,8 @@ async function autoSave() {
       body: JSON.stringify({
         projectId,
         data: items,
-        messages: localStorage.getItem("at_main_message") || "",
-        music: localStorage.getItem("at_bg_music") || ""
+        messages: localStorage.getItem(MSG_KEY)
+        music: localStorage.getItem(`music_${projectId}`)
       })
     });
 
@@ -448,8 +447,21 @@ function clearAll(){ items=[]; autoSave(); render(); }
 
 /* Password */
 function savePass(){
- passSaved.style.display="block";
- setTimeout(()=>passSaved.style.display="none",1500);
+  const newPassword = document.getElementById("newPass").value.trim();
+
+  if(!newPassword){
+    alert("Enter password first");
+    return;
+  }
+
+  // ✅ SAVE PER PROJECT
+  localStorage.setItem(`pass_${projectId}`, newPassword);
+
+  passSaved.style.display="block";
+  setTimeout(()=>passSaved.style.display="none",1500);
+
+  // ✅ SAVE TO DB
+  autoSave();
 }
 
 /* ===== MESSAGE SYSTEM ===== */
@@ -597,32 +609,41 @@ document.addEventListener("DOMContentLoaded", () => {
   waitForCloudinary();
 });
 
-async function downloadViewer() {
+function downloadViewer() {
   autoSave();
 
   const template = window.location.pathname.split("/")[2];
   const projectId = window.location.pathname.split("/").pop();
 
-  // 🔽 Download ZIP (viewer page)
-  window.open(
-    `https://celebratewithus.onrender.com/download?template=${template}&projectId=${projectId}`
-  );
+  // ✅ Download viewer ZIP
+  window.open(`/download?template=${template}&projectId=${projectId}`);
 
-  // 🔽 Fetch invoice
-  try {
-    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
-    const data = await res.json();
+  // ✅ Create invoice file
+  const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
+  const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
+  const coupon = localStorage.getItem("usedCoupon") || "N/A";
 
-    // assuming invoice stored or you track it
-    const invoiceURL = `/invoices/invoice_${projectId}.pdf`;
+  const content = `
+CelebrateWithUs Invoice
 
-    setTimeout(() => {
-      window.open(invoiceURL);
-    }, 1500);
+Project ID: ${projectId}
+Template: ${template}
+Amount: ₹149
+Coupon: ${coupon}
 
-  } catch (err) {
-    console.error("Invoice fetch failed:", err);
-  }
+Viewer:
+${viewerURL}
+
+Editor:
+${editorURL}
+`;
+
+  const blob = new Blob([content], { type: "text/plain" });
+  const link = document.createElement("a");
+
+  link.href = URL.createObjectURL(blob);
+  link.download = `invoice_${projectId}.txt`;
+  link.click();
 }
 
 function goToViewer() {

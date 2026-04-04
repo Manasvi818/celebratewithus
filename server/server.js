@@ -455,8 +455,7 @@ viewerHtml = viewerHtml.replace(
 // add modified viewer
 archive.append(viewerHtml, { name: "viewer.html" });
 
-// add editor normally
-archive.file(editorPath, { name: "editor.html" });
+
 
     archive.finalize();
 
