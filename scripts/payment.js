@@ -25,18 +25,9 @@ if (!selectedTemplate) {
   return;
 }
 
-// if you have templates array
-if (!templates) {
-  console.error("Templates undefined");
-  return;
-}
+const template = localStorage.getItem("selectedTemplate")?.toLowerCase().trim();
 
-const selected = templates.find(t => t.id === selectedTemplate);
-
-  if (!validTemplate) {
-    alert("Please select a template first");
-    return;
-  }
+console.log("TEMPLATE:", template);
 
   try {
     const res = await fetch(`${BASE_URL}/create-order`, {
