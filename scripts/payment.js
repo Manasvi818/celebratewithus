@@ -20,7 +20,18 @@ async function openCheckout() {
   // ✅ VALIDATION HERE (CORRECT PLACE)
   const selectedTemplate = localStorage.getItem("selectedTemplate");
 
-  const validTemplate = window.TEMPLATES.find(t => t.id === selectedTemplate);
+if (!selectedTemplate) {
+  console.error("No template selected");
+  return;
+}
+
+// if you have templates array
+if (!templates) {
+  console.error("Templates undefined");
+  return;
+}
+
+const selected = templates.find(t => t.id === selectedTemplate);
 
   if (!validTemplate) {
     alert("Please select a template first");
