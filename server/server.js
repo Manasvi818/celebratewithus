@@ -444,10 +444,28 @@ const password = project?.password || "sweet";
 
 let viewerHtml = fs.readFileSync(viewerPath, "utf-8");
 
-// 🔥 inject password
+// inject password
 viewerHtml = viewerHtml.replace(
-  'const PASS = "sweet";',
-  `const PASS = "${password}";`
+  'let PASS = "";',
+  `let PASS = "${password}";`
+);
+
+// inject data
+viewerHtml = viewerHtml.replace(
+  'let data = [];',
+  `let data = ${JSON.stringify(project.data || [])};`
+);
+
+// inject messages
+viewerHtml = viewerHtml.replace(
+  'let messages = "";',
+  `let messages = ${JSON.stringify(project.messages || "")};`
+);
+
+// inject music
+viewerHtml = viewerHtml.replace(
+  'let song = "";',
+  `let song = "${project.music || ""}";`
 );
 
 // add modified viewer

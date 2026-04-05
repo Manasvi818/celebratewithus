@@ -555,7 +555,10 @@ password = result.password;
 
       render();
       loadMessages();   
-      setupMusic();
+      if (music) {
+  song = music;
+  setupMusic();
+}
     }
   } catch (err) {
     console.error("❌ Viewer load failed:", err);
@@ -619,13 +622,17 @@ let PASS = "";
 let isLoaded = false;
 function unlock(){
   if(!isLoaded){
-    alert("⏳ Still loading, wait 1 second");
+    alert("⏳ Wait...");
     return;
   }
 
   if(pass.value.trim() === PASS.trim()){
     passwordOverlay.style.display="none";
-    playMusic();
+
+    if(song){
+      playMusic();   // ✅ only if music exists
+    }
+
   }else{
     wrongPass.style.display="block";
   }
@@ -648,7 +655,10 @@ async function loadViewerData() {
 
       render();
       loadMessages();
-      setupMusic();
+      if (music) {
+  song = music;
+  setupMusic();
+}
     }
   } catch (err) {
     console.error("❌ Viewer load failed:", err);
