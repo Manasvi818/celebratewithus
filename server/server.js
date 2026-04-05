@@ -567,7 +567,8 @@ async function generateInvoice(data) {
 
     // 🎨 BACKGROUND
     doc.rect(0, 0, doc.page.width, doc.page.height).fill("#f8d6df");
-
+    
+    doc.fillColor("#000000");   // 🔥 VERY IMPORTANT
     doc.moveDown(2);
 
     // 🧾 TITLE
@@ -593,6 +594,13 @@ async function generateInvoice(data) {
     doc.text(`Template: ${data.template}`);
 
     doc.moveDown();
+
+doc.fillColor("#0000EE")
+  .text(`Viewer Link: ${data.viewerLink}`, { link: data.viewerLink });
+
+doc.text(`Editor Link: ${data.editorLink}`, { link: data.editorLink });
+
+doc.fillColor("#000"); // reset color
 
     doc.fillColor("#0000EE")
       .text(`Viewer Link: ${data.viewerLink}`, { link: data.viewerLink });

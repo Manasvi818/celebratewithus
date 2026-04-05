@@ -694,6 +694,29 @@ async function goToViewer() {
 
   window.location.href = `/viewer/${template}/${projectId}`;
 }
+
+// ✅ COPY VIEWER LINK
+function copyViewerLink() {
+  const viewerLink = window.location.href.replace("/editor/", "/viewer/");
+
+  navigator.clipboard.writeText(viewerLink)
+    .then(() => {
+      alert("🔗 Link copied! Share it 💖");
+    })
+    .catch(() => {
+      alert("Copy failed");
+    });
+}
+
+
+// ✅ DOWNLOAD INVOICE
+function downloadInvoice() {
+  const projectId = window.location.pathname.split("/").pop();
+
+  const invoiceUrl = `/invoices/invoice_${projectId}.pdf`;
+
+  window.open(invoiceUrl, "_blank");
+}
 </script>
 
 <div style="text-align:center; margin-top:30px;">
@@ -702,13 +725,12 @@ async function goToViewer() {
     💾 Save All & Show Viewer Page
   </button>
 
-  <button class="btn ghost" onclick="downloadViewer()">
-    ⬇️ Download Viewer Page
-  </button>
+  <button onclick="copyViewerLink()">Copy Viewer Link 🔗</button>
+<button onclick="downloadInvoice()">Download Invoice 📄</button>
 
   <p style="margin-top:12px; font-size:13px; color:#8a5a55;">
-    ⚠️ When you click on "Download Viewer Page", along with the viewer page you will get 
-    <b>Editor page link</b> (to access again) and <b>Invoice Receipt</b>.
+    ⚠️ When you click on "Download Invoice", along with the billing you will get 
+    <b>Editor page link</b> and <b>Viewer page link</b>.
   </p>
 
 </div>
