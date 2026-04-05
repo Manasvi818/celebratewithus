@@ -201,9 +201,6 @@ app.post("/create-order", async (req, res) => {
   }
 });
 
-const { createCoupon, markUsed } = require("./coupon");
-
-
 // ------------------------------------------------------
 // VERIFY PAYMENT
 // ------------------------------------------------------
@@ -568,7 +565,7 @@ async function generateInvoice(data) {
 
     // ✅ SAFE CALCULATION
     const baseAmount = 149;
-    const discount = parseInt(data.discount);
+    const discount = parseInt(data.discount || 0);
     const safeDiscount = isNaN(discount) ? 0 : discount;
     const finalAmount = Math.max(0, baseAmount - safeDiscount);
 
