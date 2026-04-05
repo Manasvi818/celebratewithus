@@ -454,7 +454,7 @@ password: localStorage.getItem(`pass_${projectId}`)
 function clearAll(){ items=[]; autoSave(); render(); }
 
 /* Password */
-function savePass(){
+async function savePass(){
   const newPassword = document.getElementById("newPass").value.trim();
 
   if(!newPassword){
@@ -462,14 +462,15 @@ function savePass(){
     return;
   }
 
-  // ✅ SAVE PER PROJECT
   localStorage.setItem(`pass_${projectId}`, newPassword);
 
   passSaved.style.display="block";
   setTimeout(()=>passSaved.style.display="none",1500);
 
-  // ✅ SAVE TO DB
-  autoSave();
+  // 🔥 THIS IS THE REAL FIX
+  await autoSave();
+
+  console.log("✅ Password sent to DB:", newPassword);
 }
 
 /* ===== MESSAGE SYSTEM ===== */
