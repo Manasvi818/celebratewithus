@@ -1,3 +1,4 @@
+const { generateInvoice } = require("./invoice");
 const fs = require("fs");
 const path = require("path");
 const PDFDocument = require("pdfkit");
