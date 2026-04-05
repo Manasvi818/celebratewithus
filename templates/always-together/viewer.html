@@ -531,40 +531,21 @@ let messages = "";
 let music = "";
 let password = "";
 
-async function loadViewerData() {
-  try {
-    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
-    const result = await res.json();
+/* ✅ ADD THIS BLOCK EXACTLY HERE */
+if (data.length > 0) {
+  PASS = password;
+  isLoaded = true;
 
-    if (result.success) {
-      data = result.data || [];
-      messages = result.messages || "";
-      music = result.music || "";
-      if (!result.password) {
-  alert("⚠️ No password set for this page. Please set it in editor.");
-  return;
-}
+  render();
+  loadMessages();
 
-password = result.password;
-
-
- PASS = password;      // ✅ ADD THIS
-  song = music;   
-
-      console.log("✅ Viewer loaded from DB");
-
-      render();
-      loadMessages();   
-      if (music) {
-  song = music;
-  setupMusic();
-}
-    }
-  } catch (err) {
-    console.error("❌ Viewer load failed:", err);
+  if (music) {
+    song = music;
+    setupMusic();
   }
+} else {
+  loadViewerData();
 }
-
   function optimizeCloudinaryUrl(url, width = 500) {
   if (!url || !url.includes("res.cloudinary.com")) return url;
 
@@ -939,12 +920,7 @@ function downloadViewer() {
 
   // create text file
   const blob = new Blob([invoiceContent], { type: "text/plain" });
-  const link = document.createElement("a");
-
-  link.href = URL.createObjectURL(blob);
-  link.download = `invoice_${projectId}.txt`;
-
-  link.click();
+ 
 
   alert("Viewer link + Editor link + Invoice downloaded ✅");
 }
