@@ -710,10 +710,6 @@ function downloadViewer() {
 const element = document.createElement("div");
 element.innerHTML = content;
 
-html2pdf().from(element).save(`invoice_${projectId}.pdf`);
-
-// ALSO open PDF (optional)
-window.open(`https://celebratewithus.co.in/invoices/invoice_${projectId}.pdf`);
 }
 async function goToViewer() {
   await autoSave();   // 🔥 wait for DB save
@@ -739,13 +735,11 @@ function copyViewerLink() {
 
 
 // ✅ DOWNLOAD INVOICE
-function downloadInvoice() {
-  const projectId = window.location.pathname.split("/").pop();
 
-  const invoiceUrl = `/invoices/invoice_${projectId}.pdf`;
-
-  window.open(invoiceUrl, "_blank");
+  function downloadInvoice() {
+  alert("Invoice is generated after payment only ✅");
 }
+
 </script>
 
 <div style="text-align:center; margin-top:30px;"<div style="
