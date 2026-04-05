@@ -848,15 +848,6 @@ function drawDecor(){
   drawDecor();
 })();
 
-musicOpenBtn.onclick = () => {
-  musicOverlay.style.display = "flex";
-};
-
-musicOverlay.onclick = e => {
-  if(e.target === musicOverlay){
-    musicOverlay.style.display = "none";
-  }
-};
 
 function setupMusic() {
   if (!song) return;
