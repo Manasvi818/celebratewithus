@@ -531,21 +531,6 @@ let messages = "";
 let music = "";
 let password = "";
 
-/* ✅ ADD THIS BLOCK EXACTLY HERE */
-if (data.length > 0) {
-  PASS = password;
-  isLoaded = true;
-
-  render();
-  loadMessages();
-
-  if (music) {
-    song = music;
-    setupMusic();
-  }
-} else {
-  loadViewerData();
-}
   function optimizeCloudinaryUrl(url, width = 500) {
   if (!url || !url.includes("res.cloudinary.com")) return url;
 
@@ -607,15 +592,19 @@ function unlock(){
     return;
   }
 
-  if(pass.value.trim() === PASS.trim()){
-    passwordOverlay.style.display="none";
+  const entered = document.getElementById("pass").value.trim();
+  const saved = PASS.trim();
+
+  if(entered === saved){
+    document.getElementById("passwordOverlay").style.display = "none";
+    document.getElementById("wrongPass").style.display = "none";
 
     if(song){
-      playMusic();   // ✅ only if music exists
+      playMusic();
     }
 
   }else{
-    wrongPass.style.display="block";
+    document.getElementById("wrongPass").style.display = "block";
   }
 }
 
@@ -752,6 +741,7 @@ closeMsg.onclick=()=>msgOverlay.style.display="none";
 /* LOAD MESSAGES */
 function loadMessages(){
   const txt = messages;
+   messageList.innerHTML = "";
   if(!txt.trim()) return;
 txt.split("\n---\n").forEach(m=>{
     const d=document.createElement("div");

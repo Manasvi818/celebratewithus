@@ -1,5 +1,5 @@
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 console.log("TEMPLATE:", localStorage.getItem("selectedTemplate"));
 
 console.log("Razorpay loaded:", typeof Razorpay);
@@ -73,10 +73,21 @@ console.log("TEMPLATE:", template);
         const result = await res.json();
 
         if (result.success && result.editLink) {
-          window.location.href = result.editLink;
-        } else {
-          alert("Something went wrong");
-        }
+
+  // ✅ 1. Save coupon locally (for invoice)
+  localStorage.setItem("usedCoupon", usedCoupon || "N/A");
+
+  // ✅ 2. Generate invoice PDF
+  generateInvoicePDF(response);
+
+  // ✅ 3. Redirect after small delay
+  setTimeout(() => {
+    window.location.href = result.editLink;
+  }, 2000);
+
+} else {
+  alert("Something went wrong");
+}
       },
 
       modal: {
@@ -128,5 +139,44 @@ async function applyCoupon() {
 
 function selectVibe(vibe) {
   localStorage.setItem("selectedTemplate", vibe);
+}
+
+function generateInvoicePDF(response){
+
+  const projectId = "TEMP_" + Date.now(); // since project not created yet
+  const template = localStorage.getItem("selectedTemplate") || "N/A";
+
+  const coupon = localStorage.getItem("usedCoupon") || "N/A";
+  const paymentId = response.razorpay_payment_id;
+
+  const date = new Date().toLocaleString();
+
+  const content = `
+  <div style="font-family:Arial;padding:25px;">
+    
+    <h2 style="text-align:center;">CelebrateWithUs - Invoice</h2>
+    <hr>
+
+    <p><strong>Date:</strong> ${date}</p>
+    <p><strong>Payment ID:</strong> ${paymentId}</p>
+
+    <hr>
+
+    <p><strong>Template:</strong> ${template}</p>
+    <p><strong>Amount Paid:</strong> ₹149</p>
+    <p><strong>Coupon:</strong> ${coupon}</p>
+
+    <hr>
+
+    <p style="text-align:center;">
+      Thank you for your purchase 💛
+    </p>
+  </div>
+  `;
+
+  const element = document.createElement("div");
+  element.innerHTML = content;
+
+  html2pdf().from(element).save(`invoice_${paymentId}.pdf`);
 }
     

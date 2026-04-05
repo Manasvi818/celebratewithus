@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://res.cloudinary.com">
 <link rel="preload" href="https://widget.cloudinary.com/v2.0/global/all.js" as="script">
 <script src="https://widget.cloudinary.com/v2.0/global/all.js" defer></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <title>Always Together — Editor • CelebrateWithUs</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
@@ -270,7 +270,7 @@ if (result.password) {
       console.log("✅ Loaded from DB");
 
       render();
-      loadMessages();
+    
       
     }
 
@@ -507,7 +507,7 @@ if(!txt){
   });
 }
 
-loadMessages();
+
 
 msgOpenBtn.onclick = ()=>{
  document.getElementById("msgPopup").style.display="flex";
@@ -519,15 +519,19 @@ msgSaveBtn.onclick = ()=>{
 
   let txt = localStorage.getItem(MSG_KEY) || "";
 
-  let updated = txt ? txt + "\n---\n" + newMsg : newMsg;
+  let messages = txt ? txt.split("\n---\n") : [];
 
-  localStorage.setItem(MSG_KEY, updated);
+if (!messages.includes(newMsg)) {
+  messages.push(newMsg);
+}
+
+localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
 
   document.getElementById("msgInput").value = "";
   document.getElementById("msgPopup").style.display = "none";
 
   autoSave();   // ✅ IMPORTANT (saves to DB)
-  loadMessages();
+loadMessages();   // ✅ ADD THIS LINE
 }
 
 function deleteMsg(index){
@@ -539,20 +543,23 @@ function deleteMsg(index){
   localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
 
   autoSave();
-  loadMessages();
+  
 }
 
 function editMsg(index){
-  
+  let txt = localStorage.getItem(MSG_KEY) || "";
   let messages = txt.split("\n---\n");
 
   let updated = prompt("Edit message:", messages[index]);
   if(updated === null) return;
 
   if(updated.trim()==="") return;
+
   messages[index] = updated.trim();
-  
-autoSave();
+
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+
+  autoSave();
   loadMessages();
 }
 msgPopup.onclick = e=>{
@@ -604,6 +611,7 @@ function saveBgMusic() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  loadMessages();   // ✅ ADD HERE
 
   // ✅ ADD THESE LINES HERE
   const musicOverlay = document.getElementById("musicOverlay");
@@ -649,26 +657,31 @@ function downloadViewer() {
   const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
   const coupon = localStorage.getItem("usedCoupon") || "No Coupon Applied";
   const content = `
-CelebrateWithUs Invoice
+<div style="font-family:Arial;padding:20px;">
+  <h2 style="text-align:center;">CelibrateWithUs INVOICE</h2>
+  <hr>
 
-Project ID: ${projectId}
-Template: ${template}
-Amount: ₹149
+  <p><strong>Project ID:</strong> ${projectId}</p>
+  <p><strong>Template:</strong> ${template}</p>
+  <p><strong>Amount:</strong> ₹149</p>
+  <p><strong>Coupon:</strong> ${coupon}</p>
 
-Viewer:
-${viewerURL}
+  <hr>
 
-Editor:
-${editorURL}
+  <p><strong>Viewer:</strong><br>${viewerURL}</p>
+  <p><strong>Editor:</strong><br>${editorURL}</p>
+
+  <hr>
+
+  <p style="text-align:center;">Thank you 💛</p>
+</div>
 `;
 
 // create file properly
-const blob = new Blob([content], { type: "text/plain" });
+const element = document.createElement("div");
+element.innerHTML = content;
 
-const link = document.createElement("a");
-link.href = URL.createObjectURL(blob);
-link.download = `invoice_${projectId}.txt`;
-link.click();
+html2pdf().from(element).save(`invoice_${projectId}.pdf`);
 
 // ALSO open PDF (optional)
 window.open(`https://celebratewithus.co.in/invoices/invoice_${projectId}.pdf`);
