@@ -647,15 +647,13 @@ function downloadViewer() {
   // ✅ Create invoice file
   const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
   const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
-  const coupon = localStorage.getItem("usedCoupon") || "N/A";
-
+  const coupon = localStorage.getItem("usedCoupon") || "No Coupon Applied";
   const content = `
 CelebrateWithUs Invoice
 
 Project ID: ${projectId}
 Template: ${template}
 Amount: ₹149
-Coupon: ${coupon}
 
 Viewer:
 ${viewerURL}
@@ -664,13 +662,16 @@ Editor:
 ${editorURL}
 `;
 
-  window.open(`https://celebratewithus.co.in/invoices/invoice_${projectId}.pdf`);
-  const link = document.createElement("a");
+// create file properly
+const blob = new Blob([content], { type: "text/plain" });
 
-  link.href = URL.createObjectURL(blob);
-  link.download = `invoice_${projectId}.txt`;
-  link.click();
-}
+const link = document.createElement("a");
+link.href = URL.createObjectURL(blob);
+link.download = `invoice_${projectId}.txt`;
+link.click();
+
+// ALSO open PDF (optional)
+window.open(`https://celebratewithus.co.in/invoices/invoice_${projectId}.pdf`);
 
 async function goToViewer() {
   await autoSave();   // 🔥 wait for DB save
