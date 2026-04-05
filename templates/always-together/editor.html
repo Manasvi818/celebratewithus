@@ -240,9 +240,6 @@ h2, h3{ text-align:center; font-family:"Playfair Display",serif; }
   const projectId = window.location.pathname.split("/").pop();
 const STORAGE_KEY = `project_${projectId}`;
 
-const musicOverlay = document.getElementById("musicOverlay");
-const musicOpenBtn = document.getElementById("musicOpenBtn");
-
 console.log("PROJECT ID:", projectId);
 console.log("STORAGE KEY:", STORAGE_KEY);
 
@@ -607,11 +604,28 @@ function saveBgMusic() {
 
 document.addEventListener("DOMContentLoaded", () => {
 
+  // ✅ ADD THESE LINES HERE
+  const musicOverlay = document.getElementById("musicOverlay");
+  const musicOpenBtn = document.getElementById("musicOpenBtn");
+
+  if (musicOpenBtn && musicOverlay) {
+    musicOpenBtn.onclick = () => {
+      musicOverlay.style.display = "flex";
+    };
+
+    musicOverlay.onclick = (e) => {
+      if (e.target === musicOverlay) {
+        musicOverlay.style.display = "none";
+      }
+    };
+  }
+
+  // EXISTING CODE
   loadFromDB();  
 
   function waitForCloudinary(){
     if (typeof cloudinary !== "undefined") {
-      initWidget(); // ✅ only runs when ready
+      initWidget();
     } else {
       setTimeout(waitForCloudinary, 200);
     }
