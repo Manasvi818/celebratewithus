@@ -240,6 +240,9 @@ h2, h3{ text-align:center; font-family:"Playfair Display",serif; }
   const projectId = window.location.pathname.split("/").pop();
 const STORAGE_KEY = `project_${projectId}`;
 
+const musicOverlay = document.getElementById("musicOverlay");
+const musicOpenBtn = document.getElementById("musicOpenBtn");
+
 console.log("PROJECT ID:", projectId);
 console.log("STORAGE KEY:", STORAGE_KEY);
 
