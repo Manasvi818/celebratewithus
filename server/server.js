@@ -826,28 +826,6 @@ const projectId = `${templateName}-${uniqueId}`;
 
     req.session.isPaid = true;
 
-    // OPTIONAL async tasks (DO NOT send response here)
-    try {
-      const invoicePath = await generateInvoice({
-  payment_id: razorpay_payment_id,
-  name,
-  email,
-  projectId,
-  template,
-  viewerLink: `https://celebratewithus.co.in/viewer/${template}/${projectId}`,
-  editorLink: `https://celebratewithus.co.in/editor/${template}/${projectId}`,
-  coupon: req.body.coupon || "N/A",
-  date: new Date().toLocaleDateString("en-IN"),
-  time: new Date().toLocaleTimeString("en-IN")
-});
-
-      if (email) {
-        await createCoupon(email);
-      }
-    } catch (e) {
-      console.error("Optional task error:", e);
-    }
-
    const invoicePath = await generateInvoice({
   payment_id: razorpay_payment_id,
   name,
@@ -1247,8 +1225,8 @@ doc.fillColor("#000")
 
 const baseAmount = 149;
 
-const discount = data.discount ? Number(data.discount) : 0;
-const finalAmount = baseAmount - discount;
+const discount = Number(data.discount || 0);
+const finalAmount = Math.max(0, baseAmount - discount);
 
     const stream = fs.createWriteStream(filePath);
     doc.pipe(stream);
