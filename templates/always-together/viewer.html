@@ -620,7 +620,7 @@ async function loadViewerData() {
 
       password = result.password || "";
       PASS = password;
-
+      document.getElementById("passwordOverlay").style.display = "flex";
       isLoaded = true;   // ✅ IMPORTANT
 
       render();
@@ -634,20 +634,6 @@ async function loadViewerData() {
     console.error("❌ Viewer load failed:", err);
   }
 }
-
-  if(pass.value === PASS){
-    passwordOverlay.style.display="none";
-    playMusic();
-
-    const btn = document.getElementById("musicBtn");
-    if(btn){
-      btn.textContent = "⏸ Pause Music";
-    }
-    isPlaying = true;
-  }else{
-    wrongPass.style.display="block";
-  }
-
 
 /* RENDER */
 function render(){
