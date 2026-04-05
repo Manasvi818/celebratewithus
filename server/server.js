@@ -256,7 +256,7 @@ const coupon = await createCoupon(emailUser);   // 🔥 ADD THIS
       data: [],
       messages: "",
       music: "",
-      password: "sweet"
+      password: req.body.password || "1234"
     });
 
     req.session.isPaid = true;
