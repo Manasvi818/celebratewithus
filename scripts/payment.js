@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           if (result.success && result.editLink) {
 
-            localStorage.setItem("usedCoupon", usedCoupon || "N/A");
+           localStorage.setItem("nextCoupon", result.nextCoupon);
 
             // ✅ OPEN BACKEND INVOICE (BEST)
             if (result.invoice) {

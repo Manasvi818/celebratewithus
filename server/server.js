@@ -1,4 +1,5 @@
-const Project = require("./models/Project");
+
+const { createCoupon, applyCoupon, markUsed } = require("./coupon");const Project = require("./models/Project");
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
@@ -249,6 +250,10 @@ console.log("🔥 TEMPLATE RECEIVED:", template);
 const uniqueId = Date.now() + Math.floor(Math.random() * 1000);
 const projectId = `${templateName}-${uniqueId}`;
 
+const emailUser = email || "guest@email.com";
+
+const coupon = await createCoupon(emailUser);   // 🔥 ADD THIS
+
     await Project.create({
       projectId,
       data: [],
@@ -267,7 +272,7 @@ const projectId = `${templateName}-${uniqueId}`;
   template,
   viewerLink: `https://celebratewithus.co.in/viewer/${templateName}/${projectId}`,
 editorLink: `https://celebratewithus.co.in/editor/${templateName}/${projectId}`,
-  coupon: req.body.coupon || "N/A",
+  coupon: coupon.code,   // 🔥 USE GENERATED COUPON
 discount: req.body?.discount || 0,
   date: new Date().toLocaleDateString("en-IN"),
   time: new Date().toLocaleTimeString("en-IN")
@@ -275,11 +280,13 @@ discount: req.body?.discount || 0,
 
 return req.session.save(() => {
   res.json({
-    success: true,
-    projectId,
-    editLink: `/editor/${templateName}/${projectId}`,
-    invoice: invoicePath   // ✅ ADD THIS
-  });
+  success: true,
+  projectId,
+  editLink: `/editor/${templateName}/${projectId}`,
+  viewerLink: `/viewer/${templateName}/${projectId}`, // optional but useful
+  invoice: invoicePath,
+  nextCoupon: coupon.code   // 🔥 ADD THIS
+});
 });
 
   } catch (err) {
@@ -628,7 +635,7 @@ doc.fillColor("#000"); // reset color
 
     doc.fontSize(14)
       .fillColor("#555")
-      .text("Thank you for celebrating with us ❤️", { align: "center" });
+      .text("Thank you for celebrating with us ", { align: "center" });
 
     doc.end();
 
