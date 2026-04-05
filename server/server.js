@@ -346,26 +346,24 @@ app.post("/save-project", async (req, res) => {
 // ------------------------------------------------------
 // LOAD PROJECT DATA
 // ------------------------------------------------------
-app.get("/get-project/:projectId", async (req, res) => {
+app.get("/get-project/:id", async (req, res) => {
   try {
-    const { projectId } = req.params;
-
-    const project = await Project.findOne({ projectId });
+    const project = await Project.findOne({ projectId: req.params.id });
 
     if (!project) {
-      return res.status(404).json({ success: false, error: "Project not found" });
+      return res.json({ success: false });
     }
 
-    return res.json({
+    res.json({
       success: true,
-      data: project.data,
-      messages: project.messages,
-      music: project.music
+      data: project.data || [],
+      messages: project.messages || "",
+      music: project.music || "",
+      password: project.password || ""
     });
 
   } catch (err) {
-    console.error("LOAD ERROR:", err);
-    return res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false });
   }
 });
 
