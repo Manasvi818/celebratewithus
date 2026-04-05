@@ -920,17 +920,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const musicOverlay = document.getElementById("musicOverlay");
   const musicOpenBtn = document.getElementById("musicOpenBtn");
 
-  musicOpenBtn.onclick = () => {
-    musicOverlay.style.display = "flex";
-  };
+  if (musicOpenBtn && musicOverlay) {
+    musicOpenBtn.onclick = () => {
+      musicOverlay.style.display = "flex";
+    };
 
-  musicOverlay.onclick = (e) => {
-    if (e.target === musicOverlay) {
-      musicOverlay.style.display = "none";
-    }
-  };
+    musicOverlay.onclick = (e) => {
+      if (e.target === musicOverlay) {
+        musicOverlay.style.display = "none";
+      }
+    };
+  }
 
-  loadViewerData(); // keep your existing call
+  // your existing function
+  loadViewerData();
+
 });
 
 </script>
