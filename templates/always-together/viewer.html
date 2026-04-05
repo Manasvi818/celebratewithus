@@ -546,7 +546,7 @@ async function loadViewerData() {
 }
 
 password = result.password;
-PASS = password;
+
 
  PASS = password;      // ✅ ADD THIS
   song = music;   
@@ -616,11 +616,44 @@ function toggleMusic(){
 /* PASSWORD */
 let PASS = "";
 
+let isLoaded = false;
 function unlock(){
-  if(!PASS){
-    alert("⏳ Loading... please wait");
+  if(!isLoaded){
+    alert("⏳ Still loading, wait 1 second");
     return;
   }
+
+  if(pass.value.trim() === PASS.trim()){
+    passwordOverlay.style.display="none";
+    playMusic();
+  }else{
+    wrongPass.style.display="block";
+  }
+}
+
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+
+      password = result.password || "";
+      PASS = password;
+
+      isLoaded = true;   // ✅ IMPORTANT
+
+      render();
+      loadMessages();
+      setupMusic();
+    }
+  } catch (err) {
+    console.error("❌ Viewer load failed:", err);
+  }
+}
 
   if(pass.value === PASS){
     passwordOverlay.style.display="none";
@@ -634,7 +667,7 @@ function unlock(){
   }else{
     wrongPass.style.display="block";
   }
-}
+
 
 /* RENDER */
 function render(){

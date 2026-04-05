@@ -319,21 +319,22 @@ return req.session.save(() => {
 // ------------------------------------------------------
 app.post("/save-project", async (req, res) => {
   try {
-    const { projectId, data, messages, music } = req.body;
+    const { projectId, data, messages, music, password } = req.body;
 
     if (!projectId) {
       return res.status(400).json({ success: false, error: "Missing projectId" });
     }
 
-    const project = await Project.findOneAndUpdate(
-      { projectId },
-      {
-        data: data || [],
-        messages: messages || "",
-        music: music || ""
-      },
-      { new: true }
-    );
+   await Project.findOneAndUpdate(
+  { projectId },
+  {
+    data: data || [],
+    messages: messages || "",
+    music: music || "",
+    password: password || ""
+  },
+  { new: true }
+);
 
     return res.json({ success: true });
 
