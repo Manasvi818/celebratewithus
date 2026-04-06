@@ -573,7 +573,7 @@ console.log("📄 Saving invoice at:", filePath);
     const finalAmount = Math.round(baseAmount - (baseAmount * safeDiscount / 100));
 
     // 🎨 BACKGROUND
-    doc.rect(0, 0, doc.page.width, doc.page.height).fill("#d7a3c1");
+    doc.rect(0, 0, doc.page.width, doc.page.height).fill("#E89AC6");
     
     doc.fillColor("#000000");   // 🔥 VERY IMPORTANT
     doc.moveDown(2);
