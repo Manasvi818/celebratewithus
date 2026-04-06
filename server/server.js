@@ -568,7 +568,7 @@ async function generateInvoice(data) {
     const baseAmount = 149;
     const discount = parseInt(data.discount || 0);
     const safeDiscount = isNaN(discount) ? 0 : discount;
-    const finalAmount = Math.max(0, baseAmount - safeDiscount);
+    const finalAmount = Math.round(baseAmount - (baseAmount * safeDiscount / 100));
 
     // 🎨 BACKGROUND
     doc.rect(0, 0, doc.page.width, doc.page.height).fill("#E89AC6");

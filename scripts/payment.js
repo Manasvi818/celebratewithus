@@ -130,6 +130,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       finalAmount = finalAmount - (finalAmount * data.discount / 100);
 
+      localStorage.setItem("discount", data.discount);
+
       document.getElementById("discountMsg").innerText =
         `Discount applied: ${data.discount}%`;
 
