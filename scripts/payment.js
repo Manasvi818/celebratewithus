@@ -71,7 +71,7 @@ const projectId = "proj_" + Date.now();
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({
+    
      body: JSON.stringify({
   razorpay_payment_id: response.razorpay_payment_id,
   razorpay_order_id: response.razorpay_order_id,
@@ -82,7 +82,7 @@ const projectId = "proj_" + Date.now();
   discount,
   amount: 149
 })
-    })
+    
   });
 
 console.log("Invoice status:", invoiceRes.status);
