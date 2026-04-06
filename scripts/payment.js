@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
 let appliedCoupon = "";
 let appliedDiscount = 0;
 
+const projectId = "proj_" + Date.now();
+
   const payBtn = document.getElementById("rzpButton");
 
   if (payBtn) {
