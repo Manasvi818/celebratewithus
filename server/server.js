@@ -269,7 +269,8 @@ const coupon = await createCoupon(emailUser);   // 🔥 ADD THIS
   template,
   viewerLink: `https://celebratewithus.co.in/viewer/${templateName}/${projectId}`,
 editorLink: `https://celebratewithus.co.in/editor/${templateName}/${projectId}`,
-  coupon: coupon.code,   // 🔥 USE GENERATED COUPON
+  coupon: req.body?.coupon || "N/A",
+  nextCoupon: coupon.code,
 discount: req.body?.discount || 0,
   date: new Date().toLocaleDateString("en-IN"),
   time: new Date().toLocaleTimeString("en-IN")
@@ -579,7 +580,7 @@ async function generateInvoice(data) {
 try {
   const logoPath = path.join(__dirname, "../styles/images/logo.png");
 
-  doc.image(logoPath, 480, 40, { width: 60 });
+  doc.image(logoPath, 450, 30, { width: 100 });
 } catch (e) {
   console.log("Logo not found");
 }
@@ -605,13 +606,8 @@ try {
 
     doc.text(`Project ID: ${data.projectId}`);
     doc.text(`Template: ${data.template}`);
-doc.text(`Next Coupon: ${data.coupon || "N/A"}`);
+doc.text(`Next Coupon (for next purchase): ${data.nextCoupon || "N/A"}`);
     doc.moveDown();
-
-doc.fillColor("#0000EE")
-  .text(`Viewer Link: ${data.viewerLink}`, { link: data.viewerLink });
-
-doc.text(`Editor Link: ${data.editorLink}`, { link: data.editorLink });
 
 doc.fillColor("#000"); // reset color
 
@@ -628,14 +624,16 @@ doc.fillColor("#000"); // reset color
     doc.text(`Discount: ₹${safeDiscount}`);
     doc.text(`Final Amount Paid: ₹${finalAmount}`);
 
-    doc.moveDown(2);
+ doc.moveDown(1);
 
-    // 💰 COMPACT TOTAL BOX
-doc.roundedRect(150, 250, 300, 50, 12).fill("#ffc0cb");
+// 💰 TOTAL BOX BELOW FINAL AMOUNT
+doc.roundedRect(150, doc.y, 300, 50, 12).fill("#ffc0cb");
 
 doc.fillColor("#000")
   .fontSize(16)
-  .text(`Total Paid: ₹${finalAmount}`, 200, 265);
+  .text(`Total Paid: ₹${finalAmount}`, 200, doc.y - 35);
+
+    
 
 doc.moveDown();
 
