@@ -240,9 +240,11 @@ h2,h3{
 <!-- SCRIPT -->
 <script>
 /* EVERYTHING SAME LOGIC AS YOUR ORIGINAL */
-const STORAGE_KEY="blush_photos_v1";
-const MSG_KEY="blush_messages";
-const MUSIC_KEY="blush_bg_music";
+const projectId = window.location.pathname.split("/").pop();
+
+const STORAGE_KEY = `project_${projectId}`;
+const MSG_KEY = `msg_${projectId}`;
+const MUSIC_KEY = `music_${projectId}`;
 
 let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
@@ -250,9 +252,30 @@ function saveAll(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 }
 
-function autoSave(){
-  localStorage.setItem("blush_photos_v1", JSON.stringify(items));
+async function autoSave() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
+  try {
+    await fetch("https://celebratewithus.onrender.com/save-project", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        projectId,
+        data: items,
+        messages: localStorage.getItem(MSG_KEY),
+        music: localStorage.getItem(MUSIC_KEY),
+        password: localStorage.getItem(`pass_${projectId}`)
+      })
+    });
+
+    console.log("Saved to DB");
+  } catch (err) {
+    console.error("Save failed:", err);
+  }
 }
+
 function clearAll(){ items=[]; autoSave(); render(); }
 
  function render(){
@@ -343,21 +366,24 @@ msgSaveBtn.onclick=()=>{
  localStorage.setItem(MSG_KEY, old?old+"\n---\n"+m:m);
  msgInput.value="";
  msgPopup.style.display="none";
+ await autoSave(); 
  loadMessages();
 };
 msgPopup.onclick=e=>{ if(e.target===msgPopup) msgPopup.style.display="none"; };
 
-function deleteMsg(index){
+async function deleteMsg(index){
   let txt = localStorage.getItem(MSG_KEY) || "";
   let messages = txt.split("\n---\n");
 
   messages.splice(index, 1);
 
   localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+
+  await autoSave();   // 🔥 ADD THIS
   loadMessages();
 }
 
-function editMsg(index){
+async function editMsg(index){
   let txt = localStorage.getItem(MSG_KEY) || "";
   let messages = txt.split("\n---\n");
 
@@ -369,6 +395,8 @@ function editMsg(index){
   messages[index] = updated.trim();
 
   localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+
+  await autoSave();   // 🔥 ADD THIS
   loadMessages();
 }
 
@@ -394,15 +422,18 @@ function saveBgMusic(){
 }
 
 function savePass(){
- localStorage.setItem("viewerPassword_blushLove",newPass.value);
+ localStorage.setItem(`pass_${projectId}`, newPass.value);
+ await autoSave();
+
  passSaved.style.display="block";
  setTimeout(()=>passSaved.style.display="none",1500);
 }
-function saveMessages(){
-  let txt = localStorage.getItem(MSG_KEY) || "";
-  localStorage.setItem(MSG_KEY, txt);
+
+async function saveMessages(){
+  await autoSave();   // 🔥 IMPORTANT
   alert("Messages saved with love 💗");
 }
+
 function openWidget(type) {
   cloudinary.openUploadWidget({
     cloudName: "di8n4lsjz",
@@ -431,6 +462,38 @@ window.addEventListener("load", () => {
   render();
 });
 loadMessages();
+
+async function loadFromDB() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      items = result.data || [];
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
+      if (result.messages) {
+        localStorage.setItem(MSG_KEY, result.messages);
+      }
+
+      if (result.music) {
+        localStorage.setItem(MUSIC_KEY, result.music);
+      }
+
+      if (result.password) {
+        localStorage.setItem(`pass_${projectId}`, result.password);
+      }
+
+      render();
+    }
+  } catch (err) {
+    console.error("Load failed:", err);
+  }
+}
+window.addEventListener("load", () => {
+  loadFromDB();
+});
 </script>
 <!-- FOOTER -->
 <footer class="site-footer">

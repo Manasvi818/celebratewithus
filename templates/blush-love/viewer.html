@@ -822,12 +822,20 @@ closeMsg.onclick = () => {
   msgOverlay.style.display = "none";
 };
 
-const mediaList =
-  JSON.parse(localStorage.getItem("blush_photos_v1")) || [];
+const projectId = window.location.pathname.split("/").pop();
+
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
 
 const grid = document.querySelector(".grid");
 
-mediaList.forEach(x => {
+function render() {
+  const grid = document.querySelector(".grid");
+  grid.innerHTML = "";
+
+  data.forEach(x => {
 
   if (x.type === "image" || x.type === "video") {
 
@@ -858,8 +866,6 @@ card.addEventListener("click", () => {
   }
 });
 
-const allMessages =
-  localStorage.getItem("blush_messages") || "";
 
 const viewerBox = document.getElementById("viewerMessage");
 
@@ -914,8 +920,22 @@ function setConfetti(amount){
    PASSWORD SYSTEM — BLUSH LOVE
 ================================ */
 
-const VIEWER_PASS =
-  localStorage.getItem("viewerPassword_blushLove") || "love";
+let PASS = "";
+
+function unlockViewer() {
+  const input = document.getElementById("viewerPass").value;
+
+  if (input === PASS) {
+    document.getElementById("passwordOverlay").style.display = "none";
+
+    if (music) {
+      toggleMusic();
+    }
+
+  } else {
+    document.getElementById("wrongPass").style.display = "block";
+  }
+}
 
 function unlockViewer() {
   const input = document.getElementById("viewerPass").value;
@@ -925,7 +945,13 @@ function unlockViewer() {
 
     // auto play background music if saved
     const savedMusic =
-      localStorage.getItem("blush_bg_music");
+      function setupMusic(){
+  if(!music) return;
+
+  bgAudio = new Audio(music);
+  bgAudio.loop = true;
+  bgAudio.volume = 0.6;
+}
 
     if (savedMusic) {
   bgAudio = new Audio(savedMusic);
@@ -1036,6 +1062,56 @@ document.getElementById("musicPanel").addEventListener("click", (e) => {
   }
 });
 
+function loadMessages(){
+  const viewerBox = document.getElementById("viewerMessage");
+  viewerBox.innerHTML = "";
+
+  if(!messages.trim()){
+    viewerBox.innerText = "A little message is waiting to be written 💗";
+    return;
+  }
+
+  messages.split("\n---\n").forEach(msg=>{
+    const p = document.createElement("div");
+
+    p.style.marginBottom = "12px";
+    p.style.padding = "10px 14px";
+    p.style.borderRadius = "14px";
+    p.style.background = "rgba(255,255,255,0.6)";
+    p.style.boxShadow = "0 6px 16px rgba(255,120,160,0.25)";
+
+    p.innerText = msg;
+
+    viewerBox.appendChild(p);
+  });
+}
+
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      PASS = password;
+
+      document.getElementById("passwordOverlay").style.display = "flex";
+
+      render();
+      loadMessages();
+
+      if (music) {
+        setupMusic();
+      }
+    }
+  } catch (err) {
+    console.error("Viewer load failed:", err);
+  }
+}
 </script>
 <!-- MUSIC PANEL -->
 <div id="musicPanel" style="

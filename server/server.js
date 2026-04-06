@@ -217,6 +217,21 @@ app.post("/verify-payment", async (req, res) => {
 console.log("FULL BODY:", req.body);
 console.log("🔥 TEMPLATE RECEIVED:", template);
 
+const templateName = (req.body.template || "").toLowerCase().trim();
+
+if (!templateName) {
+  return res.status(400).json({
+    success: false,
+    error: "Template is required"
+  });
+}
+
+if (!validTemplates.includes(templateName)) {
+  return res.status(400).json({
+    success: false,
+    error: "Invalid template"
+  });
+}
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return res.status(400).json({
@@ -241,7 +256,6 @@ console.log("🔥 TEMPLATE RECEIVED:", template);
 
     console.log("✅ PAYMENT VERIFIED");
 
-    const templateName = (template || "default").toLowerCase().trim();
 
 // simple unique suffix
 const uniqueId = Date.now() + Math.floor(Math.random() * 1000);
