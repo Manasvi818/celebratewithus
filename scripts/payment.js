@@ -80,7 +80,12 @@ const projectId = "proj_" + Date.now();
   projectId,
   coupon,
   discount,
-  amount: 149
+  amount: 149,
+
+  // ✅ ADD THESE
+  name: "Guest",
+  email: "guest@email.com",
+  template: selectedTemplate
 })
     
   });
