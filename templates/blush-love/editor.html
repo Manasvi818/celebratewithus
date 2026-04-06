@@ -360,7 +360,7 @@ function loadMessages(){
 }
 
 msgOpenBtn.onclick=()=>msgPopup.style.display="flex";
-msgSaveBtn.onclick=()=>{
+msgSaveBtn.onclick = async () => {
  let m=msgInput.value.trim(); if(!m) return;
  let old=localStorage.getItem(MSG_KEY)||"";
  localStorage.setItem(MSG_KEY, old?old+"\n---\n"+m:m);
@@ -421,7 +421,7 @@ function saveBgMusic(){
  setTimeout(()=>musicSavedMsg.style.display="none",1500);
 }
 
-function savePass(){
+async function savePass(){
  localStorage.setItem(`pass_${projectId}`, newPass.value);
  await autoSave();
 
@@ -494,7 +494,36 @@ async function loadFromDB() {
 window.addEventListener("load", () => {
   loadFromDB();
 });
+
+
 </script>
+
+<div style="text-align:center; margin-top:30px;"<div style="
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:30px;
+  flex-wrap:wrap;
+">
+
+<button class="btn" onclick="goToViewer()">
+    💾 Save All & Show Viewer Page
+  </button>
+
+  <button class="btn" onclick="copyViewerLink()">
+  🔗 Copy Viewer Link
+</button>
+
+<button class="btn" onclick="downloadInvoice()">
+  📄 Download Invoice
+</button>
+
+  <p style="margin-top:12px; font-size:13px; color:#8a5a55;">
+    ⚠️ When you click on "Download Invoice", along with the billing you will get 
+    <b>Editor page link</b> and <b>Viewer page link</b>.
+  </p>
+
+</div>
 <!-- FOOTER -->
 <footer class="site-footer">
   <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>

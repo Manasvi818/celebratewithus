@@ -808,6 +808,16 @@ const cuteMessages = [
   "Pinterest wishes it had pictures like this 🌙✨"
 ];
 
+const projectId = window.location.pathname.split("/").pop();
+
+let data = [];
+let messages = "";
+let music = "";
+let PASS = "";
+
+let bgAudio = null;
+let isPlaying = false;
+
 const msgOverlay = document.getElementById("msgOverlay");
 const msgText = document.getElementById("msgText");
 const closeMsg = document.getElementById("closeMsg");
@@ -821,13 +831,6 @@ function changeMessage() {
 closeMsg.onclick = () => {
   msgOverlay.style.display = "none";
 };
-
-const projectId = window.location.pathname.split("/").pop();
-
-let data = [];
-let messages = "";
-let music = "";
-let password = "";
 
 const grid = document.querySelector(".grid");
 
@@ -865,32 +868,9 @@ card.addEventListener("click", () => {
     grid.appendChild(card);
   }
 });
-
-
-const viewerBox = document.getElementById("viewerMessage");
-
-if (allMessages.trim() === "") {
-  viewerBox.innerText = "A little message is waiting to be written ";
-} else {
-  const list = allMessages.split("\n---\n");
-
-  viewerBox.innerHTML = "";
-
-  list.forEach(msg => {
-    const p = document.createElement("div");
-    p.style.marginBottom = "12px";
-    p.style.padding = "10px 14px";
-    p.style.borderRadius = "14px";
-    p.style.background = "rgba(255,255,255,0.6)";
-    p.style.boxShadow = "0 6px 16px rgba(255,120,160,0.25)";
-    p.style.animation = "pop 0.3s ease";
-
-    p.innerText = msg;
-
-    viewerBox.appendChild(p);
-  });
 }
 
+const viewerBox = document.getElementById("viewerMessage");
 
 const savedStart = localStorage.getItem("blush_grad_start");
 const savedEnd = localStorage.getItem("blush_grad_end");
@@ -898,6 +878,18 @@ const savedEnd = localStorage.getItem("blush_grad_end");
 if (savedStart && savedEnd) {
   document.documentElement.style.setProperty("--grad-start", savedStart);
   document.documentElement.style.setProperty("--grad-end", savedEnd);
+}
+
+function unlockViewer() {
+  const input = document.getElementById("viewerPass").value;
+
+  if (input === PASS) {
+    document.getElementById("passwordOverlay").style.display = "none";
+
+    if (music) playMusic();
+  } else {
+    document.getElementById("wrongPass").style.display = "block";
+  }
 }
 
 function openConfetti() {
@@ -916,63 +908,11 @@ function setConfetti(amount){
   closeConfetti();
 }
 
-/* ===============================
-   PASSWORD SYSTEM — BLUSH LOVE
-================================ */
-
-let PASS = "";
-
-function unlockViewer() {
-  const input = document.getElementById("viewerPass").value;
-
-  if (input === PASS) {
-    document.getElementById("passwordOverlay").style.display = "none";
-
-    if (music) {
-      toggleMusic();
-    }
-
-  } else {
-    document.getElementById("wrongPass").style.display = "block";
-  }
-}
-
-function unlockViewer() {
-  const input = document.getElementById("viewerPass").value;
-
-  if (input === VIEWER_PASS) {
-    document.getElementById("passwordOverlay").style.display = "none";
-
-    // auto play background music if saved
-    const savedMusic =
-      function setupMusic(){
-  if(!music) return;
-
-  bgAudio = new Audio(music);
-  bgAudio.loop = true;
-  bgAudio.volume = 0.6;
-}
-
-    if (savedMusic) {
-  bgAudio = new Audio(savedMusic);
-  bgAudio.loop = true;
-  bgAudio.volume = 0.6;
-  bgAudio.play();
-  isPlaying = true;
-  document.getElementById("musicBtn").innerText = "⏸ Pause Music";
-}
-
-  } else {
-    document.getElementById("wrongPass").style.display = "block";
-  }
-}
 
 /* ===============================
    MUSIC SYSTEM — BLUSH LOVE
 ================================ */
 
-let bgAudio = null;
-let isPlaying = false;
 
 function openMusic(){
   document.getElementById("musicPanel").style.display = "flex";
@@ -982,36 +922,7 @@ function closeMusic(){
   document.getElementById("musicPanel").style.display = "none";
 }
 
-function toggleMusic(){
-  const song = localStorage.getItem("blush_bg_music");
 
-  if(!song){
-    alert("No music selected 💗");
-    return;
-  }
-
- if (bgAudio && bgAudio.src !== song) {
-    bgAudio.pause();
-    bgAudio = null;
-    isPlaying = false;
-  }
-
-  if(!bgAudio){
-    bgAudio = new Audio(song);
-    bgAudio.loop = true;
-    bgAudio.volume = 0.6;
-  }
-
-  if(isPlaying){
-    bgAudio.pause();
-    document.getElementById("musicBtn").innerText = "▶ Play Music";
-  }else{
-    bgAudio.play();
-    document.getElementById("musicBtn").innerText = "⏸ Pause Music";
-  }
-
-  isPlaying = !isPlaying;
-}
 
 const zoomOverlay = document.getElementById("zoomOverlay");
 const zoomMediaBox = document.getElementById("zoomMediaBox");
@@ -1086,6 +997,42 @@ function loadMessages(){
   });
 }
 
+function playMusic(){
+  if(!music) return;
+
+  if(!bgAudio){
+    bgAudio = new Audio(music);
+    bgAudio.loop = true;
+    bgAudio.volume = 0.6;
+  }
+
+  bgAudio.play();
+  isPlaying = true;
+}
+
+function toggleMusic(){
+  if(!music){
+    alert("No music selected 💗");
+    return;
+  }
+
+  if(!bgAudio){
+    playMusic();
+    document.getElementById("musicBtn").innerText = "⏸ Pause Music";
+    return;
+  }
+
+  if(isPlaying){
+    bgAudio.pause();
+    document.getElementById("musicBtn").innerText = "▶ Play Music";
+  } else {
+    bgAudio.play();
+    document.getElementById("musicBtn").innerText = "⏸ Pause Music";
+  }
+
+  isPlaying = !isPlaying;
+}
+
 async function loadViewerData() {
   try {
     const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
@@ -1112,6 +1059,10 @@ async function loadViewerData() {
     console.error("Viewer load failed:", err);
   }
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+  loadViewerData();
+});
 </script>
 <!-- MUSIC PANEL -->
 <div id="musicPanel" style="
