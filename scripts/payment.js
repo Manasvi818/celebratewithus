@@ -66,7 +66,7 @@ const projectId = "proj_" + Date.now();
   const coupon = appliedCoupon || "No Coupon Applied";
   const discount = appliedDiscount || 0;
 
-  const invoiceRes = await fetch(`${BASE_URL}/create-invoice`, {
+  const invoiceRes = await fetch(`${BASE_URL}/verify-payment`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -78,6 +78,9 @@ const projectId = "proj_" + Date.now();
       amount: 149
     })
   });
+
+console.log("Invoice status:", invoiceRes.status);
+
 
           let result;
 
