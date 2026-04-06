@@ -560,6 +560,8 @@ async function generateInvoice(data) {
     const fileName = `invoice_${data.projectId}.pdf`;
     const filePath = path.join(invoicesDir, fileName);
 
+console.log("📄 Saving invoice at:", filePath);
+
     const doc = new PDFDocument({ margin: 50 });
     const stream = fs.createWriteStream(filePath);
     doc.pipe(stream);
@@ -659,11 +661,16 @@ doc.fontSize(14)
 
     doc.moveDown(4);
 
+if (!fs.existsSync(filePath)) {
+  console.log("❌ FILE NOT FOUND BEFORE END:", filePath);
+}
+
     doc.end();
 
     stream.on("finish", () => {
-      resolve(`/invoices/${fileName}`);
-    });
+  console.log("✅ Invoice created:", filePath);
+  resolve(`/invoices/${fileName}?t=${Date.now()}`);
+});
 
     stream.on("error", (err) => {
       reject(err);
