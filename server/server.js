@@ -578,7 +578,7 @@ async function generateInvoice(data) {
 
     // 🧁 LOGO (top right)
 try {
-  const logoPath = path.join(__dirname, "../styles/images/logo.png");
+  const logoPath = path.join(process.cwd(), "styles/images/logo.png");
 
   doc.image(logoPath, 400, startY, { width: 110 });
 } catch (e) {
@@ -631,19 +631,26 @@ doc.fillColor("#000"); // reset color
 // 💰 PINK BOX
 const boxY = doc.y;
 
-doc.roundedRect(150, boxY, 300, 60, 12).fill("#ffc0cb");
+// 💰 PINK BOX
+const boxX = 150;
+const boxWidth = 300;
 
-// TEXT INSIDE BOX
+doc.roundedRect(boxX, boxY, boxWidth, 60, 12).fill("#ffc0cb");
+
+// ✅ CENTER TEXT INSIDE BOX
 doc.fillColor("#000")
   .fontSize(16)
-  .text(`Total Paid: ₹${finalAmount}`, 200, boxY + 15);
+  .text(`Total Paid: ₹${finalAmount}`, boxX, boxY + 20, {
+    width: boxWidth,
+    align: "center"
+  });
     
 
 doc.moveDown(2);
 
 doc.fontSize(14)
   .fillColor("#555")
-  .text("Thank you for celebrating with us 💛", { align: "center" });
+  .text("Thank you for celebrating with us 💛", { align: "left" });
 
     doc.moveDown(4);
 
