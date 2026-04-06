@@ -575,6 +575,15 @@ async function generateInvoice(data) {
     doc.fillColor("#000000");   // 🔥 VERY IMPORTANT
     doc.moveDown(2);
 
+    // 🧁 LOGO (top right)
+try {
+  const logoPath = path.join(__dirname, "../styles/images/logo.png");
+
+  doc.image(logoPath, 480, 40, { width: 60 });
+} catch (e) {
+  console.log("Logo not found");
+}
+
     // 🧾 TITLE
     doc.fontSize(20).fillColor("#333").text("INVOICE RECEIPT", { align: "center" });
 
@@ -596,7 +605,7 @@ async function generateInvoice(data) {
 
     doc.text(`Project ID: ${data.projectId}`);
     doc.text(`Template: ${data.template}`);
-
+doc.text(`Next Coupon: ${data.coupon || "N/A"}`);
     doc.moveDown();
 
 doc.fillColor("#0000EE")
@@ -621,18 +630,20 @@ doc.fillColor("#000"); // reset color
 
     doc.moveDown(2);
 
-    // 💵 TOTAL BOX
-    doc.roundedRect(50, 250, 500, 80, 10).fill("#ffc0cb");
+    // 💰 COMPACT TOTAL BOX
+doc.roundedRect(150, 250, 300, 50, 12).fill("#ffc0cb");
 
-    doc.fillColor("#000")
-      .fontSize(18)
-      .text(`Total Paid: ₹${finalAmount}`, 70, 280);
+doc.fillColor("#000")
+  .fontSize(16)
+  .text(`Total Paid: ₹${finalAmount}`, 200, 265);
+
+doc.moveDown();
+
+doc.fontSize(14)
+  .fillColor("#555")
+  .text("Thank you for celebrating with us 💛", { align: "left" });
 
     doc.moveDown(4);
-
-    doc.fontSize(14)
-      .fillColor("#555")
-      .text("Thank you for celebrating with us ", { align: "center" });
 
     doc.end();
 
@@ -644,5 +655,6 @@ doc.fillColor("#000"); // reset color
       reject(err);
     });
 
+    
   });
 }
