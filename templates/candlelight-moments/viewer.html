@@ -621,13 +621,7 @@ async function loadViewerData() {
 document.addEventListener("DOMContentLoaded", () => {
  loadViewerData();
   /* 🔐 PASSWORD */
- window.checkPassword = function () {
-  const input = document.getElementById("passInput").value;
-
-  if (!PASS || PASS === "") {
-    document.getElementById("lockScreen").style.display = "none";
-    return;
-  }
+    
 
   if (input === PASS) {
     document.getElementById("lockScreen").style.display = "none";
@@ -655,7 +649,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 👉 AUTO PLAY MUSIC AFTER UNLOCK
   if (savedMusic) {
     if (!bgAudio) {
-      bgAudio = new Audio(savedMusic);
+      bgAudio = new Audio(music);
       bgAudio.loop = true;
       bgAudio.volume = 0;
     }
@@ -687,7 +681,7 @@ bgAudio.play().then(() => {
   const musicToggle = document.getElementById("musicToggle");
 
   musicToggle.onclick = () => {
-    if (!savedMusic) {
+    if (!music) {
       musicToggle.innerText = "🤍 No Music";
       return;
     }
@@ -794,34 +788,7 @@ function renderMessages() {
     .join("<br><br>");
 }
 
-if (items.length === 0) {
-  viewerMessage.innerText = "No candlelight moments yet 🤍";
-}
 
-// ✅ Default message section
-if (messages.length > 0) {
-  viewerMessage.innerHTML = messages
-    .map(m => `💌 ${m}`)
-    .join("<br><br>");
-} else if (items.length > 0) {
-  viewerMessage.innerText = items[0].memory || "A quiet feeling rests here 🤍";
-} else {
-  viewerMessage.innerText = "No candlelight moments yet 🤍";
-}
-
-grid.innerHTML = "";
-
-if(items.length === 0){
-  grid.innerHTML = `
-    <p style="grid-column:1/-1;text-align:center;opacity:.7;">
-      No moments added yet 🕯️
-    </p>
-  `;
-}
-
-
-// 👉 separate videos and images
-const videos = items.filter(item => item.type === "video");
 const images = items.filter(item => item.type !== "video");
 
 // 👉 combine: videos first, then images
