@@ -967,11 +967,16 @@ zoomOverlay.addEventListener("click", (e) => {
   if (e.target === zoomOverlay) closeZoom();
 });
 
-document.getElementById("musicPanel").addEventListener("click", (e) => {
-  if (e.target.id === "musicPanel") {
-    closeMusic();
-  }
-});
+const musicPanel = document.getElementById("musicPanel");
+
+if (musicPanel) {
+  musicPanel.addEventListener("click", (e) => {
+    if (e.target.id === "musicPanel") {
+      closeMusic();
+    }
+  });
+}
+  
 
 function loadMessages(){
   const viewerBox = document.getElementById("viewerMessage");
@@ -1042,9 +1047,7 @@ async function loadViewerData() {
       data = result.data || [];
       messages = result.messages || "";
       music = result.music || "";
-      password = result.password || "";
-
-      PASS = password;
+      PASS = result.password || "";
 
       document.getElementById("passwordOverlay").style.display = "flex";
 
