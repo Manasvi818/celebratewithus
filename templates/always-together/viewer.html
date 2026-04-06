@@ -875,8 +875,30 @@ function downloadViewer() {
   const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
   const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
 
- const coupon = localStorage.getItem(`coupon_${projectId}`) || "";
-const discount = localStorage.getItem(`discount_${projectId}`) || 0;
+ let coupon = "";
+let discount = 0;
+
+// ✅ Only show coupon if explicitly passed from backend (recommended)
+// OR if exists AND valid
+
+const storedCoupon = localStorage.getItem(`coupon_${projectId}`);
+const storedDiscount = localStorage.getItem(`discount_${projectId}`);
+
+if (storedCoupon && storedDiscount && Number(storedDiscount) > 0) {
+  coupon = storedCoupon;
+  discount = Number(storedDiscount);
+} else {
+  coupon = "No Coupon Applied";
+  discount = 0;
+}
+
+if (couponApplied === true) {
+  localStorage.setItem(`coupon_${projectId}`, coupon);
+  localStorage.setItem(`discount_${projectId}`, discount);
+} else {
+  localStorage.removeItem(`coupon_${projectId}`);
+  localStorage.removeItem(`discount_${projectId}`);
+}
 
 if (!coupon || discount == 0) {
   document.getElementById("couponUsed").innerText = "No Coupon Applied";
