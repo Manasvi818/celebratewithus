@@ -65,7 +65,9 @@ document.addEventListener("DOMContentLoaded", () => {
             credentials: "include",
             body: JSON.stringify({
               ...response,
-              template: selectedTemplate
+              template: selectedTemplate,
+              coupon: localStorage.getItem("usedCoupon") || "N/A",
+              discount: localStorage.getItem("discount") || 0
             })
           });
 

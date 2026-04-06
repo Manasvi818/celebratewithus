@@ -581,7 +581,7 @@ try {
   const logoPath = path.join(process.cwd(), "styles/images/logo.png");
 
   if (fs.existsSync(logoPath)) {
-  doc.image(logoPath, 400, startY, { width: 110 });
+  doc.image(logoPath, 400, 120, { width: 110 });
   } else {
     console.log("Logo file NOT found at:", logoPath);
   }
@@ -599,8 +599,8 @@ let startY = 120;
 
     // 👤 CUSTOMER
     doc.fontSize(12).fillColor("#444")
-      .text(`Name: ${data.name}`)
-      .text(`Email: ${data.email}`);
+      .text(`Name: ${data.name || "Guest"}`)
+      .text(`Email: ${data.email || "guest@email.com"}`);
 
     doc.moveDown();
 
