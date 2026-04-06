@@ -580,7 +580,7 @@ async function generateInvoice(data) {
 try {
   const logoPath = path.join(__dirname, "../styles/images/logo.png");
 
-  doc.image(logoPath, 450, 30, { width: 100 });
+  doc.image(logoPath, 400, startY, { width: 110 });
 } catch (e) {
   console.log("Logo not found");
 }
@@ -588,12 +588,14 @@ try {
     // 🧾 TITLE
     doc.fontSize(20).fillColor("#333").text("INVOICE RECEIPT", { align: "center" });
 
-    doc.moveDown(2);
+    doc.moveDown(1);
+
+let startY = 120;
 
     // 👤 CUSTOMER
     doc.fontSize(12).fillColor("#444")
-      .text(`Name: ${data.name || "Guest"}`)
-      .text(`Email: ${data.email || "guest@email.com"}`);
+      .text(`Name: ${data.name}`)
+      .text(`Email: ${data.email}`);
 
     doc.moveDown();
 
@@ -624,22 +626,24 @@ doc.fillColor("#000"); // reset color
     doc.text(`Discount: ₹${safeDiscount}`);
     doc.text(`Final Amount Paid: ₹${finalAmount}`);
 
- doc.moveDown(1);
+ doc.moveDown(3);
 
-// 💰 TOTAL BOX BELOW FINAL AMOUNT
-doc.roundedRect(150, doc.y, 300, 50, 12).fill("#ffc0cb");
+// 💰 PINK BOX
+const boxY = doc.y;
 
+doc.roundedRect(150, boxY, 300, 60, 12).fill("#ffc0cb");
+
+// TEXT INSIDE BOX
 doc.fillColor("#000")
   .fontSize(16)
-  .text(`Total Paid: ₹${finalAmount}`, 200, doc.y - 35);
-
+  .text(`Total Paid: ₹${finalAmount}`, 200, boxY + 15);
     
 
-doc.moveDown();
+doc.moveDown(2);
 
 doc.fontSize(14)
   .fillColor("#555")
-  .text("Thank you for celebrating with us 💛", { align: "left" });
+  .text("Thank you for celebrating with us 💛", { align: "center" });
 
     doc.moveDown(4);
 
