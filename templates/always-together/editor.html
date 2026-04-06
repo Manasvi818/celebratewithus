@@ -655,7 +655,7 @@ function downloadViewer() {
   // ✅ Create invoice file
   const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
   const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
-  const coupon = localStorage.getItem("usedCoupon") || "No Coupon Applied";
+  const coupon = "No Coupon Applied";
   const content = `
 
 
@@ -749,7 +749,7 @@ function copyViewerLink() {
 
 </script>
 
-<div style="text-align:center; margin-top:30px;"<div style="
+<div style="text-align:center; margin-top:30px;"
   display:flex;
   justify-content:center;
   gap:12px;
