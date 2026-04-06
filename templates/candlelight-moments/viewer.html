@@ -564,12 +564,6 @@ body::before{
   </div>
 </section>
 
-<section class="message-box">
-  <div class="pink-msg-box" id="viewerMessage">
-    A quiet feeling rests here 🤍
-  </div>
-</section>
-
 <!-- TOP CONTROL BOX -->
 <div id="topControls">
 
@@ -619,63 +613,55 @@ async function loadViewerData() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
- loadViewerData();
+  loadViewerData();
+});
+
+  let bgAudio = null;
+  let playing = false;
+
   /* 🔐 PASSWORD */
-    
+window.checkPassword = function () {
+  const input = document.getElementById("passInput").value;
+
+  if (!PASS || PASS === "") {
+    document.getElementById("lockScreen").style.display = "none";
+    return;
+  }
 
   if (input === PASS) {
     document.getElementById("lockScreen").style.display = "none";
 
-    if (music) playMusic();
+    // ✅ MOVE MUSIC HERE
+    if (music) {
+      if (!bgAudio) {
+        bgAudio = new Audio(music);
+        bgAudio.loop = true;
+        bgAudio.volume = 0;
+      }
+
+      bgAudio.play().then(() => {
+        playing = true;
+        document.getElementById("musicToggle").innerText = "⏸ Music";
+
+        let vol = 0;
+        const fade = setInterval(() => {
+          if (vol >= 0.6) clearInterval(fade);
+          else {
+            vol += 0.05;
+            bgAudio.volume = vol;
+          }
+        }, 100);
+      }).catch(() => {
+        console.log("Autoplay blocked");
+      });
+    }
+
   } else {
     document.getElementById("wrongPass").style.display = "block";
   }
 };
 
-  let bgAudio = null;
-  let playing = false;
-
-  window.checkPassword = function () {
-  const input = document.getElementById("passInput").value;
-
-  if (!savedPass || savedPass === "") {
-    document.getElementById("lockScreen").style.display = "none";
-    return;
-  }
-
-  if (input === savedPass) {
-  document.getElementById("lockScreen").style.display = "none";
-
-  // 👉 AUTO PLAY MUSIC AFTER UNLOCK
-  if (savedMusic) {
-    if (!bgAudio) {
-      bgAudio = new Audio(music);
-      bgAudio.loop = true;
-      bgAudio.volume = 0;
-    }
-
-   
-bgAudio.play().then(() => {
-  playing = true;
-  document.getElementById("musicToggle").innerText = "⏸ Music";
-
-  // 👉 FADE-IN EFFECT
-  let vol = 0;
-  const fade = setInterval(() => {
-    if (vol >= 0.6) {
-      clearInterval(fade);
-    } else {
-      vol += 0.05;
-      bgAudio.volume = vol;
-    }
-  }, 100);
-
-}).catch(() => {
-  console.log("Autoplay blocked by browser");
-});
-  }
-
-  }}
+  
 
   /* 🎶 MUSIC */
   const musicToggle = document.getElementById("musicToggle");
@@ -687,7 +673,7 @@ bgAudio.play().then(() => {
     }
 
     if (!bgAudio) {
-      bgAudio = new Audio(savedMusic);
+      bgAudio = new Audio(music);
       bgAudio.loop = true;
       bgAudio.volume = 0.6;
     }
@@ -789,62 +775,7 @@ function renderMessages() {
 }
 
 
-const images = items.filter(item => item.type !== "video");
 
-// 👉 combine: videos first, then images
-const sortedItems = [...videos, ...images];
-
-// 👉 render in new order
-sortedItems.forEach((item, index) => {
-
-  const card = document.createElement("div");
-  card.className = item.type === "video" ? "card video" : "card";
-
-  let media;
-  if (item.type === "video") {
-    media = document.createElement("video");
-    media.src = item.url;
-    media.controls = true;
-  } else {
-    media = document.createElement("img");
-    media.src = item.url;
-  }
-
-  media.onclick = () => {
-    if(item.type !== "video"){
-      openZoom(item.url, item.caption);
-    }
-
-    viewerMessage.style.opacity = 0;
-
-    setTimeout(() => {
-      viewerMessage.innerText =
-        item.memory || messages[index] || messages[0] || "A quiet feeling rests here 🤍";
-      viewerMessage.style.opacity = 1;
-    }, 200);
-  };
-
-  card.appendChild(media);
-
-  if (item.caption && item.caption.trim() !== "") {
-    const cap = document.createElement("div");
-    cap.className = "caption";
-    cap.innerText = item.caption;
-    card.appendChild(cap);
-  }
-
-  if (item.memory && item.memory.trim() !== "") {
-    const mem = document.createElement("div");
-    mem.className = "caption";
-    mem.style.opacity = "0.95";
-    mem.style.fontStyle = "normal";
-    mem.style.color = "#ffe8c8";
-    mem.innerText = item.memory;
-    card.appendChild(mem);
-  }
-
-  grid.appendChild(card);
-});
 
   /* ✨ SPARKLES */
   let sparkleOn = false;
@@ -967,7 +898,7 @@ document.addEventListener("keydown", (e) => {
     setTimeout(() => word.remove(), 10000);
   }, 5000);
 
-});
+
 
 
 </script>
