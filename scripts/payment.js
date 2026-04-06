@@ -72,10 +72,16 @@ const projectId = "proj_" + Date.now();
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      projectId,
-      coupon,
-      discount,
-      amount: 149
+     body: JSON.stringify({
+  razorpay_payment_id: response.razorpay_payment_id,
+  razorpay_order_id: response.razorpay_order_id,
+  razorpay_signature: response.razorpay_signature,
+
+  projectId,
+  coupon,
+  discount,
+  amount: 149
+})
     })
   });
 
