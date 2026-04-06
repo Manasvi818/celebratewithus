@@ -329,6 +329,8 @@ function uploadLocal(e){
  r.readAsDataURL(f);
 }
 
+
+
 /* messages */
 function loadMessages(){
   let txt = localStorage.getItem(MSG_KEY) || "";
@@ -446,15 +448,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // EXISTING CODE
   loadFromDB();  
 
-  function waitForCloudinary(){
-    if (typeof cloudinary !== "undefined") {
-      initWidget();
-    } else {
-      setTimeout(waitForCloudinary, 200);
-    }
-  }
-
-  waitForCloudinary();
+  
 });
 
 async function savePass(){
@@ -468,6 +462,10 @@ async function savePass(){
 async function saveMessages(){
   await autoSave();   // 🔥 IMPORTANT
   alert("Messages saved with love 💗");
+}
+
+function initWidget(){
+  console.log("Cloudinary ready");
 }
 
 function openWidget(type) {
