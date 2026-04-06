@@ -642,7 +642,7 @@ const boxY = doc.y;
 const boxX = 150;
 const boxWidth = 300;
 
-doc.roundedRect(boxX, boxY, boxWidth, 60, 12).fill("#ffc0cb");
+doc.roundedRect(boxX, boxY, boxWidth, 60, 12).fill("#F4C2C2");
 
 // ✅ CENTER TEXT INSIDE BOX
 doc.fillColor("#000")
