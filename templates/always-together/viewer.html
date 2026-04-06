@@ -875,7 +875,16 @@ function downloadViewer() {
   const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
   const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
 
-  const coupon = localStorage.getItem("usedCoupon") || "N/A";
+ const coupon = localStorage.getItem(`coupon_${projectId}`) || "";
+const discount = localStorage.getItem(`discount_${projectId}`) || 0;
+
+if (!coupon || discount == 0) {
+  document.getElementById("couponUsed").innerText = "No Coupon Applied";
+  document.getElementById("discount").innerText = "0";
+} else {
+  document.getElementById("couponUsed").innerText = coupon;
+  document.getElementById("discount").innerText = discount;
+}
 
   const invoiceContent = `
     CelebrateWithUs - Invoice Receipt
