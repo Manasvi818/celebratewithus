@@ -79,7 +79,16 @@ const projectId = "proj_" + Date.now();
     })
   });
 
-          const result = await invoiceRes.json();
+          let result;
+
+try {
+  result = await invoiceRes.json();
+} catch (e) {
+  const text = await invoiceRes.text();
+  console.error("NOT JSON RESPONSE:", text);
+  alert("Server error: invoice API not working");
+  return;
+}
 
           if (result.success && result.editLink) {
 
