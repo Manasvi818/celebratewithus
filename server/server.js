@@ -593,14 +593,14 @@ try {
 }
 
     // 🧾 TITLE
-    doc.fontSize(20).fillColor("#333").text("INVOICE RECEIPT", { align: "center" });
+    doc.fontSize(20).fillColor("#ffffff").text("INVOICE RECEIPT", { align: "center" });
 
     doc.moveDown(1);
 
 let startY = 120;
 
     // 👤 CUSTOMER
-    doc.fontSize(12).fillColor("#444")
+    doc.fontSize(12).fillColor("#ffffff")
       .text(`Name: ${data.name || "Guest"}`)
       .text(`Email: ${data.email || "guest@email.com"}`);
 
@@ -628,7 +628,7 @@ doc.fillColor("#ffffff"); // reset color
     doc.moveDown();
 
     // 💰 PAYMENT DETAILS
-    doc.fillColor("#000");
+    doc.fillColor("#ffffff");
     doc.text(`Coupon Used: ${data.coupon || "N/A"}`);
     doc.text(`Discount: ₹${safeDiscount}`);
     doc.text(`Final Amount Paid: ₹${finalAmount}`);
@@ -656,7 +656,7 @@ doc.fillColor("#ffffff")
 doc.moveDown(2);
 
 doc.fontSize(14)
-  .fillColor("#555")
+  .fillColor("#ec8989")
   .text("Thank you for celebrating with us 💛", { align: "left" });
 
     doc.moveDown(4);
