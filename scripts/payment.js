@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const BASE_URL = "https://celebratewithus.onrender.com";
   let finalAmount = 14900;
   let usedCoupon = null;
+let appliedCoupon = "";
+let appliedDiscount = 0;
 
   const payBtn = document.getElementById("rzpButton");
 
@@ -57,21 +59,25 @@ document.addEventListener("DOMContentLoaded", () => {
         name: "Celebratewithus",
         description: "Template Purchase ₹149",
 
-        handler: async function (response) {
+       handler: async function (response) {
 
-          const res = await fetch(`${BASE_URL}/verify-payment`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({
-              ...response,
-              template: selectedTemplate,
-              coupon: localStorage.getItem("usedCoupon") || "N/A",
-              discount: localStorage.getItem("discount") || 0
-            })
-          });
+  const coupon = appliedCoupon || "No Coupon Applied";
+  const discount = appliedDiscount || 0;
 
-          const result = await res.json();
+  const invoiceRes = await fetch(`${BASE_URL}/create-invoice`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      projectId,
+      coupon,
+      discount,
+      amount: 149
+    })
+  });
+
+          const result = await invoiceRes.json();
 
           if (result.success && result.editLink) {
 
@@ -130,12 +136,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       finalAmount = finalAmount - (finalAmount * data.discount / 100);
 
-      localStorage.setItem("discount", data.discount);
+      appliedCoupon = code;
+appliedDiscount = data.discount;
 
       document.getElementById("discountMsg").innerText =
         `Discount applied: ${data.discount}%`;
 
-      localStorage.setItem("usedCoupon", code);
+      
     } else {
       alert("Invalid or used coupon");
     }
