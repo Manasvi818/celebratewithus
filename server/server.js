@@ -670,7 +670,7 @@ doc.fillColor("#ffffff")
 doc.moveDown(2);
 
 doc.fontSize(14)
-  .fillColor("#ec8989")
+  .fillColor("#ffffff")
   .text("Thank you for celebrating with us 💛", { align: "left" });
 
     doc.moveDown(4);

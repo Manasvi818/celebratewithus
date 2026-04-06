@@ -256,25 +256,69 @@ input, textarea, select{
 </div>
 
 <script>
-/* SAME LOGIC AS BLUSH LOVE */
+async function loadFromDB() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
 
-const STORAGE_KEY="candle_gallery";
-const MSG_KEY="candle_messages";
-const MUSIC_KEY="candle_music";
+    if (result.success) {
+      items = result.data || [];
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
+      if (result.messages) {
+        localStorage.setItem(MSG_KEY, result.messages);
+      }
+
+      if (result.music) {
+        localStorage.setItem(MUSIC_KEY, result.music);
+      }
+
+      if (result.password) {
+        localStorage.setItem(`pass_${projectId}`, result.password);
+      }
+
+      render();
+    }
+  } catch (err) {
+    console.error("Load failed:", err);
+  }
+}
+
+const projectId = window.location.pathname.split("/").pop();
+
+const STORAGE_KEY = `project_${projectId}`;
+const MSG_KEY = `msg_${projectId}`;
+const MUSIC_KEY = `music_${projectId}`;
 
 window.addEventListener("load", () => {
-  items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  render();
+  loadFromDB();
 });
 
-function saveAll(){
+async function autoSave() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  console.log("Saved:", items);
 
-  function autoSave(){
-  localStorage.setItem("candle_gallery", JSON.stringify(items));
+  try {
+    await fetch("https://celebratewithus.onrender.com/save-project", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        projectId,
+        data: items,
+        messages: localStorage.getItem(MSG_KEY),
+        music: localStorage.getItem(MUSIC_KEY),
+        password: localStorage.getItem(`pass_${projectId}`)
+      })
+    });
+
+    console.log("Saved to DB");
+  } catch (err) {
+    console.error("Save failed:", err);
+  }
 }
-}
+
 function clearAll(){ items=[]; autoSave(); render(); }
 
 function render(){
@@ -349,6 +393,27 @@ function uploadLocal(e){
  r.readAsDataURL(f);
 }
 
+function initWidget(){
+  widget = cloudinary.createUploadWidget({
+    cloudName:"di8n4lsjz",
+    uploadPreset:"candlelight_moments",
+    folder:"candlelight_moments",
+    resourceType:"auto",
+    multiple:true
+  },(e,r)=>{
+    if(!e && r && r.event==="success"){
+      items.push({
+        url:r.info.secure_url,
+        type:r.info.resource_type,
+        caption:"",
+        memory:""
+      });
+      autoSave();
+      render();
+    }
+  });
+}
+
 /* messages */
 function loadMessages(){
  let txt=localStorage.getItem(MSG_KEY)||"";
@@ -367,12 +432,13 @@ function loadMessages(){
 }
 
 msgOpenBtn.onclick=()=>msgPopup.style.display="flex";
-msgSaveBtn.onclick=()=>{
+msgSaveBtn.onclick = async () => {
  let m=msgInput.value.trim(); if(!m) return;
  let old=localStorage.getItem(MSG_KEY)||"";
  localStorage.setItem(MSG_KEY, old?old+"\n---\n"+m:m);
  msgInput.value="";
  msgPopup.style.display="none";
+ await autoSave();
  loadMessages();
 };
 
@@ -410,8 +476,9 @@ function saveBgMusic(){
  setTimeout(()=>musicSavedMsg.style.display="none",1500);
 }
 
-function savePass(){
- localStorage.setItem("viewerPassword_candle",newPass.value);
+async function savePass(){
+ localStorage.setItem(`pass_${projectId}`, newPass.value);
+await autoSave();
  passSaved.style.display="block";
  setTimeout(()=>passSaved.style.display="none",1500);
 }
@@ -448,7 +515,137 @@ function openWidget(type){
 
 loadMessages();
 render();
+
+function downloadViewer() {
+  autoSave();
+
+  const template = window.location.pathname.split("/")[2];
+  const projectId = window.location.pathname.split("/").pop();
+
+  // ✅ Download viewer ZIP
+  window.open(`/download?template=${template}&projectId=${projectId}`);
+
+  // ✅ Create invoice file
+  const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
+  const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
+  const coupon = "No Coupon Applied";
+  const content = `
+
+
+<div style="font-family:Arial; padding:25px; background:#f3cdd3;">
+
+  <!-- LOGO -->
+  <div style="text-align:right;">
+    <img src="https://celebratewithus.co.in/styles/images/logo.png" 
+         style="width:70px; border-radius:10px;" />
+  </div>
+
+  <!-- TITLE -->
+  <h2 style="text-align:center; letter-spacing:2px;">INVOICE RECEIPT</h2>
+  <hr>
+
+  <!-- BASIC DETAILS -->
+  <p><strong>Project ID:</strong> ${projectId}</p>
+  <p><strong>Template:</strong> ${template}</p>
+
+  <!-- NEW COUPON -->
+  <p><strong>Next Coupon:</strong> ${localStorage.getItem("nextCoupon") || "N/A"}</p>
+
+  <!-- PRICE BOX -->
+  <div style="
+    background:#e8aab4;
+    padding:15px 20px;
+    border-radius:16px;
+    display:inline-block;
+    margin:15px 0;
+    font-size:18px;
+  ">
+    <strong>Total Paid: ₹149</strong>
+  </div>
+
+  <!-- LINKS -->
+  <p><strong>Viewer Link:</strong><br>${viewerURL}</p>
+  <p><strong>Editor Link:</strong><br>${editorURL}</p>
+
+  <!-- FINAL DETAILS -->
+  <p><strong>Coupon Used:</strong> ${coupon}</p>
+  <p><strong>Final Amount Paid:</strong> ₹149</p>
+
+  <!-- THANK YOU -->
+  <p style="margin-top:15px;">
+    Thank you for celebrating with us 💛
+  </p>
+
+</div>
+`;
+
+// create file properly
+const element = document.createElement("div");
+element.innerHTML = content;
+
+}
+async function goToViewer() {
+  await autoSave();   // 🔥 wait for DB save
+
+  const template = window.location.pathname.split("/")[2];
+  const projectId = window.location.pathname.split("/").pop();
+
+  window.location.href = `/viewer/${template}/${projectId}`;
+}
+
+// ✅ COPY VIEWER LINK
+function copyViewerLink() {
+  const viewerLink = window.location.href.replace("/editor/", "/viewer/");
+
+  navigator.clipboard.writeText(viewerLink)
+    .then(() => {
+      alert("🔗 Link copied! Share it 💖");
+    })
+    .catch(() => {
+      alert("Copy failed");
+    });
+}
+
+
+// ✅ DOWNLOAD INVOICE
+
+ function downloadInvoice() {
+  const invoicePath = localStorage.getItem("invoicePath");
+
+  if (!invoicePath) {
+    alert("Invoice not found ❌ Please complete payment first");
+    return;
+  }
+
+  window.open(`https://celebratewithus.co.in${invoicePath}`, "_blank");
+}
 </script>
+
+div style="text-align:center; margin-top:30px;"<div style="
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:30px;
+  flex-wrap:wrap;
+">
+
+  <button class="btn" onclick="goToViewer()">
+    💾 Save All & Show Viewer Page
+  </button>
+
+  <button class="btn" onclick="copyViewerLink()">
+  🔗 Copy Viewer Link
+</button>
+
+<button class="btn" onclick="downloadInvoice()">
+  📄 Download Invoice
+</button>
+
+  <p style="margin-top:12px; font-size:13px; color:#8a5a55;">
+    ⚠️ When you click on "Download Invoice", along with the billing you will get 
+    <b>Editor page link</b> and <b>Viewer page link</b>.
+  </p>
+
 <!-- FOOTER -->
 <footer class="site-footer">
   <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>

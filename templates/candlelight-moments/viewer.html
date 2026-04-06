@@ -586,15 +586,58 @@ body::before{
 <!-- sparkle layer -->
 <div id="sparkle-layer"></div>
 <script>
-  const STORAGE_KEY = "candle_gallery";
-const MSG_KEY = "candle_messages";
+const projectId = window.location.pathname.split("/").pop();
+
+let data = [];
+let messages = "";
+let music = "";
+let PASS = "";
+let isLoaded = false;
+
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      PASS = result.password || "";
+
+      isLoaded = true;
+
+      renderGallery();
+      renderMessages();
+      setupMusic();
+
+      document.getElementById("lockScreen").style.display = "flex";
+    }
+  } catch (err) {
+    console.error("Viewer load failed:", err);
+  }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
-
+ loadViewerData();
   /* 🔐 PASSWORD */
-  const savedPass = localStorage.getItem("viewerPassword_candle");
+ window.checkPassword = function () {
+  const input = document.getElementById("passInput").value;
 
-  const savedMusic = localStorage.getItem("candle_music");
+  if (!PASS || PASS === "") {
+    document.getElementById("lockScreen").style.display = "none";
+    return;
+  }
+
+  if (input === PASS) {
+    document.getElementById("lockScreen").style.display = "none";
+
+    if (music) playMusic();
+  } else {
+    document.getElementById("wrongPass").style.display = "block";
+  }
+};
+
   let bgAudio = null;
   let playing = false;
 
@@ -699,11 +742,57 @@ togglePass.onclick = () => {
 const grid = document.querySelector(".grid");
 const viewerMessage = document.getElementById("viewerMessage");
 
-const items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-const messages = (localStorage.getItem(MSG_KEY) || "")
-  .split("\n---\n")
-   .map(m => m.trim())
-  .filter(m => m.length > 0);
+function renderGallery() {
+  const grid = document.querySelector(".grid");
+  grid.innerHTML = "";
+
+  if (data.length === 0) {
+    grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;">No moments yet 🕯️</p>`;
+    return;
+  }
+
+  const videos = data.filter(x => x.type === "video");
+  const images = data.filter(x => x.type !== "video");
+
+  [...videos, ...images].forEach((item, index) => {
+    const card = document.createElement("div");
+    card.className = item.type === "video" ? "card video" : "card";
+
+    let media;
+    if (item.type === "video") {
+      media = document.createElement("video");
+      media.src = item.url;
+      media.controls = true;
+    } else {
+      media = document.createElement("img");
+      media.src = item.url;
+    }
+
+    card.appendChild(media);
+
+    if (item.caption) {
+      const cap = document.createElement("div");
+      cap.className = "caption";
+      cap.innerText = item.caption;
+      card.appendChild(cap);
+    }
+
+    grid.appendChild(card);
+  });
+}
+function renderMessages() {
+  const viewerMessage = document.getElementById("viewerMessage");
+
+  if (!messages || messages.trim() === "") {
+    viewerMessage.innerText = "A quiet feeling rests here 🤍";
+    return;
+  }
+
+  viewerMessage.innerHTML = messages
+    .split("\n---\n")
+    .map(m => `💌 ${m}`)
+    .join("<br><br>");
+}
 
 if (items.length === 0) {
   viewerMessage.innerText = "No candlelight moments yet 🤍";
