@@ -575,7 +575,7 @@ console.log("📄 Saving invoice at:", filePath);
     // 🎨 BACKGROUND
     doc.rect(0, 0, doc.page.width, doc.page.height).fill("#E89AC6");
     
-    doc.fillColor("#000000");   // 🔥 VERY IMPORTANT
+    doc.fillColor("#ffffff");   // 🔥 VERY IMPORTANT
     doc.moveDown(2);
 
     // 🧁 LOGO (top right)
@@ -618,7 +618,7 @@ let startY = 120;
 doc.text(`Next Coupon (for next purchase): ${data.nextCoupon || "N/A"}`);
     doc.moveDown();
 
-doc.fillColor("#000"); // reset color
+doc.fillColor("#ffffff"); // reset color
 
     doc.fillColor("#0000EE")
       .text(`Viewer Link: ${data.viewerLink}`, { link: data.viewerLink });
@@ -645,7 +645,7 @@ const boxWidth = 300;
 doc.roundedRect(boxX, boxY, boxWidth, 60, 12).fill("#FF6EC7");
 
 // ✅ CENTER TEXT INSIDE BOX
-doc.fillColor("#000")
+doc.fillColor("#ffffff")
   .fontSize(16)
   .text(`Total Paid: ₹${finalAmount}`, boxX, boxY + 20, {
     width: boxWidth,
