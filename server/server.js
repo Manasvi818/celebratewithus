@@ -571,7 +571,7 @@ async function generateInvoice(data) {
     const finalAmount = Math.max(0, baseAmount - safeDiscount);
 
     // 🎨 BACKGROUND
-    doc.rect(0, 0, doc.page.width, doc.page.height).fill("#f8d6df");
+    doc.rect(0, 0, doc.page.width, doc.page.height).fill("#E89AC6");
     
     doc.fillColor("#000000");   // 🔥 VERY IMPORTANT
     doc.moveDown(2);
