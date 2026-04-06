@@ -580,9 +580,14 @@ async function generateInvoice(data) {
 try {
   const logoPath = path.join(process.cwd(), "styles/images/logo.png");
 
+  if (fs.existsSync(logoPath)) {
   doc.image(logoPath, 400, startY, { width: 110 });
-} catch (e) {
-  console.log("Logo not found");
+  } else {
+    console.log("Logo file NOT found at:", logoPath);
+  }
+
+} catch (err) {
+  console.log("Logo error:", err.message);
 }
 
     // 🧾 TITLE
