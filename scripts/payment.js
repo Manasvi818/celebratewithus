@@ -75,6 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
            localStorage.setItem("nextCoupon", result.nextCoupon);
 
+           localStorage.setItem("invoicePath", result.invoice);
+
             // ✅ OPEN BACKEND INVOICE (BEST)
             if (result.invoice) {
               window.open(BASE_URL + result.invoice, "_blank");

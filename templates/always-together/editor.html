@@ -736,8 +736,15 @@ function copyViewerLink() {
 
 // ✅ DOWNLOAD INVOICE
 
-  function downloadInvoice() {
-  alert("Invoice is generated after payment only ✅");
+ function downloadInvoice() {
+  const invoicePath = localStorage.getItem("invoicePath");
+
+  if (!invoicePath) {
+    alert("Invoice not found ❌ Please complete payment first");
+    return;
+  }
+
+  window.open(`https://celebratewithus.co.in${invoicePath}`, "_blank");
 }
 
 </script>
