@@ -673,7 +673,7 @@ async function loadViewerData() {
       messages = result.messages || "";
       music = result.music || "";
       password = result.password || "";
-
+PASS = password;
 
 
       render();
@@ -986,9 +986,9 @@ function toggleMusic(){
 
 musicOpenBtn.onclick=()=> musicOverlay.style.display="flex";
 musicOverlay.onclick=e=>{ if(e.target===musicOverlay) musicOverlay.style.display="none"; 
-
-document.addEventListener("DOMContentLoaded", loadViewerData);
 };
+document.addEventListener("DOMContentLoaded", loadViewerData);
+
 </script>
 <!-- FOOTER -->
 <footer class="site-footer">
