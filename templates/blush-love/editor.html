@@ -239,6 +239,13 @@ h2,h3{
 
 <!-- SCRIPT -->
 <script>
+  let widget;   // ✅ ADD THIS
+  let items = [];
+
+  let messages = "";
+let music = "";
+let password = "";
+
 /* EVERYTHING SAME LOGIC AS YOUR ORIGINAL */
 const projectId = window.location.pathname.split("/").pop();
 
@@ -246,7 +253,7 @@ const STORAGE_KEY = `project_${projectId}`;
 const MSG_KEY = `msg_${projectId}`;
 const MUSIC_KEY = `music_${projectId}`;
 
-let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
 
 function saveAll(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
@@ -342,7 +349,7 @@ function loadMessages(){
     return;
   }
 
-  let messages = txt.split("\n---\n");
+  messages = txt.split("\n---\n");
 
   messages.forEach((msg, index) => {
     let div = document.createElement("div");
@@ -375,7 +382,7 @@ msgPopup.onclick=e=>{ if(e.target===msgPopup) msgPopup.style.display="none"; };
 
 async function deleteMsg(index){
   let txt = localStorage.getItem(MSG_KEY) || "";
-  let messages = txt.split("\n---\n");
+ messages = txt.split("\n---\n");
 
   messages.splice(index, 1);
 
@@ -385,20 +392,18 @@ async function deleteMsg(index){
   loadMessages();
 }
 
-async function editMsg(index){
-  let txt = localStorage.getItem(MSG_KEY) || "";
-  let messages = txt.split("\n---\n");
+function editMsg(index){
+  let arr = messages.split("\n---\n");
 
-  let updated = prompt("Edit your message 💗", messages[index]);
-
+  let updated = prompt("Edit message:", arr[index]);
   if(updated === null) return;
   if(updated.trim() === "") return;
 
-  messages[index] = updated.trim();
+  arr[index] = updated.trim();
 
-  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  messages = arr.join("\n---\n");
 
-  await autoSave();   // 🔥 ADD THIS
+  autoSave();
   loadMessages();
 }
 
@@ -419,7 +424,9 @@ function stopMusicPreview(){
 }
 function saveBgMusic() {
   const url = musicSelect.value;
-  localStorage.setItem(MUSIC_KEY, url || "");
+  music = url || "";
+localStorage.setItem(MUSIC_KEY, music);
+autoSave();
   document.getElementById("musicSavedMsg").style.display = "block";
   setTimeout(() => {
     document.getElementById("musicSavedMsg").style.display = "none";
@@ -459,6 +466,10 @@ async function savePass(){
  setTimeout(()=>passSaved.style.display="none",1500);
 }
 
+password = newPassword;
+localStorage.setItem(`pass_${projectId}`, password);
+await autoSave();
+
 async function saveMessages(){
   await autoSave();   // 🔥 IMPORTANT
   alert("Messages saved with love 💗");
@@ -492,7 +503,7 @@ autoSave();
   });
 }
 window.addEventListener("load", () => {
-  items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  
   render();
 });
 loadMessages();
@@ -504,6 +515,18 @@ async function loadFromDB() {
 
     if (result.success) {
       items = result.data || [];
+
+messages = result.messages || "";
+music = result.music || "";
+password = result.password || "";
+
+localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+localStorage.setItem(MSG_KEY, messages);
+localStorage.setItem(`music_${projectId}`, music);
+localStorage.setItem(`pass_${projectId}`, password);
+
+render();
+loadMessages();
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 

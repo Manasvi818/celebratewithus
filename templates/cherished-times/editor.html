@@ -279,6 +279,10 @@ body.night .site-footer{
 let widget;   // ✅ ADD THIS
   let items = [];
 
+  let messages = "";
+let music = "";
+let password = "";
+
   const projectId = window.location.pathname.split("/").pop();
 const STORAGE_KEY = `project_${projectId}`;
 
@@ -293,13 +297,7 @@ console.log("STORAGE KEY:", STORAGE_KEY);
     const result = await res.json();
 
     if (result.success) {
-      items = result.data || [];
-messages = result.messages || "";
-music = result.music || "";
-password = result.password || "";
-      console.log("✅ Loaded from DB");
-      render();
-loadMessages();     
+      
     }
 
   } catch (err) {
@@ -550,29 +548,26 @@ msgSaveBtn.onclick = ()=>{
 }
 
 function deleteMsg(index){
-  let txt = localStorage.getItem(MSG_KEY) || "";
-  let messages = txt.split("\n---\n");
+  let arr = messages.split("\n---\n");
 
-  messages.splice(index, 1);
+  arr.splice(index, 1);
 
-  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  messages = arr.join("\n---\n");
 
   autoSave();
-  
+  loadMessages();
 }
 
 function editMsg(index){
-  let txt = localStorage.getItem(MSG_KEY) || "";
-  let messages = txt.split("\n---\n");
+  let arr = messages.split("\n---\n");
 
-  let updated = prompt("Edit message:", messages[index]);
+  let updated = prompt("Edit message:", arr[index]);
   if(updated === null) return;
+  if(updated.trim() === "") return;
 
-  if(updated.trim()==="") return;
+  arr[index] = updated.trim();
 
-  messages[index] = updated.trim();
-
-  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  messages = arr.join("\n---\n");
 
   autoSave();
   loadMessages();
