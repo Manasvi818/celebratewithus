@@ -585,56 +585,45 @@ function downloadViewer() {
   // ✅ Create invoice file
   const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
   const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
-  const coupon = "No Coupon Applied";
-  const content = `
+  const nextCoupon = localStorage.getItem("nextCoupon") || "N/A";
+const couponUsed = localStorage.getItem("usedCoupon") || "None";
+const discount = Number(localStorage.getItem("discount")) || 0;
 
+const basePrice = 149;
+const finalAmount = basePrice - discount;
 
-<div style="font-family:Arial; padding:25px; background:#f3cdd3;">
+const content = `
+INVOICE RECEIPT
 
-  <!-- LOGO -->
-  <div style="text-align:right;">
-    <img src="https://celebratewithus.co.in/styles/images/logo.png" 
-         style="width:70px; border-radius:10px;" />
-  </div>
+Project ID: ${projectId}
+Template: ${template}
 
-  <!-- TITLE -->
-  <h2 style="text-align:center; letter-spacing:2px;">INVOICE RECEIPT</h2>
-  <hr>
+----------------------------------
 
-  <!-- BASIC DETAILS -->
-  <p><strong>Project ID:</strong> ${projectId}</p>
-  <p><strong>Template:</strong> ${template}</p>
+Coupon Used: ${couponUsed}
+Discount: ₹${discount}
 
-  <!-- NEW COUPON -->
-  <p><strong>Next Coupon:</strong> ${localStorage.getItem("nextCoupon") || "N/A"}</p>
+Final Amount Paid: ₹${finalAmount}
 
-  <!-- PRICE BOX -->
-  <div style="
-    background:#e8aab4;
-    padding:15px 20px;
-    border-radius:16px;
-    display:inline-block;
-    margin:15px 0;
-    font-size:18px;
-  ">
-    <strong>Total Paid: ₹149</strong>
-  </div>
+----------------------------------
 
-  <!-- LINKS -->
-  <p><strong>Viewer Link:</strong><br>${viewerURL}</p>
-  <p><strong>Editor Link:</strong><br>${editorURL}</p>
+Next Coupon: ${nextCoupon}
 
-  <!-- FINAL DETAILS -->
-  <p><strong>Coupon Used:</strong> ${coupon}</p>
-  <p><strong>Final Amount Paid:</strong> ₹149</p>
+----------------------------------
 
-  <!-- THANK YOU -->
-  <p style="margin-top:15px;">
-    Thank you for celebrating with us 💛
-  </p>
+Viewer Link: ${viewerURL}
+Editor Link: ${editorURL}
 
-</div>
+Thank you for celebrating with us 💛
 `;
+
+const blob = new Blob([content], { type: "text/plain" });
+const link = document.createElement("a");
+
+link.href = URL.createObjectURL(blob);
+link.download = `invoice_${projectId}.txt`;
+
+link.click();
 
 // create file properly
 const element = document.createElement("div");
