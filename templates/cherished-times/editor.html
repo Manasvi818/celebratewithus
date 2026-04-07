@@ -171,7 +171,7 @@ body.night .site-footer{
 
 <div class="wrap">
 
-<h1>Cherished Time</h1>
+<h1>Cherished Times</h1>
 <h2>🌿 Save the moments that shaped you 🌿</h2>
 
 <!-- MUSIC -->
@@ -228,8 +228,8 @@ body.night .site-footer{
     <button class="btn ghost" onclick="stopMusicPreview()">⏸ Pause</button>
     <button class="btn" onclick="saveBgMusic()">💾 Save Music</button>
 
-    <button onclick="openWidget()">📸 Image</button>
-<button onclick="openWidget()">🎥 Video</button>
+    <button class="btn" onclick="openWidget()">📸 Image</button>
+<button class="btn" onclick="openWidget()">🎥 Video</button>
 
     <label class="btn ghost">
       Local Upload
@@ -460,15 +460,12 @@ async function autoSave() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        projectId,
-        data: items,
-        body: JSON.stringify({
   projectId,
   data: items,
   messages: messages,
   music: music,
   password: password
-})
+
       })
     });
 
@@ -539,23 +536,17 @@ msgOpenBtn.onclick = ()=>{
 
 msgSaveBtn.onclick = ()=>{
   let newMsg = document.getElementById("msgInput").value.trim();
-  if(newMsg === "") return;
+  if(!newMsg) return;
 
-  let txt = localStorage.getItem(MSG_KEY) || "";
-
-  let messages = txt ? txt.split("\n---\n") : [];
-
-if (!messages.includes(newMsg)) {
-  messages.push(newMsg);
-}
-
-localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  messages = messages
+    ? messages + "\n---\n" + newMsg
+    : newMsg;
 
   document.getElementById("msgInput").value = "";
   document.getElementById("msgPopup").style.display = "none";
 
-  autoSave();   // ✅ IMPORTANT (saves to DB)
-loadMessages();   // ✅ ADD THIS LINE
+  autoSave();
+  loadMessages();
 }
 
 function deleteMsg(index){

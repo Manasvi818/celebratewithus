@@ -626,15 +626,13 @@ function getSavedPass(){
   return localStorage.getItem(PASS_KEY);
 }
 
-function unlock(){
-  const entered = document.getElementById("pass").value.trim();
-  let PASS = "";
 
 function unlock(){
   const entered = document.getElementById("pass").value.trim();
 
   if(entered === PASS){
     passwordOverlay.style.display="none";
+    wrongPass.style.display="none";
 
     if(song){
       playMusic();
@@ -674,7 +672,7 @@ if(entered === saved){
 }
 document.getElementById("pass").addEventListener("keydown", (e)=>{
   if(e.key === "Enter") unlock();
-})};
+});
 
 
 /* ===========================
@@ -688,10 +686,7 @@ let messages = "";
 let music = "";
 let password = "";
 let PASS = "";   // 👈 IMPORTANT
-if (!isLoaded) {
-  alert("⏳ Wait...");
-  return;
-}
+
 
 async function loadViewerData() {
   try {
