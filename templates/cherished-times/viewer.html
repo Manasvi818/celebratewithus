@@ -617,15 +617,12 @@ body.night .site-footer{
 </div>
 
 <script>
+
 /* ===========================
    PASSWORD
 =========================== */
-const PASS_KEY = "viewerPassword_cherishedTimes";
 
-function getSavedPass(){
-  return localStorage.getItem(PASS_KEY);
-}
-
+let PASS = "";
 
 function unlock(){
   const entered = document.getElementById("pass").value.trim();
@@ -642,38 +639,16 @@ function unlock(){
   }
 }
 
-  // If no password is set in editor
-  if(!saved){
-    alert("No password is set yet! Please set it in the Editor page first.");
-    return;
-  }
+// Enter key support
+document.addEventListener("DOMContentLoaded", () => {
+  const passInput = document.getElementById("pass");
 
-if(entered === saved){
-
-  passwordOverlay.style.display="none";
-  wrongPass.style.display="none";
-
-  // 👉 AUTO START MUSIC AFTER UNLOCK
-  if(song){
-    if(!bgAudio){
-      bgAudio = new Audio(song);
-      bgAudio.loop = true;
-      bgAudio.volume = 0.6;
-    }
-
-    bgAudio.play().then(()=>{
-      isPlaying = true;
-      document.getElementById("musicBtn").textContent = "⏸ Pause Music";
-    }).catch(()=>{
-      console.log("Autoplay blocked");
+  if(passInput){
+    passInput.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter") unlock();
     });
   }
-
-}
-document.getElementById("pass").addEventListener("keydown", (e)=>{
-  if(e.key === "Enter") unlock();
 });
-
 
 /* ===========================
    DATA
@@ -685,8 +660,8 @@ let data = [];
 let messages = "";
 let music = "";
 let password = "";
-let PASS = "";   // 👈 IMPORTANT
-
+ PASS = password;        // ✅ THIS LINE YOU ASKED ABOUT
+      let isLoaded = false;
 
 async function loadViewerData() {
   try {
@@ -699,8 +674,7 @@ async function loadViewerData() {
       music = result.music || "";
       password = result.password || "";
 
- PASS = password;        // ✅ THIS LINE YOU ASKED ABOUT
-      isLoaded = true;
+
 
       render();
       loadMessages();
@@ -713,8 +687,6 @@ async function loadViewerData() {
     console.error("Viewer load failed:", err);
   }
 }
-
-document.addEventListener("DOMContentLoaded", loadViewerData);
 
 function optimizeCloudinaryUrl(url, width = 500) {
   if (!url || !url.includes("res.cloudinary.com")) return url;
