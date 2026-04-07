@@ -307,9 +307,9 @@ async function autoSave() {
       body: JSON.stringify({
         projectId,
         data: items,
-        messages: localStorage.getItem(MSG_KEY),
-        music: localStorage.getItem(MUSIC_KEY),
-        password: localStorage.getItem(`pass_${projectId}`)
+        messages: messages,
+music: music,
+password: password
       })
     });
 

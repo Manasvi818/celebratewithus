@@ -228,8 +228,8 @@ body.night .site-footer{
     <button class="btn ghost" onclick="stopMusicPreview()">⏸ Pause</button>
     <button class="btn" onclick="saveBgMusic()">💾 Save Music</button>
 
-    <button class="btn" onclick="openWidget('image')">📸 Image</button>
-    <button class="btn" onclick="openWidget('video')">🎥 Video</button>
+    <button onclick="openWidget()">📸 Image</button>
+<button onclick="openWidget()">🎥 Video</button>
 
     <label class="btn ghost">
       Local Upload
@@ -294,26 +294,12 @@ console.log("STORAGE KEY:", STORAGE_KEY);
 
     if (result.success) {
       items = result.data || [];
-
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-
-      if (result.messages) {
-  localStorage.setItem(MSG_KEY, result.messages);
-}
-
-if (result.music) {
-  localStorage.setItem(`music_${projectId}`, result.music);
-}
-
-if (result.password) {
-  localStorage.setItem(`pass_${projectId}`, result.password);
-}
-
+messages = result.messages || "";
+music = result.music || "";
+password = result.password || "";
       console.log("✅ Loaded from DB");
-
       render();
-    
-      
+loadMessages();     
     }
 
   } catch (err) {
@@ -341,7 +327,6 @@ const MSG_KEY = `msg_${projectId}`;
 
 /* Render Media */
 function render(){
-  items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
   let box = document.getElementById("mediaGrid");
   box.innerHTML = "";
@@ -477,9 +462,13 @@ async function autoSave() {
       body: JSON.stringify({
         projectId,
         data: items,
-        messages: localStorage.getItem(MSG_KEY),
-music: localStorage.getItem(`music_${projectId}`),
-password: localStorage.getItem(`pass_${projectId}`)
+        body: JSON.stringify({
+  projectId,
+  data: items,
+  messages: messages,
+  music: music,
+  password: password
+})
       })
     });
 
@@ -504,7 +493,8 @@ async function savePass(){
     return;
   }
 
-  localStorage.setItem(`pass_${projectId}`, newPassword);
+  password = newPassword;
+await autoSave();
 
   passSaved.style.display="block";
   setTimeout(()=>passSaved.style.display="none",1500);
@@ -517,23 +507,15 @@ async function savePass(){
 
 /* ===== MESSAGE SYSTEM ===== */
 function loadMessages(){
-let txt = localStorage.getItem(MSG_KEY) || "";
-
-if(!txt){
-  allMessagesBox.innerText = "(No love letters yet)";
-  return;
-}
   let box = document.getElementById("allMessagesBox");
   box.innerHTML = "";
 
-  if(txt.trim()===""){
+  if(!messages.trim()){
     box.innerText = "(No messages yet)";
     return;
   }
 
-  let messages = txt.split("\n---\n");
-
-  messages.forEach((msg, index)=>{
+  messages.split("\n---\n").forEach((msg, index)=>{
     let div = document.createElement("div");
     div.className = "singleMessage";
 
@@ -645,7 +627,8 @@ function stopMusicPreview() {
 // Save selected music
 function saveBgMusic() {
   const url = musicSelect.value;
-  localStorage.setItem(MUSIC_KEY, url || "");
+  music = url || "";
+autoSave();
   document.getElementById("musicSavedMsg").style.display = "block";
   setTimeout(() => {
     document.getElementById("musicSavedMsg").style.display = "none";
