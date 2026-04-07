@@ -271,7 +271,6 @@ if (result.password) {
 
       render();
     
-      
     }
 
   } catch (err) {
@@ -294,9 +293,6 @@ if (result.password) {
 
 const MSG_KEY = `msg_${projectId}`;
 
-
-
-
 /* Render Media */
 function render(){
   items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
@@ -313,7 +309,7 @@ function render(){
     if(obj.type === "video"){
       el = document.createElement("video");
       el.src = optimizeCloudinaryUrl(obj.url, 400);
-el.loading = "lazy";
+      el.loading = "lazy";
       el.controls = true;
     } else {
       el = document.createElement("img");

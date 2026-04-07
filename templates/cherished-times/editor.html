@@ -276,204 +276,548 @@ body.night .site-footer{
 </div>
 
 <script>
+let widget;   // ✅ ADD THIS
+  let items = [];
 
-/* STORAGE KEYS */
-const STORAGE_KEY="cherished_gallery";
-const MSG_KEY="cherished_messages";
-const MUSIC_KEY="cherished_music";
+  const projectId = window.location.pathname.split("/").pop();
+const STORAGE_KEY = `project_${projectId}`;
 
-let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+console.log("PROJECT ID:", projectId);
+console.log("STORAGE KEY:", STORAGE_KEY);
 
-function saveAll(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  console.log("Saved data:", items);
+  async function loadFromDB() {
+
+
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      items = result.data || [];
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
+      if (result.messages) {
+  localStorage.setItem(MSG_KEY, result.messages);
 }
 
-function autoSave(){
-  localStorage.setItem("cherished_gallery", JSON.stringify(items));
+if (result.music) {
+  localStorage.setItem(`music_${projectId}`, result.music);
 }
 
-function clearAll(){ items=[]; autoSave(); render(); }
+if (result.password) {
+  localStorage.setItem(`pass_${projectId}`, result.password);
+}
 
+      console.log("✅ Loaded from DB");
+
+      render();
+    
+      
+    }
+
+  } catch (err) {
+    console.error("❌ Load failed:", err);
+  }
+}
+
+  function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  if (url.includes("/upload/f_auto")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
+
+/* Keys */
+
+const MSG_KEY = `msg_${projectId}`;
+
+
+
+
+/* Render Media */
 function render(){
-  mediaGrid.innerHTML = "";
+  items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
-  items.forEach((o, i) => {
+  let box = document.getElementById("mediaGrid");
+  box.innerHTML = "";
+
+  items.forEach((obj,i)=>{
     const d = document.createElement("div");
     d.className = "card";
 
     let el;
-    if (o.type === "video") {
+
+    if(obj.type === "video"){
       el = document.createElement("video");
-      el.src = o.url;
-      el.controls = true;
-    } else if (o.type === "audio") {
-      el = document.createElement("audio");
-      el.src = o.url;
+      el.src = optimizeCloudinaryUrl(obj.url, 400);
+      el.loading = "lazy";
       el.controls = true;
     } else {
       el = document.createElement("img");
-      el.src = o.url;
+      el.src = optimizeCloudinaryUrl(obj.url, 400);
+el.loading = "lazy";
     }
 
-    // Caption
+    el.onclick = () => preview(obj);
+
     const inp = document.createElement("input");
+    inp.type = "text";
     inp.placeholder = "Caption...";
-    inp.value = o.caption || "";
+    inp.value = obj.caption;
+
     inp.onchange = e => {
-      o.caption = e.target.value;
+      obj.caption = e.target.value;
       autoSave();
     };
 
-    // ✅ Message (THIS is what viewer reads)
-    const msg = document.createElement("textarea");
-    msg.placeholder = "Write a memory for this photo...";
-    msg.value = o.message || "";
-    msg.style.marginTop = "8px";
-    msg.onchange = e => {
-      o.message = e.target.value;
-      autoSave();
-    };
-
-    // Delete
     const del = document.createElement("button");
     del.textContent = "Delete";
     del.className = "btn ghost";
-    del.onclick = () => {
-      items.splice(i, 1);
+    del.style.marginTop = "4px";
+
+    del.onclick = ()=>{
+      items.splice(i,1);
       autoSave();
-      render();
     };
 
-    d.append(el, inp, msg, del);
-    mediaGrid.appendChild(d);
+    d.appendChild(el);
+    d.appendChild(inp);
+    d.appendChild(del);
+
+    box.appendChild(d);
+  });
+}
+
+/* Preview */
+function preview(obj){
+  const img = document.getElementById("previewImg");
+  const vid = document.getElementById("previewVideo");
+
+  img.style.display = "none";
+  vid.style.display = "none";
+
+  if(obj.type === "video"){
+    vid.src = optimizeCloudinaryUrl(obj.url, 800);
+    vid.style.display = "block";
+  } else {
+    img.src = optimizeCloudinaryUrl(obj.url, 800);
+    img.style.display = "block";
+  }
+
+  document.getElementById("previewCap").innerText = obj.caption || "";
+}
+
+
+function initWidget(){
+  widget = cloudinary.createUploadWidget({
+    cloudName: "di8n4lsjz",
+    uploadPreset: "cherished_times",
+    folder: "cherished_times",
+    resourceType: "auto",
+    multiple: true
+  }, (error, result) => {
+    if (!error && result && result.event === "success") {
+      items.push({
+        url: optimizeCloudinaryUrl(result.info.secure_url, 500),
+        type: result.info.resource_type,
+        caption: ""
+      });
+      autoSave();
+      render();
+    }
+  });
+}
+
+/* Cloudinary Upload */
+function openWidget(){
+  if(!widget){
+    document.body.style.cursor = "wait"; // loader feel
+    setTimeout(() => {
+      document.body.style.cursor = "default";
+    }, 1000);
+
+    alert("Opening uploader...");
+    return;
+  }
+
+  widget.open();
+}
+
+
+/* Local Upload */
+function uploadLocal(e){
+ const file=e.target.files[0]; if(!file) return;
+ const r=new FileReader();
+ r.onload=v=>{
+  let type=file.type.includes("video")?"video": "image";
+  items.push({url:v.target.result,type,caption:""});
+  autoSave();
+  render(); 
+ }
+ r.readAsDataURL(file);
+}
+
+/* Save */
+async function autoSave() {
+  // 1. Save locally
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
+  // 2. Save to MongoDB
+  try {
+    await fetch("https://celebratewithus.onrender.com/save-project", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        projectId,
+        data: items,
+        messages: localStorage.getItem(MSG_KEY),
+music: localStorage.getItem(`music_${projectId}`),
+password: localStorage.getItem(`pass_${projectId}`)
+      })
+    });
+
+    console.log("✅ Saved to DB");
+
+  } catch (err) {
+    console.error("❌ DB Save failed:", err);
+  }
+}
+
+
+
+/* Delete */
+function clearAll(){ items=[]; autoSave(); render(); }
+
+/* Password */
+async function savePass(){
+  const newPassword = document.getElementById("newPass").value.trim();
+
+  if(!newPassword){
+    alert("Enter password first");
+    return;
+  }
+
+  localStorage.setItem(`pass_${projectId}`, newPassword);
+
+  passSaved.style.display="block";
+  setTimeout(()=>passSaved.style.display="none",1500);
+
+  // 🔥 THIS IS THE REAL FIX
+  await autoSave();
+
+  console.log("✅ Password sent to DB:", newPassword);
+}
+
+/* ===== MESSAGE SYSTEM ===== */
+function loadMessages(){
+let txt = localStorage.getItem(MSG_KEY) || "";
+
+if(!txt){
+  allMessagesBox.innerText = "(No love letters yet)";
+  return;
+}
+  let box = document.getElementById("allMessagesBox");
+  box.innerHTML = "";
+
+  if(txt.trim()===""){
+    box.innerText = "(No messages yet)";
+    return;
+  }
+
+  let messages = txt.split("\n---\n");
+
+  messages.forEach((msg, index)=>{
+    let div = document.createElement("div");
+    div.className = "singleMessage";
+
+    div.innerHTML = `
+      <div class="msgText">${msg}</div>
+      <div class="msgBtns">
+        <button onclick="editMsg(${index})">✏️</button>
+        <button onclick="deleteMsg(${index})">🗑️</button>
+      </div>
+    `;
+
+    box.appendChild(div);
   });
 }
 
 
 
-/* uploads */
-function uploadLocal(e){
- let f=e.target.files[0];
- if(!f) return;
- let r=new FileReader();
- r.onload=x=>{
-  let t = f.type.startsWith("video")
-  ? "video"
-  : f.type.startsWith("audio")
-  ? "audio"
-  : "image";
-  items.push({url:x.target.result,type:t,caption:""});
-  autoSave();render(); 
- };
- r.readAsDataURL(f);
+msgOpenBtn.onclick = ()=>{
+ document.getElementById("msgPopup").style.display="flex";
 }
 
-/* messages */
-function loadMessages(){
- let txt=localStorage.getItem(MSG_KEY)||"";
- allMessagesBox.innerHTML="";
- if(!txt.trim()){ allMessagesBox.innerText="(No memories yet)"; return; }
- txt.split(/\r?\n\s*---\s*\r?\n/).forEach((m,i)=>{
-   let d=document.createElement("div");
-   d.className="singleMessage";
-   d.innerHTML=`<div>${m}</div>
-   <div class="msgBtns">
-     <button onclick="editMsg(${i})">✏️</button>
-     <button onclick="deleteMsg(${i})">🗑️</button>
-   </div>`;
-   allMessagesBox.appendChild(d);
- });
+msgSaveBtn.onclick = ()=>{
+  let newMsg = document.getElementById("msgInput").value.trim();
+  if(newMsg === "") return;
+
+  let txt = localStorage.getItem(MSG_KEY) || "";
+
+  let messages = txt ? txt.split("\n---\n") : [];
+
+if (!messages.includes(newMsg)) {
+  messages.push(newMsg);
 }
 
-msgOpenBtn.onclick=()=>msgPopup.style.display="flex";
-msgSaveBtn.onclick=()=>{
- let m=msgInput.value.trim(); if(!m) return;
- let old=localStorage.getItem(MSG_KEY)||"";
- localStorage.setItem(MSG_KEY, old?old+"\n---\n"+m:m);
- msgInput.value="";
- msgPopup.style.display="none";
- loadMessages();
+localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+
+  document.getElementById("msgInput").value = "";
+  document.getElementById("msgPopup").style.display = "none";
+
+  autoSave();   // ✅ IMPORTANT (saves to DB)
+loadMessages();   // ✅ ADD THIS LINE
+}
+
+function deleteMsg(index){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let messages = txt.split("\n---\n");
+
+  messages.splice(index, 1);
+
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+
+  autoSave();
+  
+}
+
+function editMsg(index){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let messages = txt.split("\n---\n");
+
+  let updated = prompt("Edit message:", messages[index]);
+  if(updated === null) return;
+
+  if(updated.trim()==="") return;
+
+  messages[index] = updated.trim();
+
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+
+  autoSave();
+  loadMessages();
+}
+msgPopup.onclick = e=>{
+  if(e.target === msgPopup){
+    msgPopup.style.display="none";
+  }
 };
 
-msgPopup.onclick=e=>{ if(e.target===msgPopup) msgPopup.style.display="none"; };
+/* ===== BACKGROUND MUSIC SYSTEM ===== */
+let previewAudio = null;
+const MUSIC_KEY = `music_${projectId}`;
 
-function deleteMsg(i){
- let a=(localStorage.getItem(MSG_KEY)||"").split(/\r?\n\s*---\s*\r?\n/)
- a.splice(i,1);
- localStorage.setItem(MSG_KEY,a.join("\n---\n"));
- loadMessages();
-}
-function editMsg(i){
- let a=(localStorage.getItem(MSG_KEY)||"").split(/\r?\n\s*---\s*\r?\n/)
- let u=prompt("Edit memory",a[i]);
- if(u){ a[i]=u.trim(); localStorage.setItem(MSG_KEY,a.join("\n---\n")); loadMessages(); }
+const musicSelect = document.getElementById("bgMusicSelect");
+
+// Load saved music
+const savedMusic = localStorage.getItem(MUSIC_KEY);
+if (savedMusic) {
+  musicSelect.value = savedMusic;
 }
 
-/* music */
-let previewAudio=null;
-bgMusicSelect.value=localStorage.getItem(MUSIC_KEY)||"";
+// Play preview (user gesture safe)
+function playMusicPreview() {
+  const url = musicSelect.value;
+  if (!url) return alert("Please select a song first 🎵");
 
-function playMusicPreview(){
- if(!bgMusicSelect.value) return;
- stopMusicPreview();
- previewAudio=new Audio(bgMusicSelect.value);
- previewAudio.volume=.6;
- previewAudio.play();
-}
-function stopMusicPreview(){
- if(previewAudio){ previewAudio.pause(); previewAudio=null; }
-}
-function saveBgMusic(){
- localStorage.setItem(MUSIC_KEY,bgMusicSelect.value||"");
- musicSavedMsg.style.display="block";
- setTimeout(()=>musicSavedMsg.style.display="none",1500);
+  stopMusicPreview();
+  previewAudio = new Audio(url);
+  previewAudio.volume = 0.6;
+  previewAudio.play();
 }
 
-function savePass(){
-  const passBox = document.getElementById("newPass");
-  const value = passBox.value.trim();
+// Stop preview
+function stopMusicPreview() {
+  if (previewAudio) {
+    previewAudio.pause();
+    previewAudio.currentTime = 0;
+    previewAudio = null;
+  }
+}
 
-  if(!value){
-    alert("Please enter a password first!");
+// Save selected music
+function saveBgMusic() {
+  const url = musicSelect.value;
+  localStorage.setItem(MUSIC_KEY, url || "");
+  document.getElementById("musicSavedMsg").style.display = "block";
+  setTimeout(() => {
+    document.getElementById("musicSavedMsg").style.display = "none";
+  }, 1500);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadMessages();   // ✅ ADD HERE
+
+  // ✅ ADD THESE LINES HERE
+  const musicOverlay = document.getElementById("musicOverlay");
+  const musicOpenBtn = document.getElementById("musicOpenBtn");
+
+  if (musicOpenBtn && musicOverlay) {
+    musicOpenBtn.onclick = () => {
+      musicOverlay.style.display = "flex";
+    };
+
+    musicOverlay.onclick = (e) => {
+      if (e.target === musicOverlay) {
+        musicOverlay.style.display = "none";
+      }
+    };
+  }
+
+  // EXISTING CODE
+  loadFromDB();  
+
+  function waitForCloudinary(){
+    if (typeof cloudinary !== "undefined") {
+      initWidget();
+    } else {
+      setTimeout(waitForCloudinary, 200);
+    }
+  }
+
+  waitForCloudinary();
+});
+
+function downloadViewer() {
+  autoSave();
+
+  const template = window.location.pathname.split("/")[2];
+  const projectId = window.location.pathname.split("/").pop();
+
+  // ✅ Download viewer ZIP
+  window.open(`/download?template=${template}&projectId=${projectId}`);
+
+  // ✅ Create invoice file
+  const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
+  const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
+  const coupon = "No Coupon Applied";
+  const content = `
+
+
+<div style="font-family:Arial; padding:25px; background:#f3cdd3;">
+
+  <!-- LOGO -->
+  <div style="text-align:right;">
+    <img src="https://celebratewithus.co.in/styles/images/logo.png" 
+         style="width:70px; border-radius:10px;" />
+  </div>
+
+  <!-- TITLE -->
+  <h2 style="text-align:center; letter-spacing:2px;">INVOICE RECEIPT</h2>
+  <hr>
+
+  <!-- BASIC DETAILS -->
+  <p><strong>Project ID:</strong> ${projectId}</p>
+  <p><strong>Template:</strong> ${template}</p>
+
+  <!-- NEW COUPON -->
+  <p><strong>Next Coupon:</strong> ${localStorage.getItem("nextCoupon") || "N/A"}</p>
+
+  <!-- PRICE BOX -->
+  <div style="
+    background:#e8aab4;
+    padding:15px 20px;
+    border-radius:16px;
+    display:inline-block;
+    margin:15px 0;
+    font-size:18px;
+  ">
+    <strong>Total Paid: ₹149</strong>
+  </div>
+
+  <!-- LINKS -->
+  <p><strong>Viewer Link:</strong><br>${viewerURL}</p>
+  <p><strong>Editor Link:</strong><br>${editorURL}</p>
+
+  <!-- FINAL DETAILS -->
+  <p><strong>Coupon Used:</strong> ${coupon}</p>
+  <p><strong>Final Amount Paid:</strong> ₹149</p>
+
+  <!-- THANK YOU -->
+  <p style="margin-top:15px;">
+    Thank you for celebrating with us 💛
+  </p>
+
+</div>
+`;
+
+// create file properly
+const element = document.createElement("div");
+element.innerHTML = content;
+
+}
+async function goToViewer() {
+  await autoSave();   // 🔥 wait for DB save
+
+  const template = window.location.pathname.split("/")[2];
+  const projectId = window.location.pathname.split("/").pop();
+
+  window.location.href = `/viewer/${template}/${projectId}`;
+}
+
+// ✅ COPY VIEWER LINK
+function copyViewerLink() {
+  const viewerLink = window.location.href.replace("/editor/", "/viewer/");
+
+  navigator.clipboard.writeText(viewerLink)
+    .then(() => {
+      alert("🔗 Link copied! Share it 💖");
+    })
+    .catch(() => {
+      alert("Copy failed");
+    });
+}
+
+
+// ✅ DOWNLOAD INVOICE
+
+ function downloadInvoice() {
+  const invoicePath = localStorage.getItem("invoicePath");
+
+  if (!invoicePath) {
+    alert("Invoice not found ❌ Please complete payment first");
     return;
   }
 
-  localStorage.setItem("viewerPassword_cherishedTimes", value);
-
-  passSaved.style.display="block";
-  setTimeout(()=>passSaved.style.display="none",1500);
+  window.open(`https://celebratewithus.co.in${invoicePath}`, "_blank");
 }
 
-
-function saveMessages(){
- alert("Memories saved ✨");
-}
-
-function openWidget(type){
- cloudinary.openUploadWidget({
-  cloudName:"di8n4lsjz",
-  uploadPreset:"cherished_times",
-  folder:"cherished_times",
-  resourceType: "auto",
-  multiple:true
- },(e,r)=>{
-  if(!e && r && r.event==="success"){
-    items.push({
-      url:r.info.secure_url,
-      type:r.info.resource_type,
-      caption:""
-    });
-     autoSave()();render();
-  }
- });
-}
-window.addEventListener("load", () => {
-  items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  render();
-});
-loadMessages();
 </script>
+
+<div style="text-align:center; margin-top:30px;"
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:30px;
+  flex-wrap:wrap;
+">
+
+  <button class="btn" onclick="goToViewer()">
+    💾 Save All & Show Viewer Page
+  </button>
+
+  <button class="btn" onclick="copyViewerLink()">
+  🔗 Copy Viewer Link
+</button>
+
+<button class="btn" onclick="downloadInvoice()">
+  📄 Download Invoice
+</button>
+
+  <p style="margin-top:12px; font-size:13px; color:#8a5a55;">
+    ⚠️ When you click on "Download Invoice", along with the billing you will get 
+    <b>Editor page link</b> and <b>Viewer page link</b>.
+  </p>
+
+</div>
+
 <!-- FOOTER -->
 <footer class="site-footer">
   <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
