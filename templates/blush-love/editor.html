@@ -664,14 +664,8 @@ function copyViewerLink() {
 
   const fullURL = `https://celebratewithus.co.in${invoicePath}`;
 
-  fetch(fullURL)
-    .then(res => {
-      if (!res.ok) throw new Error("Not found");
-      window.open(fullURL, "_blank");
-    })
-    .catch(() => {
-      alert("Invoice file missing on server ❌");
-    });
+  // ✅ NO FETCH
+  window.open(fullURL, "_blank");
 }
 
 </script>
