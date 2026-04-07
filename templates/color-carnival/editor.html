@@ -362,7 +362,6 @@ function render(){
   items.forEach((o, i) => {
     const d = document.createElement("div");
     d.className = "card";
-el.onclick = () => preview(o);
 
     let el;
     if (o.type === "video") {
@@ -378,6 +377,8 @@ el.onclick = () => preview(o);
       el.src = optimizeCloudinaryUrl(o.url, 500);
     }
 
+    el.onclick = () => preview(o);
+
     // Caption
     const inp = document.createElement("input");
     inp.placeholder = "Caption...";
@@ -390,10 +391,11 @@ el.onclick = () => preview(o);
     // Message for that photo/video
     const msg = document.createElement("textarea");
     msg.placeholder = "Write a memory for this photo...";
-    msg.value = o.message || "";
+    msg.value = o.memory || "";
+o.memory = e.target.value;
     msg.style.marginTop = "10px";
     msg.onchange = e => {
-       o.memory = e.target.value; 
+       o.message = e.target.value;
       autoSave();
     };
 
@@ -619,6 +621,21 @@ function preview(obj){
 
   document.getElementById("previewCap").innerText = obj.caption || "";
 }
+
+
+
+// ✅ DOWNLOAD INVOICE
+
+ function downloadInvoice() {
+  const invoicePath = localStorage.getItem("invoicePath");
+
+  if (!invoicePath) {
+    alert("Invoice not found ❌ Please complete payment first");
+    return;
+  }
+
+  window.open(`https://celebratewithus.co.in${invoicePath}`, "_blank");
+}
 </script>
 <div id="previewBox" style="margin-top:15px;">
   <img id="previewImg" style="width:100%; max-height:300px; display:none;">
@@ -636,6 +653,16 @@ function preview(obj){
   </button>
 </div>
 
+<button class="btn" onclick="downloadInvoice()">
+  📄 Download Invoice
+</button>
+
+  <p style="margin-top:12px; font-size:13px; color:#8a5a55;">
+    ⚠️ When you click on "Download Invoice", along with the billing you will get 
+    <b>Editor page link</b> and <b>Viewer page link</b>.
+  </p>
+
+</div>
 <!-- FOOTER -->
 <footer class="site-footer">
   <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
