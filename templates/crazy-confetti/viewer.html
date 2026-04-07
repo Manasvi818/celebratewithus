@@ -683,7 +683,9 @@ let confettiOn = false;
    THEME PANEL
 ================================ */
 function openTheme(){
-  document.getElementById("themePanel").style.display = "flex";
+  const el = document.getElementById("themePanel");
+  if(!el) return;
+  el.style.display = "flex";
 }
 function closeTheme(){
   document.getElementById("themePanel").style.display = "none";
@@ -752,8 +754,13 @@ function stopConfetti(){
 }
 
 function openConfetti(){
-  document.getElementById("panelConfettiState").innerText = confettiOn ? "ON" : "OFF";
-  document.getElementById("confettiPanel").style.display = "flex";
+  const state = document.getElementById("panelConfettiState");
+  const panel = document.getElementById("confettiPanel");
+
+  if(!state || !panel) return;
+
+  state.innerText = confettiOn ? "ON" : "OFF";
+  panel.style.display = "flex";
 }
 
 function closeConfetti(){
@@ -929,7 +936,9 @@ let bgAudio = null;
 let isPlaying = false;
 
 function openMusic(){
-  document.getElementById("musicPanel").style.display = "flex";
+  const el = document.getElementById("musicPanel");
+  if(!el) return;
+  el.style.display = "flex";
 }
 function closeMusic(){
   document.getElementById("musicPanel").style.display = "none";
