@@ -370,25 +370,34 @@ function loadMessages(){
 
 msgOpenBtn.onclick=()=>msgPopup.style.display="flex";
 msgSaveBtn.onclick = async () => {
- let m=msgInput.value.trim(); if(!m) return;
- let old=localStorage.getItem(MSG_KEY)||"";
- localStorage.setItem(MSG_KEY, old?old+"\n---\n"+m:m);
+ let m = msgInput.value.trim(); 
+ if(!m) return;
+
+ let old = localStorage.getItem(MSG_KEY) || "";
+
+ messages = old ? old + "\n---\n" + m : m;   // ✅ ADD THIS
+
+ localStorage.setItem(MSG_KEY, messages);
+
  msgInput.value="";
  msgPopup.style.display="none";
+
  await autoSave(); 
  loadMessages();
 };
 msgPopup.onclick=e=>{ if(e.target===msgPopup) msgPopup.style.display="none"; };
 
 async function deleteMsg(index){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+
   let arr = txt.split("\n---\n");
-arr.splice(index, 1);
+  arr.splice(index, 1);
 
-messages = arr.join("\n---\n");  
+  messages = arr.join("\n---\n");
 
-  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  localStorage.setItem(MSG_KEY, messages);
 
-  await autoSave();   // 🔥 ADD THIS
+  await autoSave();
   loadMessages();
 }
 
@@ -550,9 +559,7 @@ loadMessages();
     console.error("Load failed:", err);
   }
 }
-window.addEventListener("load", () => {
-  loadFromDB();
-});
+
 
 function downloadViewer() {
   autoSave();
