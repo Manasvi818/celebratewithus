@@ -688,12 +688,6 @@ async function loadViewerData() {
 
 document.addEventListener("DOMContentLoaded", loadViewerData);
 
-function initViewerFeatures(){
-  titleEl.textContent = "";
-  tIndex = 0;
-  setTimeout(typeTitle, 350);
-}
-
 function checkPassword(){
   const savedPassword = password;
   const entered = document.getElementById("passInput").value.trim();
@@ -713,6 +707,7 @@ function checkPassword(){
   const viewer = document.getElementById("viewerPage");
   viewer.style.display = "block";
   requestAnimationFrame(() => viewer.classList.add("show"));
+initViewerFeatures();   // ✅ ADD THIS
 
   // 🎵 LOAD SAVED MUSIC
   const musicUrl = music;
