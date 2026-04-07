@@ -263,14 +263,17 @@ input, textarea, select{
 let music = "";
 let password = "";
 
-function deleteMsg(index){
-  let arr = messages.split("\n---\n");
+async function deleteMsg(index){
+  let txt = localStorage.getItem(MSG_KEY) || "";
 
+  let arr = txt.split("\n---\n");
   arr.splice(index, 1);
 
   messages = arr.join("\n---\n");
 
-  autoSave();
+  localStorage.setItem(MSG_KEY, messages);
+
+  await autoSave();
   loadMessages();
 }
 
@@ -477,24 +480,26 @@ function loadMessages(){
 }
 
 msgOpenBtn.onclick=()=>msgPopup.style.display="flex";
+
 msgSaveBtn.onclick = async () => {
- let m=msgInput.value.trim(); if(!m) return;
- let old=localStorage.getItem(MSG_KEY)||"";
- localStorage.setItem(MSG_KEY, old?old+"\n---\n"+m:m);
+ let m = msgInput.value.trim(); 
+ if(!m) return;
+
+ let old = localStorage.getItem(MSG_KEY) || "";
+
+ messages = old ? old + "\n---\n" + m : m;   // ✅ ADD THIS
+
+ localStorage.setItem(MSG_KEY, messages);
+
  msgInput.value="";
  msgPopup.style.display="none";
- await autoSave();
+
+ await autoSave(); 
  loadMessages();
 };
 
 msgPopup.onclick=e=>{ if(e.target===msgPopup) msgPopup.style.display="none"; };
 
-function deleteMsg(i){
- let a=(localStorage.getItem(MSG_KEY)||"").split("\n---\n");
- a.splice(i,1);
- localStorage.setItem(MSG_KEY,a.join("\n---\n"));
- loadMessages();
-}
 function editMsg(i){
  let a=(localStorage.getItem(MSG_KEY)||"").split("\n---\n");
  let u=prompt("Edit message",a[i]);
@@ -516,20 +521,23 @@ function stopMusicPreview(){
  if(previewAudio){ previewAudio.pause(); previewAudio=null; }
 }
 function saveBgMusic(){
- localStorage.setItem(MUSIC_KEY,bgMusicSelect.value||"");
- music = url || "";
-localStorage.setItem(MUSIC_KEY, music);
-autoSave();
- musicSavedMsg.style.display="block";
- setTimeout(()=>musicSavedMsg.style.display="none",1500);
+  music = bgMusicSelect.value || "";   // ✅ FIX
+
+  localStorage.setItem(MUSIC_KEY, music);
+  autoSave();
+
+  musicSavedMsg.style.display="block";
+  setTimeout(()=>musicSavedMsg.style.display="none",1500);
 }
 
 async function savePass(){
- password = newPassword;
-localStorage.setItem(`pass_${projectId}`, password);
-await autoSave();
- passSaved.style.display="block";
- setTimeout(()=>passSaved.style.display="none",1500);
+  password = document.getElementById("newPass").value;  // ✅ CORRECT
+
+  localStorage.setItem(`pass_${projectId}`, password);
+  await autoSave();
+
+  passSaved.style.display="block";
+  setTimeout(()=>passSaved.style.display="none",1500);
 }
 function saveHint(){
   localStorage.setItem("viewerPassword_hint", passHint.value);
