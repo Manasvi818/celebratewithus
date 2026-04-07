@@ -645,6 +645,31 @@ body{
 </div>
 
 <script>
+  const projectId = window.location.pathname.split("/").pop();
+
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
+
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      renderGallery();
+      loadMessages();
+    }
+  } catch (err) {
+    console.error("Viewer load failed:", err);
+  }
+}
 /* ===============================
    CRAZY CONFETTI — SETTINGS
 ================================ */
@@ -792,60 +817,81 @@ function changeMessage(){
 /* ===============================
    LOAD MEDIA
 ================================ */
-const mediaList =
-  JSON.parse(localStorage.getItem("crazy_photos_v1")) || [];
 
 const grid = document.querySelector(".grid");
 
-mediaList.forEach(x => {
-  if(x.type === "image" || x.type === "video"){
-    const card = document.createElement("div");
-card.className = "card " + (x.type === "video" ? "video" : "image");
+function renderGallery() {
+  const grid = document.querySelector(".grid");
+  grid.innerHTML = "";
 
-    card.innerHTML = `
-      ${x.type === "video"
-        ? `<video src="${x.url}" controls onclick="event.stopPropagation()"></video>`
-        : `<img src="${x.url}">`
-      }
+  data.forEach(x => {
+    if(x.type === "image" || x.type === "video"){
 
-      <button class="img-msg" onclick="event.stopPropagation(); changeMessage()">
-        tap for chaos 💥
-      </button>
+      const card = document.createElement("div");
+      card.className = "card " + (x.type === "video" ? "video" : "");
 
-      <div class="caption">${x.caption || ""}</div>
-    `;
+      card.innerHTML = `
+        ${x.type === "video"
+          ? `<video src="${x.url}" controls></video>`
+          : `<img src="${x.url}">`
+        }
 
-    card.addEventListener("click", () => {
-      openZoom(x.type, x.url, x.caption);
-    });
+        <button class="img-msg" onclick="event.stopPropagation(); changeMessage()">
+          tap for chaos 💥
+        </button>
 
-    grid.appendChild(card);
-  }
-});
+        <div class="caption">
+  ${x.caption || ""}
+  
+  ${x.message ? `
+    <div style="
+      margin-top:8px;
+      font-size:13px;
+      opacity:0.9;
+      background:rgba(0,0,0,0.25);
+      padding:8px 10px;
+      border-radius:10px;
+    ">
+      ${x.message}
+    </div>
+  ` : ""}
+</div>
+      `;
+
+      card.addEventListener("click", () => {
+        openZoom(x.type, x.url, x.caption);
+      });
+
+      grid.appendChild(card);
+    }
+  });
+}
 
 /* ===============================
    LOAD MESSAGES
 ================================ */
-const allMessages = localStorage.getItem("crazy_messages") || "";
-const viewerBox = document.getElementById("viewerMessage");
 
-if(allMessages.trim() === ""){
-  viewerBox.innerText = "A message is waiting to pop 🎊";
-}else{
-  const list = allMessages.split("\n---\n");
+function loadMessages(){
+  const viewerBox = document.getElementById("viewerMessage");
+
+  if(!messages.trim()){
+    viewerBox.innerText = "A message is waiting to pop 🎊";
+    return;
+  }
+
   viewerBox.innerHTML = "";
 
-  list.forEach(msg => {
+  messages.split("\n---\n").forEach(msg => {
     const p = document.createElement("div");
+
     p.style.marginBottom = "12px";
     p.style.padding = "10px 14px";
     p.style.borderRadius = "14px";
     p.style.background = "rgba(255,255,255,0.18)";
-    p.style.boxShadow = "0 10px 20px rgba(0,0,0,0.12)";
-    p.style.border = "1px solid rgba(255,255,255,0.22)";
-    p.style.animation = "pop 0.3s ease";
     p.style.color = "white";
+
     p.innerText = msg;
+
     viewerBox.appendChild(p);
   });
 }
@@ -853,22 +899,20 @@ if(allMessages.trim() === ""){
 /* ===============================
    PASSWORD SYSTEM
 ================================ */
-const VIEWER_PASS =
-  localStorage.getItem("viewerPassword_crazyConfetti") || "party";
+
 
 function unlockViewer(){
   const input = document.getElementById("viewerPass").value;
 
-  if(input === VIEWER_PASS){
+  if(input === password){
     document.getElementById("passwordOverlay").style.display = "none";
 
     // auto play music if saved
-    const savedMusic = localStorage.getItem("crazy_bg_music");
-    if(savedMusic){
-      bgAudio = new Audio(savedMusic);
-      bgAudio.loop = true;
-      bgAudio.volume = 0.6;
-      bgAudio.play();
+    if(music){
+  bgAudio = new Audio(music);
+  bgAudio.loop = true;
+  bgAudio.volume = 0.6;
+  bgAudio.play();
       isPlaying = true;
       document.getElementById("musicBtn").innerText = "⏸ Pause Music";
     }
@@ -892,7 +936,10 @@ function closeMusic(){
 }
 
 function toggleMusic(){
-  const song = localStorage.getItem("crazy_bg_music");
+  if(!music){
+    alert("No music selected 🎵");
+    return;
+  }
 
   if(!song){
     alert("No music selected 🎵");
@@ -965,6 +1012,10 @@ function closeZoom(){
 
 zoomOverlay.addEventListener("click",(e)=>{
   if(e.target === zoomOverlay) closeZoom();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadViewerData();
 });
 </script>
 

@@ -625,89 +625,97 @@ function preview(obj){
 
 // ✅ DOWNLOAD INVOICE
 
- function downloadInvoice() {
+ function downloadViewer() {
+  autoSave();
 
-  const template = "color-carnival";
+  const template = window.location.pathname.split("/")[2];
   const projectId = window.location.pathname.split("/").pop();
 
+  // ✅ Download viewer ZIP
+  window.open(`/download?template=${template}&projectId=${projectId}`);
+
+  // ✅ Create invoice file
   const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
   const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
-
-  const coupon = localStorage.getItem("coupon") || "No Coupon Applied";
-  const discount = Number(localStorage.getItem("discount")) || 0;
-  const finalAmount = Number(localStorage.getItem("finalAmount")) || 149;
-
+  const coupon = "No Coupon Applied";
   const content = `
-  <div id="invoiceBox" style="
-    font-family:Arial;
-    padding:30px;
-    background:#ffffff;
-    color:#000;
-    width:700px;
-  ">
 
-    <div style="text-align:right;">
-      <img src="https://celebratewithus.co.in/styles/images/logo.png"
-           style="width:80px;" />
-    </div>
 
-    <h2 style="text-align:center;">INVOICE RECEIPT</h2>
-    <hr>
+<div style="font-family:Arial; padding:25px; background:#f3cdd3;">
 
-    <p><strong>Project ID:</strong> ${projectId}</p>
-    <p><strong>Template:</strong> Color Carnival</p>
-
-    <div style="
-      background:#f4c2c2;
-      padding:15px;
-      border-radius:10px;
-      margin:15px 0;
-    ">
-      <p><strong>Original Price:</strong> ₹149</p>
-      <p><strong>Coupon Used:</strong> ${coupon}</p>
-      <p><strong>Discount:</strong> ₹${discount}</p>
-      <hr>
-      <p style="font-size:18px;">
-        <strong>Total Paid: ₹${finalAmount}</strong>
-      </p>
-    </div>
-
-    <p><strong>Viewer Link:</strong><br>${viewerURL}</p>
-    <p><strong>Editor Link:</strong><br>${editorURL}</p>
-
-    <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
-
-    <p style="margin-top:20px;">
-      Thank you for celebrating with us 💛
-    </p>
-
+  <!-- LOGO -->
+  <div style="text-align:right;">
+    <img src="https://celebratewithus.co.in/styles/images/logo.png" 
+         style="width:70px; border-radius:10px;" />
   </div>
-  `;
 
-  // ✅ STEP 1: ADD TO DOM (IMPORTANT FIX)
-  const tempDiv = document.createElement("div");
-  tempDiv.innerHTML = content;
-  document.body.appendChild(tempDiv);
+  <!-- TITLE -->
+  <h2 style="text-align:center; letter-spacing:2px;">INVOICE RECEIPT</h2>
+  <hr>
 
-  const invoiceElement = tempDiv.querySelector("#invoiceBox");
+  <!-- BASIC DETAILS -->
+  <p><strong>Project ID:</strong> ${projectId}</p>
+  <p><strong>Template:</strong> ${template}</p>
 
-  // ✅ STEP 2: WAIT FOR RENDER (VERY IMPORTANT)
-  setTimeout(() => {
-    html2pdf()
-      .set({
-        margin: 10,
-        filename: `invoice_${projectId}.pdf`,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-      })
-      .from(invoiceElement)
-      .save()
-      .then(() => {
-        // ✅ CLEANUP
-        document.body.removeChild(tempDiv);
-      });
-  }, 300);
+  <!-- NEW COUPON -->
+  <p><strong>Next Coupon:</strong> ${localStorage.getItem("nextCoupon") || "N/A"}</p>
+
+  <!-- PRICE BOX -->
+  <div style="
+    background:#e8aab4;
+    padding:15px 20px;
+    border-radius:16px;
+    display:inline-block;
+    margin:15px 0;
+    font-size:18px;
+  ">
+    <strong>Total Paid: ₹149</strong>
+  </div>
+
+  <!-- LINKS -->
+  <p><strong>Viewer Link:</strong><br>${viewerURL}</p>
+  <p><strong>Editor Link:</strong><br>${editorURL}</p>
+
+  <!-- FINAL DETAILS -->
+  <p><strong>Coupon Used:</strong> ${coupon}</p>
+  <p><strong>Final Amount Paid:</strong> ₹149</p>
+
+  <!-- THANK YOU -->
+  <p style="margin-top:15px;">
+    Thank you for celebrating with us 💛
+  </p>
+
+</div>
+`;
+
+// create file properly
+const element = document.createElement("div");
+element.innerHTML = content;
+
+}
+async function goToViewer() {
+  await autoSave();   // 🔥 wait for DB save
+
+  const template = window.location.pathname.split("/")[2];
+  const projectId = window.location.pathname.split("/").pop();
+
+  window.location.href = `/viewer/${template}/${projectId}`;
+}
+
+
+
+
+// ✅ DOWNLOAD INVOICE
+
+ function downloadInvoice() {
+  const invoicePath = localStorage.getItem("invoicePath");
+
+  if (!invoicePath) {
+    alert("Invoice not found ❌ Please complete payment first");
+    return;
+  }
+
+  window.open(`https://celebratewithus.co.in${invoicePath}`, "_blank");
 }
 </script>
 
