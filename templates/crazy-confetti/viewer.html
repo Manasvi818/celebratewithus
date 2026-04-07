@@ -941,23 +941,21 @@ function toggleMusic(){
     return;
   }
 
-   if(!music){
-    alert("No music selected 🎵");
-    return;
-  }
-
-  if(bgAudio && bgAudio.src !== song){
+  // reset audio if different track
+  if(bgAudio && bgAudio.src !== music){
     bgAudio.pause();
     bgAudio = null;
     isPlaying = false;
   }
 
+  // create audio if not exists
   if(!bgAudio){
-    bgAudio = new Audio(song);
+    bgAudio = new Audio(music);
     bgAudio.loop = true;
     bgAudio.volume = 0.6;
   }
 
+  // play / pause toggle
   if(isPlaying){
     bgAudio.pause();
     document.getElementById("musicBtn").innerText = "▶ Play Music";
