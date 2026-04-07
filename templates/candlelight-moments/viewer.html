@@ -757,6 +757,17 @@ function renderGallery() {
       card.appendChild(cap);
     }
 
+if (item.memory) {
+  const mem = document.createElement("div");
+  mem.className = "caption";   // reuse style OR create new class
+  mem.style.fontSize = "13px";
+  mem.style.opacity = "0.8";
+  mem.style.marginTop = "4px";
+  mem.innerText = "🕯️ " + item.memory;
+
+  card.appendChild(mem);
+}
+
     grid.appendChild(card);
   });
 }
