@@ -289,15 +289,21 @@ const STORAGE_KEY = `project_${projectId}`;
 console.log("PROJECT ID:", projectId);
 console.log("STORAGE KEY:", STORAGE_KEY);
 
-  async function loadFromDB() {
-
-
+ async function loadFromDB() {
   try {
     const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
     const result = await res.json();
 
     if (result.success) {
-      
+      items = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      render();
+      loadMessages();
+
+      console.log("✅ Data loaded from DB");
     }
 
   } catch (err) {
@@ -447,10 +453,13 @@ function uploadLocal(e){
 
 /* Save */
 async function autoSave() {
-  // 1. Save locally
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 
-  // 2. Save to MongoDB
+  // ❗ Prevent saving empty data on load
+  if (!items.length && !messages && !music && !password) {
+    console.warn("⚠️ Prevented empty overwrite");
+    return;
+  }
+
   try {
     await fetch("https://celebratewithus.onrender.com/save-project", {
       method: "POST",
@@ -458,12 +467,11 @@ async function autoSave() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-  projectId,
-  data: items,
-  messages: messages,
-  music: music,
-  password: password
-
+        projectId,
+        data: items,
+        messages: messages,
+        music: music,
+        password: password
       })
     });
 
