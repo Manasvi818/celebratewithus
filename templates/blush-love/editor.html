@@ -349,9 +349,9 @@ function loadMessages(){
     return;
   }
 
-  messages = txt.split("\n---\n");
+  let arr = txt.split("\n---\n");
 
-  messages.forEach((msg, index) => {
+  arr.forEach((msg, index) => {
     let div = document.createElement("div");
     div.className = "singleMessage";
 
@@ -381,10 +381,10 @@ msgSaveBtn.onclick = async () => {
 msgPopup.onclick=e=>{ if(e.target===msgPopup) msgPopup.style.display="none"; };
 
 async function deleteMsg(index){
-  let txt = localStorage.getItem(MSG_KEY) || "";
- messages = txt.split("\n---\n");
+  let arr = txt.split("\n---\n");
+arr.splice(index, 1);
 
-  messages.splice(index, 1);
+messages = arr.join("\n---\n");  
 
   localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
 
