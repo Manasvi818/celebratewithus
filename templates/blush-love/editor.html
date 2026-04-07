@@ -420,7 +420,11 @@ function playMusicPreview(){
  previewAudio.play();
 }
 function stopMusicPreview(){
- if(previewAudio){ previewAudio.pause(); previewAudio=null; }
+  if(previewAudio){
+    previewAudio.pause();
+    previewAudio.currentTime = 0;
+    previewAudio = null;
+  }
 }
 function saveBgMusic() {
   const url = musicSelect.value;
@@ -465,10 +469,6 @@ async function savePass(){
  passSaved.style.display="block";
  setTimeout(()=>passSaved.style.display="none",1500);
 }
-
-password = newPassword;
-localStorage.setItem(`pass_${projectId}`, password);
-await autoSave();
 
 async function saveMessages(){
   await autoSave();   // 🔥 IMPORTANT
