@@ -652,15 +652,50 @@ height: auto;
    These keys MUST match your editor keys if you want the same data.
    Change them if your editor uses different names.
 */
-const PASS_KEY  = "viewerPassword_colorCarnival";
-const MUSIC_KEY = "colorCarnival_music";
-const MEDIA_KEY = "colorCarnival_gallery";
-const MSG_KEY   = "colorCarnival_messages";
 
-let isPlaying = false;
+const projectId = window.location.pathname.split("/").pop();
+
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
+
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+  data = result.data || [];
+  messages = result.messages || "";
+  music = result.music || "";
+  password = result.password || "";
+
+  // ✅ LOAD EVERYTHING IMMEDIATELY (LIKE ALWAYS TOGETHER)
+  loadGallery();
+  loadMessages();
+  buildTimeline();
+  spawnBalloons();
+
+  if (music) {
+    document.getElementById("bgMusic").src = music;
+  }
+}
+  } catch (err) {
+    console.error("Viewer load failed:", err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadViewerData);
+
+function initViewerFeatures(){
+  titleEl.textContent = "";
+  tIndex = 0;
+  setTimeout(typeTitle, 350);
+}
 
 function checkPassword(){
-  const savedPassword = localStorage.getItem(PASS_KEY);
+  const savedPassword = password;
   const entered = document.getElementById("passInput").value.trim();
 
   if (!savedPassword) {
@@ -680,7 +715,7 @@ function checkPassword(){
   requestAnimationFrame(() => viewer.classList.add("show"));
 
   // 🎵 LOAD SAVED MUSIC
-  const musicUrl = localStorage.getItem(MUSIC_KEY);
+  const musicUrl = music;
   const audio = document.getElementById("bgMusic");
   const btn   = document.getElementById("musicToggle");
 
@@ -696,7 +731,7 @@ function checkPassword(){
     });
   }
 
-  initViewerFeatures();
+  
 }
 
 // 🎵 PLAY / PAUSE BUTTON
@@ -704,7 +739,7 @@ document.getElementById("musicToggle").addEventListener("click", async () => {
   const audio = document.getElementById("bgMusic");
   const btn = document.getElementById("musicToggle");
 
-  const musicUrl = localStorage.getItem(MUSIC_KEY);
+  const musicUrl = music;
 
   if (!musicUrl) {
     alert("No music selected in editor ❗");
@@ -759,7 +794,7 @@ const lightboxCaption = document.getElementById("lightboxCaption");
 
 function loadGallery(){
   gallerySection.innerHTML = "";
-  const items = JSON.parse(localStorage.getItem(MEDIA_KEY) || "[]");
+  const items = data;
 
   if(!items.length){
     gallerySection.innerHTML = "<p style='opacity:.75'>No memories added yet 🎭</p>";
@@ -784,7 +819,7 @@ function loadGallery(){
 
         ${item.caption ? `<div class="polaroid-caption">${item.caption}</div>` : ""}
 
-        ${item.message ? `
+        ${item.memory ? `
           <div style="
             margin-top:10px;
             font-size:0.9rem;
@@ -824,7 +859,7 @@ function loadGallery(){
 
   ${item.caption ? `<div class="polaroid-caption">${item.caption}</div>` : ""}
 
-  ${item.message ? `
+  ${item.memory ? `
     <div style="
       margin-top:10px;
       font-size:0.9rem;
@@ -972,7 +1007,7 @@ const viewerMessages = document.getElementById("viewerMessages");
 
 function loadMessages(){
   viewerMessages.innerHTML = "";
-  const raw = localStorage.getItem(MSG_KEY);
+  const raw = messages;
 
   if(!raw){
     viewerMessages.innerHTML = "<p style='opacity:.75'>No messages yet 💛</p>";

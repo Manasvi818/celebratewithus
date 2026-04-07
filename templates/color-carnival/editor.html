@@ -276,19 +276,71 @@ textarea{
 
 <script>
 /* STORAGE KEYS */
-const STORAGE_KEY="colorCarnival_gallery";
-const MSG_KEY="colorCarnival_messages";
-const MUSIC_KEY="colorCarnival_music";
+const projectId = window.location.pathname.split("/").pop();
 
-let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+let items = [];
+let messages = "";
+let music = "";
+let password = "";
+
+const STORAGE_KEY = `project_${projectId}`;
+const MSG_KEY = `msg_${projectId}`;
+const MUSIC_KEY = `music_${projectId}`;
+
 
 function saveAll(){
   localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
 }
 
-function autoSave(){
-  localStorage.setItem("colorCarnival_gallery", JSON.stringify(items));
+async function autoSave() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
+  try {
+    await fetch("https://celebratewithus.onrender.com/save-project", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        projectId,
+        data: items,
+        messages: messages,
+        music: music,
+        password: password
+      })
+    });
+
+    console.log("Saved to DB");
+  } catch (err) {
+    console.error("Save failed:", err);
+  }
 }
+
+async function loadFromDB() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      items = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      localStorage.setItem(MSG_KEY, messages);
+      localStorage.setItem(MUSIC_KEY, music);
+      localStorage.setItem(`pass_${projectId}`, password);
+
+      render();
+      loadMessages();
+    }
+  } catch (err) {
+    console.error("Load failed:", err);
+  }
+  bgMusicSelect.value = music || "";
+}
+
 
 function clearAll(){
   if(!confirm("Delete everything from Color Carnival editor?")) return;
@@ -297,25 +349,33 @@ function clearAll(){
   render();
 }
 
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width}/`);
+}
+
 function render(){
   mediaGrid.innerHTML = "";
+
 
   items.forEach((o, i) => {
     const d = document.createElement("div");
     d.className = "card";
+el.onclick = () => preview(o);
 
     let el;
     if (o.type === "video") {
       el = document.createElement("video");
-      el.src = o.url;
+      el.src = optimizeCloudinaryUrl(o.url, 500);
       el.controls = true;
     } else if (o.type === "audio") {
       el = document.createElement("audio");
-      el.src = o.url;
+      el.src = optimizeCloudinaryUrl(o.url, 500);
       el.controls = true;
     } else {
       el = document.createElement("img");
-      el.src = o.url;
+      el.src = optimizeCloudinaryUrl(o.url, 500);
     }
 
     // Caption
@@ -333,7 +393,7 @@ function render(){
     msg.value = o.message || "";
     msg.style.marginTop = "10px";
     msg.onchange = e => {
-      o.message = e.target.value;
+       o.memory = e.target.value; 
       autoSave();
     };
 
@@ -365,7 +425,10 @@ function uploadLocal(e){
   : f.type.startsWith("audio")
   ? "audio"
   : "image";
-    items.push({url:x.target.result,type:t,caption:"",message:""});
+    items.push({url:x.target.result,
+      type:t,
+      caption:""
+      ,memory:""});
     autoSave();
     render();
 
@@ -403,7 +466,10 @@ msgSaveBtn.onclick=()=>{
   if(!m) return;
 
   let old=localStorage.getItem(MSG_KEY)||"";
-  localStorage.setItem(MSG_KEY, old ? old+"\n---\n"+m : m);
+  messages = old ? old + "\n---\n" + m : m;
+localStorage.setItem(MSG_KEY, messages);
+
+autoSave();
 
   msgInput.value="";
   msgPopup.style.display="none";
@@ -417,16 +483,27 @@ msgPopup.onclick=e=>{
 function deleteMsg(i){
   let a=(localStorage.getItem(MSG_KEY)||"").split(/\r?\n\s*---\s*\r?\n/);
   a.splice(i,1);
-  localStorage.setItem(MSG_KEY,a.join("\n---\n"));
+
+  messages = a.join("\n---\n");   // ✅ IMPORTANT
+
+  localStorage.setItem(MSG_KEY, messages);
+
+  autoSave();
   loadMessages();
 }
 
 function editMsg(i){
   let a=(localStorage.getItem(MSG_KEY)||"").split(/\r?\n\s*---\s*\r?\n/);
   let u=prompt("Edit memory",a[i]);
+
   if(u){
     a[i]=u.trim();
-    localStorage.setItem(MSG_KEY,a.join("\n---\n"));
+
+    messages = a.join("\n---\n");   // ✅ FIX
+
+    localStorage.setItem(MSG_KEY, messages);
+
+    autoSave();
     loadMessages();
   }
 }
@@ -451,7 +528,9 @@ function stopMusicPreview(){
 }
 
 function saveBgMusic(){
-  localStorage.setItem(MUSIC_KEY,bgMusicSelect.value||"");
+  music = bgMusicSelect.value || "";
+localStorage.setItem(MUSIC_KEY, music);
+autoSave();
   musicSavedMsg.style.display="block";
   setTimeout(()=>musicSavedMsg.style.display="none",1500);
 }
@@ -466,7 +545,9 @@ function savePass(){
     return;
   }
 
-  localStorage.setItem("viewerPassword_colorCarnival", value);
+  password = value;
+localStorage.setItem(`pass_${projectId}`, password);
+autoSave();
 
   passSaved.style.display="block";
   setTimeout(()=>passSaved.style.display="none",1500);
@@ -490,7 +571,7 @@ function openWidget(type){
         url:r.info.secure_url,
         type:r.info.resource_type,
         caption:"",
-        message:""
+        memory:""
       });   
       autoSave();
       render();
@@ -499,12 +580,62 @@ function openWidget(type){
 }
 
 window.addEventListener("load", () => {
-  items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  render();
+  loadFromDB();
 });
-render();
-loadMessages();
+
+
+async function goToViewer() {
+  await autoSave();
+
+  const template = window.location.pathname.split("/")[2];
+  const projectId = window.location.pathname.split("/").pop();
+
+  window.location.href = `/viewer/${template}/${projectId}`;
+}
+
+function copyViewerLink() {
+  const viewerLink = window.location.href.replace("/editor/", "/viewer/");
+
+  navigator.clipboard.writeText(viewerLink)
+    .then(() => alert("🔗 Link copied! Share it 💖"))
+    .catch(() => alert("Copy failed"));
+}
+
+
+function preview(obj){
+  const img = document.getElementById("previewImg");
+  const vid = document.getElementById("previewVideo");
+
+  img.style.display = "none";
+  vid.style.display = "none";
+
+  if(obj.type === "video"){
+    vid.src = obj.url;
+    vid.style.display = "block";
+  } else {
+    img.src = obj.url;
+    img.style.display = "block";
+  }
+
+  document.getElementById("previewCap").innerText = obj.caption || "";
+}
 </script>
+<div id="previewBox" style="margin-top:15px;">
+  <img id="previewImg" style="width:100%; max-height:300px; display:none;">
+  <video id="previewVideo" controls style="width:100%; max-height:300px; display:none;"></video>
+  <p id="previewCap"></p>
+</div>
+
+<div style="text-align:center; margin-top:30px;">
+  <button class="btn" onclick="goToViewer()">
+    💾 Save All & Show Viewer Page
+  </button>
+
+  <button class="btn" onclick="copyViewerLink()">
+    🔗 Copy Viewer Link
+  </button>
+</div>
+
 <!-- FOOTER -->
 <footer class="site-footer">
   <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
