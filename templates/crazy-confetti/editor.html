@@ -347,6 +347,7 @@ async function loadFromDB() {
       localStorage.setItem(MUSIC_KEY, result.music || "");
       localStorage.setItem(`pass_${projectId}`, result.password || "");
 
+      render(); 
       loadMessages();
     }
   } catch (err) {
