@@ -240,6 +240,7 @@ Local Upload
 </div>
 
 <script>
+  let widget;
 const projectId = window.location.pathname.split("/").pop();
 const STORAGE_KEY = `project_${projectId}`;
 const MSG_KEY = `msg_${projectId}`;
@@ -374,30 +375,43 @@ render();};
 r.readAsDataURL(f);
 }
 
-function openWidget(type){
-cloudinary.openUploadWidget({
-cloudName:"di8n4lsjz",
-uploadPreset:"golden_love",
-folder:"golden_love",
-resourceType:type,
-multiple:true
-},(error,result)=>{
-if(!error && result && result.event==="success"){
-items.push({
-url:result.info.secure_url,
-type: result.info.resource_type || (result.info.format === "mp4" ? "video" : "image"),
-caption:"",
-memory:""
-});
-
-autoSave();
-render();
+function initWidget(){
+  widget = cloudinary.createUploadWidget({
+    cloudName: "di8n4lsjz",
+    uploadPreset: "golden_love",
+    folder: "golden_love",
+    resourceType: "auto",
+    multiple: true
+  }, (error, result) => {
+    if (!error && result && result.event === "success") {
+      items.push({
+        url: optimizeCloudinaryUrl(result.info.secure_url, 500),
+        type: result.info.resource_type,
+        caption: ""
+      });
+      autoSave();
+      render();
+    }
+  });
 }
-});
+
+/* Cloudinary Upload */
+function openWidget(){
+  if(!widget){
+    document.body.style.cursor = "wait"; // loader feel
+    setTimeout(() => {
+      document.body.style.cursor = "default";
+    }, 1000);
+
+    alert("Opening uploader...");
+    return;
+  }
+
+  widget.open();
 }
 
 function savePass(){
-localStorage.setItem("viewerPassword_golden",newPass.value);
+localStorage.setItem(`pass_${projectId}`, newPass.value);
 alert("Password saved 💛");
 }
 

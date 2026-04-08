@@ -117,6 +117,8 @@ input, textarea, select{
   border-radius:14px;
   min-height:160px;
   margin-top:12px;
+  max-height:250px;      
+  overflow-y:auto; 
   white-space:pre-wrap;
   font-family:"Playfair Display";
   font-size:15px;
@@ -240,6 +242,8 @@ async function loadFromDB() {
     messages = result.messages || "";
     music = result.music || "";
     password = result.password || "";
+
+localStorage.setItem(MSG_KEY, messages); 
 
     render();
     loadMessages();
@@ -433,20 +437,16 @@ async function savePass(){
   alert("Password saved 💞");
 }
 
-msgOpenBtn.onclick=()=>{
+msgOpenBtn.onclick = () => {
   let m = prompt("Write your love letter 💌");
   if(!m) return;
 
   let txt = localStorage.getItem(MSG_KEY) || "";
-
-if(!txt){
-  allMessagesBox.innerText = "(No love letters yet)";
-  return;
-}
   let arr = txt ? txt.split("\n---\n") : [];
 
   arr.push(m);
-  saveMessages(arr);
+
+  saveMessages(arr);   // ✅ always runs
 };
 
 function loadMessages(){
