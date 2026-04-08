@@ -790,7 +790,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const template = window.location.pathname.split("/")[2];
   const projectId = window.location.pathname.split("/").pop();
 
-  window.open(`/download?template=${template}&projectId=${projectId}`);
+  
 
   // ✅ GET REAL DATA
   const couponUsed = localStorage.getItem("appliedCoupon") || "None";
@@ -914,13 +914,10 @@ Thank you for celebrating with us 💛
 </html>
 `;
 
-  // ✅ DOWNLOAD FILE (REAL FIX)
-  const blob = new Blob([content], { type: "text/html" });
-  const link = document.createElement("a");
+const newWindow = window.open("", "_blank");
 
-  link.href = URL.createObjectURL(blob);
-  link.download = `invoice_${projectId}.html`;
-  link.click();
+newWindow.document.write(content);
+newWindow.document.close();
 }
 
  

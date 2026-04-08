@@ -412,10 +412,12 @@ body.sunset  { background:linear-gradient(180deg,#ffc6ff,#ff99c8); }
 
 <script>
 const projectId = window.location.pathname.split("/").pop();
-
+const MSG_KEY = `msg_${projectId}`;
+const MUSIC_KEY = `music_${projectId}`;
 let data = [];
 let messages = "";
 let music = "";
+let song = "";
 let password = "";
 let PASS = "";
 let isLoaded = false;
@@ -441,7 +443,7 @@ async function loadViewerData() {
 
       if (music) {
         song = music;
-        setupMusic();
+        
       }
     }
   } catch (err) {
@@ -467,7 +469,7 @@ function checkPassword(){
   document.getElementById("viewerPage").style.display="block";
 
   if(song){
-    playMusic();
+    loadMusic();
   }
 
   setSkyByTime();
@@ -487,7 +489,7 @@ function render(){
     if(item.type==="video"){
       videoContainer.innerHTML += `
         <div class="videoBox">
-          <video src="${item.url}" controls></video>
+          <video src="${optimize(item.url)}" controls></video>
         </div>
       `;
     }
@@ -499,7 +501,7 @@ function render(){
       card.className="polaroid";
 
       card.innerHTML = `
-        <img src="${item.url}">
+        <img src="${optimize(item.url)}">
         <button onclick="showRandom()">✨ Surprise</button>
         <div class="caption">${item.caption || ""}</div>
       `;
@@ -513,15 +515,14 @@ lightbox.onclick=()=>lightbox.classList.remove("open");
 
 /* MESSAGES */
 function loadMessages(){
-  const raw=localStorage.getItem(MSG_KEY);
-  const box=document.getElementById("messages");
+  const box = document.getElementById("messages");
 
-  if(!raw){
-    box.innerHTML="<p>No messages yet 💛</p>";
+  if(!messages){
+    box.innerHTML = "<p>No messages yet 💛</p>";
     return;
   }
 
-  raw.split("\n---\n").forEach(msg=>{
+  messages.split("\n---\n").forEach(msg=>{
     const div=document.createElement("div");
     div.style.background="#fff3d6";
     div.style.padding="12px";
@@ -532,16 +533,21 @@ function loadMessages(){
   });
 }
 
+function optimize(url){
+  if(!url.includes("cloudinary")) return url;
+  return url.replace("/upload/", "/upload/f_auto,q_auto/");
+}
+
+
 /* MUSIC */
 function loadMusic(){
-  const url=localStorage.getItem(MUSIC_KEY);
-  const audio=document.getElementById("bgMusic");
-  if(url){
-    audio.src=url;
-    audio.volume=0.6;
+  const audio = document.getElementById("bgMusic");
+
+  if(music){
+    audio.src = music;
+    audio.volume = 0.6;
     audio.play();
-    musicToggle.textContent="⏸";
-    isPlaying=true;
+    musicToggle.textContent = "⏸";
   }
 }
 
