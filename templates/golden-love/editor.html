@@ -4,7 +4,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Golden Love — Editor</title>
-
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" href="https://celebratewithus.co.in/styles/images/logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Allura&family=Libre+Baskerville:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
 
@@ -181,18 +182,23 @@ input, textarea, select{
     <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024725/Heart_in_Bloom_fgj5oc.mp3">Heart in Bloom🤍</option>
     <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024722/Whisper_of_You_wpcufk.mp3">Whisper of You💕</option>
     <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024718/Spring_Flowers_xjmnsd.mp3">Spring Flowers🤍</option>
-</select>
+  </select>
 
-<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
 
-<button class="btn ghost" onclick="previewMusic()">▶️ Preview</button>
+   <button class="btn ghost" onclick="previewMusic()">▶️ Preview</button>
+   <button class="btn ghost" onclick="stopMusic()">⏹ Stop</button>
+   <button class="btn" onclick="saveMusic()">Save Music</button>
+  </div>
 
-<button class="btn ghost" onclick="stopMusic()">⏹ Stop</button>
+   <p id="musicSavedMsg" class="smallOk">Music saved ✓</p>
+   <p class="note">Tip: Cloudinary uploads stay online. Local uploads stay only in this browser.</p>
 
-<button class="btn" onclick="saveMusic()">Save Music</button>
+</div>
+
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;"></div>
 
 <button class="btn ghost" onclick="openWidget('image')">📷 Image</button>
-
 <button class="btn ghost" onclick="openWidget('video')">🎥 Video</button>
 <label class="btn ghost">
 Local Upload

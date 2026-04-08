@@ -355,6 +355,8 @@ select{
   </div>
 
   <p id="musicSavedMsg" class="smallOk">Music saved ✓</p>
+  <p class="note">Tip: Cloudinary uploads stay online. Local uploads stay only in this browser.</p>
+
 </div>
 
 <!-- Preview -->
@@ -542,7 +544,7 @@ async function autoSave() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 
   try {
-    await fetch("https://celebratewithus.onrender.com/save-project", {
+    const res = await fetch("https://celebratewithus.onrender.com/save-project", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -556,12 +558,19 @@ async function autoSave() {
       })
     });
 
-    console.log("✅ Saved to DB");
+    const result = await res.json();
+
+    if(result.success){
+      console.log("✅ Saved to DB");
+      return true;   // ✅ CRITICAL
+    }else{
+      console.log("❌ DB responded false");
+      return false;
+    }
 
   } catch (err) {
     console.error("❌ DB Save failed:", err);
-     return false;  // ✅ ADD THIS
-  
+    return false;
   }
 }
 async function loadFromDB() {

@@ -7,7 +7,8 @@
 <title>Royal Aura — Editor</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
-
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" href="https://celebratewithus.co.in/styles/images/logo.png">
 <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
 
 <style>
@@ -292,7 +293,7 @@ text-align:center;
 
 <select id="bgMusicSelect">
 <option value="">No Music</option>
-<<option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771542/Naadify_v7cfwz.mp3">Naadify</option>
+<option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771542/Naadify_v7cfwz.mp3">Naadify</option>
     <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771542/IndieRaag_aoboya.mp3">IndieRaag</option>
     <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771536/FolkFuel_retru9.mp3">FolkFuel</option>
     <option value="https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771536/SargamX_pn2nes.mp3">SargamX</option>
@@ -310,6 +311,10 @@ text-align:center;
 <button class="btn" onclick="playMusicPreview()">Preview</button>
 <button class="btn ghost" onclick="stopMusicPreview()">Stop</button>
 <button class="btn" onclick="saveBgMusic()">Save Music</button>
+</div>
+
+  <p id="musicSavedMsg" class="smallOk">Music saved ✓</p>
+  <p class="note">Tip: Cloudinary uploads stay online. Local uploads stay only in this browser.</p>
 
 </div>
 
