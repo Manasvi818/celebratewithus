@@ -583,9 +583,20 @@ body.night #passwordOverlay{
 </div>
 
 <script>
+  const projectId = window.location.pathname.split("/").pop();
+  function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  if (url.includes("/upload/f_auto")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
 /* ========= MUSIC ========= */
 let bgAudio = null;
-const song = localStorage.getItem("gm_bg_music"); // (Golden Mandala music key)
+let song = ""; // (Golden Mandala music key)
 
 function playMusic(){
   if(!song) return;
@@ -620,24 +631,67 @@ function toggleMusic(){
   isPlaying = !isPlaying;
 }
 
-/* ========= PASSWORD ========= */
-const PASS = localStorage.getItem("viewerPassword_goldenMandala") || "golden";
+
 
 function unlock(){
-  if(pass.value === PASS){
+  if(!isLoaded){
+    alert("⏳ Wait...");
+    return;
+  }
+
+  const entered = pass.value.trim();
+  const saved = PASS.trim();
+
+  if(entered === saved){
     passwordOverlay.style.display="none";
-    playMusic();
+
+    if(song){
+      playMusic();
+    }
 
     musicBtn.textContent = "⏸ Pause Music";
     isPlaying = true;
+
   }else{
     wrongPass.style.display="block";
   }
 }
 
 /* ========= DATA ========= */
-const KEY="gm_photos_v1";
-const data = JSON.parse(localStorage.getItem(KEY)||"[]");
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
+let PASS = "";
+let isLoaded = false;
+
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      PASS = password;
+
+      render();
+      loadMessages();
+
+      if (music) {
+        song = music;
+      
+      }
+
+      isLoaded = true;
+    }
+  } catch (err) {
+    console.error("❌ Viewer load failed:", err);
+  }
+}
 
 /* ========= RENDER ========= */
 function render(){
@@ -648,7 +702,7 @@ function render(){
     if(x.type==="video"){
       videoContainer.innerHTML+=`
         <div class="videoBox">
-          <video src="${x.url}" controls></video>
+          <video src="${optimizeCloudinaryUrl(optimizeCloudinaryUrl(x.url,800),800)}" controls></video>
         </div>
       `;
     }
@@ -660,7 +714,7 @@ function render(){
       const d = document.createElement("div");
       d.className="card";
       d.innerHTML=`
-        <img src="${x.url}" onclick="openZoom('${x.url}',\`${cap}\`)">
+        <img src="${optimizeCloudinaryUrl(optimizeCloudinaryUrl(x.url,400))}" onclick="openZoom('${optimizeCloudinaryUrl(x.url,1000)}',\`${cap}\`)">
 
         <button class="tapBtn" onclick="showRandom(${i})">
           Surprise ✨
@@ -711,17 +765,17 @@ closeMsg.onclick=()=>msgOverlay.style.display="none";
 
 /* ========= LOAD MESSAGES ========= */
 function loadMessages(){
-  const txt=localStorage.getItem("gm_main_message")||"";
-  if(!txt.trim()) return;
+  if(!messages.trim()) return;
 
-  txt.split("---").forEach(m=>{
+  messageList.innerHTML = "";
+
+  messages.split("\n---\n").forEach(m=>{
     const d=document.createElement("div");
     d.className="stickyNote";
     d.textContent=m.trim();
     messageList.appendChild(d);
   });
 }
-loadMessages();
 
 /* ========= DECORATIONS ========= */
 const c = decorCanvas;
@@ -1015,6 +1069,10 @@ musicOverlay.onclick = e => {
     musicOverlay.style.display = "none";
   }
 };
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadViewerData();
+});
 </script>
 <footer class="site-footer">
   <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>

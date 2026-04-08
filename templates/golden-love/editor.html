@@ -198,14 +198,14 @@ input, textarea, select{
 
 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;"></div>
 
-<button class="btn ghost" onclick="openWidget('image')">📷 Image</button>
-<button class="btn ghost" onclick="openWidget('video')">🎥 Video</button>
+<button class="btn ghost" onclick="openWidget()">📷 Image</button>
+<button class="btn ghost" onclick="openWidget()">🎥 Video</button>
 <label class="btn ghost">
 Local Upload
 <input type="file" hidden accept="image/*,video/*" onchange="uploadLocal(event)">
 </label>
 </div>
-</div>
+
 
 <!-- GALLERY -->
 <h2 style="margin-top:30px;">✨ Golden Gallery</h2>
@@ -221,32 +221,18 @@ Local Upload
 <input id="newPass" placeholder="gold">
 <button class="btn" onclick="savePass()">Save Password</button>
 
-<!-- MESSAGES -->
-<h3 style="margin-top:30px;">💌 Golden Messages</h3>
-<div style="text-align:center;">
-<button class="btn" id="msgOpenBtn">Add Message</button>
-</div>
-
-<div id="messagesContainer" style="margin-top:20px;"></div>
-</div>
-
-<!-- MESSAGE POPUP -->
-<div id="msgPopup">
-<div class="popupInner">
-<h3>Write softly 💛</h3>
-<textarea id="msgInput" style="height:120px;"></textarea>
-<button class="btn" id="msgSaveBtn" style="margin-top:12px;">Save</button>
-</div>
-</div>
-
 <script>
-  let widget;
-const projectId = window.location.pathname.split("/").pop();
+  const projectId = window.location.pathname.split("/").pop();
+
 const STORAGE_KEY = `project_${projectId}`;
-const MSG_KEY = `msg_${projectId}`;
 const MUSIC_KEY = `music_${projectId}`;
 
-let items=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
+let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+let music = localStorage.getItem(MUSIC_KEY) || "";
+let password = localStorage.getItem(`pass_${projectId}`) || "";
+
+let widget;
 
 function saveAll(){
 localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
@@ -254,7 +240,7 @@ localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
 
 async function autoSave() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  localStorage.setItem(MSG_KEY, messages);
+
   localStorage.setItem(MUSIC_KEY, music);
   localStorage.setItem(`pass_${projectId}`, password);
 
@@ -265,12 +251,11 @@ async function autoSave() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        projectId,
-        data: items,
-        messages: messages.join("\n---\n"),
-        music: music,
-        password: password
-      })
+  projectId,
+  data: items,
+  music: music,
+  password: password
+})
     });
 
     console.log("✅ Synced to DB");
@@ -298,17 +283,15 @@ async function loadFromDB() {
 
     if (result.success) {
       items = result.data || [];
-      messages = result.messages
-  ? result.messages.split("\n---\n")
-  : [];
+      
       
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-      localStorage.setItem(MSG_KEY, JSON.stringify(messages));
+      
       localStorage.setItem(MUSIC_KEY, result.music || "");
       localStorage.setItem(`pass_${projectId}`, result.password || "");
 
       render()
-      renderMessages();
+      
 
       console.log("✅ Loaded from DB");
     }
@@ -336,13 +319,23 @@ function render(){
     let el = o.type==="video"
       ? Object.assign(document.createElement("video"),{src:o.url,controls:true})
       : Object.assign(document.createElement("img"),{src:o.url});
+let msg = document.createElement("textarea");
+let mem = document.createElement("textarea");
 
     let cap = document.createElement("input");
     cap.placeholder="Caption...";
     cap.value=o.caption||"";
     cap.oninput=e=>{o.caption=e.target.value;autoSave();};
 
-    let mem = document.createElement("textarea");
+   
+    
+msg.placeholder = "Message...";
+msg.style.height = "70px";
+msg.value = o.message || "";
+msg.oninput = e => {
+  o.message = e.target.value;
+  autoSave();
+};
     mem.placeholder="Memory...";
     mem.style.height="80px";
     mem.value=o.memory||"";
@@ -354,7 +347,7 @@ function render(){
     del.style.marginTop="10px";
     del.onclick=()=>{items.splice(i,1);autoSave();render();};
 
-    d.append(el,cap,mem,del);
+    d.append(el, cap, mem, msg, del);
 
     if(o.type==="video"){
       videoContainer.appendChild(d);  // 🎥 full row
@@ -374,10 +367,11 @@ if(!f)return;
 let r=new FileReader();
 r.onload=x=>{
 items.push({
-url:x.target.result,
-type: f.type.startsWith("video") ? "video" : "image",
-caption:"",
-memory:""
+  url: x.target.result,
+  type: f.type.startsWith("video") ? "video" : "image",
+  caption: "",
+  memory: "",
+  message: ""
 });
 
 autoSave();
@@ -397,7 +391,9 @@ function initWidget(){
       items.push({
         url: optimizeCloudinaryUrl(result.info.secure_url, 500),
         type: result.info.resource_type,
-        caption: ""
+        caption: "",
+        memory: "",
+message: ""
       });
       autoSave();
       render();
@@ -408,17 +404,34 @@ function initWidget(){
 /* Cloudinary Upload */
 function openWidget(){
   if(!widget){
-    document.body.style.cursor = "wait"; // loader feel
-    setTimeout(() => {
-      document.body.style.cursor = "default";
-    }, 1000);
-
-    alert("Opening uploader...");
+    alert("Uploader still loading... please wait");
     return;
   }
-
   widget.open();
 }
+
+function waitForCloudinary(){
+    if (typeof cloudinary !== "undefined") {
+      initWidget();
+    } else {
+      setTimeout(waitForCloudinary, 200);
+    }
+  }
+
+  waitForCloudinary();
+
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  if (url.includes("/upload/f_auto")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
+
+
 
 function savePass(){
   password = newPass.value.trim();
@@ -459,89 +472,6 @@ previewAudio.currentTime = 0;
 
 /* 💌 PERSISTENT MESSAGE SYSTEM */
 
-let messages = JSON.parse(localStorage.getItem(MSG_KEY) || "[]");
-
-const msgOpenBtn = document.getElementById("msgOpenBtn");
-const msgPopup = document.getElementById("msgPopup");
-const msgInput = document.getElementById("msgInput");
-const msgSaveBtn = document.getElementById("msgSaveBtn");
-const messagesContainer = document.getElementById("messagesContainer");
-
-if(!messagesContainer){
-  console.error("messagesContainer not found");
-}
-function renderMessages(){
-  messagesContainer.innerHTML = "";
-
-  if(messages.length === 0){
-    messagesContainer.innerHTML = "<p style='text-align:center;opacity:.6;'>No messages yet 💛</p>";
-    return;
-  }
-
-  messages.forEach((text,index)=>{
-    const box = document.createElement("div");
-    box.style.cssText = `
-      background:white;
-      padding:16px;
-      border-radius:18px;
-      margin-bottom:12px;
-      box-shadow:0 15px 40px rgba(212,160,23,.15);
-      font-family:'Libre Baskerville';
-    `;
-
-    const msgText = document.createElement("div");
-    msgText.innerText = text;
-
-    const btnWrap = document.createElement("div");
-    btnWrap.style.cssText="margin-top:10px;display:flex;gap:8px;justify-content:flex-end;";
-
-    const editBtn = document.createElement("button");
-    editBtn.textContent="Edit";
-    editBtn.className="btn ghost";
-    editBtn.onclick=()=>{
-      msgInput.value = text;
-      msgPopup.style.display="flex";
-      messages.splice(index,1);
-      localStorage.setItem(MSG_KEY, JSON.stringify(messages));
-      renderMessages();
-    };
-
-    const delBtn = document.createElement("button");
-    delBtn.textContent="Delete";
-    delBtn.className="btn ghost";
-    delBtn.onclick=()=>{
-      messages.splice(index,1);
-      localStorage.setItem(MSG_KEY, JSON.stringify(messages));
-      renderMessages();
-    };
-
-    btnWrap.append(editBtn,delBtn);
-    box.append(msgText,btnWrap);
-    messagesContainer.appendChild(box);
-  });
-}
-
-msgOpenBtn.onclick=()=>{
-  msgInput.value="";
-  msgPopup.style.display="flex";
-};
-
-msgSaveBtn.onclick=()=>{
-  const text = msgInput.value.trim();
-  if(!text) return;
-
-  messages.push(text);
-  localStorage.setItem(MSG_KEY, JSON.stringify(messages));
-  msgPopup.style.display="none";
-  renderMessages();
-  
-};
-
-msgPopup.onclick=(e)=>{
-  if(e.target===msgPopup){
-    msgPopup.style.display="none";
-  }
-};
 
 window.addEventListener("DOMContentLoaded", () => {
   loadFromDB();
@@ -688,7 +618,7 @@ const link = document.createElement("a");
 
 link.href = URL.createObjectURL(blob);
 link.download = `invoice_${projectId}.html`;
-link.click();
+window.open(URL.createObjectURL(blob), "_blank");
 }
 async function goToViewer() {
   await autoSave();   // 🔥 THIS IS MUST

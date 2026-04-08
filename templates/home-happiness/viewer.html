@@ -725,39 +725,30 @@ body.night .modalBtn.secondary{
 /* ===========================
    PASSWORD
 =========================== */
-const PASS_KEY = "viewerPassword_homehappiness";
-
-function getSavedPass(){
-  return localStorage.getItem(PASS_KEY);
-}
+let PASS = "";
+let isLoaded = false;
 
 function unlock(){
+  if(!isLoaded){
+    alert("⏳ Loading...");
+    return;
+  }
 
-const entered = document.getElementById("pass").value.trim();
-const saved = localStorage.getItem("viewerPassword_homehappiness");
+  const entered = document.getElementById("pass").value.trim();
 
-if(!saved){
-alert("Password not set yet. Set it in editor first.");
-return;
-}
+  if(entered === PASS){
+    passwordOverlay.style.display="none";
+    wrongPass.style.display="none";
 
-if(entered === saved){
+    if(song){
+      playMusic();
+      isPlaying = true;
+      musicBtn.textContent = "⏸ Pause Music";
+    }
 
-passwordOverlay.style.display="none";
-wrongPass.style.display="none";
-
-/* start music automatically */
-playMusic();
-isPlaying = true;
-musicBtn.textContent = "⏸ Pause Music";
-
-}else{
-
-wrongPass.style.display="block";
-document.getElementById("pass").value="";
-
-}
-
+  }else{
+    wrongPass.style.display="block";
+  }
 }
 
 document.getElementById("pass").addEventListener("keydown", (e)=>{
@@ -769,8 +760,42 @@ document.getElementById("pass").addEventListener("keydown", (e)=>{
    DATA
    (Same system as Always Together)
 =========================== */
-const KEY="home_gallery";
-const data = JSON.parse(localStorage.getItem(KEY)||"[]");
+const projectId = window.location.pathname.split("/").pop();
+
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
+
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+      
+      PASS = password;
+      isLoaded = true;
+
+      document.getElementById("passwordOverlay").style.display = "flex";
+
+      render();
+      loadMessages();
+
+      if (music) {
+        song = music;
+      }
+
+      console.log("✅ Viewer loaded from DB");
+    }
+  } catch (err) {
+    console.error("❌ Viewer load failed:", err);
+  }
+}
 
 /* ===========================
    RENDER GALLERY
@@ -803,7 +828,7 @@ function render(){
 
 videoContainer.innerHTML += `
   <div class="photoCard">
-    <video src="${x.url}" controls></video>
+    <video src="${optimizeCloudinaryUrl(x.url,800)}" controls></video>
     <div class="photoCaption">${cap}</div>
   </div>
 `;
@@ -819,8 +844,8 @@ videoContainer.innerHTML += `
       d.className="photoCard";
 
       d.innerHTML=`
-        <div class="photoFrame" onclick="openZoom('${x.url}',\`${cap}\`)">
-          <img src="${x.url}">
+        <div class="photoFrame" onclick="openZoom('${optimizeCloudinaryUrl(x.url,800)}',\`${cap}\`)">
+          <img src="${optimizeCloudinaryUrl(x.url,400)}">
         </div>
         <div class="photoCaption">${cap}</div>
         <button class="surpriseBtn" onclick="showRandom(${i})">
@@ -875,33 +900,19 @@ function showRandom(){
 /* ===========================
    SAVE THOUGHTS
 =========================== */
-const MSG_KEY = "home_messages";
 
-function saveThought(){
-  const txt = thoughtInput.value.trim();
-  if(!txt) return;
-
-  const old = localStorage.getItem(MSG_KEY) || "";
-  const next = old ? (old + "\n---\n" + txt) : txt;
-
-  localStorage.setItem(MSG_KEY, next);
-  thoughtInput.value="";
-  loadMessages();
-}
 
 function loadMessages(){
   messageList.innerHTML="";
-  const txt = localStorage.getItem(MSG_KEY)||"";
-  if(!txt.trim()) return;
+  if(!messages.trim()) return;
 
-  txt.split(/\r?\n\s*---\s*\r?\n/).forEach(m=>{
+  messages.split("\n---\n").forEach(m=>{
     const d=document.createElement("div");
     d.className="stickyNote";
     d.textContent=m.trim();
     messageList.appendChild(d);
   });
 }
-loadMessages();
 
 
 /* ===========================
@@ -1034,7 +1045,7 @@ if(p.y < -80){
 let bgAudio=null;
 let isPlaying=false;
 
-const song = localStorage.getItem("home_music"); // save from editor
+let song = "";
 
 function playMusic(){
   if(!song) return;
@@ -1043,16 +1054,26 @@ function playMusic(){
     bgAudio = new Audio(song);
     bgAudio.loop = true;
     bgAudio.volume = 0;
-bgAudio.play();
+    bgAudio.play();
 
-let v = 0;
-const fade = setInterval(()=>{
-v += 0.05;
-bgAudio.volume = v;
-if(v >= 0.6) clearInterval(fade);
-},100);
+    let v = 0;
+    const fade = setInterval(()=>{
+      v += 0.05;
+      bgAudio.volume = v;
+      if(v >= 0.6) clearInterval(fade);
+    },100);
   }
-  bgAudio.play();
+}
+
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  if (url.includes("/upload/f_auto")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
 }
 
 function toggleMusic(){
@@ -1082,6 +1103,9 @@ function toggleMusic(){
 musicOpenBtn.onclick=()=> musicOverlay.style.display="flex";
 musicOverlay.onclick=e=>{ if(e.target===musicOverlay) musicOverlay.style.display="none"; };
 
+document.addEventListener("DOMContentLoaded", () => {
+  loadViewerData();
+});
 </script>
 <footer class="site-footer">
   <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>

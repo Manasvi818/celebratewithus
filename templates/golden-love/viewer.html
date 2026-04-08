@@ -415,7 +415,7 @@ max-width:90%;
  const projectId = window.location.pathname.split("/").pop();
 
 let items = [];
-let messages = "";
+let message = "";
 let music = "";
 let password = "";
 
@@ -610,12 +610,10 @@ function render() {
 
   const viewerMessage = document.getElementById("viewerMessage");
 
-  const msgList = messages ? messages.split("\n---\n") : [];
-
-viewerMessage.innerText =
-  msgList[index] ||
-  msgList[0] ||
-  "A quiet feeling rests here 🤍";
+  viewerMessage.innerHTML = `
+    ${item.message ? "💌 " + item.message + "<br><br>" : ""}
+    ${item.memory ? "📝 " + item.memory : ""}
+  `;
 };
 
     card.appendChild(media);
@@ -633,11 +631,22 @@ viewerMessage.innerText =
   grid.appendChild(imageContainer);
 }
 
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  if (url.includes("/upload/f_auto")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
+
 function renderMessages() {
   const viewerMessage = document.getElementById("viewerMessage");
 
   if (!messages || messages.trim() === "") {
-    viewerMessage.innerText = "A quiet feeling rests here 🤍";
+    viewerMessage.innerHTML = "Click a memory to feel it 🤍";
     return;
   }
 
