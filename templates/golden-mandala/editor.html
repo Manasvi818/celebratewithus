@@ -288,7 +288,23 @@ input:focus, textarea:focus, select:focus{
 </div>
 <p id="passSaved" class="smallOk">Password Updated ✓</p>
 
+<!-- MESSAGE SYSTEM -->
+<h3 style="margin-top:30px;">💬 Messages (Shown in Viewer)</h3>
 
+<div style="display:flex; justify-content:center; margin-top:10px;">
+  <button id="msgOpenBtn" class="btn">💌 Add New Message</button>
+</div>
+
+<div id="allMessagesBox">(No messages yet)</div>
+
+<!-- Popup -->
+<div id="msgPopup">
+  <div class="popupInner">
+    <h3 style="margin-top:0;font-family:Cinzel;color:#d79b2b;">Write Message</h3>
+    <textarea id="msgInput" placeholder="Write something sweet..."></textarea>
+    <button id="msgSaveBtn" class="btn" style="margin-top:12px;width:100%;">Save Message</button>
+  </div>
+</div>
 
 </div>
 
@@ -300,12 +316,12 @@ input:focus, textarea:focus, select:focus{
 const projectId = window.location.pathname.split("/").pop();
 
 const STORAGE_KEY = `project_${projectId}`;
-
+const MSG_KEY = `msg_${projectId}`;
 const MUSIC_KEY = `music_${projectId}`;
 const PASS_KEY = `pass_${projectId}`;
 
 let items = [];
-
+let messages = "";
 let music = "";
 let password = "";
 
@@ -316,17 +332,17 @@ async function loadFromDB() {
 
     if (result.success) {
       items = result.data || [];
-      
+      messages = result.messages || "";
       music = result.music || "";
       password = result.password || "";
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-      
+      localStorage.setItem(MSG_KEY, messages);
       localStorage.setItem(MUSIC_KEY, music);
       localStorage.setItem(PASS_KEY, password);
 
       render();
-      
+      loadMessages();
 
       console.log("✅ Loaded from DB");
     }
@@ -365,24 +381,6 @@ function render(){
       autoSave();
     };
 
-    // 👉 ADD BELOW CAPTION INPUT
-
-let msg = document.createElement("textarea");
-msg.placeholder = "Message...";
-msg.value = obj.message || "";
-msg.oninput = e => {
-  obj.message = e.target.value;
-  autoSave();
-};
-
-let mem = document.createElement("textarea");
-mem.placeholder = "Memory...";
-mem.value = obj.memory || "";
-mem.oninput = e => {
-  obj.memory = e.target.value;
-  autoSave();
-};
-
     const del=document.createElement("button");
     del.textContent="Delete";
     del.className="btn ghost";
@@ -395,10 +393,8 @@ mem.oninput = e => {
     };
 
     d.appendChild(el);
-d.appendChild(inp);
-d.appendChild(mem);   // ✅ ADD
-d.appendChild(msg);   // ✅ ADD
-d.appendChild(del);
+    d.appendChild(inp);
+    d.appendChild(del);
     box.appendChild(d);
   });
 }
@@ -425,9 +421,7 @@ function initWidget(){
       items.push({
         url: optimizeCloudinaryUrl(result.info.secure_url, 500),
         type: result.info.resource_type,
-        caption: "",
-        memory: "",
-  message: ""
+        caption: ""
       });
       autoSave();
       render();
@@ -438,9 +432,15 @@ function initWidget(){
 /* Cloudinary Upload */
 function openWidget(){
   if(!widget){
-    alert("Uploader still loading... please wait");
+    document.body.style.cursor = "wait"; // loader feel
+    setTimeout(() => {
+      document.body.style.cursor = "default";
+    }, 1000);
+
+    alert("Opening uploader...");
     return;
   }
+
   widget.open();
 }
 
@@ -474,13 +474,7 @@ function uploadLocal(e){
   r.onload=v=>{
     let type = file.type.startsWith("video") ? "video" : "image";
 
-    items.push({
-  url: v.target.result,
-  type,
-  caption: "",
-  memory: "",
-  message: ""
-});
+    items.push({url:v.target.result,type,caption:""});
     
     autoSave();
 render();  };
@@ -494,7 +488,7 @@ function saveAll(){
 
 async function autoSave() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  
+  localStorage.setItem(MSG_KEY, messages);
   localStorage.setItem(MUSIC_KEY, music);
   localStorage.setItem(PASS_KEY, password);
 
@@ -507,7 +501,7 @@ async function autoSave() {
       body: JSON.stringify({
         projectId,
         data: items,
-      
+        messages: messages,
         music: music,
         password: password
       })
@@ -540,7 +534,98 @@ autoSave();
   setTimeout(()=>passSaved.style.display="none",1500);
 }
 
+/* =========================
+   MESSAGE SYSTEM
+========================= */
+function loadMessages(){
+  let txt = localStorage.getItem(MSG_KEY) || "";
 
+  let box = document.getElementById("allMessagesBox");
+  box.innerHTML = "";
+
+  if(txt.trim() === ""){
+    box.innerText = "(No messages yet)";
+    return;
+  }
+
+  let messagesArr = txt.split("\n---\n");
+
+  messagesArr.forEach((msg, index)=>{
+    let div = document.createElement("div");
+    div.className = "singleMessage";
+
+    div.innerHTML = `
+      <div class="msgText">${msg}</div>
+      <div class="msgBtns">
+        <button onclick="editMsg(${index})">✏️</button>
+        <button onclick="deleteMsg(${index})">🗑️</button>
+      </div>
+    `;
+
+    box.appendChild(div);
+  });
+}
+loadMessages();
+
+msgOpenBtn.onclick = ()=>{
+  document.getElementById("msgPopup").style.display="flex";
+};
+
+msgSaveBtn.onclick = () => {
+  let newMsg = document.getElementById("msgInput").value.trim();
+  if (newMsg === "") return;
+
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let arr = txt ? txt.split("\n---\n") : [];
+
+  if (!arr.includes(newMsg)) {
+    arr.push(newMsg);
+  }
+
+  messages = arr.join("\n---\n");
+
+  localStorage.setItem(MSG_KEY, messages);
+
+  document.getElementById("msgInput").value = "";
+  document.getElementById("msgPopup").style.display = "none";
+
+  autoSave();
+  loadMessages();
+};
+
+function deleteMsg(index){
+  let arr = (localStorage.getItem(MSG_KEY) || "").split("\n---\n");
+
+  arr.splice(index, 1);
+  messages = arr.join("\n---\n");
+
+  localStorage.setItem(MSG_KEY, messages);
+
+  autoSave();
+  loadMessages();
+}
+
+function editMsg(index){
+  let arr = (localStorage.getItem(MSG_KEY) || "").split("\n---\n");
+
+  let updated = prompt("Edit message:", arr[index]);
+  if(updated === null) return;
+  if(updated.trim() === "") return;
+
+  arr[index] = updated.trim();
+  messages = arr.join("\n---\n");
+
+  localStorage.setItem(MSG_KEY, messages);
+
+  autoSave();
+  loadMessages();
+}
+
+msgPopup.onclick = e=>{
+  if(e.target === msgPopup){
+    msgPopup.style.display="none";
+  }
+};
 
 /* =========================
    BACKGROUND MUSIC SYSTEM
@@ -728,7 +813,7 @@ const link = document.createElement("a");
 
 link.href = URL.createObjectURL(blob);
 link.download = `invoice_${projectId}.html`;
-window.open(URL.createObjectURL(blob), "_blank");
+link.click();
 }
 async function goToViewer() {
   await autoSave();   // 🔥 wait for DB save
@@ -741,8 +826,7 @@ async function goToViewer() {
 
 // ✅ COPY VIEWER LINK
 function copyViewerLink() {
-  const template = window.location.pathname.split("/")[2];
-const viewerLink = `${window.location.origin}/viewer/${template}/${projectId}`;
+  const viewerLink = window.location.href.replace("/editor/", "/viewer/");
 
   navigator.clipboard.writeText(viewerLink)
     .then(() => {

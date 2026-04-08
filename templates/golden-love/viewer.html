@@ -415,7 +415,7 @@ max-width:90%;
  const projectId = window.location.pathname.split("/").pop();
 
 let items = [];
-let message = "";
+let messages = "";
 let music = "";
 let password = "";
 
@@ -499,12 +499,12 @@ async function loadViewerData() {
 
     if (result.success) {
       items = result.data || [];
-    
+      messages = result.messages || "";
       music = result.music || "";
       password = result.password || "";
 
-render();
-renderMessagesFromItems();
+      render();
+      renderMessages();
       setupPassword();
       setupMusic();
     }
@@ -512,27 +512,6 @@ renderMessagesFromItems();
   } catch (err) {
     console.error("❌ Load failed:", err);
   }
-}
-
-function renderMessagesFromItems(){
-  const viewerMessage = document.getElementById("viewerMessage");
-
-  let content = "";
-
-  items.forEach(item=>{
-    if(item.message){
-      content += `💌 ${item.message}<br><br>`;
-    }
-    if(item.memory){
-      content += `📝 ${item.memory}<br><br>`;
-    }
-  });
-
-  if(content === ""){
-    content = "Click a memory to feel it 🤍";
-  }
-
-  viewerMessage.innerHTML = content;
 }
 
   function startMusic(){
@@ -565,7 +544,7 @@ bgAudio.play()
  /* 👁️ PASSWORD HINT TOGGLE */
 const hintText = document.getElementById("hintText");
 const hintValue = document.getElementById("hintValue");
-const hint = localStorage.getItem(`hint_${projectId}`);
+const hint = localStorage.getItem("viewerPassword_hint");
 
 if (hintText && hintValue && hint && hint.trim() !== "") {
   hintValue.innerText = hint;
@@ -624,19 +603,6 @@ function render() {
       media.src = optimizeCloudinaryUrl(item.url, 500);
     }
 
-    media.onclick = () => {
-  if(item.type !== "video"){
-    openZoom(item.url, item.caption);
-  }
-
-  const viewerMessage = document.getElementById("viewerMessage");
-
-  viewerMessage.innerHTML = `
-    ${item.message ? "💌 " + item.message + "<br><br>" : ""}
-    ${item.memory ? "📝 " + item.memory : ""}
-  `;
-};
-
     card.appendChild(media);
 
     if(item.type==="video"){
@@ -646,35 +612,8 @@ function render() {
     }
   });
 
-  
-
   grid.appendChild(videoContainer);
   grid.appendChild(imageContainer);
-}
-
-function optimizeCloudinaryUrl(url, width = 500) {
-  if (!url || !url.includes("res.cloudinary.com")) return url;
-
-  if (url.includes("/upload/f_auto")) return url;
-
-  return url.replace(
-    "/upload/",
-    `/upload/f_auto,q_auto,w_${width}/`
-  );
-}
-
-function renderMessages() {
-  const viewerMessage = document.getElementById("viewerMessage");
-
-  if (!messages || messages.trim() === "") {
-    viewerMessage.innerHTML = "Click a memory to feel it 🤍";
-    return;
-  }
-
-  viewerMessage.innerHTML = messages
-    .split("\n---\n")
-    .map(m => `💌 ${m}`)
-    .join("<br><br>");
 }
 
 /* ✨ GOLDEN SPARKLE SYSTEM */
@@ -816,216 +755,12 @@ document.addEventListener("keydown", (e) => {
     setTimeout(() => word.remove(), 10000);
   }, 5000);
 
-
+});
 
 window.addEventListener("DOMContentLoaded", () => {
   loadViewerData();
 });
-
-function downloadViewer() {
-  autoSave();
-
-  const template = window.location.pathname.split("/")[2];
-  const projectId = window.location.pathname.split("/").pop();
-
-  // ✅ Download viewer ZIP
-  window.open(`/download?template=${template}&projectId=${projectId}`);
-
-  // ✅ Create invoice file
-  const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
-  const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
-  const coupon = "No Coupon Applied";
-
-  const couponUsed = localStorage.getItem("appliedCoupon") || "No Coupon Applied";
-const discount = parseInt(localStorage.getItem("discount")) || 0;
-const finalAmount = parseInt(localStorage.getItem("finalAmount")) || 149;
-const nextCoupon = localStorage.getItem("nextCoupon") || "N/A";
-  
-  const content = `
-<html>
-<head>
-<style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#d88fb0;
-  color:white;
-  padding:30px;
-}
-
-.container{
-  max-width:800px;
-  margin:auto;
-}
-
-.header{
-  text-align:center;
-  font-size:28px;
-  font-weight:bold;
-  letter-spacing:2px;
-  margin-bottom:20px;
-}
-
-.logo{
-  position:absolute;
-  top:30px;
-  right:30px;
-  width:90px;
-}
-
-.section{
-  margin-bottom:12px;
-}
-
-.links{
-  color:#002fff;
-  margin:10px 0;
-  word-break:break-all;
-}
-
-.totalBox{
-  margin:30px auto;
-  width:300px;
-  text-align:center;
-  background:#ff5bbd;
-  padding:18px;
-  border-radius:18px;
-  font-size:20px;
-  font-weight:bold;
-}
-
-.footer{
-  text-align:center;
-  margin-top:20px;
-  font-size:16px;
-}
-</style>
-</head>
-
-<body>
-
-<img class="logo" src="https://celebratewithus.co.in/styles/images/logo.png" />
-
-<div class="container">
-
-<div class="header">INVOICE RECEIPT</div>
-
-<div class="section">Name: Guest</div>
-<div class="section">Email: guest@email.com</div>
-
-<br>
-
-<div class="section">Payment ID: pay_${projectId}</div>
-<div class="section">Date: ${new Date().toLocaleDateString()}</div>
-<div class="section">Time: ${new Date().toLocaleTimeString()}</div>
-
-<br>
-
-<div class="section">Project ID: ${projectId}</div>
-<div class="section">Template: ${template}</div>
-<div class="section">Next Coupon: ${nextCoupon}</div>
-
-<br>
-
-<div class="links">
-Viewer Link: ${viewerURL}
-</div>
-
-<div class="links">
-Editor Link: ${editorURL}
-</div>
-
-<br>
-
-<div class="section">Coupon Used: ${couponUsed}</div>
-<div class="section">Discount: ${discount}</div>
-<div class="section">Final Amount Paid: ₹${finalAmount}</div>
-
-<div class="totalBox">
-Total Paid: ₹${finalAmount}
-</div>
-
-<div class="footer">
-Thank you for celebrating with us 💛
-</div>
-
-</div>
-</body>
-</html>
-`;
-
-// create file properly
-const blob = new Blob([content], { type: "text/html" });
-const link = document.createElement("a");
-
-link.href = URL.createObjectURL(blob);
-link.download = `invoice_${projectId}.html`;
-link.click();
-}
-async function goToViewer() {
-  await autoSave();   // 🔥 wait for DB save
-
-  const template = window.location.pathname.split("/")[2];
-  const projectId = window.location.pathname.split("/").pop();
-
-  window.location.href = `/viewer/${template}/${projectId}`;
-}
-
-// ✅ COPY VIEWER LINK
-function copyViewerLink() {
-  const viewerLink = window.location.href.replace("/editor/", "/viewer/");
-
-  navigator.clipboard.writeText(viewerLink)
-    .then(() => {
-      alert("🔗 Link copied! Share it 💖");
-    })
-    .catch(() => {
-      alert("Copy failed");
-    });
-}
-
-
-// ✅ DOWNLOAD INVOICE
-
- function downloadInvoice() {
-  const invoicePath = localStorage.getItem("invoicePath");
-
-  if (!invoicePath) {
-    alert("Invoice not found ❌ Please complete payment first");
-    return;
-  }
-
-  window.open(`https://celebratewithus.co.in${invoicePath}`, "_blank");
-}
-
 </script>
-
-<div style="text-align:center; margin-top:30px;"
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  margin-top:30px;
-  flex-wrap:wrap;
-">
-
-  <button class="btn" onclick="goToViewer()">
-    💾 Save All & Show Viewer Page
-  </button>
-
-  <button class="btn" onclick="copyViewerLink()">
-  🔗 Copy Viewer Link
-</button>
-
-<button class="btn" onclick="downloadInvoice()">
-  📄 Download Invoice
-</button>
-
-  <p style="margin-top:12px; font-size:13px; color:#8a5a55;">
-    ⚠️ When you click on "Download Invoice", along with the billing you will get 
-    <b>Editor page link</b> and <b>Viewer page link</b>.
-  </p>
-
-</div>
 <div id="flame"></div>
 
 <!-- 🔍 ZOOM MODAL -->
