@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cultural Festive Viewer</title>
-
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" href="https://celebratewithus.co.in/styles/images/logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Allura&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -437,6 +438,7 @@ function render(){
     }
     else{
       media = document.createElement("img");
+      imageGrid.appendChild(card);
 media.src = item.url;
 
 media.style.cursor = "pointer";   // 👈 nice UX
@@ -458,9 +460,20 @@ media.onclick = () => {
 
 /* LOAD MESSAGE */
 function loadMessages(){
-  if(!messages.trim()) return;
+  const box = document.getElementById("festiveMessage");
+  box.innerHTML = "";
 
-  document.getElementById("festiveMessage").innerText = messages;
+  if(!messages.trim()){
+    box.innerText = "No message added yet.";
+    return;
+  }
+
+  messages.split("\n---\n").forEach(m => {
+    const div = document.createElement("div");
+    div.style.marginBottom = "10px";
+    div.textContent = m;
+    box.appendChild(div);
+  });
 }
 
 /* ===== SMOOTH TRAILING CURSOR ===== */
@@ -541,12 +554,6 @@ function setupMusic(){
   bgAudio.volume = 0.6;
 }
 let isPlaying = false;
-
-if(musicUrl){
-  bgAudio = new Audio(musicUrl);
-  bgAudio.loop = true;
-  bgAudio.volume = 0.6;
-}
 
 function startMusic(){
   if(bgAudio && !isPlaying){
@@ -655,22 +662,6 @@ themeSelect.addEventListener("change", function(){
   });
 }
 });
-
-
-function unlock(){
-  const input = document.getElementById("passInput").value;
-
-  if(!savedPass || input === savedPass){
-    document.getElementById("lockScreen").style.display="none";
-
-    launchFireworks();          // first big burst
-    startContinuousFireworks(); // background celebration
-
-    setTimeout(() => {
-      startMusic();
-    }, 900);
-  }
-}
 
 async function loadViewerData() {
   try {

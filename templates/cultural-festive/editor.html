@@ -4,7 +4,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Cultural Festive — Editor • CelebrateWithUs</title>
-
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" href="https://celebratewithus.co.in/styles/images/logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -596,9 +597,7 @@ async function loadFromDB() {
       messages = result.messages || "";
       music = result.music || "";
       password = result.password || "";
-let messages = "";
-let music = "";
-let password = "";
+
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
       localStorage.setItem(MSG_KEY, messages);
       localStorage.setItem(MUSIC_KEY, music);
