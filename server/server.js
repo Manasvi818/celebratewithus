@@ -3,7 +3,7 @@ const { createCoupon, applyCoupon, markUsed } = require("./coupon");const Projec
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
-const express = require("express");
+
 const app = express();   // ✅ DEFINE FIRST
 
 const PORT = process.env.PORT || 10000;  // ✅ DEFINE EARLY
