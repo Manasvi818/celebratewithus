@@ -3,8 +3,9 @@ const { createCoupon, applyCoupon, markUsed } = require("./coupon");const Projec
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
-
-const app = express();   // ✅ DEFINE FIRST
+const express = require("express");   // ✅ FIRST
+const app = express(); 
+   
 
 const PORT = process.env.PORT || 10000;  // ✅ DEFINE EARLY
 
@@ -34,7 +35,7 @@ const couponController = require("./coupon");
 // ✅ ADD DEBUG HERE
 console.log("KEY ID:", process.env.RAZORPAY_KEY_ID);
 
-const express = require("express");
+
 const session = require("express-session");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
