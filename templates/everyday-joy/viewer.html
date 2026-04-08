@@ -629,7 +629,14 @@ function confettiBurst(){
 }
 
 /* 🌈 Rainbow Trail */
-const rainbow=["#ff0000","#ff7f00","#ffff00","#00ff00","#0000ff","#4b0082","#9400d3"];
+const themeTrail = [
+  "#FFD27D",  // warm sunlight
+  "#FFB4A2",  // soft peach
+  "#FFC6FF",  // pink glow
+  "#FFE08A",  // pastel yellow
+  "#F2C94C",  // gold light
+  "#D4A017"   // deep gold (main theme)
+];
 let rIndex=0;
 
 document.addEventListener("mousemove",e=>{
@@ -637,7 +644,10 @@ document.addEventListener("mousemove",e=>{
   dot.className="trail";
   dot.style.left=e.clientX+"px";
   dot.style.top=e.clientY+"px";
-  dot.style.background=rainbow[rIndex%rainbow.length];
+  const color = themeTrail[rIndex % themeTrail.length];
+
+dot.style.background = color;
+dot.style.boxShadow = `0 0 12px ${color}, 0 0 20px ${color}`;
   rIndex++;
   document.body.appendChild(dot);
   setTimeout(()=>dot.remove(),800);
