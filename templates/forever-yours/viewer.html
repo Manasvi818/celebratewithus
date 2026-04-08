@@ -340,17 +340,19 @@ body{
   <img id="zoomImg">
 </div>
 <script>
-const STORAGE_KEY="forever_gallery";
-const MSG_KEY="forever_messages";
+const projectId = window.location.pathname.split("/").pop();
 
-function getSavedPass(){
-  return localStorage.getItem("viewerPassword_forever");
-}
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
+
+
 
 /* PASSWORD */
 function checkPassword(){
 
-  const savedPass = getSavedPass();
+  const savedPass = password;
 
   if(!savedPass){
     wrongPass.innerText = "No password set. Please set it in editor page 💜";
@@ -369,75 +371,102 @@ function checkPassword(){
   }
 }
 
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      renderGallery();
+      renderMessages();
+      setupMusic();
+    }
+
+  } catch (err) {
+    console.error("❌ Viewer load failed:", err);
+  }
+}
+
 /* LOAD DATA */
 const grid=document.querySelector(".grid");
 const viewerMessage=document.getElementById("viewerMessage");
 const sparkleLayer=document.getElementById("sparkle-layer");
 
-const items=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
-const messages=(localStorage.getItem(MSG_KEY)||"")
-  .split("\n---\n")
-  .filter(m=>m.trim()!=="");
 
 /* SHOW MESSAGE SECTION */
-if(messages.length>0){
+function renderMessages(){
+  const viewerMessage = document.getElementById("viewerMessage");
+
+  if(!messages.trim()){
+    viewerMessage.innerText = "A quiet feeling rests here 💜";
+    return;
+  }
+
   viewerMessage.innerHTML = "";
 
-  messages.forEach(msg=>{
+  messages.split("\n---\n").forEach(msg=>{
     const div = document.createElement("div");
     div.className = "single-message";
     div.innerText = msg;
     viewerMessage.appendChild(div);
   });
-
-}else{
-  viewerMessage.innerText="A quiet feeling rests here 💜";
 }
 
 /* RENDER GALLERY */
-items.forEach((item,i)=>{
-  const card=document.createElement("div");
-card.className="card";
+function renderGallery(){
+  const grid = document.querySelector(".grid");
+  grid.innerHTML = "";
 
-if(item.type==="video"){
-  card.classList.add("video-card");  // ✅ full width
-}
+  data.forEach((item,i)=>{
+    const card=document.createElement("div");
+    card.className="card";
 
-  let media;
-  if(item.type==="video"){
-    media=document.createElement("video");
-    media.src=item.url;
-    media.controls=true;
-  }else{
-    media=document.createElement("img");
-    media.src=item.url;
-  }
-
-  media.onclick=()=>{
-    if(item.type!=="video"){
-      zoomImg.src=item.url;
-      zoomModal.style.display="flex";
+    if(item.type==="video"){
+      card.classList.add("video-card");
     }
 
-    viewerMessage.style.opacity=0;
+    let media;
 
-    setTimeout(()=>{
-      viewerMessage.innerText =
-        item.memory || messages[i] || messages[0] || "A quiet feeling rests here 💜";
-      viewerMessage.style.opacity=1;
-    },200);
-  };
+    if(item.type==="video"){
+      media=document.createElement("video");
+      media.src = item.url.includes("res.cloudinary.com")
+  ? item.url.replace("/upload/", "/upload/f_auto,q_auto,w_500/")
+  : item.url;
+      media.controls=true;
+    }else{
+      media=document.createElement("img");
+      media.src = item.url.includes("res.cloudinary.com")
+  ? item.url.replace("/upload/", "/upload/f_auto,q_auto,w_500/")
+  : item.url;
+    }
 
-  card.appendChild(media);
+    media.onclick=()=>{
+      if(item.type!=="video"){
+        zoomImg.src=item.url;
+        zoomModal.style.display="flex";
+      }
+    };
 
-  if(item.caption){
-    const cap=document.createElement("div");
-    cap.className="caption";
-    cap.innerText=item.caption;
-    card.appendChild(cap);
-  }
+    card.appendChild(media);
 
-  grid.appendChild(card);
+    if(item.caption){
+      const cap=document.createElement("div");
+      cap.className="caption";
+      cap.innerText=item.caption;
+      card.appendChild(cap);
+    }
+
+    grid.appendChild(card);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadViewerData();
 });
 
 /* LAVENDER SPARKLE CURSOR */
@@ -463,20 +492,22 @@ document.addEventListener("mousemove", (e) => {
 });
 
 /* MUSIC */
-let audio=null;
-const savedMusic=localStorage.getItem("forever_music");
+let audio = null;
+
+function setupMusic(){
+  if(!music) return;
+
+  audio = new Audio(music);
+  audio.loop = true;
+  audio.volume = 0.6;
+}
 
 function startMusic(){
-  if(!savedMusic) return;
+  if(!audio) return;
 
-  audio=new Audio(savedMusic);
-  audio.loop=true;
-  audio.volume=0.6;
-
-  audio.play().then(()=>{
-    musicToggle.innerText="⏸ Music";
-    musicToggle.classList.add("active");
-  }).catch(()=>{});
+  audio.play();
+  musicToggle.innerText="⏸ Music";
+  musicToggle.classList.add("active");
 }
 
 musicToggle.onclick=()=>{
@@ -532,6 +563,7 @@ function startFloatingWords(){
     setTimeout(()=>w.remove(),10000);
   },5000);
 }
+
 </script>
 
 <footer class="site-footer">
