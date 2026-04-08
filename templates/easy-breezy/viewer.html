@@ -637,14 +637,14 @@ const MUSIC_KEY   = "eb_bg_music_v1";
    PASSWORD SYSTEM
 ================================ */
 function unlockViewer(){
-  const saved = localStorage.getItem(PASS_KEY) || "breezy";
+  const  saved = PASS || "breezy"; 
   const input = document.getElementById("viewerPass").value.trim();
 
   if(input === saved){
     document.getElementById("passwordOverlay").style.display = "none";
 
     // autoplay music if saved
-    const savedMusic = localStorage.getItem(MUSIC_KEY);
+    const savedMusic = song || localStorage.getItem(MUSIC_KEY);
     if(savedMusic){
       bgAudio = new Audio(savedMusic);
       bgAudio.loop = true;
@@ -658,6 +658,25 @@ function unlockViewer(){
   }else{
     document.getElementById("wrongPass").style.display = "block";
   }
+}
+
+function loadMessages(){
+
+  const viewerBox = document.getElementById("viewerMessage");
+
+  if(!messages.trim()){
+    viewerBox.innerText = "No messages yet 💌";
+    return;
+  }
+
+  viewerBox.innerHTML = "";
+
+  messages.split("\n---\n").forEach(msg=>{
+    const div = document.createElement("div");
+    div.className = "stickyNote";
+    div.innerText = msg;
+    viewerBox.appendChild(div);
+  });
 }
 
 /* ===============================
@@ -799,21 +818,21 @@ function openMusic(){ musicPanel.style.display="flex"; }
 function closeMusic(){ musicPanel.style.display="none"; }
 
 function toggleMusic(){
-  const song = localStorage.getItem(MUSIC_KEY);
+  const songUrl = song || localStorage.getItem(MUSIC_KEY);
 
-  if(!song){
+  if(!songUrl){
     alert("No music selected 🌿");
     return;
   }
 
-  if(bgAudio && bgAudio.src !== song){
+  if(bgAudio && bgAudio.src !== songUrl){
     bgAudio.pause();
     bgAudio = null;
     isPlaying = false;
   }
 
   if(!bgAudio){
-    bgAudio = new Audio(song);
+    bgAudio = new Audio(songUrl);
     bgAudio.loop = true;
     bgAudio.volume = 0.6;
   }
@@ -863,65 +882,87 @@ function launchConfettiOnce(){
 /* ===============================
    LOAD MEDIA + MESSAGES
 ================================ */
-const mediaList = JSON.parse(localStorage.getItem("eb_media_v1") || "[]");
-const videoContainer = document.getElementById("videoContainer");
-const imageGrid = document.getElementById("imageGrid");
+const projectId = window.location.pathname.split("/").pop();
 
-mediaList.forEach(x=>{
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
 
-  const card = document.createElement("div");
-  card.className = "card";
+let PASS = "";
+let song = "";
+let isLoaded = false;
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
 
-  if(x.type === "video"){
-    card.classList.add("videoCard");
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
 
-    card.innerHTML = `
-      <video src="${x.url}" controls></video>
-      <div class="caption">${x.caption || ""}</div>
-    `;
+      PASS = password;
+      song = music;
 
-    videoContainer.appendChild(card);
+      isLoaded = true;
+
+      render();
+      loadMessages();
+    }
+
+  } catch (err) {
+    console.error("❌ Viewer load failed:", err);
   }
+}
 
-  else if(x.type === "image"){
-    card.innerHTML = `
-      <img src="${x.url}">
-      <button class="img-msg" onclick="event.stopPropagation(); sendBreeze()">
-        tap gently 🌿
-      </button>
-      <div class="caption">${x.caption || ""}</div>
-    `;
-
-    card.addEventListener("click", ()=>{
-      openZoom("image", x.url, x.caption);
-    });
-
-    imageGrid.appendChild(card);
-  }
-
+document.addEventListener("DOMContentLoaded", () => {
+  loadViewerData();
 });
 
-/* load saved messages */
-const allMessages = localStorage.getItem(MSG_KEY) || "";
-const viewerBox = document.getElementById("viewerMessage");
+function render(){
 
-if(allMessages.trim()===""){
-  viewerBox.innerText = "A little message is waiting to be written 🌿";
-}else{
-  const list = allMessages.split("\n---\n");
-  viewerBox.innerHTML = "";
+  const videoContainer = document.getElementById("videoContainer");
+  const imageGrid = document.getElementById("imageGrid");
 
-  list.forEach(msg=>{
-    const p = document.createElement("div");
-    p.style.marginBottom="12px";
-    p.style.padding="10px 14px";
-    p.style.borderRadius="14px";
-    p.style.background="rgba(255,255,255,0.65)";
-    p.style.boxShadow="0 6px 16px rgba(102,217,255,0.20)";
-    p.style.animation="pop 0.3s ease";
-    p.innerText = msg;
-    viewerBox.appendChild(p);
+  videoContainer.innerHTML = "";
+  imageGrid.innerHTML = "";
+
+  data.forEach(x => {
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    if(x.type === "video"){
+      card.innerHTML = `
+        <video src="${optimizeCloudinaryUrl(x.url,800)}" controls></video>
+        <div class="caption">${x.caption || ""}</div>
+      `;
+      videoContainer.appendChild(card);
+    }
+
+    else if(x.type === "image"){
+      card.innerHTML = `
+        <img src="${optimizeCloudinaryUrl(x.url,400)}">
+        <button class="img-msg" onclick="event.stopPropagation(); sendBreeze()">
+          tap gently 🌿
+        </button>
+        <div class="caption">${x.caption || ""}</div>
+      `;
+
+      card.onclick = ()=> openZoom("image", x.url, x.caption);
+
+      imageGrid.appendChild(card);
+    }
+
   });
+}
+
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width}/`);
 }
 
 /* ===============================

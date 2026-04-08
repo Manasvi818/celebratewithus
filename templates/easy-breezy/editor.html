@@ -560,6 +560,8 @@ async function autoSave() {
 
   } catch (err) {
     console.error("❌ DB Save failed:", err);
+     return false;  // ✅ ADD THIS
+  
   }
 }
 async function loadFromDB() {
@@ -665,6 +667,7 @@ function deleteMsg(index){
   localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
 
   loadMessages();
+  autoSave();  
 }
 
 function editMsg(index){
