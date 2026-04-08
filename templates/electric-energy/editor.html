@@ -592,7 +592,7 @@ async function autoSave() {
         data: items,
         messages: localStorage.getItem(MSG_KEY) || "",
         music: localStorage.getItem(MUSIC_KEY) || "",
-        password: localStorage.getItem("viewerPassword_easyBreezy") || "",
+        password: localStorage.getItem(`pass_${projectId}`) || "",
       
   // ✅ ADD THESE
   couponUsed: localStorage.getItem("appliedCoupon") || "",

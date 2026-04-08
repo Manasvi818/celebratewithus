@@ -586,6 +586,17 @@ let password = "";
 let isLoaded = false;
 let song = "";
 
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  if (url.includes("/upload/f_auto")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
+
 /* MUSIC */
 let bgAudio = null;
 let isPlaying = false;
@@ -594,13 +605,19 @@ function playMusic(){
   if(!song) return;
 
   if(!bgAudio){
-    bgAudio = new Audio(song);
-    bgAudio.loop = true;
-    bgAudio.volume = 0.65;
+    setupMusic();   // ✅ ensures initialization
   }
+
   bgAudio.play().catch(()=>{});
 }
 
+function setupMusic() {
+  if (!song) return;
+
+  bgAudio = new Audio(optimizeCloudinaryUrl(song, 800));
+  bgAudio.loop = true;
+  bgAudio.volume = 0.65;
+}
 
 function toggleMusic(){
   if(!song){
@@ -625,9 +642,6 @@ function toggleMusic(){
 
   isPlaying = !isPlaying;
 }
-    alert("No music saved in Editor 🎵");
-    return;
-  
 
 async function loadViewerData() {
   try {
@@ -646,8 +660,9 @@ async function loadViewerData() {
       loadMessages();
 
       if (music) {
-        song = music;
-      }
+  song = music;
+  setupMusic();   // ✅ IMPORTANT
+}
 
       document.getElementById("passwordOverlay").style.display = "flex";
     }
@@ -705,7 +720,7 @@ function render(){
     if(x.type==="video"){
   videoContainer.innerHTML += `
     <div class="videoBox">
-      <video src="${x.url}" controls></video>
+      <video src="${optimizeCloudinaryUrl(x.url, 800)}" controls></video>
       <p class="videoCaption">${x.caption || ""}</p>
     </div>
   `;
@@ -718,7 +733,10 @@ function render(){
       const d=document.createElement("div");
       d.className="card";
       d.innerHTML=`
-        <img src="${x.url}" onclick="openZoom('${x.url}',\`${cap}\`)">
+        <img 
+  src="${optimizeCloudinaryUrl(x.url, 400)}"
+  loading="lazy"
+  onclick="openZoom('${optimizeCloudinaryUrl(x.url, 800)}',\`${cap}\`)">
         <button class="tapBtn" onclick="showRandom(${i})">Surprise ⚡</button>
         <p class="photoCaption">${x.caption || ""}</p>
       `;
@@ -739,7 +757,7 @@ render();
 
 /* ZOOM */
 function openZoom(src,cap){
-  zoomImg.src=src;
+  zoomImg.src = optimizeCloudinaryUrl(src, 1000);
   zoomCaption.textContent=cap || "";
   imgZoomOverlay.style.display="flex";
 }
