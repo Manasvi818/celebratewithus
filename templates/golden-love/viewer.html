@@ -499,12 +499,12 @@ async function loadViewerData() {
 
     if (result.success) {
       items = result.data || [];
-      messages = result.messages || "";
+    
       music = result.music || "";
       password = result.password || "";
 
-      render();
-      renderMessages();
+render();
+renderMessagesFromItems();
       setupPassword();
       setupMusic();
     }
@@ -512,6 +512,27 @@ async function loadViewerData() {
   } catch (err) {
     console.error("❌ Load failed:", err);
   }
+}
+
+function renderMessagesFromItems(){
+  const viewerMessage = document.getElementById("viewerMessage");
+
+  let content = "";
+
+  items.forEach(item=>{
+    if(item.message){
+      content += `💌 ${item.message}<br><br>`;
+    }
+    if(item.memory){
+      content += `📝 ${item.memory}<br><br>`;
+    }
+  });
+
+  if(content === ""){
+    content = "Click a memory to feel it 🤍";
+  }
+
+  viewerMessage.innerHTML = content;
 }
 
   function startMusic(){

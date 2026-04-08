@@ -3,6 +3,11 @@ const { createCoupon, applyCoupon, markUsed } = require("./coupon");const Projec
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
+const express = require("express");
+const app = express();   // ✅ DEFINE FIRST
+
+const PORT = process.env.PORT || 10000;  // ✅ DEFINE EARLY
+
 const mongoose = require("mongoose");
 require("dotenv").config();
 async function startServer() {
@@ -34,7 +39,7 @@ const session = require("express-session");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const cors = require("cors");
-const app = express();  
+
 app.use(express.static(__dirname + "/.."));
 app.use(session({
   secret: "my-secret-key",   // change later
@@ -93,7 +98,7 @@ app.use(express.static(path.join(__dirname, "..")));
 
 // 🔐 PROTECTED (optional)
 app.use("/assets", isPaid, express.static(path.join(__dirname, "../assets")));
-const PORT = process.env.PORT || 3000;
+
 
 
 app.use("/invoices", express.static(path.join(__dirname, "../invoices")));

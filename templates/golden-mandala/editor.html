@@ -365,6 +365,24 @@ function render(){
       autoSave();
     };
 
+    // 👉 ADD BELOW CAPTION INPUT
+
+let msg = document.createElement("textarea");
+msg.placeholder = "Message...";
+msg.value = obj.message || "";
+msg.oninput = e => {
+  obj.message = e.target.value;
+  autoSave();
+};
+
+let mem = document.createElement("textarea");
+mem.placeholder = "Memory...";
+mem.value = obj.memory || "";
+mem.oninput = e => {
+  obj.memory = e.target.value;
+  autoSave();
+};
+
     const del=document.createElement("button");
     del.textContent="Delete";
     del.className="btn ghost";
@@ -377,8 +395,10 @@ function render(){
     };
 
     d.appendChild(el);
-    d.appendChild(inp);
-    d.appendChild(del);
+d.appendChild(inp);
+d.appendChild(mem);   // ✅ ADD
+d.appendChild(msg);   // ✅ ADD
+d.appendChild(del);
     box.appendChild(d);
   });
 }
@@ -405,7 +425,9 @@ function initWidget(){
       items.push({
         url: optimizeCloudinaryUrl(result.info.secure_url, 500),
         type: result.info.resource_type,
-        caption: ""
+        caption: "",
+        memory: "",
+  message: ""
       });
       autoSave();
       render();
@@ -452,7 +474,13 @@ function uploadLocal(e){
   r.onload=v=>{
     let type = file.type.startsWith("video") ? "video" : "image";
 
-    items.push({url:v.target.result,type,caption:""});
+    items.push({
+  url: v.target.result,
+  type,
+  caption: "",
+  memory: "",
+  message: ""
+});
     
     autoSave();
 render();  };

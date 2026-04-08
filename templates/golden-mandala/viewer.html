@@ -659,7 +659,7 @@ function unlock(){
 
 /* ========= DATA ========= */
 let data = [];
-let messages = "";
+
 let music = "";
 let password = "";
 let PASS = "";
@@ -672,14 +672,14 @@ async function loadViewerData() {
 
     if (result.success) {
       data = result.data || [];
-      messages = result.messages || "";
+  
       music = result.music || "";
       password = result.password || "";
 
       PASS = password;
 
       render();
-      loadMessages();
+      renderMessagesFromItems();
 
       if (music) {
         song = music;
@@ -728,6 +728,19 @@ function render(){
 }
 render();
 
+function renderMessagesFromItems(){
+  messageList.innerHTML = "";
+
+  data.forEach(item=>{
+    if(item.message && item.message.trim() !== ""){
+      const d = document.createElement("div");
+      d.className = "stickyNote";
+      d.textContent = item.message;
+      messageList.appendChild(d);
+    }
+  });
+}
+
 /* ========= ZOOM ========= */
 function openZoom(src,cap){
   zoomImg.src=src;
@@ -763,19 +776,7 @@ function showRandom(i){
 }
 closeMsg.onclick=()=>msgOverlay.style.display="none";
 
-/* ========= LOAD MESSAGES ========= */
-function loadMessages(){
-  if(!messages.trim()) return;
 
-  messageList.innerHTML = "";
-
-  messages.split("\n---\n").forEach(m=>{
-    const d=document.createElement("div");
-    d.className="stickyNote";
-    d.textContent=m.trim();
-    messageList.appendChild(d);
-  });
-}
 
 /* ========= DECORATIONS ========= */
 const c = decorCanvas;
