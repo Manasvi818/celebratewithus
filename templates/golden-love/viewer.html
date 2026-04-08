@@ -411,10 +411,16 @@ max-width:90%;
 <!-- sparkle layer -->
 <div id="sparkle-layer"></div>
 <script>
-  const STORAGE_KEY = "golden_gallery";
-const MSG_KEY = "golden_messages";
 
-document.addEventListener("DOMContentLoaded", () => {
+ const projectId = window.location.pathname.split("/").pop();
+
+let items = [];
+let messages = "";
+let music = "";
+let password = "";
+
+let bgAudio = null;
+let playing = false;
 /* Floating Hearts */
 setInterval(()=>{
   const heart=document.createElement("div");
@@ -427,47 +433,50 @@ setInterval(()=>{
 },900);
 
   /* 🔐 PASSWORD */
-  const savedPass = localStorage.getItem("viewerPassword_golden");
+  
+
+  function setupPassword() {
+  const lock = document.getElementById("lockScreen");
 
   window.checkPassword = function () {
-  const input = document.getElementById("passInput").value;
+    const input = document.getElementById("passInput").value;
 
-  if (!savedPass || savedPass === "") {
-    document.getElementById("lockScreen").style.display = "none";
-    startMusic(); // ✅ ADD THIS
-    return;
-  }
-
-  if (input === savedPass) {
-    document.getElementById("lockScreen").style.display = "none";
-
-    startMusic(); // ✅ ADD THIS
-
-  } else {
-    document.getElementById("wrongPass").style.display = "block";
-
-    if (hint && hint.trim() !== "") {
-      hintText.style.display = "block";
+    if (!password || password === "") {
+      lock.style.display = "none";
+      startMusic();
+      return;
     }
-  }
-};
 
+    if (input === password) {
+      lock.style.display = "none";
+      startMusic();
+    } else {
+      document.getElementById("wrongPass").style.display = "block";
+    }
+  };
+}
+
+function setupMusic() {
+  if (!music) return;
+
+  bgAudio = new Audio(music);
+  bgAudio.loop = true;
+  bgAudio.volume = 0.6;
+}
 
   /* 🎶 MUSIC */
-  const savedMusic = localStorage.getItem("golden_music");
-  let bgAudio = null;
-  let playing = false;
+    
 
   const musicToggle = document.getElementById("musicToggle");
 
   musicToggle.onclick = () => {
-    if (!savedMusic) {
+    if (!music) {
       musicToggle.innerText = "🤍 No Music";
       return;
     }
 
     if (!bgAudio) {
-      bgAudio = new Audio(savedMusic);
+      bgAudio = new Audio(music);
       bgAudio.loop = true;
       bgAudio.volume = 0.6;
     }
@@ -483,11 +492,33 @@ setInterval(()=>{
     }
   };
 
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      items = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      render();
+      renderMessages();
+      setupPassword();
+      setupMusic();
+    }
+
+  } catch (err) {
+    console.error("❌ Load failed:", err);
+  }
+}
+
   function startMusic(){
-  if (!savedMusic) return;
+  if (!music) return;
 
   if (!bgAudio){
-    bgAudio = new Audio(savedMusic);
+    bgAudio = new Audio(music);
     bgAudio.loop = true;
     bgAudio.volume = 0.5;
   }
@@ -513,7 +544,7 @@ bgAudio.play()
  /* 👁️ PASSWORD HINT TOGGLE */
 const hintText = document.getElementById("hintText");
 const hintValue = document.getElementById("hintValue");
-const hint = localStorage.getItem("viewerPassword_hint");
+const hint = localStorage.getItem(`hint_${projectId}`);
 
 if (hintText && hintValue && hint && hint.trim() !== "") {
   hintValue.innerText = hint;
@@ -528,121 +559,93 @@ togglePass.onclick = () => {
   togglePass.innerText = hidden ? "🙈" : "👁️";
 };
 
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width}/`);
+}
 
 /* 🖼️ LOAD GALLERY + MESSAGES */
-const grid = document.querySelector(".grid");
-const viewerMessage = document.getElementById("viewerMessage");
+function render() {
+  const grid = document.querySelector(".grid");
+  const viewerMessage = document.getElementById("viewerMessage");
 
-const items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-const messages = JSON.parse(localStorage.getItem(MSG_KEY) || "[]");
+  grid.innerHTML = "";
 
-if (items.length === 0) {
-  viewerMessage.innerText = "No lovely moments yet 🤍";
-}
+  const videoContainer = document.createElement("div");
+  const imageContainer = document.createElement("div");
 
-// ✅ Default message section
-if (messages.length > 0) {
-  viewerMessage.innerHTML = messages
-    .map(m => `💌 ${m}`)
-    .join("<br><br>");
-} else if (items.length > 0) {
-  viewerMessage.innerText = items[0].memory || "A quiet feeling rests here 🤍";
-} else {
-  viewerMessage.innerText = "No lovely moments yet 🤍";
-}
+  videoContainer.style.display = "flex";
+  videoContainer.style.flexDirection = "column";
+  videoContainer.style.gap = "32px";
 
-grid.innerHTML = "";
+  imageContainer.style.display = "grid";
+  imageContainer.style.gridTemplateColumns = "repeat(2,1fr)";
+  imageContainer.style.gap = "32px";
 
-const videoContainer = document.createElement("div");
-const imageContainer = document.createElement("div");
+  if(items.length === 0){
+    grid.innerHTML = `<p style="text-align:center;">No moments yet 🤍</p>`;
+    return;
+  }
 
-videoContainer.style.display = "flex";
-videoContainer.style.flexDirection = "column";
-videoContainer.style.gap = "32px";
+  items.forEach((item, index) => {
+    const card = document.createElement("div");
+    card.className = "card";
 
-imageContainer.style.display = "grid";
-imageContainer.style.gridTemplateColumns = "repeat(2,1fr)";
-imageContainer.style.gap = "32px";
+    let media;
 
-if(items.length === 0){
-  grid.innerHTML = `
-    <p style="grid-column:1/-1;text-align:center;opacity:.7;">
-      No moments added yet 🕯️
-    </p>
-  `;
-}
+    if (item.type === "video") {
+      media = document.createElement("video");
+      media.controls = true;
+      media.src = item.url;
+    } else {
+      media = document.createElement("img");
+      media.src = optimizeCloudinaryUrl(item.url, 500);
+    }
 
-
-items.forEach((item, index) => {
-  const card = document.createElement("div");
-  card.className = "card";
-
-  let media;
-  if (item.type === "video") {
-  media = document.createElement("video");
-
-  media.controls = true;
-  media.preload = "metadata";
-  media.playsInline = true;
-
-  const source = document.createElement("source");
-  source.src = item.url;
-  source.type = "video/mp4"; // Cloudinary usually serves mp4
-
-  media.appendChild(source);
-
-   media.innerHTML += "Your browser does not support video.";
-}
-
-else {
-  media = document.createElement("img");
-  media.src = item.url;
-}
-  media.onclick = () => {
-  // zoom only for images
+    media.onclick = () => {
   if(item.type !== "video"){
     openZoom(item.url, item.caption);
   }
 
-  viewerMessage.style.opacity = 0;
+  const viewerMessage = document.getElementById("viewerMessage");
 
-  setTimeout(() => {
-    viewerMessage.innerText =
-  item.memory || messages[index] || messages[0] || "A quiet feeling rests here 🤍";
-    viewerMessage.style.opacity = 1;
-  }, 200);
+  const msgList = messages ? messages.split("\n---\n") : [];
+
+viewerMessage.innerText =
+  msgList[index] ||
+  msgList[0] ||
+  "A quiet feeling rests here 🤍";
 };
 
- card.appendChild(media); // ✅ IMAGE FIRST
-  // caption
-if (item.caption && item.caption.trim() !== "") {
-  const cap = document.createElement("div");
-  cap.className = "caption";
-  cap.innerText = item.caption;
-  card.appendChild(cap);
+    card.appendChild(media);
+
+    if(item.type==="video"){
+      videoContainer.appendChild(card);
+    } else {
+      imageContainer.appendChild(card);
+    }
+  });
+
+  
+
+  grid.appendChild(videoContainer);
+  grid.appendChild(imageContainer);
 }
 
-// ✅ memory
-if (item.memory && item.memory.trim() !== "") {
-  const mem = document.createElement("div");
-  mem.className = "caption";
-  mem.style.opacity = "0.95";
-  mem.style.fontStyle = "normal";
-  mem.style.color = "#ffe8c8";
-  mem.innerText = item.memory;
-  card.appendChild(mem);
+function renderMessages() {
+  const viewerMessage = document.getElementById("viewerMessage");
+
+  if (!messages || messages.trim() === "") {
+    viewerMessage.innerText = "A quiet feeling rests here 🤍";
+    return;
+  }
+
+  viewerMessage.innerHTML = messages
+    .split("\n---\n")
+    .map(m => `💌 ${m}`)
+    .join("<br><br>");
 }
-
-if(item.type === "video"){
-  videoContainer.appendChild(card);   // 🎥 full row
-} else {
-  imageContainer.appendChild(card);   // 🖼 2 per row
-}
-
-});
-
-grid.appendChild(videoContainer);
-grid.appendChild(imageContainer);
 
 /* ✨ GOLDEN SPARKLE SYSTEM */
 let sparkleOn = false;
@@ -783,10 +786,216 @@ document.addEventListener("keydown", (e) => {
     setTimeout(() => word.remove(), 10000);
   }, 5000);
 
+
+
+window.addEventListener("DOMContentLoaded", () => {
+  loadViewerData();
 });
 
+function downloadViewer() {
+  autoSave();
+
+  const template = window.location.pathname.split("/")[2];
+  const projectId = window.location.pathname.split("/").pop();
+
+  // ✅ Download viewer ZIP
+  window.open(`/download?template=${template}&projectId=${projectId}`);
+
+  // ✅ Create invoice file
+  const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
+  const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
+  const coupon = "No Coupon Applied";
+
+  const couponUsed = localStorage.getItem("appliedCoupon") || "No Coupon Applied";
+const discount = parseInt(localStorage.getItem("discount")) || 0;
+const finalAmount = parseInt(localStorage.getItem("finalAmount")) || 149;
+const nextCoupon = localStorage.getItem("nextCoupon") || "N/A";
+  
+  const content = `
+<html>
+<head>
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#d88fb0;
+  color:white;
+  padding:30px;
+}
+
+.container{
+  max-width:800px;
+  margin:auto;
+}
+
+.header{
+  text-align:center;
+  font-size:28px;
+  font-weight:bold;
+  letter-spacing:2px;
+  margin-bottom:20px;
+}
+
+.logo{
+  position:absolute;
+  top:30px;
+  right:30px;
+  width:90px;
+}
+
+.section{
+  margin-bottom:12px;
+}
+
+.links{
+  color:#002fff;
+  margin:10px 0;
+  word-break:break-all;
+}
+
+.totalBox{
+  margin:30px auto;
+  width:300px;
+  text-align:center;
+  background:#ff5bbd;
+  padding:18px;
+  border-radius:18px;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:16px;
+}
+</style>
+</head>
+
+<body>
+
+<img class="logo" src="https://celebratewithus.co.in/styles/images/logo.png" />
+
+<div class="container">
+
+<div class="header">INVOICE RECEIPT</div>
+
+<div class="section">Name: Guest</div>
+<div class="section">Email: guest@email.com</div>
+
+<br>
+
+<div class="section">Payment ID: pay_${projectId}</div>
+<div class="section">Date: ${new Date().toLocaleDateString()}</div>
+<div class="section">Time: ${new Date().toLocaleTimeString()}</div>
+
+<br>
+
+<div class="section">Project ID: ${projectId}</div>
+<div class="section">Template: ${template}</div>
+<div class="section">Next Coupon: ${nextCoupon}</div>
+
+<br>
+
+<div class="links">
+Viewer Link: ${viewerURL}
+</div>
+
+<div class="links">
+Editor Link: ${editorURL}
+</div>
+
+<br>
+
+<div class="section">Coupon Used: ${couponUsed}</div>
+<div class="section">Discount: ${discount}</div>
+<div class="section">Final Amount Paid: ₹${finalAmount}</div>
+
+<div class="totalBox">
+Total Paid: ₹${finalAmount}
+</div>
+
+<div class="footer">
+Thank you for celebrating with us 💛
+</div>
+
+</div>
+</body>
+</html>
+`;
+
+// create file properly
+const blob = new Blob([content], { type: "text/html" });
+const link = document.createElement("a");
+
+link.href = URL.createObjectURL(blob);
+link.download = `invoice_${projectId}.html`;
+link.click();
+}
+async function goToViewer() {
+  await autoSave();   // 🔥 wait for DB save
+
+  const template = window.location.pathname.split("/")[2];
+  const projectId = window.location.pathname.split("/").pop();
+
+  window.location.href = `/viewer/${template}/${projectId}`;
+}
+
+// ✅ COPY VIEWER LINK
+function copyViewerLink() {
+  const viewerLink = window.location.href.replace("/editor/", "/viewer/");
+
+  navigator.clipboard.writeText(viewerLink)
+    .then(() => {
+      alert("🔗 Link copied! Share it 💖");
+    })
+    .catch(() => {
+      alert("Copy failed");
+    });
+}
+
+
+// ✅ DOWNLOAD INVOICE
+
+ function downloadInvoice() {
+  const invoicePath = localStorage.getItem("invoicePath");
+
+  if (!invoicePath) {
+    alert("Invoice not found ❌ Please complete payment first");
+    return;
+  }
+
+  window.open(`https://celebratewithus.co.in${invoicePath}`, "_blank");
+}
 
 </script>
+
+<div style="text-align:center; margin-top:30px;"
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:30px;
+  flex-wrap:wrap;
+">
+
+  <button class="btn" onclick="goToViewer()">
+    💾 Save All & Show Viewer Page
+  </button>
+
+  <button class="btn" onclick="copyViewerLink()">
+  🔗 Copy Viewer Link
+</button>
+
+<button class="btn" onclick="downloadInvoice()">
+  📄 Download Invoice
+</button>
+
+  <p style="margin-top:12px; font-size:13px; color:#8a5a55;">
+    ⚠️ When you click on "Download Invoice", along with the billing you will get 
+    <b>Editor page link</b> and <b>Viewer page link</b>.
+  </p>
+
+</div>
 <div id="flame"></div>
 
 <!-- 🔍 ZOOM MODAL -->

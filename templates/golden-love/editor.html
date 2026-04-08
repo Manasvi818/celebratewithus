@@ -254,6 +254,9 @@ localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
 
 async function autoSave() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  localStorage.setItem(MSG_KEY, messages);
+  localStorage.setItem(MUSIC_KEY, music);
+  localStorage.setItem(`pass_${projectId}`, password);
 
   try {
     await fetch("https://celebratewithus.onrender.com/save-project", {
@@ -264,17 +267,22 @@ async function autoSave() {
       body: JSON.stringify({
         projectId,
         data: items,
-        messages: messages,
-        music: localStorage.getItem(MUSIC_KEY) || "",
-        password: localStorage.getItem(`pass_${projectId}`) || ""
+        messages: messages.join("\n---\n"),
+        music: music,
+        password: password
       })
     });
 
-    console.log("✅ Saved to DB");
-
+    console.log("✅ Synced to DB");
   } catch (err) {
-    console.error("❌ DB Save failed:", err);
+    console.error("❌ Sync failed:", err);
   }
+}
+
+function saveMusic(){
+  music = document.getElementById("bgMusicSelect").value || "";
+  localStorage.setItem(MUSIC_KEY, music);
+  autoSave();
 }
 
 function clearAll(){
@@ -290,14 +298,16 @@ async function loadFromDB() {
 
     if (result.success) {
       items = result.data || [];
-      messages = result.messages || [];
+      messages = result.messages
+  ? result.messages.split("\n---\n")
+  : [];
       
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
       localStorage.setItem(MSG_KEY, JSON.stringify(messages));
       localStorage.setItem(MUSIC_KEY, result.music || "");
       localStorage.setItem(`pass_${projectId}`, result.password || "");
 
-      render();
+      render()
       renderMessages();
 
       console.log("✅ Loaded from DB");
@@ -411,13 +421,9 @@ function openWidget(){
 }
 
 function savePass(){
-localStorage.setItem(`pass_${projectId}`, newPass.value);
-alert("Password saved 💛");
-}
-
-function saveMusic(){
-localStorage.setItem(MUSIC_KEY,bgMusicSelect.value||"");
-alert("Music saved 🎶");
+  password = newPass.value.trim();
+  localStorage.setItem(`pass_${projectId}`, password);
+  autoSave();
 }
 
 let previewAudio = null;
@@ -528,7 +534,7 @@ msgSaveBtn.onclick=()=>{
   localStorage.setItem(MSG_KEY, JSON.stringify(messages));
   msgPopup.style.display="none";
   renderMessages();
-  render();
+  
 };
 
 msgPopup.onclick=(e)=>{
@@ -541,15 +547,7 @@ window.addEventListener("DOMContentLoaded", () => {
   loadFromDB();
 });
   
-function waitForCloudinary(){
-    if (typeof cloudinary !== "undefined") {
-      initWidget();
-    } else {
-      setTimeout(waitForCloudinary, 200);
-    }
-  }
 
-  waitForCloudinary();
 
 
 function downloadViewer() {
@@ -693,11 +691,8 @@ link.download = `invoice_${projectId}.html`;
 link.click();
 }
 async function goToViewer() {
-  await autoSave();   // 🔥 wait for DB save
-
+  await autoSave();   // 🔥 THIS IS MUST
   const template = window.location.pathname.split("/")[2];
-  const projectId = window.location.pathname.split("/").pop();
-
   window.location.href = `/viewer/${template}/${projectId}`;
 }
 
