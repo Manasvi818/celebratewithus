@@ -152,7 +152,14 @@ input, textarea, select{
   color:#3B1F1F;
   outline:none;
 }
-
+#msgInput {
+  width: 100%;
+  min-height: 140px;   /* 🔥 increased height */
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 14px;
+  resize: vertical;
+}
 input:focus, textarea:focus, select:focus{
   border-color:var(--gold);
   box-shadow:0 0 8px rgba(212,160,23,.4);
@@ -421,11 +428,11 @@ function saveAll(){
 
 async function autoSave() {
 
-  // local save
+  // local save (instant)
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 
   try {
-    await fetch("https://celebratewithus.onrender.com/save-project", {
+    const res = await fetch("https://celebratewithus.onrender.com/save-project", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -439,10 +446,19 @@ async function autoSave() {
       })
     });
 
-    console.log("✅ Saved to DB");
+    const result = await res.json();
+
+    if(!result.success){
+      throw new Error("Save failed");
+    }
+
+    console.log("✅ Fully saved to DB");
+
+    return true;
 
   } catch (err) {
     console.error("❌ DB Save failed:", err);
+    return false;
   }
 }
 
@@ -681,12 +697,21 @@ element.innerHTML = content;
 }
 
 async function goToViewer() {
-  await autoSave();
 
-  const template = window.location.pathname.split("/")[2];
-  const projectId = window.location.pathname.split("/").pop();
+  const saved = await autoSave();
 
-  window.location.href = `/viewer/${template}/${projectId}`;
+  if(!saved){
+    alert("Save failed. Please try again.");
+    return;
+  }
+
+  // 🔥 small delay ensures DB consistency
+  setTimeout(() => {
+    const template = window.location.pathname.split("/")[2];
+    const projectId = window.location.pathname.split("/").pop();
+
+    window.location.href = `/viewer/${template}/${projectId}`;
+  }, 500);
 }
 
 function copyViewerLink() {
@@ -695,20 +720,39 @@ function copyViewerLink() {
   alert("Link copied!");
 }
 
-function downloadInvoice() {
-  const invoicePath = localStorage.getItem("invoicePath");
+async function downloadInvoice() {
 
-  if (!invoicePath) {
-    alert("Invoice not found");
+  const saved = await autoSave();
+
+  if(!saved){
+    alert("Save failed.");
     return;
   }
 
-  window.open(`https://celebratewithus.co.in${invoicePath}`, "_blank");
+  setTimeout(() => {
+    const invoicePath = localStorage.getItem("invoicePath");
+
+    if (!invoicePath) {
+      alert("Invoice not found");
+      return;
+    }
+
+    window.open(`https://celebratewithus.co.in${invoicePath}`, "_blank");
+  }, 500);
 }
 </script>
-<button class="btn" onclick="goToViewer()">👁 View Page</button>
+<div style="
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  margin-top:20px;
+  flex-wrap:wrap;
+">
+<button class="btn" onclick="goToViewer()">👁 save and  go to Viewer Page</button>
 <button class="btn" onclick="copyViewerLink()">🔗 Copy Link</button>
 <button class="btn" onclick="downloadInvoice()">📄 Invoice</button>
+</div>
+
 <!-- FOOTER -->
 <footer class="site-footer">
   <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>

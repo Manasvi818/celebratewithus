@@ -433,19 +433,21 @@ function render(){
       media = document.createElement("video");
       media.src = item.url;
       media.controls = true;
+
       card.classList.add("videoCard");
       videoContainer.appendChild(card);
     }
     else{
       media = document.createElement("img");
+      media.src = item.url;
+
+      media.style.cursor = "pointer";
+      media.onclick = () => {
+        openZoom(item.url, item.caption || "");
+      };
+
       imageGrid.appendChild(card);
-media.src = item.url;
-
-media.style.cursor = "pointer";   // 👈 nice UX
-
-media.onclick = () => {
-  openZoom(item.url, item.caption || "");
-};
+    }
 
     const caption = document.createElement("div");
     caption.className = "caption";
@@ -457,6 +459,7 @@ media.onclick = () => {
   });
 
 }
+
 
 /* LOAD MESSAGE */
 function loadMessages(){
