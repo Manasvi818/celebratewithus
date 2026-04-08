@@ -802,38 +802,117 @@ document.addEventListener("DOMContentLoaded", () => {
   const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
 
   const content = `
-  <html>
-  <body style="font-family:Arial; padding:25px; background:#f3cdd3;">
+<html>
+<head>
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#d88fb0;
+  color:white;
+  padding:30px;
+}
 
-    <h2 style="text-align:center;">INVOICE RECEIPT</h2>
-    <hr>
+.container{
+  max-width:800px;
+  margin:auto;
+}
 
-    <p><strong>Project ID:</strong> ${projectId}</p>
-    <p><strong>Template:</strong> ${template}</p>
+.header{
+  text-align:center;
+  font-size:28px;
+  font-weight:bold;
+  letter-spacing:2px;
+  margin-bottom:20px;
+}
 
-    <p><strong>Coupon Used:</strong> ${couponUsed}</p>
-    <p><strong>Discount:</strong> ₹${discount}</p>
+.logo{
+  position:absolute;
+  top:30px;
+  right:30px;
+  width:90px;
+}
 
-    <div style="margin:15px 0; font-size:18px;">
-      <strong>Final Amount Paid: ₹${finalAmount}</strong>
-    </div>
+.section{
+  margin-bottom:12px;
+}
 
-    <p><strong>Next Coupon:</strong> ${nextCoupon}</p>
+.links{
+  color:#002fff;
+  margin:10px 0;
+  word-break:break-all;
+}
 
-    <hr>
+.totalBox{
+  margin:30px auto;
+  width:300px;
+  text-align:center;
+  background:#ff5bbd;
+  padding:18px;
+  border-radius:18px;
+  font-size:20px;
+  font-weight:bold;
+}
 
-    <p><strong>Viewer Link:</strong><br>${viewerURL}</p>
-    <p><strong>Editor Link:</strong><br>${editorURL}</p>
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:16px;
+}
+</style>
+</head>
 
-     <!-- THANK YOU -->
-  <p style="margin-top:15px;">
-    Thank you for celebrating with us 💛
-  </p>
+<body>
 
+<img class="logo" src="https://celebratewithus.co.in/styles/images/logo.png" />
 
-  </body>
-  </html>
-  `;
+<div class="container">
+
+<div class="header">INVOICE RECEIPT</div>
+
+<div class="section">Name: Guest</div>
+<div class="section">Email: guest@email.com</div>
+
+<br>
+
+<div class="section">Payment ID: pay_${projectId}</div>
+<div class="section">Date: ${new Date().toLocaleDateString()}</div>
+<div class="section">Time: ${new Date().toLocaleTimeString()}</div>
+
+<br>
+
+<div class="section">Project ID: ${projectId}</div>
+<div class="section">Template: ${template}</div>
+<div class="section">Next Coupon: ${nextCoupon}</div>
+
+<br>
+
+<div class="links">
+Viewer Link: ${viewerURL}
+</div>
+
+<div class="links">
+Editor Link: ${editorURL}
+</div>
+
+<br>
+
+<div class="section">Coupon Used: ${couponUsed}</div>
+<div class="section">Discount: ${discount}</div>
+<div class="section">Final Amount Paid: ₹${finalAmount}</div>
+
+<div class="totalBox">
+Total Paid: ₹${finalAmount}
+</div>
+
+<div class="footer">
+Thank you for celebrating with us 💛
+</div>
+
+</div>
+</body>
+</html>
+`;
 
   // ✅ DOWNLOAD FILE (REAL FIX)
   const blob = new Blob([content], { type: "text/html" });

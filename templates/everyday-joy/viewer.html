@@ -411,76 +411,98 @@ body.sunset  { background:linear-gradient(180deg,#ffc6ff,#ff99c8); }
 </div>
 
 <script>
-const MEDIA_KEY="joy_media_v1";
-const MSG_KEY="joy_messages_v1";
-const MUSIC_KEY="joy_bg_music_v1";
-const PASS_KEY="viewerPassword_everydayJoy";
-const musicToggle = document.getElementById("musicToggle");
+const projectId = window.location.pathname.split("/").pop();
 
-let isPlaying=false;
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
+let PASS = "";
+let isLoaded = false;
+
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      PASS = password;
+
+      document.getElementById("lockScreen").style.display = "flex";
+      isLoaded = true;
+
+      render();
+      loadMessages();
+
+      if (music) {
+        song = music;
+        setupMusic();
+      }
+    }
+  } catch (err) {
+    console.error("❌ Viewer load failed:", err);
+  }
+}
 
 /* PASSWORD */
 function checkPassword(){
-  const saved=localStorage.getItem(PASS_KEY);
+  if(!isLoaded){
+    alert("Wait...");
+    return;
+  }
+
   const entered=document.getElementById("passInput").value.trim();
 
-  if(!saved){ alert("Password not set in editor."); return; }
-  if(entered!==saved){ alert("Wrong password ❌"); return; }
+  if(entered !== PASS){
+    alert("Wrong password ❌");
+    return;
+  }
 
   document.getElementById("lockScreen").style.display="none";
   document.getElementById("viewerPage").style.display="block";
 
-  loadGallery();
-  loadMessages();
-  loadMusic();
+  if(song){
+    playMusic();
+  }
+
+  setSkyByTime();
+  spawnBalloons();
+  confettiBurst();
 }
 
 /* GALLERY */
-function loadGallery(){
-  const items = JSON.parse(localStorage.getItem(MEDIA_KEY)||"[]");
-
+function render(){
   const gallery = document.getElementById("gallery");
   const videoContainer = document.getElementById("videoContainer");
 
   gallery.innerHTML = "";
   videoContainer.innerHTML = "";
 
-  if(!items.length){
-    gallery.innerHTML = "<p>No memories yet 🌼</p>";
-    return;
-  }
-
-  /* 🎬 VIDEOS FIRST (1 PER ROW) */
-  items.forEach(item=>{
-    if(item.type === "video"){
-      const box = document.createElement("div");
-      box.className = "videoBox";
-
-      box.innerHTML = `
-        <video src="${item.url}" controls></video>
-        <div class="caption">${item.caption || ""}</div>
+  data.forEach(item=>{
+    if(item.type==="video"){
+      videoContainer.innerHTML += `
+        <div class="videoBox">
+          <video src="${item.url}" controls></video>
+        </div>
       `;
-
-      videoContainer.appendChild(box);
     }
   });
 
-  /* 🖼 IMAGES (2 PER ROW) */
-  items.forEach(item=>{
-    if(item.type === "image"){
+  data.forEach(item=>{
+    if(item.type==="image"){
       const card = document.createElement("div");
-      card.className = "polaroid";
+      card.className="polaroid";
 
       card.innerHTML = `
         <img src="${item.url}">
+        <button onclick="showRandom()">✨ Surprise</button>
         <div class="caption">${item.caption || ""}</div>
       `;
-
-      card.querySelector("img").onclick = ()=>{
-        lightbox.classList.add("open");
-        lightboxImg.src = item.url;
-        lightboxCap.textContent = item.caption || "";
-      };
 
       gallery.appendChild(card);
     }
@@ -679,6 +701,10 @@ function updateTimelineColor(theme){
       "linear-gradient(90deg,#F2C94C,#ffffff)";
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadViewerData();
+});
 
 </script>
 

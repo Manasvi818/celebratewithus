@@ -506,9 +506,13 @@ previewAudio=null;
 }
 
 function saveBgMusic(){
-localStorage.setItem(MUSIC_KEY,musicSelect.value||"");
-musicSavedMsg.style.display="block";
-setTimeout(()=>musicSavedMsg.style.display="none",1500);
+  const url = musicSelect.value || "";
+  localStorage.setItem(MUSIC_KEY, url);
+
+  autoSave();   // ✅ REQUIRED (this was missing)
+
+  musicSavedMsg.style.display="block";
+  setTimeout(()=>musicSavedMsg.style.display="none",1500);
 }
 
 let widget;
