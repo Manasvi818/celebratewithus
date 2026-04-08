@@ -778,29 +778,25 @@ document.addEventListener("DOMContentLoaded", () => {
   waitForCloudinary();
 });
 
-  async function downloadViewer() {
-
-  const saved = await autoSave();
-
-  if(!saved){
-    alert("Save failed");
-    return;
-  }
+ function downloadViewer() {
+  autoSave();
 
   const template = window.location.pathname.split("/")[2];
   const projectId = window.location.pathname.split("/").pop();
 
-  
+  // ✅ Download viewer ZIP
+  window.open(`/download?template=${template}&projectId=${projectId}`);
 
-  // ✅ GET REAL DATA
-  const couponUsed = localStorage.getItem("appliedCoupon") || "None";
-  const discount = parseInt(localStorage.getItem("discount")) || 0;
-  const finalAmount = parseInt(localStorage.getItem("finalAmount")) || 149;
-  const nextCoupon = localStorage.getItem("nextCoupon") || "N/A";
-
+  // ✅ Create invoice file
   const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
   const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
+  const coupon = "No Coupon Applied";
 
+  const couponUsed = localStorage.getItem("appliedCoupon") || "No Coupon Applied";
+const discount = parseInt(localStorage.getItem("discount")) || 0;
+const finalAmount = parseInt(localStorage.getItem("finalAmount")) || 149;
+const nextCoupon = localStorage.getItem("nextCoupon") || "N/A";
+  
   const content = `
 <html>
 <head>
@@ -914,14 +910,14 @@ Thank you for celebrating with us 💛
 </html>
 `;
 
-const newWindow = window.open("", "_blank");
+// create file properly
+const blob = new Blob([content], { type: "text/html" });
+const link = document.createElement("a");
 
-newWindow.document.write(content);
-newWindow.document.close();
+link.href = URL.createObjectURL(blob);
+link.download = `invoice_${projectId}.html`;
+link.click();
 }
-
- 
-
 async function goToViewer() {
   await autoSave();   // 🔥 wait for DB save
 
@@ -976,7 +972,7 @@ function copyViewerLink() {
   🔗 Copy Viewer Link
 </button>
 
-<button class="btn" onclick="downloadViewer()">
+<button class="btn" onclick="downloadInvoice()">
   📄 Download Invoice
 </button>
 
