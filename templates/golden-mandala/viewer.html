@@ -357,6 +357,16 @@ body.night #musicCard{
 
 .btnSmall:active{transform:scale(.98);}
 
+#messageInput {
+  width: 100%;
+  min-height: 120px;   /* 🔥 increase this */
+  height: 150px;       /* 🔥 fixed bigger size */
+  padding: 12px;
+  border-radius: 12px;
+  resize: vertical;    /* ✅ user can expand manually */
+  font-size: 16px;
+}
+
 #msgText{
   white-space:pre-line;
   font-size:16px;
@@ -583,6 +593,14 @@ body.night #passwordOverlay{
 </div>
 
 <script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+  // 🔥 STEP 1: instant load from cache
+  const loaded = loadFromCache();
+
+  // 🔥 STEP 2: always fetch fresh data in background
+  loadViewerData();
+});
   const projectId = window.location.pathname.split("/").pop();
   function optimizeCloudinaryUrl(url, width = 500) {
   if (!url || !url.includes("res.cloudinary.com")) return url;
@@ -632,12 +650,11 @@ function toggleMusic(){
 }
 
 
-
 function unlock(){
-  if(!isLoaded){
-    alert("⏳ Wait...");
-    return;
-  }
+if(!isLoaded){
+  alert("⚠️ Loading data, please try again in 2 seconds");
+  return;
+}
 
   const entered = pass.value.trim();
   const saved = PASS.trim();
@@ -665,6 +682,44 @@ let password = "";
 let PASS = "";
 let isLoaded = false;
 
+// 🔥 INSTANT LOAD CACHE
+const CACHE_KEY = `viewer_${projectId}`;
+
+function loadFromCache(){
+  const cache = localStorage.getItem(CACHE_KEY);
+  if(!cache) return false;
+
+  try{
+    const parsed = JSON.parse(cache);
+
+    data = parsed.data || [];
+    messages = parsed.messages || "";
+    music = parsed.music || "";
+    password = parsed.password || "";
+
+    PASS = password;
+
+    render();
+    loadMessages();
+
+    if(music){
+      song = music;
+    }
+
+    isLoaded = true;
+
+    // auto unlock if no password
+    if(!PASS){
+      passwordOverlay.style.display="none";
+    }
+
+    return true;
+
+  }catch(e){
+    return false;
+  }
+}
+
 async function loadViewerData() {
   try {
     const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
@@ -683,10 +738,25 @@ async function loadViewerData() {
 
       if (music) {
         song = music;
-      
       }
 
       isLoaded = true;
+
+      // 🔥 SAVE CACHE
+localStorage.setItem(CACHE_KEY, JSON.stringify({
+  data,
+  messages,
+  music,
+  password
+}));
+
+setTimeout(() => {
+  if (!PASS || PASS.trim() === "") {
+    passwordOverlay.style.display = "none";
+  }
+}, 500);
+
+      
     }
   } catch (err) {
     console.error("❌ Viewer load failed:", err);
@@ -1071,6 +1141,11 @@ musicOverlay.onclick = e => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+
+  // 🔥 STEP 1: instant load from cache
+  const loaded = loadFromCache();
+
+  // 🔥 STEP 2: always fetch fresh data in background
   loadViewerData();
 });
 </script>
