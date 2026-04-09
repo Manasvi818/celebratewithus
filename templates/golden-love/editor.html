@@ -597,18 +597,16 @@ window.addEventListener("DOMContentLoaded", () => {
 });
   
 
-
-
 function downloadViewer() {
   autoSave();
 
   const template = window.location.pathname.split("/")[2];
-  
+  const projectId = window.location.pathname.split("/").pop();
 
   
-  
+
   // ✅ Create invoice file
-  const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
+  
   const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
   const coupon = "No Coupon Applied";
 
@@ -617,78 +615,56 @@ const discount = parseInt(localStorage.getItem("discount")) || 0;
 const finalAmount = parseInt(localStorage.getItem("finalAmount")) || 149;
 const nextCoupon = localStorage.getItem("nextCoupon") || "N/A";
   
-  const content = `
+ const content = `
 <html>
 <head>
 <style>
 body{
   margin:0;
-  font-family:"Poppins",sans-serif;
+  font-family: Arial, sans-serif;
   background:#d88fb0;
-  padding:30px;
   color:white;
+  padding:40px;
 }
 
 .container{
   max-width:700px;
   margin:auto;
-  background:rgba(255,255,255,0.1);
-  padding:30px;
-  border-radius:20px;
 }
 
-.header{
+.title{
   text-align:center;
-  font-size:28px;
+  font-size:32px;
   font-weight:bold;
-  margin-bottom:20px;
-  letter-spacing:2px;
-}
-
-.logoBox{
-  text-align:center;
-  margin-bottom:20px;
+  margin-bottom:30px;
 }
 
 .logo{
-  width:100px;
+  position:absolute;
+  right:60px;
+  top:80px;
+  width:120px;
   border-radius:50%;
   background:white;
   padding:10px;
 }
 
 .section{
-  margin-bottom:12px;
-  font-size:15px;
+  margin-bottom:10px;
+  font-size:16px;
 }
 
-.linkBtn{
-  display:block;
-  text-align:center;
-  margin:20px auto;
-  padding:12px;
-  width:80%;
-  background:#002fff;
-  color:white;
-  border-radius:12px;
+.links{
+  margin-top:15px;
+}
+
+.links a{
+  color:#0000ee;
   text-decoration:none;
-  font-weight:bold;
 }
 
-.totalBox{
-  margin-top:25px;
-  text-align:center;
-  background:#ff5bbd;
-  padding:18px;
-  border-radius:16px;
-  font-size:18px;
-  font-weight:bold;
-}
-
-.footer{
-  text-align:center;
-  margin-top:20px;
-  font-size:15px;
+.links a:hover{
+  text-decoration:underline;
 }
 </style>
 </head>
@@ -697,11 +673,9 @@ body{
 
 <div class="container">
 
-<div class="logoBox">
-  <img src="https://celebratewithus.co.in/styles/images/logo.png" class="logo">
-</div>
+<div class="title">INVOICE RECEIPT</div>
 
-<div class="header">INVOICE RECEIPT</div>
+<img src="https://celebratewithus.co.in/styles/images/logo.png" class="logo">
 
 <div class="section">Name: Guest</div>
 <div class="section">Email: guest@email.com</div>
@@ -716,25 +690,23 @@ body{
 
 <div class="section">Project ID: ${projectId}</div>
 <div class="section">Template: ${template}</div>
-<div class="section">Next Coupon: ${nextCoupon}</div>
+<div class="section">Next Coupon (for next purchase): ${nextCoupon}</div>
 
-<a href="${editorURL}" target="_blank" class="linkBtn">
-  ✏️ Open Your Page
-</a>
+<div class="links">
+  
+  <div>Editor Link: 
+    <a href="${editorURL}" target="_blank">${editorURL}</a>
+  </div>
+</div>
+
+<br>
 
 <div class="section">Coupon Used: ${couponUsed}</div>
 <div class="section">Discount: ${discount}</div>
-<div class="section">Final Amount Paid: ₹${finalAmount}</div>
-
-<div class="totalBox">
-Total Paid: ₹${finalAmount}
-</div>
-
-<div class="footer">
-Thank you for celebrating with us 💛
-</div>
+<div class="section">Final Amount Paid: ${finalAmount}</div>
 
 </div>
+
 </body>
 </html>
 `;
