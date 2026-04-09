@@ -578,12 +578,15 @@ function downloadViewer() {
   autoSave();
 
   const template = window.location.pathname.split("/")[2];
-  const projectId = window.location.pathname.split("/").pop();
-
   
 
+  // ✅ Download viewer ZIP
+  window.open(`/download?template=${template}&projectId=${projectId}`);
+
+  const viewerURL = window.location.href.replace("/editor/", "/viewer/");
   // ✅ Create invoice file
-   const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
+  
+  const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
   const coupon = "No Coupon Applied";
 
   const couponUsed = localStorage.getItem("appliedCoupon") || "No Coupon Applied";
@@ -595,7 +598,6 @@ const nextCoupon = localStorage.getItem("nextCoupon") || "N/A";
 <html>
 <head>
 <style>
-  
 body{
   margin:0;
   font-family:Arial, sans-serif;
@@ -609,37 +611,23 @@ body{
   margin:auto;
 }
 
-.topBar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:30px;
-}
-
 .header{
-  font-size:32px;
+  text-align:center;
+  font-size:28px;
   font-weight:bold;
   letter-spacing:2px;
-}
-
-.logoBox{
-  background:white;
-  padding:12px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  margin-bottom:20px;
 }
 
 .logo{
+  position:absolute;
+  top:30px;
+  right:30px;
   width:90px;
-  height:90px;
-  border-radius:50%;
 }
 
 .section{
-  margin-bottom:14px;
-  font-size:16px;
+  margin-bottom:12px;
 }
 
 .links{
@@ -668,13 +656,13 @@ body{
 </head>
 
 <body>
+
+<img class="logo" src="https://celebratewithus.co.in/styles/images/logo.png" />
+
 <div class="container">
-  <div class="topBar">
-  <div class="header">INVOICE RECEIPT</div>
-  <div class="logoBox">
-    <img src="https://celebratewithus.co.in/styles/images/logo.png" class="logo">
-  </div>
-</div>
+
+<div class="header">INVOICE RECEIPT</div>
+
 <div class="section">Name: Guest</div>
 <div class="section">Email: guest@email.com</div>
 
@@ -700,14 +688,14 @@ Editor Link: ${editorURL}
 
 <div class="section">Coupon Used: ${couponUsed}</div>
 <div class="section">Discount: ${discount}</div>
-<div class="section">Final Amount Paid: ${finalAmount}</div>
+<div class="section">Final Amount Paid: ₹${finalAmount}</div>
 
 <div class="totalBox">
-Total Paid: ${finalAmount}
+Total Paid: ₹${finalAmount}
 </div>
 
 <div class="footer">
-Thank you for celebrating with us 
+Thank you for celebrating with us 💛
 </div>
 
 </div>
@@ -719,9 +707,11 @@ Thank you for celebrating with us
 const blob = new Blob([content], { type: "text/html" });
 const link = document.createElement("a");
 
-
-window.open(URL.createObjectURL(blob), "_blank");
+link.href = URL.createObjectURL(blob);
+link.download = `invoice_${projectId}.html`;
+link.click();
 }
+
 async function goToViewer() {
   await autoSave();   // 🔥 THIS IS MUST
   const template = window.location.pathname.split("/")[2];
