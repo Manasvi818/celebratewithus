@@ -55,7 +55,9 @@ app.use(session({
 app.use(cors({
   origin: [
     "https://www.celebratewithus.co.in",
-    "https://celebratewithus.co.in"
+    "https://celebratewithus.co.in",
+    "https://celebratewithus-1.onrender.com", // ✅ your frontend
+    "https://celebratewithus.onrender.com"
   ],
   credentials: true
 }));
@@ -63,7 +65,9 @@ app.use(cors({
 app.options("*", cors({
   origin: [
     "https://www.celebratewithus.co.in",
-    "https://celebratewithus.co.in"
+    "https://celebratewithus.co.in",
+    "https://celebratewithus-1.onrender.com", // ✅ your frontend
+    "https://celebratewithus.onrender.com"
   ],
   credentials: true
 })); 
