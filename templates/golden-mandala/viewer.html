@@ -593,14 +593,7 @@ body.night #passwordOverlay{
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-
-  // 🔥 STEP 1: instant load from cache
-  const loaded = loadFromCache();
-
-  // 🔥 STEP 2: always fetch fresh data in background
-  loadViewerData();
-});
+  
   const projectId = window.location.pathname.split("/").pop();
   function optimizeCloudinaryUrl(url, width = 500) {
   if (!url || !url.includes("res.cloudinary.com")) return url;
