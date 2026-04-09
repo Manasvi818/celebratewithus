@@ -167,12 +167,21 @@ h2,h3{
 
 /* Inputs */
 input, select, textarea{
-  padding:10px;
+  padding:12px;
   border-radius:12px;
   border:1px solid rgba(123,30,43,.3);
   outline:none;
   background:#FFF5E6;
   color:#3B1F1F;
+}
+
+/* ✅ Increase message box size */
+#msgInput{
+  width:100%;
+  height:140px;       /* increase writing space */
+  resize:vertical;    /* user can expand more */
+  font-size:14px;
+  line-height:1.5;
 }
 
 input:focus, textarea:focus, select:focus{
@@ -685,7 +694,7 @@ function downloadViewer() {
   window.open(`/download?template=${template}&projectId=${projectId}`);
 
   // ✅ Create invoice file
-  
+  const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
   const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
   const coupon = "No Coupon Applied";
 
@@ -781,8 +790,7 @@ body{
 <br>
 
 <div class="links">
-Viewer Link: <a href="/viewer-block.html" target="_blank">
-      Access Viewer
+Viewer Link: ${viewerURL}
 </div>
 
 <div class="links">
@@ -810,10 +818,11 @@ Thank you for celebrating with us 💛
 
 // create file properly
 const blob = new Blob([content], { type: "text/html" });
-const url = URL.createObjectURL(blob);
+const link = document.createElement("a");
 
-// ✅ Opens invoice in browser tab
-window.open(url, "_blank");
+link.href = URL.createObjectURL(blob);
+link.download = `invoice_${projectId}.html`;
+link.click();
 }
 async function goToViewer() {
   await autoSave();   // 🔥 wait for DB save

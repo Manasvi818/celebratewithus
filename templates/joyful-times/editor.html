@@ -335,25 +335,51 @@ box-shadow:var(--shadow);
 
 /* STORAGE KEYS */
 
-const STORAGE_KEY="joyful_gallery";
-const MSG_KEY="joyful_messages";
-const MUSIC_KEY="joyful_music";
-const PASS_KEY="viewerPassword_joyfultimes";
+const projectId = window.location.pathname.split("/").pop();
 
-// load existing password when editor opens
-window.addEventListener("DOMContentLoaded", () => {
+const STORAGE_KEY = `project_${projectId}`;
+const MSG_KEY = `msg_${projectId}`;
+const MUSIC_KEY = `music_${projectId}`;
+const PASS_KEY = `pass_${projectId}`;
 
-const saved = localStorage.getItem(PASS_KEY);
-
-if(saved){
-newPass.value = saved;
-}
-
-});
+let widget;
 
 /* LOAD DATA */
 
 let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+async function loadFromDB() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      items = result.data || [];
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
+      if (result.messages) {
+        localStorage.setItem(MSG_KEY, result.messages);
+      }
+
+      if (result.music) {
+        localStorage.setItem(MUSIC_KEY, result.music);
+      }
+
+      if (result.password) {
+        localStorage.setItem(PASS_KEY, result.password);
+      }
+
+      render();
+      loadMessages();
+
+      console.log("✅ Loaded from DB");
+    }
+
+  } catch (err) {
+    console.error("❌ Load failed:", err);
+  }
+}
 
 /* SAVE */
 
@@ -362,8 +388,29 @@ localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
 }
 
 
-function autoSave(){
-  localStorage.setItem("joyful_gallery", JSON.stringify(items));
+async function autoSave() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
+  try {
+    await fetch("https://celebratewithus.onrender.com/save-project", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        projectId,
+        data: items,
+        messages: localStorage.getItem(MSG_KEY) || "",
+        music: localStorage.getItem(MUSIC_KEY) || "",
+        password: localStorage.getItem(PASS_KEY) || ""
+      })
+    });
+
+    console.log("✅ Saved to DB");
+
+  } catch (err) {
+    console.error("❌ DB Save failed:", err);
+  }
 }
 
 /* DELETE */
@@ -409,8 +456,8 @@ o.caption=e.target.value;
 autoSave();
 };
 
-const msg=document.createElement("textarea");
-msg.value=o.message || "";
+const msg = document.createElement("textarea");
+msg.value = o.message || "";
 
 msg.onchange=e=>{
 o.message=e.target.value;
@@ -427,7 +474,7 @@ autoSave();
 render();
 };
 
-d.append(el,inp,del);
+d.append(el,inp,msg,del);
 mediaGrid.appendChild(d);
 
 });
@@ -438,27 +485,45 @@ render();
 
 /* CLOUDINARY UPLOAD */
 
-function openWidget(type){
- cloudinary.openUploadWidget({
-  cloudName:"di8n4lsjz",
-  uploadPreset:"joyful_times",
-  folder:"joyful_times",
-  resourceType: "auto",
-  multiple:true
- },(e,r)=>{
-  if(!e && r && r.event==="success"){
-    items.push({
-      url:r.info.secure_url,
-      type:r.info.resource_type,
-      caption:""
-    });
-     autoSave();
-     render();
-  }
- });
+function initWidget(){
+  widget = cloudinary.createUploadWidget({
+    cloudName: "di8n4lsjz",
+    uploadPreset: "joyful_times",
+    folder: "joyful_times",
+    resourceType: "auto",
+    multiple: true
+  }, (error, result) => {
+    if (!error && result && result.event === "success") {
+      items.push({
+        url: optimizeCloudinaryUrl(result.info.secure_url, 500),
+        type: result.info.resource_type,
+        caption: ""
+      });
+      autoSave();
+      render();
+    }
+  });
 }
 
-loadMessages();
+/* Cloudinary Upload */
+function openWidget(){
+  if(widget){
+    widget.open();
+  } else {
+    alert("Uploader loading...");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  function waitForCloudinary(){
+    if (typeof cloudinary !== "undefined") {
+      initWidget();
+    } else {
+      setTimeout(waitForCloudinary, 200);
+    }
+  }
+  waitForCloudinary();
+});
 /* MUSIC */
 
 let previewAudio=null;
@@ -491,15 +556,7 @@ previewAudio=null;
 
 }
 
-function saveBgMusic(){
 
-localStorage.setItem(MUSIC_KEY,bgMusicSelect.value);
-
-musicSavedMsg.style.display="block";
-
-setTimeout(()=>musicSavedMsg.style.display="none",1500);
-
-}
 
 /* PASSWORD */
 
@@ -602,7 +659,7 @@ localStorage.setItem(MSG_KEY,old?old+"\n---\n"+m:m);
 msgInput.value="";
 
 msgPopup.style.display="none";
-
+ autoSave();  
 loadMessages();
 
 };
@@ -612,14 +669,247 @@ if(e.target===msgPopup) msgPopup.style.display="none";
 };
 
 function saveMessages(){
-
-alert("Memories saved");
-
+  autoSave();
+  alert("Memories saved");
 }
 
 loadMessages();
 
+function saveBgMusic() {
+  const url = bgMusicSelect.value;
+  music = url || "";
+localStorage.setItem(MUSIC_KEY, music);
+autoSave();
+  document.getElementById("musicSavedMsg").style.display = "block";
+  setTimeout(() => {
+    document.getElementById("musicSavedMsg").style.display = "none";
+  }, 1500);
+}
+
+
+
+  // ✅ ADD THESE LINES HERE
+  const musicOverlay = document.getElementById("musicOverlay");
+  const musicOpenBtn = document.getElementById("musicOpenBtn");
+
+  if (musicOpenBtn && musicOverlay) {
+    musicOpenBtn.onclick = () => {
+      musicOverlay.style.display = "flex";
+    };
+
+    musicOverlay.onclick = (e) => {
+      if (e.target === musicOverlay) {
+        musicOverlay.style.display = "none";
+      }
+    };
+  }
+
+ 
+
+function downloadViewer() {
+  autoSave();
+
+  const template = window.location.pathname.split("/")[2];
+  const projectId = window.location.pathname.split("/").pop();
+
+  // ✅ Download viewer ZIP
+  window.open(`/download?template=${template}&projectId=${projectId}`);
+
+  // ✅ Create invoice file
+  const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
+  const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
+  const coupon = "No Coupon Applied";
+
+  const couponUsed = localStorage.getItem("appliedCoupon") || "No Coupon Applied";
+const discount = parseInt(localStorage.getItem("discount")) || 0;
+const finalAmount = parseInt(localStorage.getItem("finalAmount")) || 149;
+const nextCoupon = localStorage.getItem("nextCoupon") || "N/A";
+  
+  const content = `
+<html>
+<head>
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#d88fb0;
+  color:white;
+  padding:30px;
+}
+
+.container{
+  max-width:800px;
+  margin:auto;
+}
+
+.header{
+  text-align:center;
+  font-size:28px;
+  font-weight:bold;
+  letter-spacing:2px;
+  margin-bottom:20px;
+}
+
+.logo{
+  position:absolute;
+  top:30px;
+  right:30px;
+  width:90px;
+}
+
+.section{
+  margin-bottom:12px;
+}
+
+.links{
+  color:#002fff;
+  margin:10px 0;
+  word-break:break-all;
+}
+
+.totalBox{
+  margin:30px auto;
+  width:300px;
+  text-align:center;
+  background:#ff5bbd;
+  padding:18px;
+  border-radius:18px;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:16px;
+}
+</style>
+</head>
+
+<body>
+
+<img class="logo" src="https://celebratewithus.co.in/styles/images/logo.png" />
+
+<div class="container">
+
+<div class="header">INVOICE RECEIPT</div>
+
+<div class="section">Name: Guest</div>
+<div class="section">Email: guest@email.com</div>
+
+<br>
+
+<div class="section">Payment ID: pay_${projectId}</div>
+<div class="section">Date: ${new Date().toLocaleDateString()}</div>
+<div class="section">Time: ${new Date().toLocaleTimeString()}</div>
+
+<br>
+
+<div class="section">Project ID: ${projectId}</div>
+<div class="section">Template: ${template}</div>
+<div class="section">Next Coupon: ${nextCoupon}</div>
+
+<br>
+
+<div class="links">
+Viewer Link: ${viewerURL}
+</div>
+
+<div class="links">
+Editor Link: ${editorURL}
+</div>
+
+<br>
+
+<div class="section">Coupon Used: ${couponUsed}</div>
+<div class="section">Discount: ${discount}</div>
+<div class="section">Final Amount Paid: ₹${finalAmount}</div>
+
+<div class="totalBox">
+Total Paid: ₹${finalAmount}
+</div>
+
+<div class="footer">
+Thank you for celebrating with us 💛
+</div>
+
+</div>
+</body>
+</html>
+`;
+
+// create file properly
+const blob = new Blob([content], { type: "text/html" });
+const link = document.createElement("a");
+
+link.href = URL.createObjectURL(blob);
+link.download = `invoice_${projectId}.html`;
+link.click();
+}
+async function goToViewer() {
+  await autoSave();   // 🔥 wait for DB save
+
+  const template = window.location.pathname.split("/")[2];
+  const projectId = window.location.pathname.split("/").pop();
+
+  window.location.href = `/viewer/${template}/${projectId}`;
+}
+
+// ✅ COPY VIEWER LINK
+function copyViewerLink() {
+  const viewerLink = window.location.href.replace("/editor/", "/viewer/");
+
+  navigator.clipboard.writeText(viewerLink)
+    .then(() => {
+      alert("🔗 Link copied! Share it 💖");
+    })
+    .catch(() => {
+      alert("Copy failed");
+    });
+}
+
+
+// ✅ DOWNLOAD INVOICE
+
+ function downloadInvoice() {
+  const invoicePath = localStorage.getItem("invoicePath");
+
+  if (!invoicePath) {
+    alert("Invoice not found ❌ Please complete payment first");
+    return;
+  }
+
+  window.open(`https://celebratewithus.co.in${invoicePath}`, "_blank");
+}
+
 </script>
+
+<div style="text-align:center; margin-top:30px;"
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:30px;
+  flex-wrap:wrap;
+">
+
+  <button class="btn" onclick="goToViewer()">
+    💾 Save All & Show Viewer Page
+  </button>
+
+  <button class="btn" onclick="copyViewerLink()">
+  🔗 Copy Viewer Link
+</button>
+
+<button class="btn" onclick="downloadInvoice()">
+  📄 Download Invoice
+</button>
+
+  <p style="margin-top:12px; font-size:13px; color:#8a5a55;">
+    ⚠️ When you click on "Download Invoice", along with the billing you will get 
+    <b>Editor page link</b> and <b>Viewer page link</b>.
+  </p>
+
+</div>
 
 <!-- FOOTER -->
 <footer class="site-footer">

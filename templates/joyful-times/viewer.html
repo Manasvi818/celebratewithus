@@ -734,55 +734,89 @@ border:4px solid #F2D7B5;
 </div>
 
 <script>
+const projectId = window.location.pathname.split("/").pop();
+
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
+
+let PASS = "";
+let isLoaded = false;
+let song = "";
+let widget;
+  async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      PASS = password;
+      isLoaded = true;
+
+      render();
+      loadMessages();
+
+      if (music) {
+        song = music;
+      }
+    }
+  } catch (err) {
+    console.error("❌ Viewer load failed:", err);
+  }
+}
+
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url.includes("res.cloudinary.com")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
+
 /* ===========================
    PASSWORD
 =========================== */
-const PASS_KEY = "viewerPassword_joyfultimes";
 
-function getSavedPass(){
-  return localStorage.getItem(PASS_KEY);
-}
+
+
 
 function unlock(){
 
-const entered = document.getElementById("pass").value.trim();
-const saved = localStorage.getItem("viewerPassword_joyfultimes");
+  if(!isLoaded){
+    alert("⏳ Wait...");
+    return;
+  }
 
-if(!saved){
-alert("Password not set yet. Set it in editor first.");
-return;
-}
+  const entered = document.getElementById("pass").value.trim();
+  const saved = PASS;
 
-if(entered === saved){
+  if(entered === saved){
 
-passwordOverlay.style.display="none";
-wrongPass.style.display="none";
+    passwordOverlay.style.display="none";
+    wrongPass.style.display="none";
 
-/* start music automatically */
-playMusic();
-isPlaying = true;
-musicBtn.textContent = "⏸ Pause Music";
+    playMusic();
+    isPlaying = true;
+    musicBtn.textContent = "⏸ Pause Music";
 
-}else{
+  }else{
 
-wrongPass.style.display="block";
-document.getElementById("pass").value="";
+    wrongPass.style.display="block";
+    document.getElementById("pass").value="";
 
-}
-
+  }
 }
 
 document.getElementById("pass").addEventListener("keydown", (e)=>{
   if(e.key === "Enter") unlock();
 });
-
-
-/* ===========================
-   DATA
-   (Same system as Always Together)
-=========================== */
-const KEY="joyful_gallery";
-const data = JSON.parse(localStorage.getItem(KEY)||"[]");
 
 /* ===========================
    RENDER GALLERY
@@ -874,29 +908,12 @@ function showRandom(){
   msgOverlay.style.display="flex";
 }
 
-/* ===========================
-   SAVE THOUGHTS
-=========================== */
-const MSG_KEY = "joyful_messages";
-
-function saveThought(){
-  const txt = thoughtInput.value.trim();
-  if(!txt) return;
-
-  const old = localStorage.getItem(MSG_KEY) || "";
-  const next = old ? (old + "\n---\n" + txt) : txt;
-
-  localStorage.setItem(MSG_KEY, next);
-  thoughtInput.value="";
-  loadMessages();
-}
 
 function loadMessages(){
   messageList.innerHTML="";
-  const txt = localStorage.getItem(MSG_KEY)||"";
-  if(!txt.trim()) return;
+  if(!messages.trim()) return;
 
-  txt.split(/\r?\n\s*---\s*\r?\n/).forEach(m=>{
+  messages.split("\n---\n").forEach(m=>{
     const d=document.createElement("div");
     d.className="stickyNote";
     d.textContent=m.trim();
@@ -1059,7 +1076,7 @@ if(p.y < -80){
 let bgAudio=null;
 let isPlaying=false;
 
-const song = localStorage.getItem("joyful_music"); // save from editor
+
 
 function playMusic(){
   if(!song) return;
@@ -1107,6 +1124,9 @@ function toggleMusic(){
 musicOpenBtn.onclick=()=> musicOverlay.style.display="flex";
 musicOverlay.onclick=e=>{ if(e.target===musicOverlay) musicOverlay.style.display="none"; };
 
+document.addEventListener("DOMContentLoaded", () => {
+  loadViewerData();
+});
 </script>
 <!-- FOOTER -->
 <footer class="site-footer">
