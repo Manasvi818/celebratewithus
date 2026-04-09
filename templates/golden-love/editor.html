@@ -583,9 +583,9 @@ function downloadViewer() {
   // ✅ Download viewer ZIP
   window.open(`/download?template=${template}&projectId=${projectId}`);
 
-  const viewerURL = window.location.href.replace("/editor/", "/viewer/");
-  // ✅ Create invoice file
   
+  // ✅ Create invoice file
+  const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
   const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
   const coupon = "No Coupon Applied";
 
