@@ -22,7 +22,7 @@ body{
   font-family:'Poppins',sans-serif;
   background:linear-gradient(135deg,#fbf7ef,#f5ead6,#fffaf2);
   color:var(--text);
-  padding:30px;
+  padding:40px;
 }
 
 /* subtle golden dots */
@@ -595,7 +595,28 @@ const nextCoupon = localStorage.getItem("nextCoupon") || "N/A";
 <html>
 <head>
 <style>
-  .header{
+  
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#d88fb0;
+  color:white;
+  padding:30px;
+}
+
+.container{
+  max-width:800px;
+  margin:auto;
+}
+
+.topBar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+}
+
+.header{
   font-size:32px;
   font-weight:bold;
   letter-spacing:2px;
@@ -610,36 +631,15 @@ const nextCoupon = localStorage.getItem("nextCoupon") || "N/A";
   justify-content:center;
 }
 
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#d88fb0;
-  color:white;
-  padding:30px;
-}
-
-.container{
-  max-width:800px;
-  margin:auto;
-}
-
-.header{
-  text-align:center;
-  font-size:28px;
-  font-weight:bold;
-  letter-spacing:2px;
-  margin-bottom:20px;
-}
-
 .logo{
-  position:absolute;
-  top:30px;
-  right:30px;
   width:90px;
+  height:90px;
+  border-radius:50%;
 }
 
 .section{
-  margin-bottom:12px;
+  margin-bottom:14px;
+  font-size:16px;
 }
 
 .links{
