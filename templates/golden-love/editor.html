@@ -641,14 +641,22 @@ body{
 
 .logo{
   position:absolute;
-  right:60px;
-  top:80px;
-  width:120px;
+  right:40px;
+  top:60px;
+  width:150px;
   border-radius:50%;
-  background:white;
-  padding:10px;
+  background:none;
+  padding:0;
 }
-
+.totalBox{
+  margin-top:20px;
+  background:#ff5bbd; /* lighter than main bg */
+  padding:16px;
+  border-radius:14px;
+  text-align:center;
+  font-size:18px;
+  font-weight:bold;
+}
 .section{
   margin-bottom:10px;
   font-size:16px;
@@ -703,7 +711,9 @@ body{
 
 <div class="section">Coupon Used: ${couponUsed}</div>
 <div class="section">Discount: ${discount}</div>
-<div class="section">Final Amount Paid: ${finalAmount}</div>
+<div class="totalBox">
+  Final Amount Paid: ${finalAmount}
+</div>
 
 </div>
 
@@ -712,12 +722,12 @@ body{
 `;
 
 // create file properly
-const blob = new Blob([content], { type: "text/html" });
-const link = document.createElement("a");
 
-link.href = URL.createObjectURL(blob);
-link.download = `invoice_${projectId}.html`;
-link.click();
+const blob = new Blob([content], { type: "text/html" });
+const url = URL.createObjectURL(blob);
+
+// ✅ OPEN instead of download
+window.open(url, "_blank");
 }
 
 async function goToViewer() {
