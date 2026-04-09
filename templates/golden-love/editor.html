@@ -580,8 +580,7 @@ function downloadViewer() {
   const template = window.location.pathname.split("/")[2];
   const projectId = window.location.pathname.split("/").pop();
 
-  // ✅ Download viewer ZIP
-  window.open(`/download?template=${template}&projectId=${projectId}`);
+  
 
   // ✅ Create invoice file
    const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
@@ -715,8 +714,7 @@ Thank you for celebrating with us 💛
 const blob = new Blob([content], { type: "text/html" });
 const link = document.createElement("a");
 
-link.href = URL.createObjectURL(blob);
-link.download = `invoice_${projectId}.html`;
+
 window.open(URL.createObjectURL(blob), "_blank");
 }
 async function goToViewer() {
