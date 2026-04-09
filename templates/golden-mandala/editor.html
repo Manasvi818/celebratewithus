@@ -685,7 +685,7 @@ function downloadViewer() {
   window.open(`/download?template=${template}&projectId=${projectId}`);
 
   // ✅ Create invoice file
-  const viewerURL = `${window.location.origin}/viewer/${template}/${projectId}`;
+  
   const editorURL = `${window.location.origin}/editor/${template}/${projectId}`;
   const coupon = "No Coupon Applied";
 
@@ -781,10 +781,6 @@ body{
 <br>
 
 <div class="links">
-Viewer Link: ${viewerURL}
-</div>
-
-<div class="links">
 Editor Link: ${editorURL}
 </div>
 
@@ -809,11 +805,10 @@ Thank you for celebrating with us 💛
 
 // create file properly
 const blob = new Blob([content], { type: "text/html" });
-const link = document.createElement("a");
+const url = URL.createObjectURL(blob);
 
-link.href = URL.createObjectURL(blob);
-link.download = `invoice_${projectId}.html`;
-link.click();
+// ✅ Opens invoice in browser tab
+window.open(url, "_blank");
 }
 async function goToViewer() {
   await autoSave();   // 🔥 wait for DB save
