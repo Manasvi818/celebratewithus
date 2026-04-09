@@ -709,7 +709,8 @@ autoSave();
 function downloadViewer() {
   autoSave();
 
-  const template = window.location.pathname.split("/")[2];
+  const parts = window.location.pathname.split("/");
+const template = parts[2] || "joyful-times"; // fallback
   const projectId = window.location.pathname.split("/").pop();
 
   // ✅ Download viewer ZIP
