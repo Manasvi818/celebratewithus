@@ -595,6 +595,27 @@ const nextCoupon = localStorage.getItem("nextCoupon") || "N/A";
 <html>
 <head>
 <style>
+  .topBar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.header{
+  font-size:28px;
+  font-weight:bold;
+  letter-spacing:2px;
+}
+
+.logo{
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  background:white;
+  padding:12px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.2);
+}
 body{
   margin:0;
   font-family:Arial, sans-serif;
@@ -653,13 +674,10 @@ body{
 </head>
 
 <body>
-
-<img class="logo" src="https://celebratewithus.co.in/styles/images/logo.png" />
-
-<div class="container">
-
-<div class="header">INVOICE RECEIPT</div>
-
+  <div class="topBar">
+  <div class="header">INVOICE RECEIPT</div>
+  <img src="https://celebratewithus.co.in/styles/images/logo.png" class="logo">
+</div>
 <div class="section">Name: Guest</div>
 <div class="section">Email: guest@email.com</div>
 
@@ -685,14 +703,14 @@ Editor Link: ${editorURL}
 
 <div class="section">Coupon Used: ${couponUsed}</div>
 <div class="section">Discount: ${discount}</div>
-<div class="section">Final Amount Paid: ₹${finalAmount}</div>
+<div class="section">Final Amount Paid: ${finalAmount}</div>
 
 <div class="totalBox">
-Total Paid: ₹${finalAmount}
+Total Paid: ${finalAmount}
 </div>
 
 <div class="footer">
-Thank you for celebrating with us 💛
+Thank you for celebrating with us 
 </div>
 
 </div>
@@ -757,7 +775,7 @@ function copyViewerLink() {
 
   <p style="margin-top:12px; font-size:13px; color:#8a5a55;">
     ⚠️ When you click on "Download Invoice", along with the billing you will get 
-    <b>Editor page link</b> though that you can access<b>Viewer page link</b>.
+    <b>Editor page link</b> though that you can access <b>Viewer page link</b>.
   </p>
 
 </div>
