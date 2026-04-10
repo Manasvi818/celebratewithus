@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const BASE_URL = "https://celebratewithus.onrender.com";
   let finalAmount = 14900;
   let usedCoupon = null;
+  
 let appliedCoupon = "";
 let appliedDiscount = 0;
 
@@ -55,7 +56,7 @@ const projectId = "proj_" + Date.now();
 
       const options = {
         key: data.keyId,
-        amount: finalAmount,
+        amount: data.amount,
         currency: data.currency,
         order_id: data.orderId,
         name: "Celebratewithus",
@@ -65,18 +66,7 @@ const projectId = "proj_" + Date.now();
 
   const coupon = appliedCoupon || "No Coupon Applied";
   const discount = appliedDiscount || 0;
-// ✅ SMALL CONDITION (ONLY FOR JOYFUL TIMES)
-let finalTemplate = selectedTemplate;
 
-if (
-  selectedTemplate === "Joyful Family" ||
-  selectedTemplate === "Joyful Times"
-) {
-  finalTemplate = "joyful-times";
-}  else {
-  // ✅ Fix ALL other templates automatically
-  finalTemplate = selectedTemplate.toLowerCase().replace(/\s+/g, "-");
-}
   const invoiceRes = await fetch(`${BASE_URL}/verify-payment`, {
     method: "POST",
     headers: {
@@ -91,12 +81,12 @@ if (
   projectId,
   coupon,
   discount,
-  amount: finalAmount,
+  amount: 149,
 
   // ✅ ADD THESE
   name: "Guest",
   email: "guest@email.com",
-template: finalTemplate
+  template: selectedTemplate
 })
     
   });

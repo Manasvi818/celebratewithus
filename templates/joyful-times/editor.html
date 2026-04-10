@@ -700,8 +700,7 @@ autoSave();
 function downloadViewer() {
   autoSave();
 
-  const parts = window.location.pathname.split("/");
-const template = parts[2] || "joyful-times"; // fallback
+  const template = "joyful-times";
   const params = new URLSearchParams(window.location.search);
 const projectId = params.get("projectId");
 
@@ -842,7 +841,7 @@ link.click();
 async function goToViewer() {
   await autoSave();   // 🔥 wait for DB save
 
-  const template = window.location.pathname.split("/")[2];
+  const template = "joyful-times";
   const params = new URLSearchParams(window.location.search);
 const projectId = params.get("projectId");
 
