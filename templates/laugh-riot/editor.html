@@ -418,12 +418,14 @@ const MUSIC_KEY = `music_${projectId}`;
 let messages = "";
 let music = "";
 let password = "";
+let musicSelect;
 
-
-
+const savedPass = localStorage.getItem(`pass_${projectId}`);
 
 if(savedPass){
-  document.getElementById("newPass").value = savedPass;
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("newPass").value = savedPass;
+  });
 }
 
 /* Load Items */
@@ -543,7 +545,7 @@ function initWidget(){
     }
   });
 }
-
+let widget;
 /* Cloudinary Upload */
 function openWidget(){
   if(!widget){
@@ -729,13 +731,8 @@ msgPopup.onclick = e=>{
    BACKGROUND MUSIC SYSTEM
 ========================= */
 let previewAudio = null;
-const musicSelect = document.getElementById("bgMusicSelect");
 
-// Load saved music
-const savedMusic = localStorage.getItem(MUSIC_KEY);
-if(savedMusic){
-  musicSelect.value = savedMusic;
-}
+
 
 function playMusicPreview(){
   const url = musicSelect.value;
@@ -767,8 +764,17 @@ autoSave();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+
+   musicSelect = document.getElementById("bgMusicSelect");
+
+  const savedMusic = localStorage.getItem(MUSIC_KEY);
+  if(savedMusic){
+    musicSelect.value = savedMusic;
+  }
+
   loadFromDB();
   loadMessages();
+
 
   const musicOverlay = document.getElementById("musicOverlay");
   const musicOpenBtn = document.getElementById("musicOpenBtn");
