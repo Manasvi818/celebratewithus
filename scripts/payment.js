@@ -55,7 +55,7 @@ const projectId = "proj_" + Date.now();
 
       const options = {
         key: data.keyId,
-        amount: data.amount,
+        amount: finalAmount,
         currency: data.currency,
         order_id: data.orderId,
         name: "Celebratewithus",
@@ -91,7 +91,7 @@ if (
   projectId,
   coupon,
   discount,
-  amount: 149,
+  amount: finalAmount,
 
   // ✅ ADD THESE
   name: "Guest",
