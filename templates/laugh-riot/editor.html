@@ -348,6 +348,7 @@ font-family:"Playfair Display";
 <!-- Preview -->
 <div id="previewBox">
   <img id="previewImg">
+<video id="previewVideo" controls></video>
   <p id="previewCap"></p>
 </div>
 
@@ -418,7 +419,9 @@ let messages = "";
 let music = "";
 let password = "";
 
-const savedPass = localStorage.getItem("viewerPassword_laughriot");
+
+
+
 if(savedPass){
   document.getElementById("newPass").value = savedPass;
 }
@@ -460,9 +463,9 @@ function render(){
     del.textContent="Delete";
     del.className="btn ghost";
     del.style.marginTop="10px";
-    del.onclick=()=>{
+    del.onclick = async ()=>{
       items.splice(i,1);
-      autoSave();
+      await autoSave();
       render();
     };
 
@@ -473,6 +476,24 @@ function render(){
   });
 }
 render();
+
+function preview(obj){
+  const img = document.getElementById("previewImg");
+  const vid = document.getElementById("previewVideo");
+
+  img.style.display = "none";
+  vid.style.display = "none";
+
+  if(obj.type === "video"){
+    vid.src = obj.url;
+    vid.style.display = "block";
+  } else {
+    img.src = obj.url;
+    img.style.display = "block";
+  }
+
+  document.getElementById("previewCap").innerText = obj.caption || "";
+}
 
 async function loadFromDB() {
   try {
@@ -491,7 +512,6 @@ async function loadFromDB() {
 
       render();
       loadMessages();
-loadFromDB();
 
       console.log("✅ Loaded from DB");
     }
@@ -501,13 +521,7 @@ loadFromDB();
   }
 }
 
-/* Preview */
-function preview(obj){
-  const img = document.getElementById("previewImg");
-  img.style.display="block";
-  img.src=obj.url;
-  document.getElementById("previewCap").innerText = obj.caption || "";
-}
+
 
 /* Cloudinary Upload */
 function initWidget(){
@@ -533,17 +547,24 @@ function initWidget(){
 /* Cloudinary Upload */
 function openWidget(){
   if(!widget){
-    document.body.style.cursor = "wait"; // loader feel
-    setTimeout(() => {
-      document.body.style.cursor = "default";
-    }, 1000);
-
+    
     alert("Opening uploader...");
     return;
   }
 
   widget.open();
 }
+
+function waitForCloudinary(){
+  if (typeof cloudinary !== "undefined") {
+    initWidget();
+  } else {
+    setTimeout(waitForCloudinary, 200);
+  }
+}
+
+waitForCloudinary();
+
 /* Local Upload */
 function uploadLocal(e){
   const file=e.target.files[0];
@@ -595,14 +616,14 @@ function clearAll(){
 }
 
 /* Password */
-function savePass(){
-
+async function savePass(){
   const passInput = document.getElementById("newPass").value.trim();
   const msg = document.getElementById("passSaved");
 
   password = passInput;
-localStorage.setItem(`pass_${projectId}`, password);
-await autoSave();
+  localStorage.setItem(`pass_${projectId}`, password);
+
+  await autoSave();   // ✅ now valid
 
   msg.style.display = "block";
 
@@ -614,7 +635,7 @@ await autoSave();
    MESSAGE SYSTEM
 ========================= */
 function loadMessages(){
-  let txt = localStorage.getItem(MSG_KEY) || "";
+  let txt = messages;
   let box = document.getElementById("allMessagesBox");
   box.innerHTML = "";
 
@@ -623,7 +644,7 @@ function loadMessages(){
     return;
   }
 
-  let messages = txt.split("\n---\n");
+  messages = txt.split("\n---\n");
 
   messages.forEach((msg, index)=>{
     let div = document.createElement("div");
@@ -640,47 +661,62 @@ function loadMessages(){
     box.appendChild(div);
   });
 }
-loadMessages();
+
 
 msgOpenBtn.onclick = ()=>{
   document.getElementById("msgPopup").style.display="flex";
 };
 
 msgSaveBtn.onclick = ()=>{
-  let newMsg=document.getElementById("msgInput").value.trim();
+  let newMsg = document.getElementById("msgInput").value.trim();
   if(newMsg==="") return;
 
-  let old=localStorage.getItem(MSG_KEY) || "";
-  let updated = old ? old + "\n---\n" + newMsg : newMsg;
+  let txt = messages || "";
+let msgs = txt ? txt.split("\n---\n") : [];
 
-  localStorage.setItem(MSG_KEY, updated);
+if (!msgs.includes(newMsg)) {
+  msgs.push(newMsg);
+}
+
+messages = msgs.join("\n---\n");   // ✅ IMPORTANT
+
+localStorage.setItem(MSG_KEY, messages);
 
   document.getElementById("msgInput").value="";
   document.getElementById("msgPopup").style.display="none";
+
+  autoSave();     // ✅ ADD THIS (CRITICAL)
   loadMessages();
 };
 
 function deleteMsg(index){
-  let txt = localStorage.getItem(MSG_KEY) || "";
-  let messages = txt.split("\n---\n");
+ let txt = messages || "";
+let msgs = txt.split("\n---\n");
 
-  messages.splice(index, 1);
-  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+msgs.splice(index, 1);
 
-  loadMessages();
+messages = msgs.join("\n---\n");   // ✅ update global
+localStorage.setItem(MSG_KEY, messages);
+
+autoSave();
+loadMessages();
 }
 
 function editMsg(index){
-  let txt = localStorage.getItem(MSG_KEY) || "";
-  let messages = txt.split("\n---\n");
+  let txt = messages || "";
+let msgs = txt.split("\n---\n");
 
-  let updated = prompt("Edit message:", messages[index]);
-  if(updated === null) return;
-  if(updated.trim()==="") return;
+let updated = prompt("Edit message:", msgs[index]);
+if(updated === null) return;
+if(updated.trim()==="") return;
 
-  messages[index] = updated.trim();
-  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
-  loadMessages();
+msgs[index] = updated.trim();
+
+messages = msgs.join("\n---\n");   // ✅ update global
+localStorage.setItem(MSG_KEY, messages);
+
+autoSave();
+loadMessages();
 }
 
 msgPopup.onclick = e=>{
@@ -731,9 +767,9 @@ autoSave();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  loadMessages();   // ✅ ADD HERE
+  loadFromDB();
+  loadMessages();
 
-  // ✅ ADD THESE LINES HERE
   const musicOverlay = document.getElementById("musicOverlay");
   const musicOpenBtn = document.getElementById("musicOpenBtn");
 
@@ -748,9 +784,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
   }
-
-  
 });
+  
+
 
 function optimizeCloudinaryUrl(url, width = 500) {
   if (!url || !url.includes("res.cloudinary.com")) return url;

@@ -594,30 +594,71 @@ text-align:center;
 /* =========================
    STORAGE KEYS (MATCH EDITOR)
 ========================= */
-const MEDIA_KEY = "laugh_media";
-const MSG_KEY   = "laugh_messages";
-const MUSIC_KEY = "laugh_music";
-const PASS_KEY  = "viewerPassword_laughriot";
-
-/* ensure localStorage exists */
-if(!localStorage.getItem(MEDIA_KEY)){
-  localStorage.setItem(MEDIA_KEY,"[]");
-}
 
 /* LOAD DATA */
-const data = JSON.parse(localStorage.getItem(MEDIA_KEY) || "[]");
-const savedSong = localStorage.getItem(MUSIC_KEY) || "";
-const savedPass = localStorage.getItem(PASS_KEY) || "";
+const projectId = window.location.pathname.split("/").pop();
+
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
+
+let PASS = "";
+let isLoaded = false;
+
+let song = "";
+
+
+function setupMusic(){
+  if (!song) return;
+
+  bgAudio = new Audio(song);
+  bgAudio.loop = true;
+  bgAudio.volume = 0.6;
+}
+
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      PASS = password;
+
+      document.getElementById("passwordOverlay").style.display = "flex";
+      isLoaded = true;
+
+
+render();          // ✅ VERY IMPORTANT
+loadMessages();   
+  
+
+      if (music) {
+        song = music;
+        setupMusic();
+      }
+    }
+  } catch (err) {
+    console.error("❌ Viewer load failed:", err);
+  }
+}
+
+
 
 /* MUSIC */
 let bgAudio = null;
 let isPlaying = false;
 
 function playMusic(){
-  if(!savedSong) return;
+  if(!song) return;
 
   if(!bgAudio){
-    bgAudio = new Audio(savedSong);
+    bgAudio = new Audio(song);
     bgAudio.loop = true;
     bgAudio.volume = 0.65;
   }
@@ -625,7 +666,7 @@ function playMusic(){
 }
 
 function toggleMusic(){
-  if(!savedSong){
+  if(!song){
     alert("No music saved in Editor 🎵");
     return;
   }
@@ -647,27 +688,38 @@ function toggleMusic(){
   isPlaying = !isPlaying;
 }
 
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  if (url.includes("/upload/f_auto")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
+
 /* PASSWORD */
 function unlock(){
-
-  const input = document.getElementById("pass").value.trim();
-  const savedPass = localStorage.getItem("viewerPassword_laughriot") || "";
-
-  if(savedPass === ""){
-    document.getElementById("passwordOverlay").style.display="none";
-    playMusic();
-isPlaying = true;
+  if(!isLoaded){
+    alert("⏳ Wait...");
     return;
   }
 
-  if(input === savedPass){
-    document.getElementById("passwordOverlay").style.display="none";
-    playMusic();
-isPlaying = true;
-  }else{
-    document.getElementById("wrongPass").style.display="block";
-  }
+  const entered = document.getElementById("pass").value.trim();
+  const saved = PASS.trim();
 
+  if(entered === saved){
+    document.getElementById("passwordOverlay").style.display = "none";
+    document.getElementById("wrongPass").style.display = "none";
+
+    if(song){
+      playMusic();
+    }
+
+  }else{
+    document.getElementById("wrongPass").style.display = "block";
+  }
 }
 
 pass.addEventListener("keydown",(e)=>{ if(e.key==="Enter") unlock(); });
@@ -697,7 +749,7 @@ function render(){
       const d=document.createElement("div");
       d.className="card";
       d.innerHTML=`
-        <img src="${x.url}" onclick="openZoom('${x.url}',\`${cap}\`)">
+        <img src="${optimizeCloudinaryUrl(x.url,400)}" onclick="openZoom('${x.url}',\`${cap}\`)">
         <button class="tapBtn" onclick="showRandom(${i})">Surprise ⚡</button>
         <p class="photoCaption">${x.caption || ""}</p>
       `;
@@ -714,10 +766,8 @@ function render(){
     `;
   }
 }
-loadMessages();
 
-/* START RENDER AFTER EVERYTHING LOADED */
-render();
+
 
 /* ZOOM */
 function openZoom(src,cap){
@@ -751,7 +801,7 @@ closeMsg.onclick=()=>msgOverlay.style.display="none";
 
 /* LOAD MESSAGES */
 function loadMessages(){
-  const txt = localStorage.getItem(MSG_KEY) || "";
+  const txt = messages;
   if(!txt.trim()){
     messageList.innerHTML = `<div style="text-align:center;opacity:.75;font-family:Playfair Display;">
       (No messages yet)
@@ -766,7 +816,8 @@ function loadMessages(){
     messageList.appendChild(d);
   });
 }
-loadMessages();
+
+
 
 
 /* OVERLAYS */
@@ -920,6 +971,28 @@ if(p.t==="BOOM Pop"){
   spawnDecor();
   drawDecor();
 })();
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  loadViewerData();   // ✅ VERY IMPORTANT
+
+  const musicOverlay = document.getElementById("musicOverlay");
+  const musicOpenBtn = document.getElementById("musicOpenBtn");
+
+  if (musicOpenBtn && musicOverlay) {
+    musicOpenBtn.onclick = () => {
+      musicOverlay.style.display = "flex";
+    };
+
+    musicOverlay.onclick = (e) => {
+      if (e.target === musicOverlay) {
+        musicOverlay.style.display = "none";
+      }
+    };
+  }
+
+});
+
 </script>
 
 <!-- FOOTER -->
