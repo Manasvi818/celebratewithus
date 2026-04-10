@@ -80,16 +80,28 @@ handler: async function (response) {
 
   // ✅ STEP 1: VERIFY PAYMENT (ONLY RAZORPAY DATA)
   const verifyRes = await fetch(`${BASE_URL}/verify-payment`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      razorpay_payment_id: response.razorpay_payment_id,
-      razorpay_order_id: response.razorpay_order_id,
-      razorpay_signature: response.razorpay_signature
-    })
-  });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    razorpay_payment_id: response.razorpay_payment_id,
+    razorpay_order_id: response.razorpay_order_id,
+    razorpay_signature: response.razorpay_signature,
+
+    projectId,
+    coupon,
+    discount,
+    amount: 149,
+    name: "Guest",
+    email: "guest@email.com",
+    templateId: selectedTemplate
+  })
+});
+
+// 🔴 ADD THIS EXACTLY BELOW (LINE ~100)
+const text = await verifyRes.text();
+console.log("SERVER RESPONSE:", text);
 
   if (!verifyRes.ok) {
     alert("Payment verification failed");
