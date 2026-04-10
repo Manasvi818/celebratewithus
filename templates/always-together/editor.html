@@ -297,16 +297,7 @@ if (result.password) {
   }
 }
 
-  function optimizeCloudinaryUrl(url, width = 500) {
-  if (!url || !url.includes("res.cloudinary.com")) return url;
 
-  if (url.includes("/upload/f_auto")) return url;
-
-  return url.replace(
-    "/upload/",
-    `/upload/f_auto,q_auto,w_${width}/`
-  );
-}
 
 /* Keys */
 
@@ -326,15 +317,15 @@ function render(){
     let el;
 
     if(obj.type === "video"){
-      el = document.createElement("video");
-      el.src = optimizeCloudinaryUrl(obj.url, 400);
-      el.loading = "lazy";
-      el.controls = true;
-    } else {
-      el = document.createElement("img");
-      el.src = optimizeCloudinaryUrl(obj.url, 400);
-el.loading = "lazy";
-    }
+  el = document.createElement("video");
+  el.src = optimizeCloudinaryUrl(obj.url, 400);   // ✅ changed
+  el.loading = "lazy";                             // ✅ added
+  el.controls = true;
+} else {
+  el = document.createElement("img");
+  el.src = optimizeCloudinaryUrl(obj.url, 400);   // ✅ changed
+  el.loading = "lazy";                             // ✅ added
+}
 
     el.onclick = () => preview(obj);
 
@@ -556,25 +547,24 @@ function deleteMsg(index){
    messages = txt.split("\n---\n");
 
   messages.splice(index, 1);
-
   localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
 
-  autoSave();
-   loadMessages();
+  autoSave();   // ✅ ADD THIS LINE
+  loadMessages();
 }
 
 function editMsg(index){
-  let arr = messages.split("\n---\n");
+  let txt = localStorage.getItem(MSG_KEY) || "";
+   messages = txt.split("\n---\n");
 
-  let updated = prompt("Edit message:", arr[index]);
+  let updated = prompt("Edit message:", messages[index]);
   if(updated === null) return;
-  if(updated.trim() === "") return;
+  if(updated.trim()==="") return;
 
-  arr[index] = updated.trim();
+  messages[index] = updated.trim();
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
 
-  messages = arr.join("\n---\n");
-
-  autoSave();
+  autoSave();   // ✅ ADD THIS LINE
   loadMessages();
 }
 
@@ -583,6 +573,26 @@ msgPopup.onclick = e=>{
     msgPopup.style.display="none";
   }
 };
+
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  if (url.includes("/upload/f_auto")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
+
+function waitForCloudinary(){
+  if (typeof cloudinary !== "undefined") {
+    initWidget();
+  } else {
+    setTimeout(waitForCloudinary, 200);
+  }
+}
+waitForCloudinary();
 
 /* ===== BACKGROUND MUSIC SYSTEM ===== */
 let previewAudio = null;
@@ -650,15 +660,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // EXISTING CODE
   loadFromDB();  
 
-  function waitForCloudinary(){
-    if (typeof cloudinary !== "undefined") {
-      initWidget();
-    } else {
-      setTimeout(waitForCloudinary, 200);
-    }
-  }
-
-  waitForCloudinary();
+  
 });
 
 function downloadViewer() {
