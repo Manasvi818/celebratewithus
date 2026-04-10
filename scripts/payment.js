@@ -66,63 +66,73 @@ const projectId = "proj_" + Date.now();
   const coupon = appliedCoupon || "No Coupon Applied";
   const discount = appliedDiscount || 0;
 
+  console.log("FULL RESPONSE:", response);
+
+  // ✅ SAFETY CHECK
+  if (
+    !response.razorpay_payment_id ||
+    !response.razorpay_order_id ||
+    !response.razorpay_signature
+  ) {
+    console.error("❌ Missing Razorpay fields", response);
+    alert("Payment data missing");
+    return;
+  }
+
+  // ✅ SINGLE CORRECT API CALL (NO SPLIT)
   const invoiceRes = await fetch(`${BASE_URL}/verify-payment`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    
-     body: JSON.stringify({
-  razorpay_payment_id: response.razorpay_payment_id,
-  razorpay_order_id: response.razorpay_order_id,
-  razorpay_signature: response.razorpay_signature,
+    body: JSON.stringify({
+      razorpay_payment_id: response.razorpay_payment_id,
+      razorpay_order_id: response.razorpay_order_id,
+      razorpay_signature: response.razorpay_signature,
 
-  projectId,
-  coupon,
-  discount,
-  amount: 149,
-
-  // ✅ ADD THESE
-  name: "Guest",
-  email: "guest@email.com",
-  template: selectedTemplate
-})
-    
+      // ✅ your extra data (SAFE)
+      projectId,
+      coupon,
+      discount,
+      amount: 149,
+      name: "Guest",
+      email: "guest@email.com",
+      template: selectedTemplate
+    })
   });
 
-console.log("Invoice status:", invoiceRes.status);
+  console.log("Invoice status:", invoiceRes.status);
 
+  let result;
 
-          let result;
+  try {
+    result = await invoiceRes.json();
+  } catch (e) {
+    const text = await invoiceRes.text();
+    console.error("NOT JSON RESPONSE:", text);
+    alert("Server error: invoice API not working");
+    return;
+  }
 
-try {
-  result = await invoiceRes.json();
-} catch (e) {
-  const text = await invoiceRes.text();
-  console.error("NOT JSON RESPONSE:", text);
-  alert("Server error: invoice API not working");
-  return;
-}
+  if (result.success && result.editLink) {
 
-          if (result.success && result.editLink) {
+    localStorage.setItem("nextCoupon", result.nextCoupon);
+    localStorage.setItem("invoicePath", result.invoice);
 
-           localStorage.setItem("nextCoupon", result.nextCoupon);
+    // ✅ OPEN INVOICE
+    if (result.invoice) {
+      window.open(BASE_URL + result.invoice, "_blank");
+    }
 
-           localStorage.setItem("invoicePath", result.invoice);
+    // ✅ REDIRECT
+    setTimeout(() => {
+      window.location.href = result.editLink;
+    }, 1500);
 
-            // ✅ OPEN BACKEND INVOICE (BEST)
-            if (result.invoice) {
-              window.open(BASE_URL + result.invoice, "_blank");
-            }
-
-            setTimeout(() => {
-              window.location.href = result.editLink;
-            }, 1500);
-
-          } else {
-            alert("Something went wrong");
-          }
-        },
+  } else {
+    alert("Something went wrong");
+  }
+},
 
         modal: {
           ondismiss: function () {
