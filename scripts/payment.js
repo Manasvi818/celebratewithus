@@ -61,7 +61,7 @@ const projectId = "proj_" + Date.now();
         name: "Celebratewithus",
         description: "Template Purchase ₹149",
 
-       handler: async function (response) {
+handler: async function (response) {
 
   const coupon = appliedCoupon || "No Coupon Applied";
   const discount = appliedDiscount || 0;
@@ -74,13 +74,12 @@ const projectId = "proj_" + Date.now();
     !response.razorpay_order_id ||
     !response.razorpay_signature
   ) {
-    console.error("❌ Missing Razorpay fields", response);
     alert("Payment data missing");
     return;
   }
 
-  // ✅ SINGLE CORRECT API CALL (NO SPLIT)
-  const invoiceRes = await fetch(`${BASE_URL}/verify-payment`, {
+  // ✅ STEP 1: VERIFY PAYMENT (ONLY RAZORPAY DATA)
+  const verifyRes = await fetch(`${BASE_URL}/verify-payment`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -88,9 +87,22 @@ const projectId = "proj_" + Date.now();
     body: JSON.stringify({
       razorpay_payment_id: response.razorpay_payment_id,
       razorpay_order_id: response.razorpay_order_id,
-      razorpay_signature: response.razorpay_signature,
+      razorpay_signature: response.razorpay_signature
+    })
+  });
 
-      // ✅ your extra data (SAFE)
+  if (!verifyRes.ok) {
+    alert("Payment verification failed");
+    return;
+  }
+
+  // ✅ STEP 2: SAVE PROJECT + GET LINKS
+  const saveRes = await fetch(`${BASE_URL}/save-project`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
       projectId,
       coupon,
       discount,
@@ -101,19 +113,16 @@ const projectId = "proj_" + Date.now();
     })
   });
 
-  console.log("Invoice status:", invoiceRes.status);
-
   let result;
 
   try {
-    result = await invoiceRes.json();
-  } catch (e) {
-    const text = await invoiceRes.text();
-    console.error("NOT JSON RESPONSE:", text);
-    alert("Server error: invoice API not working");
+    result = await saveRes.json();
+  } catch {
+    alert("Server error");
     return;
   }
 
+  // ✅ IMPORTANT: now result comes from save-project
   if (result.success && result.editLink) {
 
     localStorage.setItem("nextCoupon", result.nextCoupon);
