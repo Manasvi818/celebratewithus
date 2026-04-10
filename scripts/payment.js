@@ -95,7 +95,7 @@ handler: async function (response) {
     amount: 149,
     name: "Guest",
     email: "guest@email.com",
-    template: selectedTemplate
+    template: selectedTemplate.toLowerCase().replace(/\s+/g, "-")
   })
 });
 
