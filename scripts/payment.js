@@ -61,99 +61,79 @@ const projectId = "proj_" + Date.now();
         name: "Celebratewithus",
         description: "Template Purchase ₹149",
 
-handler: async function (response) {
+       handler: async function (response) {
 
   const coupon = appliedCoupon || "No Coupon Applied";
   const discount = appliedDiscount || 0;
+// ✅ SMALL CONDITION (ONLY FOR JOYFUL TIMES)
+let finalTemplate = selectedTemplate;
 
-  console.log("FULL RESPONSE:", response);
-
-  // ✅ SAFETY CHECK
-  if (
-    !response.razorpay_payment_id ||
-    !response.razorpay_order_id ||
-    !response.razorpay_signature
-  ) {
-    alert("Payment data missing");
-    return;
-  }
-
-  // ✅ STEP 1: VERIFY PAYMENT (ONLY RAZORPAY DATA)
-  const verifyRes = await fetch(`${BASE_URL}/verify-payment`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    razorpay_payment_id: response.razorpay_payment_id,
-    razorpay_order_id: response.razorpay_order_id,
-    razorpay_signature: response.razorpay_signature,
-
-    projectId,
-    coupon,
-    discount,
-    amount: 149,
-    name: "Guest",
-    email: "guest@email.com",
-    template: selectedTemplate.toLowerCase().replace(/\s+/g, "-")
-  })
-});
-
-// 🔴 ADD THIS EXACTLY BELOW (LINE ~100)
-const text = await verifyRes.text();
-console.log("SERVER RESPONSE:", text);
-
-  if (!verifyRes.ok) {
-    alert("Payment verification failed");
-    return;
-  }
-
-  // ✅ STEP 2: SAVE PROJECT + GET LINKS
-  const saveRes = await fetch(`${BASE_URL}/save-project`, {
+if (
+  selectedTemplate === "Joyful Family" ||
+  selectedTemplate === "Joyful Times"
+) {
+  finalTemplate = "joyful-times";
+}  else {
+  // ✅ Fix ALL other templates automatically
+  finalTemplate = selectedTemplate.toLowerCase().replace(/\s+/g, "-");
+}
+  const invoiceRes = await fetch(`${BASE_URL}/verify-payment`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({
-      projectId,
-      coupon,
-      discount,
-      amount: 149,
-      name: "Guest",
-      email: "guest@email.com",
-      templateId: selectedTemplate
-    })
+    
+     body: JSON.stringify({
+  razorpay_payment_id: response.razorpay_payment_id,
+  razorpay_order_id: response.razorpay_order_id,
+  razorpay_signature: response.razorpay_signature,
+
+  projectId,
+  coupon,
+  discount,
+  amount: 149,
+
+  // ✅ ADD THESE
+  name: "Guest",
+  email: "guest@email.com",
+template: finalTemplate
+})
+    
   });
 
-  let result;
+console.log("Invoice status:", invoiceRes.status);
 
-  try {
-    result = await saveRes.json();
-  } catch {
-    alert("Server error");
-    return;
-  }
 
-  // ✅ IMPORTANT: now result comes from save-project
-  if (result.success && result.editLink) {
+          let result;
 
-    localStorage.setItem("nextCoupon", result.nextCoupon);
-    localStorage.setItem("invoicePath", result.invoice);
+try {
+  result = await invoiceRes.json();
+} catch (e) {
+  const text = await invoiceRes.text();
+  console.error("NOT JSON RESPONSE:", text);
+  alert("Server error: invoice API not working");
+  return;
+}
 
-    // ✅ OPEN INVOICE
-    if (result.invoice) {
-      window.open(BASE_URL + result.invoice, "_blank");
-    }
+          if (result.success && result.editLink) {
 
-    // ✅ REDIRECT
-    setTimeout(() => {
-      window.location.href = result.editLink;
-    }, 1500);
+           localStorage.setItem("nextCoupon", result.nextCoupon);
 
-  } else {
-    alert("Something went wrong");
-  }
-},
+           localStorage.setItem("invoicePath", result.invoice);
+
+            // ✅ OPEN BACKEND INVOICE (BEST)
+            if (result.invoice) {
+              window.open(BASE_URL + result.invoice, "_blank");
+            }
+
+            setTimeout(() => {
+              window.location.href = result.editLink;
+            }, 1500);
+
+          } else {
+            alert("Something went wrong");
+          }
+        },
 
         modal: {
           ondismiss: function () {
