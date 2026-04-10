@@ -735,7 +735,8 @@ border:4px solid #F2D7B5;
 </div>
 
 <script>
-const projectId = window.location.pathname.split("/").pop();
+const params = new URLSearchParams(window.location.search);
+const projectId = params.get("projectId");
 
 let data = [];
 let messages = "";
