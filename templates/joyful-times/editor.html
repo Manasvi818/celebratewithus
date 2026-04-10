@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title> Joyful Times — Editor</title>
+<title> Joyful Family — Editor</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" href="https://celebratewithus.co.in/styles/images/logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
@@ -515,6 +515,17 @@ function openWidget(){
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+
+  // ✅ 1. LOAD DATA FROM DB (VERY IMPORTANT)
+  loadFromDB();
+
+  // ✅ 2. LOAD SAVED MUSIC (THIS IS YOUR FIX 4)
+  const savedMusic = localStorage.getItem(MUSIC_KEY);
+  if (savedMusic) {
+    bgMusicSelect.value = savedMusic;
+  }
+
+  // EXISTING CLOUDINARY CODE
   function waitForCloudinary(){
     if (typeof cloudinary !== "undefined") {
       initWidget();
@@ -522,78 +533,53 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(waitForCloudinary, 200);
     }
   }
+
   waitForCloudinary();
 });
 /* MUSIC */
 
 let previewAudio=null;
-
 function playMusicPreview(){
-
 let song=bgMusicSelect.value;
-
 if(!song) return;
-
 stopMusicPreview();
-
 previewAudio=new Audio(song);
-
 previewAudio.volume=.6;
-
 previewAudio.play();
-
 }
 
 function stopMusicPreview(){
-
 if(previewAudio){
-
 previewAudio.pause();
-
 previewAudio=null;
-
 }
-
 }
-
-
 
 /* PASSWORD */
 
-function savePass(){
-
+async function savePass(){
 const value=newPass.value.trim();
-
 if(!value){
-
 alert("Enter password");
-
 return;
-
 }
 
 localStorage.setItem(PASS_KEY,value);
-
+await autoSave();
 alert("Password saved");
-
 }
 
 /* MESSAGES */
 function loadMessages(){
-
 let txt = localStorage.getItem(MSG_KEY) || "";
-
 allMessagesBox.innerHTML = "";
-
 if(!txt.trim()){
 allMessagesBox.innerText="(No memories yet)";
 return;
 }
 
 let arr = txt.split(/\n---\n/);
-
 arr.forEach((m,i)=>{
-
 let d = document.createElement("div");
 d.className = "singleMessage";
 
