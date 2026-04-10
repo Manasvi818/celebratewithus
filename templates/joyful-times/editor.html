@@ -516,16 +516,15 @@ function openWidget(){
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ✅ 1. LOAD DATA FROM DB (VERY IMPORTANT)
+  // ✅ DO NOT WAIT (same as other pages)
   loadFromDB();
 
-  // ✅ 2. LOAD SAVED MUSIC (THIS IS YOUR FIX 4)
+  // ✅ Load music AFTER (non-blocking)
   const savedMusic = localStorage.getItem(MUSIC_KEY);
   if (savedMusic) {
     bgMusicSelect.value = savedMusic;
   }
 
-  // EXISTING CLOUDINARY CODE
   function waitForCloudinary(){
     if (typeof cloudinary !== "undefined") {
       initWidget();
@@ -557,15 +556,20 @@ previewAudio=null;
 
 /* PASSWORD */
 
-async function savePass(){
+function savePass(){
+
 const value=newPass.value.trim();
+
 if(!value){
 alert("Enter password");
 return;
 }
 
 localStorage.setItem(PASS_KEY,value);
-await autoSave();
+
+// ✅ NO await
+autoSave();
+
 alert("Password saved");
 }
 
