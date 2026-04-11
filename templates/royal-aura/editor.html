@@ -383,14 +383,7 @@ Local Upload
 </div>
 
 <script>
-const originalWarn = console.warn;
 
-if (location.hostname !== "localhost") {
-  console.warn = function (...args) {
-    if (args[0]?.includes("deprecated") || args[0]?.includes("wasm")) return;
-    originalWarn.apply(console, args);
-  };
-}
 
 let widget;
 const projectId = window.location.pathname.split("/").pop();
@@ -570,6 +563,14 @@ function openWidget(){
   widget.open();
 }
 
+function waitForCloudinary(){
+  if (typeof cloudinary !== "undefined") {
+    initWidget();
+  } else {
+    setTimeout(waitForCloudinary, 200);
+  }
+}
+waitForCloudinary();
 /* =========================
    MESSAGE SYSTEM
 ========================= */
