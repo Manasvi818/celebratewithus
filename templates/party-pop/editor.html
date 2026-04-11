@@ -360,8 +360,8 @@ select option{
 <h2 style="margin-top:24px;">📸 Upload Media</h2>
 
 <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:12px;">
-  <button class="btn" onclick="openWidget('image')">📸 Image</button>
-  <button class="btn" onclick="openWidget('video')">🎥 Video</button>
+  <button class="btn" onclick="openWidget()">📸 Image</button>
+  <button class="btn" onclick="openWidget()">🎥 Video</button>
 
   <label class="btn ghost" style="padding:10px 14px;">
     Local Upload
@@ -416,7 +416,7 @@ const projectId = window.location.pathname.split("/").pop();
 const STORAGE_KEY = `project_${projectId}`;
 const MSG_KEY = `msg_${projectId}`;
 const MUSIC_KEY = `music_${projectId}`;
-
+let widget;   // ✅ REQUIRED (GLOBAL DECLARATION)
 const savedPass = localStorage.getItem(`pass_${projectId}`);
 if(savedPass){
   document.getElementById("newPass").value = savedPass;
@@ -473,6 +473,14 @@ function render(){
   });
 }
 render();
+function waitForCloudinary(){
+  if (typeof cloudinary !== "undefined") {
+    initWidget();
+  } else {
+    setTimeout(waitForCloudinary, 200);
+  }
+}
+
 
 async function loadFromDB() {
   try {
@@ -529,12 +537,7 @@ function initWidget(){
 /* Cloudinary Upload */
 function openWidget(){
   if(!widget){
-    document.body.style.cursor = "wait"; // loader feel
-    setTimeout(() => {
-      document.body.style.cursor = "default";
-    }, 1000);
-
-    alert("Opening uploader...");
+    alert("⏳ Uploader still loading... please wait 1 second");
     return;
   }
 
@@ -757,7 +760,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // EXISTING CODE
   loadFromDB();  
 
-  
+    waitForCloudinary();   // ✅ MOVE HERE
+
 });
 
 function downloadViewer() {
