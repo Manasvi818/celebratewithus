@@ -839,6 +839,23 @@ function copyViewerLink() {
   window.open(`https://celebratewithus.co.in${invoicePath}`, "_blank");
 }
 
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url.includes("res.cloudinary.com")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
+
+function waitForCloudinary(){
+  if (typeof cloudinary !== "undefined") {
+    initWidget();
+  } else {
+    setTimeout(waitForCloudinary, 200);
+  }
+}
+waitForCloudinary();
 </script>
 
 <div style="text-align:center; margin-top:30px;"

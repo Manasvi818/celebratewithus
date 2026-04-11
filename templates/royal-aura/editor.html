@@ -382,7 +382,22 @@ Local Upload
 
 </div>
 
-<script>let widget;
+<script>
+const originalWarn = console.warn;
+
+console.warn = function (...args) {
+  if (
+    typeof args[0] === "string" &&
+    (args[0].includes("deprecated parameters") ||
+     args[0].includes("wasm") ||
+     args[0].includes("init"))
+  ) {
+    return;
+  }
+  originalWarn.apply(console, args);
+};
+
+let widget;
 const projectId = window.location.pathname.split("/").pop();
 const STORAGE_KEY = `project_${projectId}`;
 const MSG_KEY = `msg_${projectId}`;
