@@ -568,6 +568,12 @@ let music = "";
 let password = "";
 let song = "";
 
+function optimizeCloudinaryUrl(url, width = 500){
+  if(!url || !url.includes("res.cloudinary.com")) return url;
+
+  return url.replace("/upload/", `/upload/w_${width},q_auto,f_auto/`);
+}
+
 /* MUSIC */
 let bgAudio = null;
 let isPlaying = false;
@@ -663,6 +669,12 @@ function unlock(){
   }else{
     document.getElementById("wrongPass").style.display="block";
   }
+}
+
+function optimizeCloudinaryUrl(url, width = 500){
+  if(!url || !url.includes("res.cloudinary.com")) return url;
+
+  return url.replace("/upload/", `/upload/w_${width},q_auto,f_auto/`);
 }
 
 /* RENDER */
