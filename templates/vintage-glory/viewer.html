@@ -152,7 +152,7 @@ opacity:0;
 /* Title */
 .hero-title{
 font-family:"Cinzel";
-font-size:64px;
+ font-size:clamp(28px, 6vw, 64px);
 text-align:center;
 color:var(--sepiaBrown);
 letter-spacing:3px;
@@ -163,7 +163,8 @@ margin-bottom:2px;
 margin:2px 0 0;
 text-align:center;
 font-family:"Playfair Display";
-font-size:28px;
+  font-size:clamp(16px, 3vw, 28px);
+
 color:var(--sepiaBrown);
 }
 
@@ -179,11 +180,23 @@ color:var(--sepiaBrown);
 }
 
 /* Mobile: keep inside screen */
-@media(max-width:520px){
+@media(max-width:600px){
   .cornerBtns{
-    top:12px;
-    right:12px;
+    flex-direction:row;
+    bottom:10px;
+    top:auto;
+    right:10px;
   }
+
+  .actionBtn{
+    padding:8px 12px;
+    font-size:12px;
+  }
+}
+
+img, video{
+  max-width:100%;
+  height:auto;
 }
 
  .actionBtn{
@@ -226,7 +239,8 @@ color:var(--sepiaBrown);
 .videoBox video{
   width:100%;
   border-radius:18px;
-  max-height:340px;
+  max-height:60vh;
+   height:auto;
   object-fit:cover;
   margin-bottom:14px;
   border:1px solid rgba(0,245,255,.16);
@@ -236,7 +250,7 @@ color:var(--sepiaBrown);
 /* Photos */
 .grid{
   display:grid;
-  grid-template-columns:repeat(2, 1fr);
+  grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
   gap:14px;
 }
 @media(max-width:980px){ .grid{grid-template-columns:repeat(2, 1fr);} }
@@ -666,29 +680,60 @@ box-shadow:0 0 10px rgba(201,163,107,.6);
 /* =========================
    STORAGE KEYS (MATCH EDITOR)
 ========================= */
-const MEDIA_KEY = "vintage_media";
-const MSG_KEY   = "vintage_messages";
-const MUSIC_KEY = "vintage_music";
-const PASS_KEY  = "viewerPassword_vintageglory";
+const projectId = window.location.pathname.split("/").pop();
+
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
+let song = "";
 
 /* ensure localStorage exists */
-if(!localStorage.getItem(MEDIA_KEY)){
-  localStorage.setItem(MEDIA_KEY,"[]");
-}
+
 
 /* LOAD DATA */
-const savedSong = localStorage.getItem(MUSIC_KEY) || "";
-const savedPass = localStorage.getItem(PASS_KEY) || "";
+song = music;
+
 
 /* MUSIC */
 let bgAudio = null;
 let isPlaying = false;
 
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      PASS = password;
+
+      render();
+      loadMessages();
+
+      if (music) {
+        song = music;
+        setupMusic();
+      }
+
+      document.getElementById("passwordOverlay").style.display = "flex";
+      isLoaded = true;
+
+    }
+  } catch (err) {
+    console.error("❌ Viewer load failed:", err);
+  }
+}
+
 function playMusic(){
-  if(!savedSong) return;
+  if(!song) return;
 
   if(!bgAudio){
-    bgAudio = new Audio(savedSong);
+    bgAudio = new Audio(song);
     bgAudio.loop = true;
     bgAudio.volume = 0.65;
   }
@@ -696,7 +741,7 @@ function playMusic(){
 }
 
 function toggleMusic(){
-  if(!savedSong){
+  if(!song){
     alert("No music saved in Editor 🎵");
     return;
   }
@@ -722,19 +767,18 @@ function toggleMusic(){
 function unlock(){
 
   const input = document.getElementById("pass").value.trim();
-  const savedPass = localStorage.getItem("viewerPassword_vintageglory") || "";
+  const saved = PASS;
 
-  if(savedPass === ""){
-    document.getElementById("passwordOverlay").style.display="none";
-    playMusic();
-isPlaying = true;
- render();        // ✅ ADD
-  loadMessages();  // ✅ ADD
+  if(PASS === ""){
+  document.getElementById("passwordOverlay").style.display="none";
+  playMusic();
+  isPlaying = true;
+  render();
+  loadMessages();
+  return;
+}
 
-    return;
-  }
-
-  if(input === savedPass){
+  if(input === PASS){
     document.getElementById("passwordOverlay").style.display="none";
     playMusic();
 isPlaying = true;
@@ -751,7 +795,7 @@ pass.addEventListener("keydown",(e)=>{ if(e.key==="Enter") unlock(); });
 /* RENDER */
 function render(){
 
-  const data = JSON.parse(localStorage.getItem(MEDIA_KEY) || "[]"); // ✅ FIX
+
 
   videoContainer.innerHTML="";
   photoGrid.innerHTML="";
@@ -777,7 +821,7 @@ function render(){
       d.className="card";
 
       d.innerHTML=`
-        <img src="${x.url}">
+        <img src="${x.url}" onclick="openZoom('${x.url}','${x.caption}')">
         <p class="photoCaption">${x.caption || ""}</p>
       `;
 
@@ -847,7 +891,7 @@ applyBtn.onclick = ()=>{
 
 /* LOAD MESSAGES */
 function loadMessages(){
-  const txt = localStorage.getItem(MSG_KEY) || "";
+  const txt = messages;
   if(!txt.trim()){
     messageList.innerHTML = `<div style="text-align:center;opacity:.75;font-family:Playfair Display;">
       (No messages yet)
@@ -910,6 +954,10 @@ document.body.appendChild(s);
 setTimeout(()=>s.remove(),3000);
 
 },800);
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadViewerData();
+});
 </script>
 <footer class="site-footer">
   <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>

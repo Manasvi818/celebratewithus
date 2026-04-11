@@ -38,7 +38,8 @@ padding:20px;
 }
 
 .wrap{
-max-width:1100px;
+max-width:1200px;
+width:100%;
 margin:auto;
 border-radius:22px;
 padding:24px;
@@ -102,8 +103,15 @@ border:1px solid var(--photoShadow);
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+
 gap:14px;
+}
+
+img, video{
+  max-width:100%;
+  height:auto;
 }
 
 .card img,
@@ -318,14 +326,22 @@ Local Upload
 </div>
 
 </div>
+<div id="previewBox" style="margin-top:20px;">
+  <img id="previewImg" style="width:100%; display:none; border-radius:10px;">
+  
+  <video id="previewVideo" controls 
+    style="width:100%; display:none; border-radius:10px;">
+  </video>
 
+  <p id="previewCap"></p>
+</div>
 <script>
 
 const projectId = window.location.pathname.split("/").pop();
 const STORAGE_KEY = `project_${projectId}`;
 const MSG_KEY = `msg_${projectId}`;
 const MUSIC_KEY = `music_${projectId}`;
-
+let items = [];
 async function loadFromDB() {
   try {
     const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
@@ -391,6 +407,7 @@ el.controls=true;
 el=document.createElement("img");
 el.src = optimizeCloudinaryUrl(obj.url, 400);
 }
+el.onclick = () => preview(obj);
 const inp=document.createElement("input");
 inp.value=obj.caption||"";
 inp.placeholder="Caption";
@@ -420,9 +437,6 @@ function saveAll(){
 localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
 }
 
-function autoSave(){
-  localStorage.setItem("vintage_media", JSON.stringify(items));
-}
 
 function clearAll(){
 items=[];
@@ -584,10 +598,14 @@ msgSaveBtn.onclick = ()=>{
   let updated = old ? old + "\n---\n" + newMsg : newMsg;
 
   localStorage.setItem(MSG_KEY, updated);
+// ✅ ADD THIS
 
   document.getElementById("msgInput").value="";
   document.getElementById("msgPopup").style.display="none";
+  autoSave();   // ✅ ADD THIS
+
   loadMessages();
+  
 };
 
 function deleteMsg(index){
@@ -596,6 +614,7 @@ function deleteMsg(index){
 
   messages.splice(index, 1);
   localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+autoSave();   // ✅ ADD THIS
 
   loadMessages();
 }
@@ -610,6 +629,8 @@ function editMsg(index){
 
   messages[index] = updated.trim();
   localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  autoSave();   // ✅ ADD THIS
+
   loadMessages();
 }
 
@@ -638,7 +659,7 @@ function preview(obj){
 }
 
 function saveBgMusic() {
-  const url = musicSelect.value;
+  const url = document.getElementById("bgMusicSelect").value;
   music = url || "";
 localStorage.setItem(MUSIC_KEY, music);
 autoSave();
@@ -668,9 +689,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
   }
-
-  // EXISTING CODE
-  loadFromDB();  
 
   
 });
