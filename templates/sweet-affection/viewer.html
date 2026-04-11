@@ -81,12 +81,12 @@ padding:10px 20px 30px;
 }
 
 .grid{
-display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:32px;
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:18px;
 }
 
-@media(max-width:700px){
+@media(max-width:600px){
 .grid{grid-template-columns:1fr;}
 }
 
@@ -151,15 +151,16 @@ transform:scale(1.1);
 }
 
 #topControls{
-position:fixed;
-top:20px;
-right:25px;
-display:flex;
-gap:14px;
-bottom:15px;
-  right:15px;
+  position:fixed;
+  top:20px;
+  right:20px;
+
+  display:flex;
   flex-direction:row;
-z-index:9999;
+  gap:10px;
+
+  z-index:9999;
+
 }
 @media(max-width:600px){
 
@@ -176,6 +177,23 @@ z-index:9999;
     font-size:16px;
   }
 
+}
+
+.controlBox{
+  background:var(--accent);
+  color:white;
+
+  padding:8px 14px;
+  border-radius:20px;
+
+  font-size:13px;
+  font-weight:500;
+
+  cursor:pointer;
+  transition:.3s;
+
+  min-width:auto;
+  height:auto;
 }
 /* PASSWORD SCREEN */
 
