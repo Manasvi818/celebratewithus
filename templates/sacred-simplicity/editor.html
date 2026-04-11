@@ -476,6 +476,7 @@ function stopMusicPreview(){
 }
 
 
+
 /* CLOUDINARY UPLOAD */
 function initWidget(){
   widget = cloudinary.createUploadWidget({
@@ -615,8 +616,9 @@ msgPopup.onclick = e=>{
   }
 };
 
+
 function saveBgMusic() {
-  const url = musicSelect.value;
+  const url = document.getElementById("bgMusicSelect").value;
   music = url || "";
 localStorage.setItem(MUSIC_KEY, music);
 autoSave();
