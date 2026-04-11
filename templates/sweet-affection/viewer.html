@@ -55,7 +55,9 @@ margin-top:-20px;
 
 .title{
 font-family:'Allura',cursive;
-font-size:8rem;
+
+  font-size:clamp(2.5rem, 8vw, 6rem);
+
 margin-bottom:0;
 line-height:1;
 color:var(--text-main);
@@ -80,7 +82,7 @@ padding:10px 20px 30px;
 
 .grid{
 display:grid;
-grid-template-columns:repeat(2,1fr);
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
 gap:32px;
 }
 
@@ -102,9 +104,10 @@ transform:translateY(-8px);
 
 .card img,
 .card video{
-width:100%;
-height:280px;
-object-fit:cover;
+  width:100%;
+  height:auto;
+  max-height:320px;
+  object-fit:cover;
 }
 
 .caption{
@@ -153,10 +156,27 @@ top:20px;
 right:25px;
 display:flex;
 gap:14px;
-flex-direction:column;
+bottom:15px;
+  right:15px;
+  flex-direction:row;
 z-index:9999;
 }
+@media(max-width:600px){
 
+  body{
+    padding:10px;
+  }
+
+  .hero{
+    padding:20px 10px;
+  }
+
+  .pink-msg-box{
+    padding:20px;
+    font-size:16px;
+  }
+
+}
 /* PASSWORD SCREEN */
 
 #lockScreen{
@@ -310,6 +330,16 @@ A quiet feeling rests here ❤️
   </div>
 </div>
 <script>
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  if (url.includes("/upload/f_auto")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
 
 const projectId = window.location.pathname.split("/").pop();
 
@@ -385,7 +415,7 @@ function render(){
     if(item.type === "video"){
       videoContainer.innerHTML += `
         <div class="videoBox">
-          <video src="${item.url}" controls></video>
+          <video src="${optimizeCloudinaryUrl(item.url,800)}" controls></video>
           <div class="caption">${item.caption || ""}</div>
         </div>
       `;
@@ -398,7 +428,7 @@ function render(){
       card.className = "card";
 
       card.innerHTML = `
-        <img src="${item.url}" onclick="openZoom('${item.url}', \`${item.caption || ""}\`)">
+        <img src="${optimizeCloudinaryUrl(item.url,400)}" onclick="openZoom('${item.url}', \`${item.caption || ""}\`)">
         <button onclick="showRandom(${i})">Surprise ✨</button>
         <div class="caption">${item.caption || ""}</div>
       `;
@@ -452,16 +482,13 @@ const musicToggle=document.getElementById("musicToggle");
 
 function startMusic(){
 
-if(!savedMusic) return;
+if(!music) return;
 
 if(!bgAudio){
-bgAudio = new Audio(savedMusic);
-bgAudio.loop = true;
-bgAudio.volume = 0.6;
+setupMusic();
 }
 
 bgAudio.play().catch(()=>{});
-playing = true;
 musicToggle.innerText = "⏸ Music";
 
 }
@@ -533,7 +560,7 @@ startHearts();
 const grid=document.querySelector(".grid");
 const viewerMessage=document.getElementById("viewerMessage");
 
-const items=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
+
 
 function loadMessages(){
   const viewerMessage = document.getElementById("viewerMessage");

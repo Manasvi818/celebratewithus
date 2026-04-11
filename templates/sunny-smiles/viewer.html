@@ -893,7 +893,7 @@ async function loadViewerData() {
       music = result.music || "";
       password = result.password || "";
 
-      initViewerFeatures();
+      
       
     }
   } catch (err) {
@@ -907,7 +907,7 @@ const lightboxImg = document.getElementById("lightboxImg");
 const lightboxCaption = document.getElementById("lightboxCaption");
 
 function loadGallery(){
-  const items = data;
+  const items = data || [];
 
   const videoContainer = document.getElementById("videoContainer");
   const gallerySection = document.getElementById("gallerySection");
@@ -915,57 +915,56 @@ function loadGallery(){
   videoContainer.innerHTML = "";
   gallerySection.innerHTML = "";
 
-  if(!items.length){
+  if(items.length === 0){
     gallerySection.innerHTML = "<p style='opacity:.7'>No memories added yet 💭</p>";
     return;
   }
 
-  // ✅ VIDEOS (FULL WIDTH)
-  items.forEach(item=>{
-  if(!item || !item.url || !item.type) return;  // ✅ ADD THIS LINE
+  // 🎥 VIDEO + AUDIO
+  items.forEach((it)=>{
+    if(!it || !it.url || !it.type) return;
 
-  if(item.type === "video"){
+    if(it.type === "video"){
       videoContainer.innerHTML += `
         <div class="videoBox">
-          <video src="${item.url}" controls></video>
-          <p class="videoCaption">${item.caption || ""}</p>
+          <video src="${it.url}" controls></video>
+          <p class="videoCaption">${it.caption || ""}</p>
+        </div>
+      `;
+    }
+
+    if(it.type === "audio"){
+      videoContainer.innerHTML += `
+        <div class="videoBox">
+          <audio src="${it.url}" controls></audio>
+          <p class="videoCaption">${it.caption || ""}</p>
         </div>
       `;
     }
   });
 
-  if(item.type === "audio"){
-  videoContainer.innerHTML += `
-    <div class="videoBox">
-      <audio src="${item.url}" controls></audio>
-      <p class="videoCaption">${item.caption || ""}</p>
-    </div>
-  `;
-}
-
-  // ✅ IMAGES (2 PER ROW)
+  // 🖼️ IMAGES
   const wrap = document.createElement("div");
   wrap.className = "polaroids";
 
-  items.forEach((item,index)=>{
-  if(!item || !item.url || !item.type) return;
-    if(item.type === "image"){
-      const card = document.createElement("div");
-      card.className = "polaroid";
+  items.forEach((it)=>{
+    if(!it || !it.url || it.type !== "image") return;
 
-      card.innerHTML = `
-        <img src="${item.url}" class="polaroid-photo">
-        <div class="polaroid-caption">${item.caption || ""}</div>
-      `;
+    const card = document.createElement("div");
+    card.className = "polaroid";
 
-      card.onclick = ()=>{
-        lightbox.classList.add("open");
-        lightboxImg.src=item.url;
-        lightboxCaption.textContent=item.caption||"";
-      };
+    card.innerHTML = `
+      <img src="${it.url}" class="polaroid-photo">
+      <div class="polaroid-caption">${it.caption || ""}</div>
+    `;
 
-      wrap.appendChild(card);
-    }
+    card.onclick = ()=>{
+      document.getElementById("lightbox").classList.add("open");
+      document.getElementById("lightboxImg").src = it.url;
+      document.getElementById("lightboxCaption").textContent = it.caption || "";
+    };
+
+    wrap.appendChild(card);
   });
 
   gallerySection.appendChild(wrap);
