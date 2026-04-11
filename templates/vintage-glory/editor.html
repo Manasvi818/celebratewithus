@@ -321,10 +321,60 @@ Local Upload
 
 <script>
 
-const STORAGE_KEY="vintage_media";
-const MSG_KEY="vintage_messages";
-const MUSIC_KEY="vintage_music";
-let items=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
+const projectId = window.location.pathname.split("/").pop();
+const STORAGE_KEY = `project_${projectId}`;
+const MSG_KEY = `msg_${projectId}`;
+const MUSIC_KEY = `music_${projectId}`;
+
+async function loadFromDB() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      items = result.data || [];
+
+      let messages = result.messages || "";
+      let music = result.music || "";
+      let password = result.password || "";
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      localStorage.setItem(MSG_KEY, messages);
+      localStorage.setItem(MUSIC_KEY, music);
+      localStorage.setItem(`pass_${projectId}`, password);
+
+      render();
+      loadMessages();
+    }
+  } catch (err) {
+    console.error("❌ Load failed:", err);
+  }
+}
+
+async function autoSave() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
+  try {
+    await fetch("https://celebratewithus.onrender.com/save-project", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        projectId,
+        data: items,
+        messages: localStorage.getItem(MSG_KEY),
+        music: localStorage.getItem(MUSIC_KEY),
+        password: localStorage.getItem(`pass_${projectId}`)
+      })
+    });
+
+    console.log("✅ Saved to DB");
+
+  } catch (err) {
+    console.error("❌ DB Save failed:", err);
+  }
+}
 
 function render(){
 let box=document.getElementById("mediaGrid");
@@ -335,11 +385,11 @@ d.className="card";
 let el;
 if(obj.type==="video"){
 el=document.createElement("video");
-el.src=obj.url;
+el.src = optimizeCloudinaryUrl(obj.url, 400);
 el.controls=true;
 }else{
 el=document.createElement("img");
-el.src=obj.url;
+el.src = optimizeCloudinaryUrl(obj.url, 400);
 }
 const inp=document.createElement("input");
 inp.value=obj.caption||"";
@@ -400,7 +450,8 @@ function savePass(){
     alert("Password unchanged");
     return;
   }
-  localStorage.setItem("viewerPassword_vintageglory", newPassword);
+  localStorage.setItem(`pass_${projectId}`, newPassword);
+autoSave();
   alert("Password updated successfully 🔐");
   document.getElementById("newPass").value = "";
 }
@@ -431,17 +482,6 @@ function stopMusicPreview(){
     previewAudio.pause();
     previewAudio.currentTime = 0;
   }
-}
-
-/* Save selected music */
-function saveBgMusic(){
-  const song = document.getElementById("bgMusicSelect").value;
-  if(!song){
-    alert("Please select a music track first 🎵");
-    return;
-  }
-  localStorage.setItem("vintage_music", song);
-  alert("Music saved successfully 🎶");
 }
 
 /* CLOUDINARY UPLOAD */
@@ -579,6 +619,24 @@ msgPopup.onclick = e=>{
   }
 };
 
+function preview(obj){
+  const img = document.getElementById("previewImg");
+  const vid = document.getElementById("previewVideo");
+
+  img.style.display = "none";
+  vid.style.display = "none";
+
+  if(obj.type === "video"){
+    vid.src = obj.url;
+    vid.style.display = "block";
+  } else {
+    img.src = obj.url;
+    img.style.display = "block";
+  }
+
+  document.getElementById("previewCap").innerText = obj.caption || "";
+}
+
 function saveBgMusic() {
   const url = musicSelect.value;
   music = url || "";
@@ -591,7 +649,9 @@ autoSave();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  loadMessages();   // ✅ ADD HERE
+  loadMessages();  
+    loadFromDB();   // 🔥 ADD THIS
+ // ✅ ADD HERE
 
   // ✅ ADD THESE LINES HERE
   const musicOverlay = document.getElementById("musicOverlay");

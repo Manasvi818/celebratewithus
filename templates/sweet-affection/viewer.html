@@ -316,6 +316,19 @@ margin-bottom:25px;
   flex-direction:column;
   justify-content:flex-start;
 }
+
+.memory{
+  padding:10px 16px;
+  margin:10px 14px 16px;
+
+  font-size:14px;
+  line-height:1.5;
+
+  background:rgba(0,0,0,0.03);
+  border-radius:12px;
+
+  color:var(--text-main);
+}
 </style>
 </head>
 
@@ -478,10 +491,14 @@ function render(){
       card.className = "card";
 
       card.innerHTML = `
-        <img src="${optimizeCloudinaryUrl(item.url,400)}" onclick="openZoom('${item.url}', \`${item.caption || ""}\`)">
-        <button class="surprise-btn" onclick="showRandom(${i})">✨ Surprise</button>
-        <div class="caption">${item.caption || ""}</div>
-      `;
+  <img src="${optimizeCloudinaryUrl(item.url,400)}" onclick="openZoom('${item.url}', \`${item.caption || ""}\`)">
+
+  <button class="surprise-btn" onclick="showRandom(${i})">✨ Surprise</button>
+
+  <div class="caption">${item.caption || ""}</div>
+
+  ${item.memory ? `<div class="memory">${item.memory}</div>` : ""}
+`;
 
       imageGrid.appendChild(card);
     }
