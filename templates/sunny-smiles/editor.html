@@ -125,6 +125,39 @@ h2,h3{
   color:#6b4b00;
   font-family:"Poppins";
 }
+
+@media (max-width: 768px) {
+
+  body {
+    padding: 10px;
+  }
+
+  .wrap {
+    padding: 14px;
+  }
+
+  h1 {
+    font-size: 34px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .btn {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  input, textarea, select {
+    font-size: 14px;
+  }
+
+}
 </style>
 </head>
 
@@ -135,14 +168,26 @@ h2,h3{
 <h2>☀️ Upload Photos / Videos / Audio ☀️</h2>
 
 <!-- MEDIA UPLOAD -->
-<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:14px 0;">
+<div style="
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  flex-wrap:wrap;
+">
   <button class="btn" onclick="openWidget()">📸 Image</button>
   <button class="btn" onclick="openWidget()">🎥 Video</button>
   <button class="btn" onclick="openWidget()">🎵 Audio</button>
+  <input type="file" accept="image/*,video/*" onchange="uploadLocal(event)">
 </div>
 
 <h2>Media List</h2>
 <div id="mediaGrid" class="grid"></div>
+
+<div id="previewBox" style="margin-top:10px;">
+  <img id="previewImg" style="width:100%; max-height:300px; display:none;">
+  <video id="previewVideo" controls style="width:100%; max-height:300px; display:none;"></video>
+  <p id="previewCap"></p>
+</div>
 
 <div style="display:flex;gap:8px;margin-top:20px;justify-content:center;">
   <button class="btn ghost" onclick="clearAll()">Delete All</button>
@@ -225,12 +270,59 @@ h2,h3{
 
 <script>
 /* STORAGE KEYS */
-const STORAGE_KEY="ss_media_v1";
-const MSG_KEY="ss_messages";
-const PASS_KEY="viewerPassword_sunnySmiles";
+const projectId = window.location.pathname.split("/").pop();
+
+const STORAGE_KEY = `project_${projectId}`;
+const MSG_KEY = `msg_${projectId}`;
+const MUSIC_KEY = `music_${projectId}`;
+const PASS_KEY = `pass_${projectId}`;
 
 /* MEDIA */
 let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+async function loadFromDB() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      items = result.data || [];
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      localStorage.setItem(MSG_KEY, result.messages || "");
+      localStorage.setItem(MUSIC_KEY, result.music || "");
+      localStorage.setItem(PASS_KEY, result.password || "");
+
+      render();
+      loadMessages();
+    }
+  } catch (err) {
+    console.error("Load failed:", err);
+  }
+}
+
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url.includes("res.cloudinary.com")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
+
+function uploadLocal(e){
+ const file=e.target.files[0];
+ if(!file) return;
+
+ const r=new FileReader();
+ r.onload=v=>{
+  let type=file.type.includes("video")?"video":"image";
+  items.push({url:v.target.result,type,caption:""});
+  autoSave();
+  render();
+ }
+ r.readAsDataURL(file);
+}
 
 function render(){
   const box = document.getElementById("mediaGrid");
@@ -243,17 +335,20 @@ function render(){
     let el;
     if(o.type === "video"){
       el = document.createElement("video");
-      el.src = o.url;
+      el.src = optimizeCloudinaryUrl(o.url);
+el.loading = "lazy";
       el.controls = true;
     } else if(o.type === "audio"){
       el = document.createElement("audio");
-      el.src = o.url;
+      el.src = optimizeCloudinaryUrl(o.url);
+el.loading = "lazy";
       el.controls = true;
     } else {
       el = document.createElement("img");
-      el.src = o.url;
+      el.src = optimizeCloudinaryUrl(o.url);
+el.loading = "lazy";
     }
-
+el.onclick = () => preview(o);
     /* Caption input */
     const capInput = document.createElement("input");
     capInput.type = "text";
@@ -287,30 +382,49 @@ function render(){
 }
 
 /* CLOUDINARY */
-function openWidget(){
-  cloudinary.openUploadWidget({
-    cloudName:"di8n4lsjz",
-    uploadPreset:"sunny_smiles",
-    folder:"sunny_smiles",
-    resourceType:"auto"
-  },(err,res)=>{
-    if(!err && res.event==="success"){
-     items.push({
-  url: res.info.secure_url,
-  type:
-  res.info.resource_type === "video" &&
-  res.info.format !== "mp3"
-    ? "video"
-    : res.info.resource_type === "video"
-    ? "audio"
-    : "image",
-  caption: ""
-});
-
-      autoSave(); render();
+function initWidget(){
+  widget = cloudinary.createUploadWidget({
+    cloudName: "di8n4lsjz",
+    uploadPreset: "sunny_smiles",
+    folder: "sunny_smiles",
+    resourceType: "auto",
+    multiple: true
+  }, (error, result) => {
+    if (!error && result && result.event === "success") {
+      items.push({
+        url: optimizeCloudinaryUrl(result.info.secure_url, 500),
+        type: result.info.resource_type,
+        caption: ""
+      });
+      autoSave();
+      render();
     }
   });
 }
+
+/* Cloudinary Upload */
+function openWidget(){
+  if(!widget){
+    document.body.style.cursor = "wait"; // loader feel
+    setTimeout(() => {
+      document.body.style.cursor = "default";
+    }, 1000);
+
+    alert("Opening uploader...");
+    return;
+  }
+
+  widget.open();
+}
+
+function waitForCloudinary(){
+  if (typeof cloudinary !== "undefined") {
+    initWidget();
+  } else {
+    setTimeout(waitForCloudinary, 200);
+  }
+}
+waitForCloudinary();
 
 function saveAll(){
   localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
@@ -318,8 +432,47 @@ function saveAll(){
 function clearAll(){
   items=[]; autoSave(); render();
 }
-function autoSave(){
-  localStorage.setItem("ss_media_v1", JSON.stringify(items));
+
+async function autoSave() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
+  try {
+    await fetch("https://celebratewithus.onrender.com/save-project", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        projectId,
+        data: items,
+        messages: localStorage.getItem(MSG_KEY),
+        music: localStorage.getItem(MUSIC_KEY),
+        password: localStorage.getItem(PASS_KEY)
+      })
+    });
+
+    console.log("Saved to DB");
+  } catch (err) {
+    console.error("DB Save failed:", err);
+  }
+}
+
+function preview(obj){
+  const img = document.getElementById("previewImg");
+  const vid = document.getElementById("previewVideo");
+
+  img.style.display = "none";
+  vid.style.display = "none";
+
+  if(obj.type === "video"){
+    vid.src = obj.url;
+    vid.style.display = "block";
+  } else {
+    img.src = obj.url;
+    img.style.display = "block";
+  }
+
+  document.getElementById("previewCap").innerText = obj.caption || "";
 }
 
 /* PASSWORD LOGIC */
@@ -372,6 +525,7 @@ msgSaveBtn.onclick=()=>{
   msgInput.value="";
   msgPopup.style.display="none";
   loadMessages();
+  autoSave();
 };
 
 function deleteMsg(i){
@@ -379,6 +533,7 @@ function deleteMsg(i){
   arr.splice(i,1);
   localStorage.setItem(MSG_KEY,arr.join("\n---\n"));
   loadMessages();
+  autoSave();
 }
 function editMsg(i){
   let arr=(localStorage.getItem(MSG_KEY)||"").split("\n---\n");
@@ -387,6 +542,7 @@ function editMsg(i){
     arr[i]=v.trim();
     localStorage.setItem(MSG_KEY,arr.join("\n---\n"));
     loadMessages();
+    autoSave();
   }
 }
 msgPopup.onclick=e=>{
@@ -394,7 +550,7 @@ msgPopup.onclick=e=>{
 };
 
 /* ===== BACKGROUND MUSIC SYSTEM ===== */
-const MUSIC_KEY = "ss_bg_music";
+
 let previewAudio = null;
 
 const musicSelect = document.getElementById("bgMusicSelect");

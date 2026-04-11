@@ -623,6 +623,40 @@ body.sunset header {
   color:#6b4b00;
   font-family:"Poppins";
 }
+
+@media (max-width: 768px) {
+
+  header h1 {
+    font-size: 34px;
+    white-space: normal;
+  }
+
+  .page {
+    padding: 18px 10px 60px;
+  }
+
+  .polaroids {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .videoBox video {
+    aspect-ratio: auto;
+  }
+
+  .timeline-cards {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .timeline-item {
+    min-width: 140px;
+  }
+
+  .lightbox-inner {
+    max-width: 95%;
+  }
+
+}
 </style>
 </head>
 
@@ -754,13 +788,15 @@ body.sunset header {
 <!-- 🔐 PASSWORD + MUSIC LOGIC -->
 <!-- ============================= -->
 <script>
-const PASS_KEY  = "viewerPassword_sunnySmiles";
-const MUSIC_KEY = "ss_bg_music";
+const projectId = window.location.pathname.split("/").pop();
+
+const PASS_KEY  = `pass_${projectId}`;
+const MUSIC_KEY = `music_${projectId}`;
 
 let isPlaying = false;
 
 function checkPassword(){
-  const savedPassword = localStorage.getItem(PASS_KEY);
+  const savedPassword = password;
   const entered = document.getElementById("passInput").value.trim();
 
   if (!savedPassword) {
@@ -781,7 +817,7 @@ requestAnimationFrame(() => viewer.classList.add("show"));
 
 
   // 🎵 LOAD SAVED MUSIC
-  const musicUrl = localStorage.getItem(MUSIC_KEY);
+  const musicUrl = music;
   const audio = document.getElementById("bgMusic");
   const btn   = document.getElementById("musicToggle");
 
@@ -839,8 +875,31 @@ initViewerFeatures = function(){
 /* ============================= */
 /* 🌼 GALLERY (FROM EDITOR) */
 /* ============================= */
-const MEDIA_KEY = "ss_media_v1";
-const MSG_KEY   = "ss_messages";
+
+
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
+
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      initViewerFeatures();
+      
+    }
+  } catch (err) {
+    console.error("Viewer load failed:", err);
+  }
+}
 
 const gallerySection = document.getElementById("gallerySection");
 const lightbox = document.getElementById("lightbox");
@@ -848,7 +907,7 @@ const lightboxImg = document.getElementById("lightboxImg");
 const lightboxCaption = document.getElementById("lightboxCaption");
 
 function loadGallery(){
-  const items = JSON.parse(localStorage.getItem("ss_media_v1") || "[]");
+  const items = data;
 
   const videoContainer = document.getElementById("videoContainer");
   const gallerySection = document.getElementById("gallerySection");
@@ -1023,7 +1082,7 @@ document.body.classList.add(stage.body);
 const viewerMessages = document.getElementById("viewerMessages");
 
 function loadMessages(){
-  const raw = localStorage.getItem(MSG_KEY);
+  const raw = messages;
   if(!raw){
     viewerMessages.innerHTML = "<p class='message-empty'>No messages yet 💛</p>";
     return;
@@ -1076,10 +1135,10 @@ const _oldCheck = checkPassword;
 checkPassword = function(){
   _oldCheck();
   if(document.getElementById("viewerPage").style.display === "block"){
-    initViewerFeatures();
-    
+    loadViewerData();   // ✅ FIRST load data
   }
 };
+
 /* 😊 Cursor Emoji Trail */
 (function emojiTrail() {
   const emojis = ["😊", "🌼", "💛", "✨"];
