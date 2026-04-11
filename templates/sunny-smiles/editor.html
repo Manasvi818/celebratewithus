@@ -177,7 +177,15 @@ h2,h3{
   <button class="btn" onclick="openWidget()">📸 Image</button>
   <button class="btn" onclick="openWidget()">🎥 Video</button>
   <button class="btn" onclick="openWidget()">🎵 Audio</button>
-  <input type="file" accept="image/*,video/*" onchange="uploadLocal(event)">
+  <label class="btn" for="fileUpload">📂 Choose File</label>
+<input 
+  id="fileUpload"
+  type="file" 
+  accept="image/*,video/*" 
+  onchange="uploadLocal(event)"
+  style="display:none;"
+>
+<p id="fileName" style="font-size:12px;margin-top:5px;"></p>
 </div>
 
 <h2>Media List</h2>
@@ -313,6 +321,8 @@ function optimizeCloudinaryUrl(url, width = 500) {
 function uploadLocal(e){
  const file=e.target.files[0];
  if(!file) return;
+
+ document.getElementById("fileName").innerText = file.name;
 
  const r=new FileReader();
  r.onload=v=>{

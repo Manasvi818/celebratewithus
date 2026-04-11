@@ -244,14 +244,42 @@ Local Upload
 
 /* SAME SCRIPT AS YOUR ORIGINAL */
 
-const STORAGE_KEY="sweet_gallery";
-const MSG_KEY="sweet_messages";
-const MUSIC_KEY="sweet_music";
+const projectId = window.location.pathname.split("/").pop();
+
+const STORAGE_KEY = `project_${projectId}`;
+const MSG_KEY = `msg_${projectId}`;
+const MUSIC_KEY = `music_${projectId}`;
+
+let password = "";
+let music = "";
 
 let items=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
 
-function autoSave(){
-  localStorage.setItem("sweet_gallery", JSON.stringify(items));
+async function autoSave() {
+
+  // local save
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
+  try {
+    await fetch("https://celebratewithus.onrender.com/save-project", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        projectId,
+        data: items,
+        messages: localStorage.getItem(MSG_KEY) || "",
+        music: music,
+        password: password
+      })
+    });
+
+    console.log("✅ Saved to DB");
+
+  } catch (err) {
+    console.error("❌ DB Save failed:", err);
+  }
 }
 
 function saveAll(){
@@ -274,8 +302,9 @@ d.className="card";
 let isVideo = o.type === "video" || (o.type || "").includes("video");
 
 let el = isVideo
-?Object.assign(document.createElement("video"),{src:o.url,controls:true})
-:Object.assign(document.createElement("img"),{src:o.url});
+?Object.assign(document.createElement("video"),{src: optimizeCloudinaryUrl(o.url, 400),controls:true})
+:Object.assign(document.createElement("img"),{src: optimizeCloudinaryUrl(o.url, 400)});
+el.onclick = () => preview(o);
 
 let cap=document.createElement("input");
 cap.placeholder="Caption...";
@@ -358,6 +387,17 @@ function openWidget(){
   widget.open();
 }
 
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  if (url.includes("/upload/f_auto")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
+
 function waitForCloudinary(){
   if (typeof cloudinary !== "undefined") {
     initWidget();
@@ -367,14 +407,61 @@ function waitForCloudinary(){
 }
 waitForCloudinary();
 
-function savePass(){
-localStorage.setItem("viewerPassword_sweet",newPass.value);
-alert("Password saved ❤️");
+async function loadFromDB() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+
+      items = result.data || [];
+      music = result.music || "";
+      password = result.password || "";
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      localStorage.setItem(MSG_KEY, result.messages || "");
+      localStorage.setItem(MUSIC_KEY, music);
+
+      render();
+      loadMessages();
+
+      console.log("✅ Loaded from DB");
+    }
+
+  } catch (err) {
+    console.error("❌ Load failed:", err);
+  }
+}
+
+async function savePass(){
+  const newPassword = document.getElementById("newPass").value.trim();
+
+  if(!newPassword){
+    alert("Enter password first");
+    return;
+  }
+
+  password = newPassword;
+  localStorage.setItem(`pass_${projectId}`, password);
+
+  await autoSave();
+
+  alert("Password saved ❤️");
 }
 
 function saveMusic(){
-localStorage.setItem(MUSIC_KEY,bgMusicSelect.value||"");
-alert("Music saved 🎶");
+  const url = document.getElementById("bgMusicSelect").value;
+  music = url || "";
+
+  localStorage.setItem(MUSIC_KEY, music);
+  autoSave();
+
+  alert("Music saved 🎶");
+}
+
+const savedMusic = localStorage.getItem(MUSIC_KEY);
+if (savedMusic) {
+  document.getElementById("bgMusicSelect").value = savedMusic;
 }
 
 let previewAudio = null;
@@ -410,104 +497,6 @@ previewAudio.currentTime = 0;
 
 /* MESSAGE SYSTEM */
 
-let messages = JSON.parse(localStorage.getItem(MSG_KEY) || "[]");
-
-const msgOpenBtn = document.getElementById("msgOpenBtn");
-const msgPopup = document.getElementById("msgPopup");
-const msgInput = document.getElementById("msgInput");
-const msgSaveBtn = document.getElementById("msgSaveBtn");
-const messagesContainer = document.getElementById("messagesContainer");
-
-function renderMessages(){
-
-messagesContainer.innerHTML="";
-
-if(messages.length===0){
-messagesContainer.innerHTML="<p style='text-align:center;opacity:.6;'>No messages yet ❤️</p>";
-return;
-}
-
-messages.forEach((text,index)=>{
-
-const box=document.createElement("div");
-
-box.style.cssText=`
-background:white;
-padding:16px;
-border-radius:18px;
-margin-bottom:12px;
-box-shadow:0 15px 40px rgba(0,0,0,.12);
-font-family:'Libre Baskerville';
-`;
-
-const msgText=document.createElement("div");
-msgText.innerText=text;
-
-const btnWrap=document.createElement("div");
-btnWrap.style.cssText="margin-top:10px;display:flex;gap:8px;justify-content:flex-end;";
-
-const editBtn=document.createElement("button");
-editBtn.textContent="Edit";
-editBtn.className="btn ghost";
-
-editBtn.onclick=()=>{
-msgInput.value=text;
-msgPopup.style.display="flex";
-messages.splice(index,1);
-localStorage.setItem(MSG_KEY,JSON.stringify(messages));
-renderMessages();
-
-};
-
-const delBtn=document.createElement("button");
-delBtn.textContent="Delete";
-delBtn.className="btn ghost";
-
-delBtn.onclick=()=>{
-messages.splice(index,1);
-localStorage.setItem(MSG_KEY,JSON.stringify(messages));
-renderMessages();
-};
-
-btnWrap.append(editBtn,delBtn);
-
-box.append(msgText,btnWrap);
-
-messagesContainer.appendChild(box);
-
-});
-
-}
-
-msgOpenBtn.onclick=()=>{
-msgInput.value="";
-msgPopup.style.display="flex";
-};
-
-msgSaveBtn.onclick=()=>{
-
-const text=msgInput.value.trim();
-if(!text)return;
-
-messages.push(text);
-
-localStorage.setItem(MSG_KEY,JSON.stringify(messages));
-
-msgPopup.style.display="none";
-
-renderMessages();
-render();  
-};
-
-msgPopup.onclick=(e)=>{
-if(e.target===msgPopup){
-msgPopup.style.display="none";
-}
-};
-
-renderMessages();
-render();  
-
 function saveBgMusic() {
   const url = musicSelect.value;
   music = url || "";
@@ -520,7 +509,8 @@ autoSave();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  loadMessages();   // ✅ ADD HERE
+  
+});
 
   // ✅ ADD THESE LINES HERE
   const musicOverlay = document.getElementById("musicOverlay");
@@ -541,8 +531,81 @@ document.addEventListener("DOMContentLoaded", () => {
   // EXISTING CODE
   loadFromDB();  
 
-  
-});
+function loadMessages(){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+
+  const box = document.getElementById("messagesContainer");
+  box.innerHTML = "";
+
+  if(!txt.trim()){
+    box.innerHTML = "<p style='text-align:center;'>No messages yet ❤️</p>";
+    return;
+  }
+
+  let messages = txt.split("\n---\n");
+
+  messages.forEach((msg, index)=>{
+    let div = document.createElement("div");
+
+    div.innerHTML = `
+      <div>${msg}</div>
+      <div style="margin-top:6px;text-align:right;">
+        <button onclick="editMsg(${index})">✏️</button>
+        <button onclick="deleteMsg(${index})">🗑️</button>
+      </div>
+    `;
+
+    box.appendChild(div);
+  });
+}
+
+msgOpenBtn.onclick = ()=>{
+  msgPopup.style.display="flex";
+}
+
+msgSaveBtn.onclick = ()=>{
+  let newMsg = msgInput.value.trim();
+  if(newMsg==="") return;
+
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let arr = txt ? txt.split("\n---\n") : [];
+
+  arr.push(newMsg);
+
+  localStorage.setItem(MSG_KEY, arr.join("\n---\n"));
+
+  msgInput.value="";
+  msgPopup.style.display="none";
+
+  autoSave();
+  loadMessages();
+}
+
+function deleteMsg(index){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let arr = txt.split("\n---\n");
+
+  arr.splice(index,1);
+  localStorage.setItem(MSG_KEY, arr.join("\n---\n"));
+
+  autoSave();
+  loadMessages();
+}
+
+function editMsg(index){
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  let arr = txt.split("\n---\n");
+
+  let updated = prompt("Edit message:", arr[index]);
+  if(!updated) return;
+
+  arr[index] = updated;
+  localStorage.setItem(MSG_KEY, arr.join("\n---\n"));
+
+  autoSave();
+  loadMessages();
+}
+
 
 function downloadViewer() {
   autoSave();
@@ -720,6 +783,39 @@ function copyViewerLink() {
   window.open(`https://celebratewithus.co.in${invoicePath}`, "_blank");
 }
 
+function preview(obj){
+  let previewBox = document.getElementById("previewBox");
+
+  if(!previewBox){
+    previewBox = document.createElement("div");
+    previewBox.id = "previewBox";
+    previewBox.style.marginTop = "10px";
+
+    previewBox.innerHTML = `
+      <img id="previewImg" style="width:100%;max-height:300px;display:none;border-radius:10px;">
+      <video id="previewVideo" controls style="width:100%;max-height:300px;display:none;border-radius:10px;"></video>
+      <p id="previewCap"></p>
+    `;
+
+    document.body.appendChild(previewBox);
+  }
+
+  const img = document.getElementById("previewImg");
+  const vid = document.getElementById("previewVideo");
+
+  img.style.display = "none";
+  vid.style.display = "none";
+
+  if(obj.type === "video"){
+    vid.src = obj.url;
+    vid.style.display = "block";
+  } else {
+    img.src = obj.url;
+    img.style.display = "block";
+  }
+
+  document.getElementById("previewCap").innerText = obj.caption || "";
+}
 </script>
 
 <div style="text-align:center; margin-top:30px;"
