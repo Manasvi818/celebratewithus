@@ -220,6 +220,73 @@ select{
   font-size:14px;
   color:#5a3e2b;
 }
+
+/* ✅ GLOBAL RESPONSIVE TYPOGRAPHY */
+
+h1{
+  font-size:clamp(28px, 5vw, 56px);
+}
+
+h2{
+  font-size:clamp(20px, 4vw, 32px);
+}
+
+h3{
+  font-size:clamp(18px, 3.5vw, 28px);
+}
+
+p, .caption, .subText{
+  font-size:clamp(14px, 2.5vw, 18px);
+}
+
+button, .btn{
+  font-size:clamp(14px, 2.5vw, 16px);
+}
+
+/* ✅ MOBILE RESPONSIVE FIX */
+@media (max-width:768px){
+
+  body{
+    padding:12px;
+  }
+
+  .wrap{
+    padding:16px;
+    border-radius:18px;
+  }
+
+  .page{
+    padding:20px 12px 60px;
+  }
+
+  header{
+    padding:18px;
+  }
+
+  section{
+    padding:16px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;   /* 1 column on mobile */
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  input, select, textarea{
+    font-size:16px;  /* prevents zoom on mobile */
+  }
+}
+
+@media (max-width:1024px){
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+
 </style>
 </head>
 
@@ -297,14 +364,77 @@ Local Upload
 </div>
 
 <script>
-const STORAGE_KEY="simple_media";
-const MSG_KEY="simple_messages";
-const MUSIC_KEY="simple_music";
+const projectId = window.location.pathname.split("/").pop();
+const STORAGE_KEY = `project_${projectId}`;
+const MSG_KEY = `msg_${projectId}`;
+const MUSIC_KEY = `music_${projectId}`;
 
-let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+let items = [];
+let messages = "";
+let music = "";
+let password = "";
 
-function autoSave(){
-  localStorage.setItem("simple_media", JSON.stringify(items));
+async function autoSave() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
+  try {
+    await fetch("https://celebratewithus.onrender.com/save-project", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        projectId,
+        data: items,
+        messages: messages,
+        music: music,
+        password: password
+      })
+    });
+
+    console.log("✅ Saved to DB");
+
+  } catch (err) {
+    console.error("❌ DB Save failed:", err);
+  }
+}
+
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  if (url.includes("/upload/f_auto")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
+
+async function loadFromDB() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      items = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      localStorage.setItem(MSG_KEY, messages);
+      localStorage.setItem(MUSIC_KEY, music);
+      localStorage.setItem(`pass_${projectId}`, password);
+
+      render();
+      loadMessages();
+
+      console.log("✅ Loaded from DB");
+    }
+
+  } catch (err) {
+    console.error("❌ Load failed:", err);
+  }
 }
 
 function render(){
@@ -315,7 +445,7 @@ let d=document.createElement("div");
 d.className="card";
 
 let el=document.createElement(obj.type==="video"?"video":"img");
-el.src=obj.url;
+el.src = optimizeCloudinaryUrl(obj.url, 400);
 if(obj.type==="video") el.controls=true;
 
 let inp=document.createElement("input");
@@ -337,59 +467,55 @@ box.appendChild(d);
 }
 render();
 
+let widget;
+
 function initWidget(){
-  widget = cloudinary.createUploadWidget({
-    cloudName: "di8n4lsjz",
-    uploadPreset: "simple_delight",
-    folder: "simple_delight",
-    resourceType: "auto",
-    multiple: true
-  }, (error, result) => {
-    if (!error && result && result.event === "success") {
-      items.push({
-        url: optimizeCloudinaryUrl(result.info.secure_url, 500),
-        type: result.info.resource_type,
-        caption: ""
-      });
-      autoSave();
-      render();
-    }
-  });
+  try{
+    widget = cloudinary.createUploadWidget({
+      cloudName: "di8n4lsjz",
+      uploadPreset: "simple_delight",
+      folder: "simple_delight"
+    }, (error, result) => {
+
+      if (error) {
+        console.error("Cloudinary Error:", error);
+        return;
+      }
+
+      if (result && result.event === "success") {
+        items.push({
+          url: optimizeCloudinaryUrl(result.info.secure_url, 500),
+          type: result.info.resource_type,
+          caption: ""
+        });
+
+        autoSave();
+        render();
+      }
+
+    });
+
+  }catch(e){
+    console.error("Widget init failed:", e);
+  }
 }
 
-/* Cloudinary Upload */
 function openWidget(){
   if(!widget){
-    document.body.style.cursor = "wait"; // loader feel
-    setTimeout(() => {
-      document.body.style.cursor = "default";
-    }, 1000);
-
-    alert("Opening uploader...");
+    alert("Uploader not ready yet. Try again.");
     return;
   }
-
   widget.open();
-}
-
-function optimizeCloudinaryUrl(url, width = 500) {
-  if (!url || !url.includes("res.cloudinary.com")) return url;
-
-  if (url.includes("/upload/f_auto")) return url;
-
-  return url.replace(
-    "/upload/",
-    `/upload/f_auto,q_auto,w_${width}/`
-  );
 }
 
 function waitForCloudinary(){
   if (typeof cloudinary !== "undefined") {
     initWidget();
   } else {
-    setTimeout(waitForCloudinary, 200);
+    setTimeout(waitForCloudinary, 300);
   }
 }
+
 waitForCloudinary();
 
 
@@ -410,10 +536,22 @@ r.readAsDataURL(file);
 function saveAll(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); }
 function clearAll(){ items=[]; autoSave(); render(); }
 
-function savePass(){
-localStorage.setItem("viewerPassword_simpledelight", document.getElementById("newPass").value);
-passSaved.style.display="block";
-setTimeout(()=>passSaved.style.display="none",1500);
+async function savePass(){
+  const newPassword = document.getElementById("newPass").value.trim();
+
+  if(!newPassword){
+    alert("Enter password first");
+    return;
+  }
+
+  password = newPassword;
+
+  localStorage.setItem(`pass_${projectId}`, password);
+
+  await autoSave();   // ✅ CRITICAL
+
+  passSaved.style.display="block";
+  setTimeout(()=>passSaved.style.display="none",1500);
 }
 
 /* Messages */
@@ -448,36 +586,46 @@ box.appendChild(div);
 
 msgOpenBtn.onclick=()=>{msgPopup.style.display="flex";};
 msgSaveBtn.onclick=()=>{
-let newMsg=msgInput.value.trim();
-if(!newMsg) return;
-let old=localStorage.getItem(MSG_KEY)||"";
-let updated=old?old+"\n---\n"+newMsg:newMsg;
-localStorage.setItem(MSG_KEY,updated);
-msgInput.value="";
-msgPopup.style.display="none";
-loadMessages();
+  let newMsg = msgInput.value.trim();
+  if(!newMsg) return;
+
+  let txt = localStorage.getItem(MSG_KEY) || "";
+  messages = txt ? txt.split("\n---\n") : [];
+
+  messages.push(newMsg);
+
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+
+  msgInput.value="";
+  msgPopup.style.display="none";
+
+  autoSave();   // ✅ NOW WORKS CORRECTLY
+  loadMessages();
 };
 
 function deleteMsg(index){
-let txt=localStorage.getItem(MSG_KEY)||"";
-let arr=txt.split("\n---\n");
-arr.splice(index,1);
-localStorage.setItem(MSG_KEY,arr.join("\n---\n"));
-loadMessages();
+  let txt = localStorage.getItem(MSG_KEY)||"";
+  messages = txt.split("\n---\n");
+
+  messages.splice(index,1);
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+
+  autoSave();   // ✅ REQUIRED
+  loadMessages();
 }
 
 function editMsg(index){
+  let txt = localStorage.getItem(MSG_KEY)||"";
+  messages = txt.split("\n---\n");
 
-let txt=localStorage.getItem(MSG_KEY)||"";
-let arr=txt.split("\n---\n");
-let currentMsg=arr[index];
-let newMsg=prompt("Edit your message:", currentMsg);
-if(newMsg===null) return;
-newMsg=newMsg.trim();
-if(newMsg==="") return;
-arr[index]=newMsg;
-localStorage.setItem(MSG_KEY,arr.join("\n---\n"));
-loadMessages();
+  let newMsg = prompt("Edit your message:", messages[index]);
+  if(newMsg===null || newMsg.trim()==="") return;
+
+  messages[index] = newMsg.trim();
+  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+
+  autoSave();   // ✅ REQUIRED
+  loadMessages();
 }
 msgPopup.onclick=e=>{ if(e.target===msgPopup) msgPopup.style.display="none"; };
 

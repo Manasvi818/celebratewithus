@@ -385,6 +385,74 @@ body.sunset  { background:linear-gradient(180deg,#ffc6ff,#ff99c8); }
   font-size:14px;
   color:#5a3e2b;
 }
+/* ✅ GLOBAL RESPONSIVE TYPOGRAPHY */
+
+h1{
+  font-size:clamp(28px, 5vw, 56px);
+}
+
+h2{
+  font-size:clamp(20px, 4vw, 32px);
+}
+
+h3{
+  font-size:clamp(18px, 3.5vw, 28px);
+}
+
+p, .caption, .subText{
+  font-size:clamp(14px, 2.5vw, 18px);
+}
+
+button, .btn{
+  font-size:clamp(14px, 2.5vw, 16px);
+}
+
+/* ✅ MOBILE RESPONSIVE FIX */
+@media (max-width:768px){
+
+  body{
+    padding:12px;
+  }
+
+  .wrap{
+    padding:16px;
+    border-radius:18px;
+  }
+
+  .page{
+    padding:20px 12px 60px;
+  }
+
+  header{
+    padding:18px;
+  }
+
+  section{
+    padding:16px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;   /* 1 column on mobile */
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  input, select, textarea{
+    font-size:16px;  /* prevents zoom on mobile */
+  }
+}
+
+@media (max-width:1024px){
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+header h1{
+  font-size:clamp(32px, 6vw, 56px);
+}
 </style>
 </head>
 
@@ -454,47 +522,69 @@ Journey of Joy
 </div>
 
 <script>
-const MEDIA_KEY="simple_media";
-const MSG_KEY="simple_messages";
-const MUSIC_KEY="simple_music";
-const PASS_KEY="viewerPassword_simpledelight";
+const projectId = window.location.pathname.split("/").pop();
+
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
+
 const musicToggle = document.getElementById("musicToggle");
 const mediaGrid = document.getElementById("mediaGrid");
 let isPlaying=false;
 
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      renderGallery();   // replace old loadGallery
+      loadMessages();
+      loadMusic();
+    }
+
+  } catch (err) {
+    console.error("❌ Viewer load failed:", err);
+  }
+}
+
 /* PASSWORD */
 function checkPassword(){
-  const saved=localStorage.getItem(PASS_KEY);
-  const entered=document.getElementById("passInput").value.trim();
+  const entered = document.getElementById("passInput").value.trim();
 
-  if(!saved){ alert("Password not set in editor."); return; }
-  if(entered!==saved){ alert("Wrong password ❌"); return; }
+  if(!password){
+    alert("Password not set ❌");
+    return;
+  }
+
+  if(entered !== password){
+    alert("Wrong password ❌");
+    return;
+  }
 
   document.getElementById("lockScreen").style.display="none";
   document.getElementById("viewerPage").style.display="block";
 
-  loadGallery();
+  renderGallery();
   loadMessages();
   loadMusic();
 }
 
 /* GALLERY */
-function loadGallery(){
-  const items = JSON.parse(localStorage.getItem(MEDIA_KEY) || "[]");
-
+function renderGallery(){
   const videoContainer = document.getElementById("videoContainer");
   const gallery = document.getElementById("gallery");
 
   videoContainer.innerHTML = "";
   gallery.innerHTML = "";
 
-  if(!items.length){
-    gallery.innerHTML = "<p>No memories yet 🌼</p>";
-    return;
-  }
-
-  // 🎥 VIDEOS (FULL ROW)
-  items.forEach(item=>{
+  data.forEach(item=>{
     if(item.type === "video"){
       videoContainer.innerHTML += `
         <div class="videoBox">
@@ -505,8 +595,7 @@ function loadGallery(){
     }
   });
 
-  // 🖼 IMAGES (2 PER ROW)
-  items.forEach(item=>{
+  data.forEach(item=>{
     if(item.type === "image"){
       const card = document.createElement("div");
       card.className = "polaroid";
@@ -521,39 +610,36 @@ function loadGallery(){
   });
 }
 
-lightbox.onclick=()=>lightbox.classList.remove("open");
-
 /* MESSAGES */
 function loadMessages(){
-  const raw=localStorage.getItem(MSG_KEY);
-  const box=document.getElementById("messages");
-box.innerHTML = "";   // ✅ IMPORTANT
-  if(!raw){
-    box.innerHTML="<p>No messages yet 💛</p>";
+  const box = document.getElementById("messages");
+  box.innerHTML = "";
+
+  if(!messages.trim()){
+    box.innerHTML = "<p>No messages yet 💛</p>";
     return;
   }
 
-  raw.split("\n---\n").forEach(msg=>{
-    const div=document.createElement("div");
+  messages.split("\n---\n").forEach(msg=>{
+    const div = document.createElement("div");
     div.style.background="#fff3d6";
     div.style.padding="12px";
     div.style.borderRadius="16px";
     div.style.marginBottom="10px";
-    div.textContent=msg;
+    div.textContent = msg;
     box.appendChild(div);
   });
 }
 
 /* MUSIC */
 function loadMusic(){
-  const url=localStorage.getItem(MUSIC_KEY);
-  const audio=document.getElementById("bgMusic");
-  if(url){
-    audio.src=url;
-    audio.volume=0.6;
+  const audio = document.getElementById("bgMusic");
+
+  if(music){
+    audio.src = music;
+    audio.volume = 0.6;
     audio.play();
     musicToggle.textContent="⏸";
-    isPlaying=true;
   }
 }
 
@@ -675,7 +761,7 @@ document.addEventListener("mousemove",e=>{
 
 /* 🔓 Enhance Unlock */
 const oldUnlock = checkPassword;
-checkPassword = function(){
+checkPassword = async function(){
   oldUnlock();
   if(document.getElementById("viewerPage").style.display==="block"){
     setSkyByTime();
@@ -739,7 +825,9 @@ function updateTimelineColor(theme){
       "linear-gradient(90deg,#F2C94C,#ffffff)";
   }
 }
-
+document.addEventListener("DOMContentLoaded", () => {
+  loadViewerData();
+});
 </script>
 <footer class="site-footer">
   <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
