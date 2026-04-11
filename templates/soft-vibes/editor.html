@@ -312,12 +312,13 @@ Local Upload
 </div>
 
 <script>
+  
 const projectId = window.location.pathname.split("/").pop();
 
 const STORAGE_KEY = `project_${projectId}`;
 const MSG_KEY = `msg_${projectId}`;
 const MUSIC_KEY = `music_${projectId}`;
-
+let items = [];
 async function loadFromDB(){
   try{
     const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
@@ -417,7 +418,11 @@ function initWidget(){
 }
 
 function openWidget(){
-  if(widget) widget.open();
+  if(!widget){
+    alert("Uploader is loading... please wait ⏳");
+    return;
+  }
+  widget.open();
 }
 
 function waitForCloudinary(){
@@ -531,6 +536,7 @@ localStorage.setItem(MSG_KEY,updated);
 msgInput.value="";
 msgPopup.style.display="none";
 loadMessages();
+autoSave();
 };
 
 function deleteMsg(index){
@@ -539,6 +545,7 @@ let arr=txt.split("\n---\n");
 arr.splice(index,1);
 localStorage.setItem(MSG_KEY,arr.join("\n---\n"));
 loadMessages();
+autoSave();
 }
 
 function editMsg(index){
@@ -553,6 +560,7 @@ if(newMsg==="") return;
 arr[index]=newMsg;
 localStorage.setItem(MSG_KEY,arr.join("\n---\n"));
 loadMessages();
+autoSave();
 }
 msgPopup.onclick=e=>{ if(e.target===msgPopup) msgPopup.style.display="none"; };
 

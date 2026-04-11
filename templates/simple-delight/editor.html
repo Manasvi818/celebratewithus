@@ -598,42 +598,57 @@ msgSaveBtn.onclick=()=>{
   let newMsg = msgInput.value.trim();
   if(!newMsg) return;
 
+  // ✅ ALWAYS treat messages as STRING
   let txt = localStorage.getItem(MSG_KEY) || "";
-  messages = txt ? txt.split("\n---\n") : [];
 
-  messages.push(newMsg);
+  if(txt){
+    txt += "\n---\n" + newMsg;
+  } else {
+    txt = newMsg;
+  }
 
-  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  // ✅ update BOTH
+  messages = txt;
+
+  localStorage.setItem(MSG_KEY, txt);
 
   msgInput.value="";
   msgPopup.style.display="none";
 
-  autoSave();   // ✅ NOW WORKS CORRECTLY
+  autoSave();   // ✅ DB gets correct string
   loadMessages();
 };
 
 function deleteMsg(index){
   let txt = localStorage.getItem(MSG_KEY)||"";
-  messages = txt.split("\n---\n");
+  let arr = txt ? txt.split("\n---\n") : [];
 
-  messages.splice(index,1);
-  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  arr.splice(index,1);
 
-  autoSave();   // ✅ REQUIRED
+  let updated = arr.join("\n---\n");
+
+  messages = updated;
+  localStorage.setItem(MSG_KEY, updated);
+
+  autoSave();
   loadMessages();
 }
 
 function editMsg(index){
   let txt = localStorage.getItem(MSG_KEY)||"";
-  messages = txt.split("\n---\n");
+  let arr = txt ? txt.split("\n---\n") : [];
 
-  let newMsg = prompt("Edit your message:", messages[index]);
+  let newMsg = prompt("Edit your message:", arr[index]);
   if(newMsg===null || newMsg.trim()==="") return;
 
-  messages[index] = newMsg.trim();
-  localStorage.setItem(MSG_KEY, messages.join("\n---\n"));
+  arr[index] = newMsg.trim();
 
-  autoSave();   // ✅ REQUIRED
+  let updated = arr.join("\n---\n");
+
+  messages = updated;
+  localStorage.setItem(MSG_KEY, updated);
+
+  autoSave();
   loadMessages();
 }
 msgPopup.onclick=e=>{ if(e.target===msgPopup) msgPopup.style.display="none"; };
@@ -674,7 +689,7 @@ autoSave();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  loadMessages();   // ✅ ADD HERE
+     // ✅ ADD HERE
 
   // ✅ ADD THESE LINES HERE
   const musicOverlay = document.getElementById("musicOverlay");

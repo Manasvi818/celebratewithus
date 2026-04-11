@@ -544,6 +544,7 @@ let isPlaying=false;
 
 async function loadViewerData() {
   try {
+    
     const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
     const result = await res.json();
 
