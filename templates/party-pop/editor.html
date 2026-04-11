@@ -526,7 +526,9 @@ function initWidget(){
     uploadPreset: "party_pop",
     folder: "party_pop",
     resourceType: "auto",
-    multiple: true
+    multiple: true,
+showPoweredBy: false,       // ← add
+    showAdvancedOptions: false
   }, async (error, result) => {
     if (!error && result && result.event === "success") {
       items.push({
