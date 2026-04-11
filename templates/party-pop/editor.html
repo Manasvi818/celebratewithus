@@ -425,6 +425,12 @@ if(savedPass){
 /* Load Items */
 let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
+function optimizeCloudinaryUrl(url, width = 500){
+  if(!url || !url.includes("res.cloudinary.com")) return url;
+
+  return url.replace("/upload/", `/upload/w_${width},q_auto,f_auto/`);
+}
+
 /* Render Media */
 function render(){
   let box=document.getElementById("mediaGrid");
