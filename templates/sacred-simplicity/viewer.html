@@ -569,6 +569,10 @@ let messages = "";
 let music = "";
 let password = "";
 
+let PASS = "";
+let isLoaded = false;
+let song = "";
+
 async function loadViewerData() {
   try {
     const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
@@ -615,7 +619,7 @@ function playMusic(){
 }
 
 function toggleMusic(){
-  if(!savedSong){
+  if(!song){
     alert("No music saved in Editor 🎵");
     return;
   }
@@ -641,7 +645,7 @@ function toggleMusic(){
 function unlock(){
 
   const input = document.getElementById("pass").value.trim();
-  const savedPass = password;
+  const savedPass = PASS;
 
   if(savedPass === ""){
     document.getElementById("passwordOverlay").style.display="none";
@@ -707,28 +711,6 @@ loadMessages();
 /* START RENDER AFTER EVERYTHING LOADED */
 render();
 
-let PASS = "";
-let isLoaded = false;
-
-function unlock(){
-  if(!isLoaded){
-    alert("⏳ Wait...");
-    return;
-  }
-
-  const entered = document.getElementById("pass").value.trim();
-
-  if(entered === PASS){
-    document.getElementById("passwordOverlay").style.display = "none";
-
-    if(song){
-      playMusic();
-    }
-
-  }else{
-    document.getElementById("wrongPass").style.display = "block";
-  }
-}
 
 /* ZOOM */
 function openZoom(src,cap){

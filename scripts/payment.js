@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const BASE_URL = "https://celebratewithus.onrender.com";
   let finalAmount = 14900;
   let usedCoupon = null;
-  
 let appliedCoupon = "";
 let appliedDiscount = 0;
 

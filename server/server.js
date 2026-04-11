@@ -505,6 +505,7 @@ const validTemplates = [
   "electric-energy",
   "laugh-riot",
   "party-pop",
+  "party_pop",
   "blush-love",
   "candlelight-moments",
   "forever-yours",

@@ -546,10 +546,15 @@ showPoweredBy: false,       // ← add
 /* Cloudinary Upload */
 function openWidget(){
   if(!widget){
-    alert("⏳ Uploader still loading... please wait 1 second");
+    // Wait for widget to be ready then open
+    const interval = setInterval(() => {
+      if(widget){
+        clearInterval(interval);
+        widget.open();
+      }
+    }, 200);
     return;
   }
-
   widget.open();
 }
 
