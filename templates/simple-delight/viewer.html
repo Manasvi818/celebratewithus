@@ -436,8 +436,17 @@ button, .btn{
   }
 
   .btn{
-    width:100%;
+    width:auto;   /* ✅ allow inline */
+    flex:1;       /* optional: equal spacing */
+    min-width:140px;
   }
+
+  .buttonRow{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:nowrap;   /* ❗ prevents stacking */
+}
 
   input, select, textarea{
     font-size:16px;  /* prevents zoom on mobile */

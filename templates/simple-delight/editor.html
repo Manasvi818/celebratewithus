@@ -272,8 +272,17 @@ button, .btn{
   }
 
   .btn{
-    width:100%;
+    width:auto;   /* ✅ allow inline */
+    flex:1;       /* optional: equal spacing */
+    min-width:140px;
   }
+
+  .buttonRow{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:nowrap;   /* ❗ prevents stacking */
+}
 
   input, select, textarea{
     font-size:16px;  /* prevents zoom on mobile */
@@ -868,13 +877,7 @@ function copyViewerLink() {
 
 </script>
 
-<div style="text-align:center; margin-top:30px;"
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  margin-top:30px;
-  flex-wrap:wrap;
-">
+<<div style="display:flex; justify-content:center; gap:12px; margin-top:30px; flex-wrap:wrap;">
 
   <button class="btn" onclick="goToViewer()">
     💾 Save All & Show Viewer Page

@@ -377,6 +377,13 @@ let del=document.createElement("button");
 del.textContent="Delete";
 del.className="btn ghost";
 del.style.marginTop="10px";
+
+del.onclick = ()=>{
+  items.splice(i,1);
+  autoSave();
+  render();
+};
+
 el.onclick = () => preview(obj);
 
 d.appendChild(el);
@@ -469,17 +476,18 @@ function optimizeCloudinaryUrl(url, width = 500){
 }
 
 function savePass(){
+  const pass = document.getElementById("newPass").value.trim();
 
-const pass = document.getElementById("newPass").value.trim();
+  if(!pass){
+    alert("Please enter a password first");
+    return;
+  }
 
-if(!pass){
-alert("Please enter a password first");
-return;
-}
+  localStorage.setItem(`pass_${projectId}`, pass);
+  autoSave();
 
-localStorage.setItem("viewerPassword_softvibes", pass);
-passSaved.style.display="block";
-setTimeout(()=>passSaved.style.display="none",1500);
+  passSaved.style.display="block";
+  setTimeout(()=>passSaved.style.display="none",1500);
 }
 
 /* Messages */
