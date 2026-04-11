@@ -497,19 +497,13 @@ previewAudio.currentTime = 0;
 
 /* MESSAGE SYSTEM */
 
-function saveBgMusic() {
-  const url = musicSelect.value;
-  music = url || "";
-localStorage.setItem(MUSIC_KEY, music);
-autoSave();
-  document.getElementById("musicSavedMsg").style.display = "block";
-  setTimeout(() => {
-    document.getElementById("musicSavedMsg").style.display = "none";
-  }, 1500);
-}
+
 
 document.addEventListener("DOMContentLoaded", () => {
-  
+    loadMessages();   // fallback
+
+    loadFromDB();
+
 });
 
   // ✅ ADD THESE LINES HERE
@@ -528,8 +522,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // EXISTING CODE
-  loadFromDB();  
+  
 
 function loadMessages(){
   let txt = localStorage.getItem(MSG_KEY) || "";

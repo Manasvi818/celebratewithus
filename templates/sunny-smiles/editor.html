@@ -501,6 +501,8 @@ function savePass(){
 
   localStorage.setItem(PASS_KEY, pass);
 
+  autoSave();   // ✅ VERY IMPORTANT (SYNC WITH VIEWER)
+
   document.getElementById("newPass").value="";
   passSaved.style.display="block";
   setTimeout(()=>passSaved.style.display="none",1500);

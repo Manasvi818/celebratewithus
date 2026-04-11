@@ -264,7 +264,7 @@ margin-bottom:25px;
 
 <input id="passInput" type="password" placeholder="Enter password">
 
-<button onclick="checkPassword()">Enter</button>
+<button onclick="unlock()">Enter</button>
 
 <p id="wrongPass" style="display:none;color:#ff7b7b;">
 Wrong password
@@ -303,42 +303,77 @@ A quiet feeling rests here ❤️
 </div>
 
 </div>
-
+<div id="imgZoomOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);justify-content:center;align-items:center;">
+  <div style="text-align:center;">
+    <img id="zoomImg" style="max-width:90%;max-height:80vh;border-radius:12px;">
+    <p id="zoomCaption" style="color:white;"></p>
+  </div>
+</div>
 <script>
 
-const STORAGE_KEY = "sweet_gallery";
-const MSG_KEY = "sweet_messages";
+const projectId = window.location.pathname.split("/").pop();
+
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
+let PASS = "";
+let isLoaded = false;
 
 /* PASSWORD */
 
-const savedPass = localStorage.getItem("viewerPassword_sweet");
+function unlock(){
 
-function checkPassword(){
+  if(!isLoaded){
+    alert("⏳ Wait...");
+    return;
+  }
 
-const input=document.getElementById("passInput").value;
+  const entered = document.getElementById("passInput").value.trim();
 
-if(!savedPass || savedPass===""){
-document.getElementById("lockScreen").style.display="none";
-return;
+  if(entered === PASS){
+
+    document.getElementById("lockScreen").style.display = "none";
+    document.getElementById("wrongPass").style.display = "none";
+
+    if(music){
+      startMusic();
+    }
+
+  } else {
+    document.getElementById("wrongPass").style.display = "block";
+  }
 }
 
-if(input===savedPass){
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
 
-document.getElementById("lockScreen").style.display="none";
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
 
-/* autoplay music after unlock */
-setTimeout(startMusic,300);
-loadGallery();
+      PASS = password;
+
+      isLoaded = true;
+
+      render();
+      loadMessages();
+
+      if (music) {
+        setupMusic();
+      }
+    }
+
+  } catch (err) {
+    console.error("❌ Viewer load failed:", err);
+  }
 }
-else{
-document.getElementById("wrongPass").style.display="block";
-}
 
-}
-
-function loadGallery(){
-
-  const items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+function render(){
 
   const videoContainer = document.getElementById("videoContainer");
   const imageGrid = document.getElementById("imageGrid");
@@ -346,13 +381,7 @@ function loadGallery(){
   videoContainer.innerHTML = "";
   imageGrid.innerHTML = "";
 
-  if(!items.length){
-    imageGrid.innerHTML = "<p>No memories yet ❤️</p>";
-    return;
-  }
-
-  // 🎥 VIDEOS (FULL ROW)
-  items.forEach(item=>{
+  data.forEach(item=>{
     if(item.type === "video"){
       videoContainer.innerHTML += `
         <div class="videoBox">
@@ -363,14 +392,14 @@ function loadGallery(){
     }
   });
 
-  // 🖼 IMAGES (2 PER ROW)
-  items.forEach(item=>{
+  data.forEach((item,i)=>{
     if(item.type !== "video"){
       const card = document.createElement("div");
       card.className = "card";
 
       card.innerHTML = `
-        <img src="${item.url}">
+        <img src="${item.url}" onclick="openZoom('${item.url}', \`${item.caption || ""}\`)">
+        <button onclick="showRandom(${i})">Surprise ✨</button>
         <div class="caption">${item.caption || ""}</div>
       `;
 
@@ -379,11 +408,44 @@ function loadGallery(){
   });
 
 }
+
+function openZoom(src, cap){
+  document.getElementById("zoomImg").src = src;
+  document.getElementById("zoomCaption").innerText = cap;
+  document.getElementById("imgZoomOverlay").style.display = "flex";
+}
+
+document.getElementById("imgZoomOverlay").onclick = (e)=>{
+  if(e.target.id === "imgZoomOverlay"){
+    e.currentTarget.style.display = "none";
+  }
+};
+
+const cuteMessages = [
+  "You are the star of every moment 💫",
+  "This smile deserves its own fanbase 😍",
+  "Your vibe is goals ✨",
+  "You glow differently when you're happy ✨",
+  "This moment = forever memory 💖"
+];
+
+function showRandom(){
+  alert(cuteMessages[Math.floor(Math.random()*cuteMessages.length)]);
+}
+
 /* MUSIC */
 
-const savedMusic = localStorage.getItem("sweet_music");
+let bgAudio = null;
 
-let bgAudio=null;
+function setupMusic(){
+  if(!music) return;
+
+  bgAudio = new Audio(music);
+  bgAudio.loop = true;
+  bgAudio.volume = 0.6;
+}
+
+
 let playing=false;
 
 const musicToggle=document.getElementById("musicToggle");
@@ -404,29 +466,24 @@ musicToggle.innerText = "⏸ Music";
 
 }
 
-musicToggle.onclick=()=>{
+musicToggle.onclick = ()=>{
 
-if(!savedMusic){
-musicToggle.innerText="No Music";
-return;
-}
+  if(!music){
+    musicToggle.innerText = "No Music";
+    return;
+  }
 
-if(!bgAudio){
-bgAudio=new Audio(savedMusic);
-bgAudio.loop=true;
-bgAudio.volume=0.6;
-}
+  if(!bgAudio){
+    setupMusic();
+  }
 
-if(playing){
-bgAudio.pause();
-playing=false;
-musicToggle.innerText="🎶 Music";
-}
-else{
-bgAudio.play();
-playing=true;
-musicToggle.innerText="⏸ Music";
-}
+  if(bgAudio.paused){
+    bgAudio.play();
+    musicToggle.innerText = "⏸ Music";
+  } else {
+    bgAudio.pause();
+    musicToggle.innerText = "🎶 Music";
+  }
 
 };
 
@@ -477,16 +534,24 @@ const grid=document.querySelector(".grid");
 const viewerMessage=document.getElementById("viewerMessage");
 
 const items=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
-const messages=JSON.parse(localStorage.getItem(MSG_KEY)||"[]");
 
-if(Array.isArray(messages) && messages.length>0){
+function loadMessages(){
+  const viewerMessage = document.getElementById("viewerMessage");
+
+  if(!messages.trim()){
+    viewerMessage.innerHTML = "No messages yet ❤️";
+    return;
+  }
+
   viewerMessage.innerHTML = messages
-    .filter(m => m && m.trim())
+    .split("\n---\n")
     .map(m => `💌 ${m}`)
     .join("<br><br>");
 }
 
-
+document.addEventListener("DOMContentLoaded", ()=>{
+  loadViewerData();
+});
 
 
 

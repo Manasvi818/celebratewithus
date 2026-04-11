@@ -1132,10 +1132,14 @@ function initViewerFeatures(){
 
 /* Hook into unlock */
 const _oldCheck = checkPassword;
-checkPassword = function(){
-  _oldCheck();
+
+checkPassword = async function(){
+  await loadViewerData();   // ✅ LOAD FIRST
+
+  _oldCheck();              // ✅ THEN CHECK PASSWORD
+
   if(document.getElementById("viewerPage").style.display === "block"){
-    loadViewerData();   // ✅ FIRST load data
+    initViewerFeatures();
   }
 };
 
