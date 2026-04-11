@@ -538,42 +538,55 @@ to{ box-shadow:0 0 25px rgba(216,166,118,.9); }
 </div>
 
 <script>
-const MEDIA_KEY="soft_media";
-const MSG_KEY="soft_messages";
-const MUSIC_KEY="soft_music";
-const PASS_KEY="viewerPassword_softvibes";
+const projectId = window.location.pathname.split("/").pop();
 const musicToggle = document.getElementById("musicToggle");
-
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
 let isPlaying=false;
+
+async function loadViewerData(){
+  try{
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if(result.success){
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      renderGallery();
+      loadMessages();
+      loadMusic();
+    }
+  }catch(err){
+    console.error("Viewer load failed", err);
+  }
+}
 
 /* PASSWORD */
 function checkPassword(){
 
-const savedPassword = localStorage.getItem("viewerPassword_softvibes");
-const enteredPassword = document.getElementById("passInput").value.trim();
+  const enteredPassword = document.getElementById("passInput").value.trim();
 
-if(!savedPassword){
-alert("Password not set yet. Please set it in the editor.");
-return;
-}
+  if(!password){
+    alert("Password not set yet.");
+    return;
+  }
 
-if(enteredPassword !== savedPassword){
-alert("Wrong password ❌");
-return;
-}
+  if(enteredPassword !== password){
+    alert("Wrong password ❌");
+    return;
+  }
 
-document.getElementById("lockScreen").style.display="none";
-document.getElementById("viewerPage").style.display="block";
-
-loadGallery();
-loadMessages();
-loadMusic();
-
+  document.getElementById("lockScreen").style.display="none";
+  document.getElementById("viewerPage").style.display="block";
 }
 
 /* GALLERY */
-function loadGallery(){
-  const items = JSON.parse(localStorage.getItem("soft_media") || "[]");
+function renderGallery(){
 
   const videoContainer = document.getElementById("videoContainer");
   const gallery = document.getElementById("gallery");
@@ -581,13 +594,12 @@ function loadGallery(){
   videoContainer.innerHTML = "";
   gallery.innerHTML = "";
 
-  if(!items.length){
+  if(!data.length){
     gallery.innerHTML = "<p>No memories yet 🌼</p>";
     return;
   }
 
-  // ✅ VIDEOS (FULL ROW)
-  items.forEach(item=>{
+  data.forEach(item=>{
     if(item.type === "video"){
       videoContainer.innerHTML += `
         <div class="videoBox">
@@ -598,9 +610,9 @@ function loadGallery(){
     }
   });
 
-  // ✅ IMAGES (GRID)
-  items.forEach((item,i)=>{
+  data.forEach(item=>{
     if(item.type === "image"){
+
       const card=document.createElement("div");
       card.className="polaroid";
 
@@ -615,6 +627,8 @@ function loadGallery(){
         lightbox.classList.add("open");
         lightboxImg.src=item.url;
         lightboxCap.textContent=item.caption || "";
+
+        showRandom(); // ✅ surprise synced
       };
 
       card.appendChild(img);
@@ -623,20 +637,21 @@ function loadGallery(){
     }
   });
 }
-
-lightbox.onclick=()=>lightbox.classList.remove("open");
+const lightbox = document.getElementById("lightbox");
+lightbox.onclick = () => lightbox.classList.remove("open");
 
 /* MESSAGES */
 function loadMessages(){
-  const raw=localStorage.getItem(MSG_KEY);
   const box=document.getElementById("messages");
 
-  if(!raw){
+  if(!messages){
     box.innerHTML="<p>No messages yet 💛</p>";
     return;
   }
 
-  raw.split("\n---\n").forEach(msg=>{
+  box.innerHTML="";
+
+  messages.split("\n---\n").forEach(msg=>{
     const div=document.createElement("div");
     div.style.background="#fff3d6";
     div.style.padding="12px";
@@ -649,14 +664,13 @@ function loadMessages(){
 
 /* MUSIC */
 function loadMusic(){
-  const url=localStorage.getItem(MUSIC_KEY);
   const audio=document.getElementById("bgMusic");
-  if(url){
-    audio.src=url;
+
+  if(music){
+    audio.src=music;
     audio.volume=0.6;
     audio.play();
     musicToggle.textContent="⏸";
-    isPlaying=true;
   }
 }
 
@@ -847,7 +861,9 @@ section.style.background = sectionColor;
 });
 
 }
-
+document.addEventListener("DOMContentLoaded", ()=>{
+  loadViewerData();
+});
 </script>
 <footer class="site-footer">
   <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>

@@ -548,16 +548,14 @@ async function loadViewerData() {
     const result = await res.json();
 
     if (result.success) {
-      data = result.data || [];
-      messages = result.messages || "";
-      music = result.music || "";
-      password = result.password || "";
+  data = result.data || [];
+  messages = result.messages || "";
+  music = result.music || "";
+  password = result.password || "";
 
-      renderGallery();   // replace old loadGallery
-      loadMessages();
-      loadMusic();
-    }
-
+  // ❌ DO NOT render or play anything yet
+  console.log("Viewer data loaded");
+}
   } catch (err) {
     console.error("❌ Viewer load failed:", err);
   }
