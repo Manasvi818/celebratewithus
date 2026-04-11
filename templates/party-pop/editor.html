@@ -521,14 +521,15 @@ function initWidget(){
     folder: "party_pop",
     resourceType: "auto",
     multiple: true
-  }, (error, result) => {
+  }, async (error, result) => {
     if (!error && result && result.event === "success") {
       items.push({
         url: optimizeCloudinaryUrl(result.info.secure_url, 500),
         type: result.info.resource_type,
         caption: ""
       });
-      autoSave();
+      await autoSave();   // ✅ WAIT FOR DB
+
       render();
     }
   });
@@ -758,7 +759,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // EXISTING CODE
-  loadFromDB();  
+  setTimeout(() => {
+  loadFromDB();
+}, 500); 
 
     waitForCloudinary();   // ✅ MOVE HERE
 
@@ -940,9 +943,7 @@ function copyViewerLink() {
   window.open(`https://celebratewithus.co.in${invoicePath}`, "_blank");
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadFromDB();
-});
+
 
 </script>
 
