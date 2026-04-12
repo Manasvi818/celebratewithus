@@ -349,6 +349,14 @@ const MUSIC_KEY = `music_${projectId}`;
 const PASS_KEY = `pass_${projectId}`;
 
 let widget;
+function waitForCloudinary(){
+  if (typeof cloudinary !== "undefined") {
+    initWidget();
+  } else {
+    setTimeout(waitForCloudinary, 200);
+  }
+}
+waitForCloudinary();
 // 🔥 CLEAR OLD MESSAGES FOR NEW PROJECT
 if (!localStorage.getItem(`initialized_${projectId}`)) {
   localStorage.removeItem(MSG_KEY);
@@ -526,11 +534,17 @@ function initWidget(){
 
 /* Cloudinary Upload */
 function openWidget(){
-  if(widget){
-    widget.open();
-  } else {
-    alert("Uploader loading...");
+
+  if (typeof cloudinary === "undefined") {
+    alert("Cloudinary not loaded yet");
+    return;
   }
+
+  if (!widget) {
+    initWidget();   // 🔥 initialize first
+  }
+
+  widget.open();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -720,11 +734,14 @@ function downloadViewer() {
 
   const template = "joyful-times";
   const params = new URLSearchParams(window.location.search);
-const projectId = params.get("projectId");
+let projectId = params.get("projectId");
 
 if (!projectId) {
-  alert("❌ Project ID missing in URL");
-  throw new Error("Project ID is required");
+  projectId = "proj_" + Date.now();
+
+  // 🔥 Update URL automatically
+  const newURL = `${window.location.pathname}?projectId=${projectId}`;
+  window.history.replaceState({}, "", newURL);
 }
 
   // ✅ Download viewer ZIP
