@@ -403,6 +403,63 @@ body.night #msgText{color:#ffe4ec;}
   opacity:0.8;
 }
 
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablets */
+@media (max-width: 900px){
+  .wrap{
+    padding:16px;
+  }
+
+  h1{
+    font-size:42px;
+  }
+
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px){
+
+  body{
+    padding:10px;
+  }
+
+  .wrap{
+    padding:12px;
+    border-radius:12px;
+  }
+
+  h1{
+    font-size:32px;
+  }
+
+  h2{
+    font-size:18px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;   /* 🔥 IMPORTANT */
+  }
+
+  .card{
+    padding:8px;
+  }
+
+  .btn{
+    width:100%;
+    text-align:center;
+  }
+
+  /* Stack buttons */
+  .flexRow{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+}
 </style>
 </head>
 

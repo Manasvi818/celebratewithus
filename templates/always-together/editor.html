@@ -110,6 +110,64 @@ h2, h3{ text-align:center; font-family:"Playfair Display",serif; }
   color:#8a5a55;
   opacity:0.8;
 }
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablets */
+@media (max-width: 900px){
+  .wrap{
+    padding:16px;
+  }
+
+  h1{
+    font-size:42px;
+  }
+
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px){
+
+  body{
+    padding:10px;
+  }
+
+  .wrap{
+    padding:12px;
+    border-radius:12px;
+  }
+
+  h1{
+    font-size:32px;
+  }
+
+  h2{
+    font-size:18px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;   /* 🔥 IMPORTANT */
+  }
+
+  .card{
+    padding:8px;
+  }
+
+  .btn{
+    width:100%;
+    text-align:center;
+  }
+
+  /* Stack buttons */
+  .flexRow{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+}
 </style>
 </head>
 
@@ -257,26 +315,30 @@ const MSG_KEY = `msg_${projectId}`;
     const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
     const result = await res.json();
 
-    if (result.success) {
-      items = result.data || [];
+    
+if (result.success) {
+  items = result.data || [];
 
-messages = result.messages || "";
-music = result.music || "";
-password = result.password || "";
+  const localMsgs = localStorage.getItem(MSG_KEY);
 
-localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-localStorage.setItem(MSG_KEY, messages);
-localStorage.setItem(`music_${projectId}`, music);
-localStorage.setItem(`pass_${projectId}`, password);
+  if (result.messages && result.messages.trim() !== "") {
+    messages = result.messages;
+    localStorage.setItem(MSG_KEY, messages);
+  } else if (localMsgs) {
+    messages = localMsgs;   // ✅ fallback to local
+  }
+
+  music = result.music || "";
+  password = result.password || "";
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+
 
 render();
 loadMessages();
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 
-      if (result.messages) {
-  localStorage.setItem(MSG_KEY, result.messages);
-}
+
 
 if (result.music) {
   localStorage.setItem(`music_${projectId}`, result.music);
@@ -288,7 +350,7 @@ if (result.password) {
 
       console.log("✅ Loaded from DB");
 
-      render();
+      
     
     }
 
@@ -441,7 +503,9 @@ async function autoSave() {
       body: JSON.stringify({
         projectId,
         data: items,
-        messages: messages,
+        messages: Array.isArray(messages) 
+  ? messages.join("\n---\n") 
+  : messages,
 music: music,
 password: password
       })
@@ -639,7 +703,7 @@ autoSave();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  loadMessages();   // ✅ ADD HERE
+    // ✅ ADD HERE
 
   // ✅ ADD THESE LINES HERE
   const musicOverlay = document.getElementById("musicOverlay");
