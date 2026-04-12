@@ -304,6 +304,48 @@ font-size:14px;
 color:#1E1E13;
 font-family:"Playfair Display";
 }
+
+img, video{
+  max-width:100%;
+  height:auto;
+}
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .wrap, .page{
+    padding:14px;
+  }
+
+  .hero-title{
+    font-size:32px;
+  }
+
+  .subtitle{
+    font-size:20px;
+  }
+
+  .sectionTitle{
+    font-size:22px;
+  }
+
+  .btn, .actionBtn{
+    width:100%;
+  }
+
+  input, textarea, select{
+    width:100%;
+  }
+
+  .cornerBtns{
+    top:10px;
+    right:10px;
+  }
+
+}
 </style>
 </head>
 
@@ -379,7 +421,7 @@ font-family:"Playfair Display";
 <h3 style="margin-top:30px;">🔑 Set Viewer Password</h3>
 <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
   <input id="newPass" placeholder="laugh"
-         style="padding:10px; width:240px; border-radius:14px; border:1px solid rgba(0,245,255,.18); background:rgba(255,255,255,.06); color:white;">
+         style="padding:10px;width:100%;max-width:240px; border-radius:14px; border:1px solid rgba(0,245,255,.18); background:rgba(255,255,255,.06); color:white;">
   <button class="btn" onclick="savePass()">Save Password</button>
 </div>
 <p id="passSaved" class="smallOk">Password Updated ✓</p>

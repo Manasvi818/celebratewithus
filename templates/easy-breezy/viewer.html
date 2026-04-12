@@ -56,7 +56,9 @@ body{
 
 .title{
   font-family:'Oswald', sans-serif;
-  font-size:6.2rem;
+    font-size:clamp(2.5rem, 8vw, 6.2rem);
+  text-align:center;
+
   margin:0;
   letter-spacing:8px;
   text-transform:uppercase;
@@ -110,15 +112,19 @@ body{
   margin-bottom:14px;
 }
 
-.grid{
-  display:grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap:20px;
+.card img, .card video{
+  height:260px;
 }
 
 @media(max-width:650px){
   .grid{ grid-template-columns:1fr; }
   .title{ font-size:4.7rem; }
+}
+
+.card img, .card video{
+  height:auto;
+  max-height:320px;
+  object-fit:cover;
 }
 
 .card{
@@ -167,6 +173,11 @@ body{
 
 .img-msg:hover{
   transform:scale(1.05);
+}
+
+img, video, audio{
+  max-width:100%;
+  height:auto;
 }
 
 /* ===== MESSAGES ===== */
@@ -384,6 +395,38 @@ body{
   font-family:'Poppins', sans-serif;
   color:var(--soft);
   font-size:14px;
+}
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .wrap, .gallery{
+    padding:14px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+  h2{
+    font-size:18px;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  input, textarea, select{
+    width:100%;
+  }
+
+  .hero{
+    padding:16px;
+  }
+
 }
 </style>
 </head>

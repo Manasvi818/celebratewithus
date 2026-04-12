@@ -220,7 +220,8 @@ h2, h3{
 
 .popupInner{
   background:white;
-  width:320px;
+    width:90%;
+  max-width:320px;
   padding:18px;
   border-radius:18px;
   text-align:center;
@@ -268,15 +269,18 @@ select{
   margin-bottom:20px;
 }
 
-/* Keep images grid */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:20px;
+.card img, .card video{
+  height:260px;
 }
 
 @media(max-width:650px){
   .grid{grid-template-columns:1fr;}
+}
+
+.card img, .card video{
+  height:auto;
+  max-height:320px;
+  object-fit:cover;
 }
 
 .site-footer{
@@ -286,6 +290,43 @@ select{
   font-family:'Poppins', sans-serif;
   color:var(--soft);
   font-size:14px;
+}
+
+img, video, audio{
+  max-width:100%;
+  height:auto;
+}
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .wrap, .gallery{
+    padding:14px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+  h2{
+    font-size:18px;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  input, textarea, select{
+    width:100%;
+  }
+
+  .hero{
+    padding:16px;
+  }
+
 }
 </style>
 </head>
@@ -392,7 +433,7 @@ select{
 <h3 style="margin-top:30px;">🔑 Set Viewer Password</h3>
 <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
   <input id="newPass" placeholder="breezy"
-         style="padding:10px; width:240px; border-radius:14px; border:1px solid rgba(47,179,197,.35);">
+         style="padding:10px; width:100%; max-width:240px; border-radius:14px; border:1px solid rgba(47,179,197,.35);">
   <button class="btn" onclick="savePass()">Save Password</button>
 </div>
 <p id="passSaved" class="smallOk">Password Updated ✓</p>

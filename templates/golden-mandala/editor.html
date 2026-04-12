@@ -218,6 +218,39 @@ input:focus, textarea:focus, select:focus{
   color:#6b3f1c;
   opacity:.8;
 }
+
+img, video{
+  max-width:100%;
+  height:auto;
+}
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .page, .wrap{
+    padding:14px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+  h2{
+    font-size:20px;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  input, textarea, select{
+    width:100%;
+  }
+
+}
 </style>
 </head>
 
@@ -292,7 +325,7 @@ input:focus, textarea:focus, select:focus{
 <h3 style="margin-top:30px;">🔑 Set Viewer Password</h3>
 <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
   <input id="newPass" placeholder="golden"
-         style="padding:10px; width:240px; border-radius:14px; border:1px solid rgba(215,155,43,.35);">
+         style="padding:10px; width:100%;max-width:240px; border-radius:14px; border:1px solid rgba(215,155,43,.35);">
   <button class="btn" onclick="savePass()">Save Password</button>
 </div>
 <p id="passSaved" class="smallOk">Password Updated ✓</p>

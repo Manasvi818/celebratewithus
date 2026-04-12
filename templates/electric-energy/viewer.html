@@ -90,7 +90,8 @@ body::after{
 /* Title */
 .hero-title{
   font-family:"Orbitron";
-  font-size:64px;
+    font-size:clamp(2.5rem, 8vw, 64px);
+  text-align:center;
   line-height:1.02;
   letter-spacing:3px;
   margin:0;
@@ -176,7 +177,7 @@ body::after{
 /* Photos */
 .grid{
   display:grid;
-  grid-template-columns:repeat(2, 1fr);
+  grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
   gap:14px;
 }
 
@@ -200,6 +201,9 @@ body::after{
 
 .card img{
   width:100%;
+    height:auto;
+  max-height:320px;
+  object-fit:cover;
   aspect-ratio:1/1;
   object-fit:cover;
   border-radius:16px;
@@ -247,7 +251,8 @@ body::after{
 /* Password input + eye */
 .passWrap{
   position:relative;
-  width:260px;
+    width:100%;
+  max-width:260px;
 
   /* this makes it ONE box */
   border-radius:14px;
@@ -436,11 +441,8 @@ body::after{
 }
 
 .videoBox{
-  
-  
+
   position:relative;
-
-
 }
 
 .site-footer{
@@ -457,6 +459,45 @@ body::after{
   margin:6px 0 14px;
   text-align:center;
   color:rgba(234,246,255,.85);
+}
+
+img, video{
+  max-width:100%;
+  height:auto;
+}
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .wrap, .page{
+    padding:14px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+  h2{
+    font-size:18px;
+  }
+
+  .btn, .actionBtn{
+    width:100%;
+    text-align:center;
+  }
+
+  input, textarea, select{
+    width:100%;
+  }
+
+  .cornerBtns{
+    right:10px;
+    top:10px;
+  }
+
 }
 </style>
 </head>

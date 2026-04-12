@@ -41,9 +41,15 @@ header{
 
 header h1{
   font-family:"Baloo 2",cursive;
-  font-size:56px;
+  font-size:clamp(2.2rem, 7vw, 56px);
+  text-align:center;
   margin:0;
   color:#e76f51;
+}
+
+img, video{
+  max-width:100%;
+  height:auto;
 }
 
 header p{
@@ -328,15 +334,41 @@ body.sunset  { background:linear-gradient(180deg,#ffc6ff,#ff99c8); }
   border-radius:14px;
 }
 
-/* images grid */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:20px;
-}
 
 @media(max-width:600px){
   .grid{grid-template-columns:1fr;}
+}
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .wrap, .page, section{
+    padding:14px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+  h2, h3{
+    font-size:18px;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  input, textarea, select{
+    width:100%;
+  }
+
+  header{
+    padding:18px;
+  }
+
 }
 </style>
 </head>

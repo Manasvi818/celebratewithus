@@ -56,14 +56,17 @@ body.midnight #typingTitle{
  font-family: 'Playfair Display', serif;
   font-style: italic;
   font-weight: 800;
-  font-size: 72px;
+    font-size: clamp(2.2rem, 7vw, 72px);
+  white-space: normal;
+  text-align: center;
+
   letter-spacing: 3px;
   text-transform: uppercase;
 
   display: inline-block;
   margin: 0;
   line-height: 1;
-  white-space: nowrap;
+
 
   transition: 0.8s ease;
 }
@@ -132,10 +135,13 @@ header {
 
 header h1 {
   font-family: 'Concert One', cursive;
-  font-size: 78px;
+    font-size: clamp(2.5rem, 8vw, 78px);
+  white-space: normal;
+  text-align: center;
+
   margin: 0;
   display: inline-block;
-  white-space: nowrap;
+  
   position: relative;
 
   /* concrete-like */
@@ -189,14 +195,13 @@ section {
 /* ===== GALLERY ===== */
 .polaroids {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 20px;
-   align-items: start;
 }
 @media (max-width: 650px) {
- .polaroids {
-  grid-template-columns: repeat(2, 1fr);
-}
+  .polaroids {
+    grid-template-columns: 1fr;
+  }
 }
 
 
@@ -514,6 +519,11 @@ height: auto;
   }
 }
 
+img, video, audio {
+  max-width: 100%;
+  height: auto;
+}
+
 .site-footer{
   text-align:center;
   padding:20px;
@@ -523,6 +533,38 @@ height: auto;
   background:rgba(255,255,255,0.6);
   border-top:1px solid rgba(0,0,0,0.08);
   backdrop-filter: blur(6px);
+}
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .wrap, .page{
+    padding:14px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+  h2{
+    font-size:18px;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  input, textarea, select{
+    width:100%;
+  }
+
+  header{
+    padding:20px;
+  }
+
 }
 </style>
 </head>

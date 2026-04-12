@@ -154,7 +154,9 @@ body.night .title-wrap::before{
 
 .hero-title{
   font-family:"Great Vibes", cursive;
-  font-size:78px;
+  font-size:clamp(2.5rem, 8vw, 78px);
+  text-align:center;
+
   margin:0;
   letter-spacing:1px;
   line-height:1.05;
@@ -212,8 +214,8 @@ body.night .mini-icons span{
 /* ===== GRID ===== */
 .grid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
+  grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+  gap:16px;
 }
 
 @media(max-width:720px){
@@ -248,11 +250,14 @@ body.night .card{
 }
 
 .card img{
-  width:100%;
-  aspect-ratio:1/1;
+  
   border-radius:14px;
-  object-fit:cover;
+ 
   cursor:pointer;
+   width:100%;
+  height:auto;
+  max-height:320px;
+  object-fit:cover;
 }
 
 .photoCaption{
@@ -428,7 +433,9 @@ body.night #passwordOverlay{
 
 #passwordOverlay input{
   padding:12px;
-  width:240px;
+  width:100%;
+  max-width:240px;
+
   border-radius:12px;
   border:1px solid rgba(215,155,43,.6);
   font-size:16px;
@@ -461,6 +468,39 @@ body.night #passwordOverlay{
   font-size:14px;
   color:#6b3f1c;
   opacity:.8;
+}
+
+img, video{
+  max-width:100%;
+  height:auto;
+}
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .page, .wrap{
+    padding:14px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+  h2{
+    font-size:20px;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  input, textarea, select{
+    width:100%;
+  }
+
 }
 </style>
 </head>

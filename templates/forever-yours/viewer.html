@@ -111,7 +111,9 @@ body{
 
 .hero h1{
   font-family:'Allura',cursive;
-  font-size:110px;          /* bigger title */
+  font-size:clamp(2.8rem, 10vw, 110px);
+  text-align:center;
+
   margin-bottom:8px;       /* less gap */
 }
 
@@ -131,11 +133,12 @@ body{
 
 .grid{
   display:grid;
-  grid-template-columns:repeat(2, 1fr);   /* 2 columns */
+  grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
   gap:25px;
   max-width:900px;
   margin:auto;
 }
+
 
 .card{
   background:var(--card);
@@ -150,16 +153,17 @@ body{
   grid-column: span 2;
 }
 
-.card.video-card video{
-  height:350px;   /* bigger for video */
+@media (max-width:600px){
+  .card.video-card{
+    grid-column: span 1;
+  }
 }
-
 .card img,
 .card video{
   width:100%;
-  height:260px;
+  height:auto;
+  max-height:320px;
   object-fit:cover;
-  cursor:pointer;
 }
 
 .caption{
@@ -297,6 +301,52 @@ body{
   color:#f3edff;
   opacity:0.8;
   font-family:'Playfair Display';
+}
+
+img, video{
+  max-width:100%;
+  height:auto;
+}
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .wrap, .gallery, .message-box{
+    padding:14px;
+  }
+
+  .hero{
+    padding:16px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+  h2{
+    font-size:20px;
+  }
+
+  h3{
+    font-size:18px;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  input, textarea, select{
+    width:100%;
+  }
+
+  #topControls{
+    top:10px;
+    right:10px;
+  }
+
 }
 </style>
 </head>

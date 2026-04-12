@@ -124,7 +124,8 @@ body.night .floatingBtn{
 color:#C86A2B;
 font-family:"Rokkitt", serif;
 font-weight:500;
-font-size:5rem;
+font-size:clamp(2.2rem, 8vw, 5rem);
+  text-align:center;
 line-height:0.9;
 letter-spacing:2px;
 text-shadow:0 6px 16px rgba(200,106,43,.20);
@@ -134,6 +135,11 @@ margin-bottom:2px;
 body.night .bigTitle{
   color:#C86A2B;
   text-shadow:0 10px 26px rgba(0,0,0,.45);
+}
+
+img, video{
+  max-width:100%;
+  height:auto;
 }
 
 .sparkles{
@@ -227,7 +233,7 @@ body.night .panel{
 
 .galleryGrid{
   display:grid;
-  grid-template-columns:repeat(2, 1fr);
+  grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
   gap:14px;
 }
 @media(max-width:520px){
@@ -244,7 +250,9 @@ body.night .panel{
 
 .photoFrame{
   width:100%;
-  aspect-ratio:1/1;
+  height:auto;
+  max-height:320px;
+
   border-radius:14px;
   overflow:hidden;
   background:#dde6d8;
@@ -609,6 +617,34 @@ body.night .modalBtn.secondary{
   font-size:14px;
   color:#7A3E1E;
   opacity:.8;
+}
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .page, .wrap{
+    padding:14px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+  h2{
+    font-size:20px;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  input, textarea, select{
+    width:100%;
+  }
+
 }
 </style>
 </head>

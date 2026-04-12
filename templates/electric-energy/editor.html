@@ -230,7 +230,9 @@ h2, h3{
 
 .popupInner{
   background:rgba(15,0,35,.92);
-  width:340px;
+    width:90%;
+  max-width:340px;
+
   padding:18px;
   border-radius:18px;
   text-align:center;
@@ -295,6 +297,45 @@ select option{
   font-family:"Playfair Display";
   color:rgba(234,246,255,.7);
   border-top:1px solid rgba(0,245,255,.12);
+}
+
+img, video{
+  max-width:100%;
+  height:auto;
+}
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .wrap, .page{
+    padding:14px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+  h2{
+    font-size:18px;
+  }
+
+  .btn, .actionBtn{
+    width:100%;
+    text-align:center;
+  }
+
+  input, textarea, select{
+    width:100%;
+  }
+
+  .cornerBtns{
+    right:10px;
+    top:10px;
+  }
+
 }
 </style>
 </head>
@@ -371,7 +412,7 @@ select option{
 <h3 style="margin-top:30px;">🔑 Set Viewer Password</h3>
 <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
   <input id="newPass" placeholder="electric"
-         style="padding:10px; width:240px; border-radius:14px; border:1px solid rgba(0,245,255,.18); background:rgba(255,255,255,.06); color:white;">
+         style="padding:10px; width:100%; max-width:240px; border-radius:14px; border:1px solid rgba(0,245,255,.18); background:rgba(255,255,255,.06); color:white;">
   <button class="btn" onclick="savePass()">Save Password</button>
 </div>
 <p id="passSaved" class="smallOk">Password Updated ✓</p>

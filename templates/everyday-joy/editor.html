@@ -56,7 +56,8 @@ body::before{
 
 h1{
   font-family:"Baloo 2", cursive;
-  font-size:50px;
+  font-size:clamp(2rem, 6vw, 50px);
+
   text-align:center;
   margin-bottom:6px;
   color:var(--deep);
@@ -165,7 +166,8 @@ h2, h3{
 
 .popupInner{
   background:white;
-  width:320px;
+  width:90%;
+  max-width:320px;
   padding:18px;
   border-radius:18px;
   text-align:center;
@@ -204,11 +206,6 @@ select{
   margin-bottom:16px;
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
-}
 
 @media(max-width:560px){
   .grid{grid-template-columns:1fr;}
@@ -221,6 +218,43 @@ select{
   font-family:"Playfair Display";
   color:rgba(234,246,255,.7);
   border-top:1px solid rgba(0,245,255,.12);
+}
+
+img, video{
+  max-width:100%;
+  height:auto;
+}
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .wrap, .page, section{
+    padding:14px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+  h2, h3{
+    font-size:18px;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  input, textarea, select{
+    width:100%;
+  }
+
+  header{
+    padding:18px;
+  }
+
 }
 </style>
 </head>
@@ -278,7 +312,7 @@ Local Upload
 
 <h3>🔑 Set Viewer Password</h3>
 <div style="display:flex; gap:10px; justify-content:center; margin-top:10px;">
-<input id="newPass" placeholder="joy123" style="padding:10px; border-radius:12px; border:1px solid #ffd6a5;">
+<input id="newPass" placeholder="joy123" style="padding:10px; border-radius:12px;width:100%; max-width:240px; border:1px solid #ffd6a5;">
 <button class="btn" onclick="savePass()">Save Password</button>
 </div>
 <p id="passSaved" class="smallOk">Password Updated ✓</p>

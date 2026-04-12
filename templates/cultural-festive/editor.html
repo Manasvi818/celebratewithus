@@ -200,13 +200,20 @@ input:focus, textarea:focus, select:focus{
 
 .popupInner{
   background:#FFF5E6;
-  width:360px;
+    width:90%;
+  max-width:360px;
   padding:26px;
   border-radius:22px;
   text-align:center;
   border:1px solid rgba(212,160,23,.3);
   box-shadow:0 14px 40px rgba(90,20,32,.4);
 }
+
+img, video, audio{
+  max-width:100%;
+  height:auto;
+}
+
 .site-footer{
   text-align:center;
   padding:20px;
@@ -215,6 +222,39 @@ input:focus, textarea:focus, select:focus{
   color:var(--gold);
   font-size:14px;
 }
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .wrap, .gallery{
+    padding:14px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+  h2{
+    font-size:18px;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  input, textarea, select{
+    width:100%;
+  }
+
+  .hero{
+    padding:16px;
+  }
+
+}
+
 </style>
 </head>
 
@@ -289,8 +329,7 @@ input:focus, textarea:focus, select:focus{
 <!-- PASSWORD -->
 <h3 style="margin-top:30px;">🔑 Set Viewer Password</h3>
 <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
-  <input id="newPass" placeholder="golden"
-         style="padding:10px; width:240px; border-radius:14px; border:1px solid rgba(215,155,43,.35);">
+  <input id="newPass" placeholder="golden" style="padding:10px; width:100%; max-width:240px; border-radius:14px; border:1px solid rgba(215,155,43,.35);">
   <button class="btn" onclick="savePass()">Save Password</button>
 </div>
 <p id="passSaved" class="smallOk">Password Updated ✓</p>

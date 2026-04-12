@@ -133,10 +133,15 @@ input, textarea, select{
   align-items:center;
   z-index:9999;
 }
-
+img, video {
+  max-width:100%;
+  height:auto;
+}
 .popupInner{
   background:#2a190f;
-  width:330px;
+  width:90%;
+  max-width:330px;
+
   padding:22px;
   border-radius:18px;
   text-align:center;
@@ -154,6 +159,36 @@ input, textarea, select{
 
 .site-footer p{
   margin:0;
+}
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .wrap{
+    padding:14px;
+    border-radius:16px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+  h2{
+    font-size:18px;
+  }
+
+  .btn{
+    width:100%;
+    text-align:center;
+  }
+
+  input, textarea, select{
+    width:100%;
+  }
+
 }
 </style>
 </head>
@@ -209,17 +244,14 @@ input, textarea, select{
 <h2 style="margin-top:24px;">✨ Candlelight Gallery</h2>
 <div id="mediaGrid" class="grid"></div>
 
-<div style="display:flex;gap:10px;margin-top:22px;">
+<div style="display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;">
   <button class="btn ghost" onclick="clearAll()">Delete All</button>
   <button class="btn" onclick="autoSave()">Save</button>
 </div>
 
 <h3 style="margin-top:32px;">🔐 Private Viewer Password</h3>
 
-<input id="newPass"
-  placeholder="candlelove"
-  style="padding:10px;width:240px;border-radius:12px;"
->
+<input id="newPass" style="padding:10px;width:100%;max-width:240px;">
 <button class="btn" onclick="savePass()">Save</button>
 
 <p id="passSaved" style="display:none;color:#ffcc88;margin-top:6px;">

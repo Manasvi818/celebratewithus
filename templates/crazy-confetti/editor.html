@@ -169,7 +169,8 @@ textarea{
 
 .popupInner{
   background:#ffffff;
-  width:360px;
+  width:90%;
+  max-width:360px;
   padding:24px;
   border-radius:24px;
   text-align:center;
@@ -192,6 +193,11 @@ textarea{
   margin-top:10px;
 }
 
+img, video, audio{
+  max-width:100%;
+  height:auto;
+}
+
 .site-footer{
   margin-top:40px;
   padding:20px;
@@ -206,6 +212,38 @@ textarea{
 
 .site-footer p{
   margin:0;
+}
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .wrap, .gallery{
+    padding:14px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+  h2{
+    font-size:18px;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  input, textarea{
+    width:100%;
+  }
+
+  .hero{
+    padding:16px;
+  }
+
 }
 </style>
 </head>
