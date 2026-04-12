@@ -335,8 +335,8 @@ box-shadow:var(--shadow);
 
 /* STORAGE KEYS */
 
-const params = new URLSearchParams(window.location.search);
-const projectId = params.get("projectId");
+const pathParts = window.location.pathname.split("/");
+const projectId = pathParts[pathParts.length - 1];
 
 if (!projectId) {
   alert("❌ Project ID missing in URL");
@@ -733,8 +733,8 @@ function downloadViewer() {
   autoSave();
 
   const template = "joyful-times";
-  const params = new URLSearchParams(window.location.search);
-let projectId = params.get("projectId");
+  const pathParts = window.location.pathname.split("/");
+const projectId = pathParts[pathParts.length - 1];
 
 if (!projectId) {
   projectId = "proj_" + Date.now();
@@ -882,8 +882,8 @@ async function goToViewer() {
   await autoSave();
 
   const template = "joyful-times";
-  const params = new URLSearchParams(window.location.search);
-  const projectId = params.get("projectId");
+  const pathParts = window.location.pathname.split("/");
+const projectId = pathParts[pathParts.length - 1];
 
   if (!projectId) {
     alert("❌ Project ID missing");
