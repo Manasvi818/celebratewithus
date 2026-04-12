@@ -257,7 +257,7 @@ h2, h3{ text-align:center; font-family:"Playfair Display",serif; }
 <div id="mediaGrid" class="grid"></div>
 
 <!-- Buttons -->
-<div style="display:flex; gap:8px; margin-top:20px;">
+<div class="flexRow" style="margin-top:20px;"></div>
   <button class="btn ghost" onclick="clearAll()">Delete All</button>
   <button class="btn" onclick="autoSave()">Save</button>
 </div>
@@ -303,11 +303,19 @@ let music = "";
 let password = "";
 
   const projectId = window.location.pathname.split("/").pop();
+  if (!projectId || projectId === "null" || projectId === "undefined") {
+  alert("❌ Project ID missing in URL");
+  throw new Error("Project ID is required");
+}
 const STORAGE_KEY = `project_${projectId}`;
 
 console.log("PROJECT ID:", projectId);
 console.log("STORAGE KEY:", STORAGE_KEY);
 const MSG_KEY = `msg_${projectId}`;
+if (!localStorage.getItem(`initialized_${projectId}`)) {
+  localStorage.removeItem(MSG_KEY);
+  localStorage.setItem(`initialized_${projectId}`, "true");
+}
   async function loadFromDB() {
 
 
@@ -438,6 +446,16 @@ function preview(obj){
   document.getElementById("previewCap").innerText = obj.caption || "";
 }
 
+
+
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url.includes("res.cloudinary.com")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
 
 function initWidget(){
   widget = cloudinary.createUploadWidget({

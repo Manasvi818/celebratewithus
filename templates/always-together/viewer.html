@@ -231,7 +231,9 @@ body.night{
 }
 .hero-title{
   font-family:"Merienda One",cursive;
-  font-size:74px;
+  
+  font-size:clamp(32px, 8vw, 74px);
+
   text-align:center;
   background:linear-gradient(45deg,#ff8d72,#ffb199,#ffc7c6);
   margin-bottom:4px;      /* was larger */
@@ -249,7 +251,7 @@ body.night{
 /* GRID */
 .grid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
   gap:12px;
 }
 

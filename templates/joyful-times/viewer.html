@@ -733,10 +733,18 @@ border:4px solid #F2D7B5;
     <button class="modalBtn secondary" onclick="musicOverlay.style.display='none'">Close</button>
   </div>
 </div>
-
+<input id="pass" type="password" placeholder="Password" disabled>
 <script>
 const params = new URLSearchParams(window.location.search);
+
+
 const projectId = params.get("projectId");
+
+if (!projectId) {
+  alert("❌ Project ID missing in URL");
+  throw new Error("Project ID is required");
+}
+
 const template = "joyful-times";
 let data = [];
 let messages = "";
@@ -760,6 +768,9 @@ let widget;
 
       PASS = password;
       isLoaded = true;
+
+// 🔥 AUTO ENABLE INPUT ONLY AFTER LOAD
+document.getElementById("pass").disabled = false;
 
       render();
       loadMessages();
