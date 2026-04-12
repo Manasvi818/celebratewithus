@@ -800,11 +800,10 @@ function copyViewerLink() {
 
 // ✅ DOWNLOAD INVOICE
 
- function downloadInvoice() {
-  const template = window.location.pathname.split("/")[2];
+function downloadInvoice() {
   const projectId = window.location.pathname.split("/").pop();
 
-  const invoiceURL = `https://celebratewithus.co.in/invoices/invoice_${template}-${projectId}.pdf`;
+  const invoiceURL = `https://celebratewithus.co.in/invoices/invoice_${projectId}.pdf`;
 
   window.open(invoiceURL, "_blank");
 }
