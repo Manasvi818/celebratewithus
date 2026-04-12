@@ -6,6 +6,20 @@ const path = require("path");
 const express = require("express");   // ✅ FIRST
 const app = express(); 
    
+const cors = require("cors");
+
+app.use(cors({
+  origin: [
+    "https://www.celebratewithus.co.in",
+    "https://celebratewithus.co.in",
+    "https://celebratewithus-1.onrender.com",
+    "https://celebratewithus.onrender.com"
+  ],
+  methods: ["GET","POST","PUT","DELETE"],
+  credentials: true
+}));
+
+app.options("*", cors());
 
 const PORT = process.env.PORT || 10000;  // ✅ DEFINE EARLY
 
@@ -52,15 +66,7 @@ app.use(session({
   sameSite: "none"    // REQUIRED for cross-site
 }
 }));
-app.use(cors({
-  origin: [
-    "https://www.celebratewithus.co.in",
-    "https://celebratewithus.co.in",
-    "https://celebratewithus-1.onrender.com", // ✅ your frontend
-    "https://celebratewithus.onrender.com"
-  ],
-  credentials: true
-}));
+
 
 app.options("*", cors({
   origin: [
