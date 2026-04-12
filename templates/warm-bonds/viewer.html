@@ -580,6 +580,40 @@ body.night .modalBtn.secondary{
   font-size:14px;
   color:#F2D7B5;
 }
+
+/* ✅ MOBILE RESPONSIVE FIX */
+@media (max-width: 768px){
+
+  h1{
+    font-size:32px;
+  }
+
+  .bigTitle{
+    font-size:2.5rem;
+  }
+
+  .wrap{
+    padding:16px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .galleryGrid{
+    grid-template-columns:1fr;
+  }
+
+  .topBtns{
+    top:10px;
+    right:10px;
+  }
+
+  .floatingBtn{
+    padding:8px 12px;
+    font-size:12px;
+  }
+}
 </style>
 </head>
 
@@ -833,6 +867,10 @@ if(!data.length){
   </button>
 
   <div class="photoCaption">${cap}</div>
+
+<div class="stickyNote">
+  ${x.message || ""}
+</div>
 `;
     }
 
