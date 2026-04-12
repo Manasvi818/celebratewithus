@@ -121,7 +121,34 @@ cloudinary.config({
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-
+const validTemplates = [
+  "easy-breezy",
+  "everyday-joy",
+  "simple-delight",
+  "soft-vibes",
+  "sunny-smiles",
+  "home-happiness",
+  "always-together",
+  "warm-bonds",
+  "cherished-times",
+  "joyful-family",
+  "color-carnival",
+  "crazy-confetti",
+  "electric-energy",
+  "laugh-riot",
+  "party-pop",
+  "party_pop",
+  "blush-love",
+  "candlelight-moments",
+  "forever-yours",
+  "golden-love",
+  "sweet-affection",
+  "cultural-festive",
+  "golden-mandala",
+  "royal-aura",
+  "sacred-simplicity",
+  "vintage-glory"
+];
 // ----------------------------------------------------
 // CLOUDINARY UPLOAD ENDPOINT
 // ------------------------------------------------------
@@ -489,34 +516,7 @@ archive.append(viewerHtml, { name: "viewer.html" });
 
 
 // ✅ VALID TEMPLATE LIST
-const validTemplates = [
-  "easy-breezy",
-  "everyday-joy",
-  "simple-delight",
-  "soft-vibes",
-  "sunny-smiles",
-  "home-happiness",
-  "always-together",
-  "warm-bonds",
-  "cherished-times",
-  "joyful-family",
-  "color-carnival",
-  "crazy-confetti",
-  "electric-energy",
-  "laugh-riot",
-  "party-pop",
-  "party_pop",
-  "blush-love",
-  "candlelight-moments",
-  "forever-yours",
-  "golden-love",
-  "sweet-affection",
-  "cultural-festive",
-  "golden-mandala",
-  "royal-aura",
-  "sacred-simplicity",
-  "vintage-glory"
-];
+
 
 app.get("/editor/:template/:id", (req, res) => {
   let { template } = req.params;

@@ -697,56 +697,41 @@ body.night .modalBtn.secondary{
 </div>
 
 <script>
+  let song = "";
 /* ===========================
    PASSWORD
 =========================== */
-const PASS_KEY = "viewerPassword_warmbonds";
-
-function getSavedPass(){
-  return localStorage.getItem(PASS_KEY);
-}
-
 function unlock(){
-
-  const entered = document.getElementById("pass").value.trim();
-  const saved = localStorage.getItem("viewerPassword_warmbonds");
-
-  if(!saved){
-    alert("Password not set yet. Set it in editor first.");
+  if(!isLoaded){
+    alert("Wait...");
     return;
   }
 
-  if(entered === saved){
+  const entered = document.getElementById("pass").value.trim();
 
+  if(entered === PASS){
     passwordOverlay.style.display="none";
+    wrongPass.style.display="none";
 
-    playMusic();
-    isPlaying = true;
-    musicBtn.textContent = "⏸ Pause Music";
-
-    render();        // ✅ SHOW MEDIA
-    loadMessages();  // ✅ SHOW MESSAGES
+    if(song){
+      playMusic();
+    }
 
   }else{
-
     wrongPass.style.display="block";
-    document.getElementById("pass").value="";
   }
 }
 
-window.addEventListener("DOMContentLoaded", ()=>{
 
-  const saved = localStorage.getItem(PASS_KEY);
 
-  if(!saved){
-    passwordOverlay.style.display="none";
 
-    render();        // ✅ LOAD MEDIA
-    loadMessages();  // ✅ LOAD MESSAGES
-    playMusic();
-  }
-
+document.addEventListener("DOMContentLoaded", () => {
+  loadViewerData();
 });
+
+  
+  
+
 document.getElementById("pass").addEventListener("keydown", (e)=>{
   if(e.key === "Enter") unlock();
 });
@@ -757,15 +742,53 @@ document.getElementById("pass").addEventListener("keydown", (e)=>{
    DATA
    (Same system as Always Together)
 =========================== */
-const KEY="warm_gallery";
-const data = JSON.parse(localStorage.getItem(KEY)||"[]");
+const projectId = window.location.pathname.split("/").pop();
 
+let data = [];
+let messages = "";
+let music = "";
+let password = "";
+let PASS = "";
+let isLoaded = false;
+
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      data = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      PASS = password;
+
+      document.getElementById("passwordOverlay").style.display = "flex";
+      isLoaded = true;
+
+      render();
+      loadMessages();
+
+      if (music) {
+        song = music;
+      }
+    }
+  } catch (err) {
+    console.error("Viewer load failed:", err);
+  }
+}
 /* ===========================
    RENDER GALLERY
 =========================== */
 function render(){
 
-  const data = JSON.parse(localStorage.getItem(KEY)||"[]"); // ✅ ALWAYS FRESH
+  photoGrid.innerHTML="";
+
+if(!data.length){
+  photoGrid.innerHTML="<p>No media yet</p>";
+  return;
+}
 
   photoGrid.innerHTML="";
 
@@ -800,19 +823,24 @@ function render(){
 
       const cap = x.caption || "";
 
-      d.innerHTML=`
-        <div class="photoFrame" onclick="openZoom('${x.url}',\`${cap}\`)">
-          <img src="${x.url}">
-        </div>
-        <div class="photoCaption">${cap}</div>
-      `;
+     d.innerHTML=`
+  <div class="photoFrame" onclick="openZoom('${x.url}',\`${cap}\`)">
+    <img src="${x.url}">
+  </div>
+
+  <button class="surpriseBtn" onclick="showRandom(${i})">
+    Surprise ✨
+  </button>
+
+  <div class="photoCaption">${cap}</div>
+`;
     }
 
     photoGrid.appendChild(d);
 
   });
 }
-render();
+
 
 /* ===========================
    ZOOM
@@ -849,36 +877,18 @@ function showRandom(){
   msgOverlay.style.display="flex";
 }
 
-/* ===========================
-   SAVE THOUGHTS
-=========================== */
-const MSG_KEY = "warm_messages";
-
-function saveThought(){
-  const txt = thoughtInput.value.trim();
-  if(!txt) return;
-
-  const old = localStorage.getItem(MSG_KEY) || "";
-  const next = old ? (old + "\n---\n" + txt) : txt;
-
-  localStorage.setItem(MSG_KEY, next);
-  thoughtInput.value="";
-  loadMessages();
-}
-
 function loadMessages(){
   messageList.innerHTML="";
-  const txt = localStorage.getItem(MSG_KEY)||"";
-  if(!txt.trim()) return;
+  if(!messages.trim()) return;
 
-  txt.split(/\r?\n\s*---\s*\r?\n/).forEach(m=>{
+  messages.split("\n---\n").forEach(m=>{
     const d=document.createElement("div");
     d.className="stickyNote";
     d.textContent=m.trim();
     messageList.appendChild(d);
   });
 }
-loadMessages();
+
 
 
 /* ===========================
@@ -1034,7 +1044,7 @@ if(p.y < -80){
 let bgAudio=null;
 let isPlaying=false;
 
-const song = localStorage.getItem("warm_music"); // save from editor
+
 
 function playMusic(){
   if(!song) return;
