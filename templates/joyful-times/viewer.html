@@ -735,10 +735,8 @@ border:4px solid #F2D7B5;
 </div>
 <input id="pass" type="password" placeholder="Password" disabled>
 <script>
-const params = new URLSearchParams(window.location.search);
-
-
-const projectId = params.get("projectId");
+const pathParts = window.location.pathname.split("/");
+const projectId = pathParts[pathParts.length - 1];
 
 if (!projectId) {
   alert("❌ Project ID missing in URL");
