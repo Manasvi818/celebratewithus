@@ -338,13 +338,22 @@ box-shadow:var(--shadow);
 const params = new URLSearchParams(window.location.search);
 const projectId = params.get("projectId");
 
+if (!projectId) {
+  alert("❌ Project ID missing in URL");
+  throw new Error("Project ID is required");
+}
+
 const STORAGE_KEY = `project_${projectId}`;
 const MSG_KEY = `msg_${projectId}`;
 const MUSIC_KEY = `music_${projectId}`;
 const PASS_KEY = `pass_${projectId}`;
 
 let widget;
-
+// 🔥 CLEAR OLD MESSAGES FOR NEW PROJECT
+if (!localStorage.getItem(`initialized_${projectId}`)) {
+  localStorage.removeItem(MSG_KEY);
+  localStorage.setItem(`initialized_${projectId}`, "true");
+}
 /* LOAD DATA */
 
 let items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
@@ -484,6 +493,15 @@ mediaGrid.appendChild(d);
 
 render();
 
+
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url.includes("res.cloudinary.com")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/f_auto,q_auto,w_${width}/`
+  );
+}
 /* CLOUDINARY UPLOAD */
 
 function initWidget(){
@@ -704,6 +722,11 @@ function downloadViewer() {
   const params = new URLSearchParams(window.location.search);
 const projectId = params.get("projectId");
 
+if (!projectId) {
+  alert("❌ Project ID missing in URL");
+  throw new Error("Project ID is required");
+}
+
   // ✅ Download viewer ZIP
   window.open(`/download?template=${template}&projectId=${projectId}`);
 
@@ -839,11 +862,16 @@ link.download = `invoice_${projectId}.html`;
 link.click();
 }
 async function goToViewer() {
-  await autoSave();   // 🔥 wait for DB save
+  await autoSave();
 
   const template = "joyful-times";
   const params = new URLSearchParams(window.location.search);
-const projectId = params.get("projectId");
+  const projectId = params.get("projectId");
+
+  if (!projectId) {
+    alert("❌ Project ID missing");
+    return;
+  }
 
   window.location.href = `/viewer/${template}/${projectId}`;
 }
