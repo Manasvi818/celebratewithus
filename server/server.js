@@ -53,7 +53,7 @@ console.log("KEY ID:", process.env.RAZORPAY_KEY_ID);
 const session = require("express-session");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
-const cors = require("cors");
+
 
 app.use(express.static(__dirname + "/.."));
 app.use(session({
