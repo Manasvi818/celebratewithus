@@ -628,28 +628,53 @@ const basePrice = 149;
 const finalAmount = basePrice - discount;
 
 const content = `
-INVOICE RECEIPT
 
-Project ID: ${projectId}
-Template: ${template}
 
-----------------------------------
+<div style="font-family:Arial; padding:25px; background:#f3cdd3;">
 
-Coupon Used: ${couponUsed}
-Discount: ₹${discount}
+  <!-- LOGO -->
+  <div style="text-align:right;">
+    <img src="https://celebratewithus.co.in/styles/images/logo.png" 
+         style="width:clamp(100px, 18vw, 180px); border-radius:10px;" />
+  </div>
 
-Final Amount Paid: ₹${finalAmount}
+  <!-- TITLE -->
+  <h2 style="text-align:center; letter-spacing:2px;">INVOICE RECEIPT</h2>
+  <hr>
 
-----------------------------------
+  <!-- BASIC DETAILS -->
+  <p><strong>Project ID:</strong> ${projectId}</p>
+  <p><strong>Template:</strong> ${template}</p>
 
-Next Coupon: ${nextCoupon}
+  <!-- NEW COUPON -->
+  <p><strong>Next Coupon:</strong> ${localStorage.getItem("nextCoupon") || "N/A"}</p>
 
-----------------------------------
+  <!-- PRICE BOX -->
+  <div style="
+    background:#e8aab4;
+    padding:15px 20px;
+    border-radius:16px;
+    display:inline-block;
+    margin:15px 0;
+    font-size:18px;
+  ">
+    <strong>Total Paid: ₹149</strong>
+  </div>
 
-Viewer Link: ${viewerURL}
-Editor Link: ${editorURL}
+  <!-- LINKS -->
+  <p><strong>Viewer Link:</strong><br>${viewerURL}</p>
+  <p><strong>Editor Link:</strong><br>${editorURL}</p>
 
-Thank you for celebrating with us 💛
+  <!-- FINAL DETAILS -->
+  <p><strong>Coupon Used:</strong> ${coupon}</p>
+  <p><strong>Final Amount Paid:</strong> ₹149</p>
+
+  <!-- THANK YOU -->
+  <p style="margin-top:15px;">
+    Thank you for celebrating with us 💛
+  </p>
+
+</div>
 `;
 
 const blob = new Blob([content], { type: "text/plain" });
