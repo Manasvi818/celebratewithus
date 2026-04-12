@@ -131,7 +131,7 @@ const validTemplates = [
   "always-together",
   "warm-bonds",
   "cherished-times",
-  "joyful-family",
+  "joyful-times",
   "color-carnival",
   "crazy-confetti",
   "electric-energy",
