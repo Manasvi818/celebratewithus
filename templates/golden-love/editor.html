@@ -352,9 +352,9 @@ async function loadFromDB() {
 
     if (result.success) {
       items = result.data || [];
-      messages = result.messages
-  ? result.messages.split("\n---\n")
-  : [];
+      messages = (result.messages && result.messages.trim() !== "")
+  ? result.messages.split("\n---\n").filter(m => m.trim() !== "")
+  : JSON.parse(localStorage.getItem(MSG_KEY) || "[]");
       
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
       localStorage.setItem(MSG_KEY, JSON.stringify(messages));
@@ -620,7 +620,7 @@ window.addEventListener("DOMContentLoaded", () => {
     messages.push(text);
     localStorage.setItem(MSG_KEY, JSON.stringify(messages));
     msgPopup.style.display = "none";
-    render();
+    autoSave(); 
     renderMessages();
   };
 
