@@ -423,6 +423,46 @@ d.append(el,cap,mem,del);
   mediaGrid.appendChild(imageContainer);
 }
 
+function renderMessages() {
+  const container = document.getElementById("messagesContainer");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  messages.forEach((msg, i) => {
+    const box = document.createElement("div");
+    box.style.cssText = `
+      background: linear-gradient(145deg,#fffdf8,#f5ead6);
+      border-radius: 20px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 30px rgba(212,160,23,.12);
+      position: relative;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #6e5730;
+    `;
+
+    const text = document.createElement("p");
+    text.style.margin = "0 0 10px";
+    text.innerText = msg;
+
+    const del = document.createElement("button");
+    del.className = "btn ghost";
+    del.textContent = "Delete";
+    del.style.marginTop = "8px";
+    del.onclick = () => {
+      messages.splice(i, 1);
+      localStorage.setItem(MSG_KEY, JSON.stringify(messages));
+      autoSave();
+      renderMessages();
+    };
+
+    box.append(text, del);
+    container.appendChild(box);
+  });
+}
+
 function uploadLocal(e){
 let f=e.target.files[0];
 if(!f)return;
