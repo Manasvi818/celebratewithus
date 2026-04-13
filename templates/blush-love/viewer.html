@@ -201,9 +201,11 @@ body {
 
 .card img {
   width: 100%;
-   height: auto;
-  max-height: 300px;
-  object-fit: cover;
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+  display: block;
+
   
   transition: 0.4s;
 }
@@ -436,6 +438,9 @@ textarea {
   .card video{
     height:auto;
   }
+  .card {
+  overflow: visible;
+}
 #zoomMediaBox img,
 #zoomMediaBox video{
   max-width:95vw;
@@ -933,7 +938,7 @@ card.className = x.type === "video" ? "card video" : "card";
 card.innerHTML = `
   ${x.type === "video"
     ? `<video src="${x.url}" controls onclick="event.stopPropagation()"></video>`
-    : `<img src="${x.url}">`
+    : `<img src="${x.url}" loading="lazy" onerror="this.style.display='none'">`
   }
 
   <button class="img-msg" onclick="event.stopPropagation(); changeMessage()">
