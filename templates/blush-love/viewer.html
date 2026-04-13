@@ -177,13 +177,11 @@ body {
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, 1fr); /* desktop: 2 per row */
   gap: 16px;
 }
 
-.card.video {
-  grid-column: span 2;
-}
+
 
 @media (max-width: 650px) {
   .grid {
@@ -197,6 +195,8 @@ body {
   overflow: hidden;
   box-shadow: 0 10px 25px rgba(0,0,0,0.05);
   cursor: pointer;
+    width: 100%;   /* ✅ ADD THIS LINE */
+
 }
 
 .card img {
