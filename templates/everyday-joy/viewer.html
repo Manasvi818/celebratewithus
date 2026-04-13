@@ -91,8 +91,10 @@ section{
 
 .caption{
   margin-top:10px;
-  font-size:.85rem;
-  opacity:.8;
+  font-size:14px;
+  font-weight:500;
+  color:#333;
+  text-align:center;
 }
 
 section h3{
@@ -515,17 +517,20 @@ function render(){
   const videoContainer = document.getElementById("videoContainer");
 
   gallery.innerHTML = "";
-  videoContainer.innerHTML = "";
-
-  data.forEach(item=>{
-    if(item.type==="video"){
-      videoContainer.innerHTML += `
-        <div class="videoBox">
-          <video src="${optimize(item.url)}" controls></video>
-        </div>
-      `;
-    }
-  });
+  videoContainer.innerHTML += `
+  <div class="videoBox">
+    <video src="${optimize(item.url)}" controls></video>
+    <div class="caption" style="
+      margin-top:8px;
+      padding:8px 12px;
+      background:#fff3d6;
+      border-radius:10px;
+      font-size:14px;
+    ">
+      ${item.caption || "✨ No caption"}
+    </div>
+  </div>
+`;
 
   data.forEach(item=>{
     if(item.type==="image"){

@@ -308,7 +308,7 @@ localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
 
 async function autoSave() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  localStorage.setItem(MSG_KEY, messages);
+  localStorage.setItem(MSG_KEY, JSON.stringify(messages));
   localStorage.setItem(MUSIC_KEY, music);
   localStorage.setItem(`pass_${projectId}`, password);
 
@@ -549,90 +549,49 @@ previewAudio.currentTime = 0;
 
 /* 💌 PERSISTENT MESSAGE SYSTEM */
 
+/* 💌 FIXED MESSAGE SYSTEM */
+
 let messages = JSON.parse(localStorage.getItem(MSG_KEY) || "[]");
 
-const msgOpenBtn = document.getElementById("msgOpenBtn");
-const msgPopup = document.getElementById("msgPopup");
-const msgInput = document.getElementById("msgInput");
-const msgSaveBtn = document.getElementById("msgSaveBtn");
-const messagesContainer = document.getElementById("messagesContainer");
+let msgOpenBtn, msgPopup, msgInput, msgSaveBtn, messagesContainer;
 
-if(!messagesContainer){
-  console.error("messagesContainer not found");
-}
-function renderMessages(){
-  messagesContainer.innerHTML = "";
+window.addEventListener("DOMContentLoaded", () => {
 
-  if(messages.length === 0){
-    messagesContainer.innerHTML = "<p style='text-align:center;opacity:.6;'>No messages yet 💛</p>";
+  msgOpenBtn = document.getElementById("msgOpenBtn");
+  msgPopup = document.getElementById("msgPopup");
+  msgInput = document.getElementById("msgInput");
+  msgSaveBtn = document.getElementById("msgSaveBtn");
+  messagesContainer = document.getElementById("messagesContainer");
+
+  if(!msgOpenBtn || !msgPopup || !msgInput || !msgSaveBtn || !messagesContainer){
+    console.error("❌ Message elements not found");
     return;
   }
 
-  messages.forEach((text,index)=>{
-    const box = document.createElement("div");
-    box.style.cssText = `
-      background:white;
-      padding:16px;
-      border-radius:18px;
-      margin-bottom:12px;
-      box-shadow:0 15px 40px rgba(212,160,23,.15);
-      font-family:'Libre Baskerville';
-    `;
+  msgOpenBtn.onclick = () => {
+    msgInput.value = "";
+    msgPopup.style.display = "flex";
+  };
 
-    const msgText = document.createElement("div");
-    msgText.innerText = text;
+  msgSaveBtn.onclick = () => {
+    const text = msgInput.value.trim();
+    if(!text) return;
 
-    const btnWrap = document.createElement("div");
-    btnWrap.style.cssText="margin-top:10px;display:flex;gap:8px;justify-content:flex-end;";
+    messages.push(text);
+    localStorage.setItem(MSG_KEY, JSON.stringify(messages));
+    msgPopup.style.display = "none";
+    render();
+    renderMessages();
+  };
 
-    const editBtn = document.createElement("button");
-    editBtn.textContent="Edit";
-    editBtn.className="btn ghost";
-    editBtn.onclick=()=>{
-      msgInput.value = text;
-      msgPopup.style.display="flex";
-      messages.splice(index,1);
-      localStorage.setItem(MSG_KEY, JSON.stringify(messages));
-      renderMessages();
-    };
+  msgPopup.onclick = (e) => {
+    if(e.target === msgPopup){
+      msgPopup.style.display = "none";
+    }
+  };
 
-    const delBtn = document.createElement("button");
-    delBtn.textContent="Delete";
-    delBtn.className="btn ghost";
-    delBtn.onclick=()=>{
-      messages.splice(index,1);
-      localStorage.setItem(MSG_KEY, JSON.stringify(messages));
-      renderMessages();
-    };
-
-    btnWrap.append(editBtn,delBtn);
-    box.append(msgText,btnWrap);
-    messagesContainer.appendChild(box);
-  });
-}
-
-msgOpenBtn.onclick=()=>{
-  msgInput.value="";
-  msgPopup.style.display="flex";
-};
-
-msgSaveBtn.onclick=()=>{
-  const text = msgInput.value.trim();
-  if(!text) return;
-
-  messages.push(text);
-  localStorage.setItem(MSG_KEY, JSON.stringify(messages));
-  msgPopup.style.display="none";
-  render();
   renderMessages();
-  
-};
-
-msgPopup.onclick=(e)=>{
-  if(e.target===msgPopup){
-    msgPopup.style.display="none";
-  }
-};
+});
 
 window.addEventListener("DOMContentLoaded", () => {
   loadFromDB();
