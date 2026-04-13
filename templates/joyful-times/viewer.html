@@ -858,11 +858,12 @@ function render(){
 d.style.maxWidth = "700px";
 d.style.margin = "0 auto";
     d.innerHTML = `
-      <div class="videoFrame">
-  <video src="${x.url}" controls style="width:100%;height:100%;object-fit:cover;"></video>
-</div>
-      <div class="photoCaption">${x.caption || ""}</div>
-    `;
+  <div class="videoFrame">
+    <video src="${x.url}" controls style="width:100%;height:100%;object-fit:cover;"></video>
+  </div>
+  ${x.caption ? `<div class="photoCaption">${x.caption}</div>` : ""}
+  ${x.message ? `<div style="text-align:center;color:#F2D7B5;padding:4px 10px 10px;margin:0;font-size:13px;line-height:1.6;opacity:0.85;">${x.message}</div>` : ""}
+`;
 
     photoGrid.appendChild(d);
   });
@@ -873,11 +874,12 @@ d.style.margin = "0 auto";
     d.className = "photoCard";
 
     d.innerHTML = `
-      <div class="photoFrame" onclick="openZoom('${x.url}','${x.caption || ""}')">
-        <img src="${x.url}" />
-      </div>
-      <div class="photoCaption">${x.caption || ""}</div>
-    `;
+  <div class="photoFrame" onclick="openZoom('${x.url}','${x.caption || ""}')">
+    <img src="${x.url}" />
+  </div>
+  ${x.caption ? `<div class="photoCaption">${x.caption}</div>` : ""}
+  ${x.message ? `<div style="text-align:center;color:#F2D7B5;padding:4px 10px 10px;margin:0;font-size:13px;line-height:1.6;opacity:0.85;">${x.message}</div>` : ""}
+`;
 
     photoGrid.appendChild(d);
   });
