@@ -476,28 +476,44 @@ setInterval(()=>{
   setTimeout(()=>heart.remove(),8000);
 },900);
 
+function renderMessages() {
+  const box = document.getElementById("viewerMessage");
+  if (!box) return;
+
+  if (!messages || messages.trim() === "") {
+    box.innerHTML = "<p>A quiet feeling rests here 🤍</p>";
+    return;
+  }
+
+  const parts = messages.split("\n---\n").filter(m => m.trim() !== "");
+  box.innerHTML = parts.map(m =>
+    `<p style="margin-bottom:20px;">${m.replace(/\n/g, "<br>")}</p>`
+  ).join('<hr style="border:none;border-top:1px solid rgba(212,160,23,.2);margin:20px 0;">');
+}
+
   /* 🔐 PASSWORD */
   
 
   function setupPassword() {
+  // just sets password variable, checkPassword is global below
+}
+
+function checkPassword() {
   const lock = document.getElementById("lockScreen");
+  const input = document.getElementById("passInput").value;
 
-  window.checkPassword = function () {
-    const input = document.getElementById("passInput").value;
+  if (!password || password === "") {
+    lock.style.display = "none";
+    startMusic();
+    return;
+  }
 
-    if (!password || password === "") {
-      lock.style.display = "none";
-      startMusic();
-      return;
-    }
-
-    if (input === password) {
-      lock.style.display = "none";
-      startMusic();
-    } else {
-      document.getElementById("wrongPass").style.display = "block";
-    }
-  };
+  if (input === password) {
+    lock.style.display = "none";
+    startMusic();
+  } else {
+    document.getElementById("wrongPass").style.display = "block";
+  }
 }
 
 function setupMusic() {
@@ -709,6 +725,7 @@ sparkleBtn.onclick = () => {
 const flame = document.getElementById("flame");
 
 document.addEventListener("mousemove", e => {
+  if (!flame) return;
   flame.style.left = e.clientX + "px";
   flame.style.top = e.clientY + "px";
 
@@ -732,31 +749,40 @@ document.addEventListener("mousemove", e => {
 });
 
 /* 🔍 ZOOM MODAL LOGIC */
-const zoomModal = document.getElementById("zoomModal");
-const zoomImg = document.getElementById("zoomImg");
-const zoomCaption = document.getElementById("zoomCaption");
-const zoomClose = document.getElementById("zoomClose");
+// ✅ REPLACE WITH (declared at top level so openZoom works globally)
+let zoomModal, zoomImg, zoomCaption, zoomClose;
 
 function openZoom(src, caption){
+  if (!zoomModal || !zoomImg) return;
   zoomImg.src = src;
-  zoomCaption.innerText = caption || "";
+  if (zoomCaption) zoomCaption.innerText = caption || "";
   zoomModal.style.display = "flex";
 }
 
 function closeZoom(){
+  if (!zoomModal || !zoomImg) return;
   zoomModal.style.display = "none";
   zoomImg.src = "";
-  zoomCaption.innerText = "";
+  if (zoomCaption) zoomCaption.innerText = "";
 }
 
-zoomClose.onclick = closeZoom;
+// Then inside your existing DOMContentLoaded listener, ADD:
+window.addEventListener("DOMContentLoaded", () => {
+  zoomModal  = document.getElementById("zoomModal");
+  zoomImg    = document.getElementById("zoomImg");
+  zoomCaption= document.getElementById("zoomCaption");
+  zoomClose  = document.getElementById("zoomClose");
 
-zoomModal.onclick = (e) => {
-  if(e.target === zoomModal) closeZoom();
-};
+  if (zoomClose) zoomClose.onclick = closeZoom;
+  if (zoomModal) zoomModal.onclick = (e) => {
+    if (e.target === zoomModal) closeZoom();
+  };
 
-document.addEventListener("keydown", (e) => {
-  if(e.key === "Escape") closeZoom();
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeZoom();
+  });
+
+  loadViewerData(); // keep this here too
 });
 
   /* 💌 FLOATING WORDS */
@@ -799,10 +825,6 @@ document.addEventListener("keydown", (e) => {
     setTimeout(() => word.remove(), 10000);
   }, 5000);
 
-
-window.addEventListener("DOMContentLoaded", () => {
-  loadViewerData();
-});
 </script>
 <div id="flame"></div>
 
