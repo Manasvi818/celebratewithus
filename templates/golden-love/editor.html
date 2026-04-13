@@ -307,6 +307,19 @@ localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
 }
 
 async function autoSave() {
+  // ✅ Sync DOM → items before saving
+  document.querySelectorAll("#mediaGrid .card").forEach((card) => {
+  const i = parseInt(card.dataset.index);
+  if (isNaN(i) || !items[i]) return;
+  const capInput = card.querySelector("input");
+  const memInput = card.querySelector("textarea");
+  if (capInput) items[i].caption = capInput.value;
+  if (memInput) items[i].memory = memInput.value;
+});
+
+  console.log("💾 Saving items:", JSON.stringify(items)); // ✅ ADD THIS
+
+
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   localStorage.setItem(MSG_KEY, JSON.stringify(messages));
   localStorage.setItem(MUSIC_KEY, music);
@@ -325,6 +338,7 @@ async function autoSave() {
         music: music,
         password: password
       })
+      
     });
 
     console.log("✅ Synced to DB");
@@ -385,7 +399,8 @@ function render(){
   items.forEach((o,i)=>{
 
     let d = document.createElement("div");
-    d.className = "card";
+d.className = "card";
+d.dataset.index = i;
 
     let el = o.type==="video"
       ? Object.assign(document.createElement("video"),{src:o.url,controls:true})
@@ -394,13 +409,13 @@ function render(){
     let cap = document.createElement("input");
     cap.placeholder="Caption...";
     cap.value=o.caption||"";
-    cap.oninput=e=>{o.caption=e.target.value;autoSave();};
+    cap.oninput=e=>{ items[i].caption=e.target.value; };
 
     let mem = document.createElement("textarea");
     mem.placeholder="Memory...";
     mem.style.height="80px";
     mem.value=o.memory||"";
-    mem.oninput=e=>{o.memory=e.target.value;autoSave();};
+    mem.oninput=e=>{ items[i].memory=e.target.value; };
 
     let del = document.createElement("button");
     del.textContent="Delete";
@@ -489,10 +504,12 @@ function initWidget(){
     multiple: true
   }, (error, result) => {
     if (!error && result && result.event === "success") {
+
       items.push({
         url: optimizeCloudinaryUrl(result.info.secure_url, 500),
         type: result.info.resource_type,
-        caption: ""
+        caption: "",
+        memory: "" 
       });
       autoSave();
       render();

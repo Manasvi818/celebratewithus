@@ -665,6 +665,36 @@ function render() {
 
     card.appendChild(media);
 
+if (item.caption && item.caption.trim() !== "") {
+    const cap = document.createElement("p");
+    cap.style.cssText = `
+      text-align:center;
+      font-style:italic;
+      color:#8a6d3b;
+      padding:10px 16px 4px;
+      margin:0;
+      font-size:15px;
+    `;
+    cap.innerText = item.caption;
+    card.appendChild(cap);
+  }
+
+  // ✅ ADD MEMORY
+  if (item.memory && item.memory.trim() !== "") {
+    const mem = document.createElement("p");
+    mem.style.cssText = `
+      text-align:center;
+      color:#a07840;
+      padding:4px 16px 14px;
+      margin:0;
+      font-size:13px;
+      line-height:1.6;
+      opacity:0.85;
+    `;
+    mem.innerText = item.memory;
+    card.appendChild(mem);
+  }
+
     if(item.type==="video"){
       videoContainer.appendChild(card);
     } else {
