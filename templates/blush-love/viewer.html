@@ -201,23 +201,12 @@ body {
 .media-box {
   width: 100%;
   height: 250px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  
   background: #fff0f5;
   overflow: hidden;
 }
 
-.card img {
-  width: 100%;
-  height: auto;
-  max-height: none;
-  object-fit: contain;
-  display: block;
 
-  
-  transition: 0.4s;
-}
 
 .card:hover img {
   transform: scale(1.08);
@@ -364,11 +353,11 @@ textarea {
   background: #ff5c8a;
 }
 
-.card video {
+.card img,
+.card video{
   width: 100%;
-  height: auto;
-  max-height: 300px;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;   /* makes both identical */
   display: block;
 }
 
@@ -407,6 +396,20 @@ textarea {
 
 /* Mobile */
 @media (max-width: 600px){
+.hero{
+  min-height: 22vh;   /* reduced from 38vh */
+  padding: 10px 10px 0;
+}
+
+.title{
+  font-size: 2.8rem !important; /* bigger on mobile */
+  line-height: 1.1;
+}
+
+.gallery{
+  margin-top: -10px;  /* pulls gallery closer */
+  padding-top: 0;
+}
 
   body{
     padding:10px;
@@ -445,10 +448,7 @@ textarea {
   gap:16px;
 }
 
-  .card img,
-  .card video{
-    height:auto;
-  }
+
   .card {
   overflow: visible;
 }
@@ -947,10 +947,12 @@ function render() {
 card.className = x.type === "video" ? "card video" : "card";
 
 card.innerHTML = `
+  <div class="media-box">
   ${x.type === "video"
     ? `<video src="${x.url}" controls onclick="event.stopPropagation()"></video>`
     : `<img src="${x.url}" loading="lazy" onerror="this.style.display='none'">`
   }
+</div>
 
   <button class="img-msg" onclick="event.stopPropagation(); changeMessage()">
     tap gently 💗
