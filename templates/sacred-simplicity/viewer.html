@@ -736,12 +736,13 @@ function render(){
 
   data.forEach(x=>{
     if(x.type==="video"){
-      videoContainer.innerHTML += `
-        <div class="videoBox">
-          <video src="${optimizeCloudinaryUrl(x.url,800)}" controls></video>
-        </div>
-      `;
-    }
+  videoContainer.innerHTML += `
+    <div class="videoBox">
+      <video src="${optimizeCloudinaryUrl(x.url,800)}" controls></video>
+      <p class="photoCaption">${x.caption || ""}</p>
+    </div>
+  `;
+}
   });
 
   data.forEach((x,i)=>{
