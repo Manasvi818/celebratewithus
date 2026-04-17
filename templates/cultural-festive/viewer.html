@@ -318,6 +318,14 @@ img, video, audio{
   }
 
 }
+
+body.maroon .caption{
+  color:#7B1E2B;
+}
+
+body.midnight .caption{
+  color:#F2C94C;
+}
 </style>
 </head>
 
@@ -664,12 +672,15 @@ function startContinuousFireworks(){
 const themeSelect = document.getElementById("themeSwitcher");
 const messageBox = document.getElementById("festiveMessage");
 const subtitle = document.querySelector(".subtitle");
-document.querySelectorAll(".caption").forEach(cap => {
-  cap.style.color = "#F2C94C";
-});
+
 themeSelect.addEventListener("change", function(){
 
   const theme = this.value;
+
+  // 🔥 ADD THESE 2 LINES HERE
+  document.body.classList.remove("gold","maroon","midnight");
+  document.body.classList.add(theme);
+
   updateTrailColor(theme);
 
   if(theme === "gold"){
@@ -678,21 +689,18 @@ themeSelect.addEventListener("change", function(){
     document.documentElement.style.setProperty('--gold','#D4A017');
     messageBox.style.color = "var(--text)";
     subtitle.style.color = "var(--maroon)";
-     captions.forEach(cap => {
-    cap.style.color = "var(--maroon)";
-  });
+     
   }
 
   if(theme === "maroon"){
-    document.documentElement.style.setProperty('--ivory','#FDF2F4');
-    document.documentElement.style.setProperty('--cream','#F9E3E8');
-    document.documentElement.style.setProperty('--gold','#7B1E2B');
-    messageBox.style.color = "var(--text)";
-     subtitle.style.color = "var(--white)";
-     captions.forEach(cap => {
-    cap.style.color = "var(--maroon)";
-  });
-  }
+  document.documentElement.style.setProperty('--ivory','#FDF2F4');
+  document.documentElement.style.setProperty('--cream','#F9E3E8');
+  document.documentElement.style.setProperty('--gold','#7B1E2B');
+
+  messageBox.style.color = "var(--text)";
+  subtitle.style.color = "white";
+
+}
 
   if(theme === "midnight"){
   document.documentElement.style.setProperty('--ivory','#1E1B2E');
@@ -702,9 +710,7 @@ themeSelect.addEventListener("change", function(){
   messageBox.style.color = "#F2C94C";
   subtitle.style.color = "white";
 
-    document.querySelectorAll(".caption").forEach(cap => {
-    cap.style.color = "#F2C94C";
-  });
+   
 }
 });
 
