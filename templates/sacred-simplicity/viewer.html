@@ -491,9 +491,14 @@ color:var(--coffeeBrown);
     padding:16px;
   }
 
-  .videoBox video{
-    max-height:220px;
-  }
+  .card video{
+  width:100%;
+  aspect-ratio:16/9;
+  object-fit:cover;
+
+  border-radius:14px; /* SAME as image */
+  border:1px solid var(--softShadow);
+}
 }
 button{
   min-height:44px;
