@@ -737,12 +737,15 @@ function render(){
 
   data.forEach(x=>{
     if(x.type==="video"){
-  videoContainer.innerHTML += `
-    <div class="videoBox">
-      <video src="${optimizeCloudinaryUrl(x.url,800)}" controls></video>
-      <p class="photoCaption">${x.caption || ""}</p>
-    </div>
+  const d = document.createElement("div");
+  d.className = "card";
+
+  d.innerHTML = `
+    <video src="${optimizeCloudinaryUrl(x.url,800)}" controls></video>
+    <p class="photoCaption">${x.caption || ""}</p>
   `;
+
+  videoContainer.appendChild(d);
 }
   });
 
