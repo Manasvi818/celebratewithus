@@ -664,7 +664,9 @@ function startContinuousFireworks(){
 const themeSelect = document.getElementById("themeSwitcher");
 const messageBox = document.getElementById("festiveMessage");
 const subtitle = document.querySelector(".subtitle");
-const captions = document.querySelectorAll(".caption");
+document.querySelectorAll(".caption").forEach(cap => {
+  cap.style.color = "#F2C94C";
+});
 themeSelect.addEventListener("change", function(){
 
   const theme = this.value;
@@ -700,8 +702,8 @@ themeSelect.addEventListener("change", function(){
   messageBox.style.color = "#F2C94C";
   subtitle.style.color = "white";
 
-  captions.forEach(cap => {
-    cap.style.color = "#F2C94C";  
+    document.querySelectorAll(".caption").forEach(cap => {
+    cap.style.color = "#F2C94C";
   });
 }
 });
