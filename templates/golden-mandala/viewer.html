@@ -250,14 +250,24 @@ body.night .card{
 }
 
 .card img{
-  
   border-radius:14px;
- 
-  cursor:pointer;
+ cursor:pointer;
    width:100%;
   height:auto;
   max-height:320px;
   object-fit:cover;
+}
+
+.card video{
+  width:100%;
+  border-radius:14px;
+  max-height:320px;
+  object-fit:cover;
+  margin-bottom:8px;
+}
+
+.photoCaption{
+  text-align:center;
 }
 
 .photoCaption{
@@ -801,15 +811,26 @@ function render(){
   videoContainer.innerHTML="";
   photoGrid.innerHTML="";
 
-  data.forEach(x=>{
-    if(x.type==="video"){
-      videoContainer.innerHTML+=`
-        <div class="videoBox">
-          <video src="${optimizeCloudinaryUrl(optimizeCloudinaryUrl(x.url,800),800)}" controls></video>
-        </div>
-      `;
-    }
-  });
+  data.forEach((x,i)=>{
+  if(x.type==="video"){
+    const cap = x.caption || "";
+
+    const d = document.createElement("div");
+    d.className = "card";
+
+    d.innerHTML = `
+      <video src="${optimizeCloudinaryUrl(optimizeCloudinaryUrl(x.url,800),800)}" controls></video>
+
+      <button class="tapBtn" onclick="showRandom(${i})">
+        Surprise ✨
+      </button>
+
+      <p class="photoCaption">${cap}</p>
+    `;
+
+    videoContainer.appendChild(d);
+  }
+});
 
   data.forEach((x,i)=>{
     if(x.type==="image"){
