@@ -111,7 +111,7 @@ body{
 
 .hero h1{
   font-family:'Allura',cursive;
-  font-size:clamp(2.8rem, 10vw, 110px);
+  font-size:clamp(3.2rem, 11vw, 130px);
   text-align:center;
 
   margin-bottom:8px;       /* less gap */
@@ -153,7 +153,8 @@ body{
   grid-column: span 2;
 }
 
-@media (max-width:600px){
+@media (max-width:600px)
+{
   .card.video-card{
     grid-column: span 1;
   }
@@ -164,6 +165,14 @@ body{
   height:auto;
   max-height:320px;
   object-fit:cover;
+}
+
+.grid{
+  grid-template-columns: 1fr; /* one item per row */
+}
+
+.card.video-card{
+  grid-column: span 1; /* already correct but keep for safety */
 }
 
 .caption{
@@ -192,7 +201,7 @@ body{
   backdrop-filter:blur(12px);
   text-align:center;
   font-family:'Playfair Display';
-  font-size:18px;
+  font-size:16px;
   line-height:1.8;
 }
 
