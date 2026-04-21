@@ -598,7 +598,7 @@ console.log("📄 Saving invoice at:", filePath);
     doc.pipe(stream);
 
     // ✅ SAFE CALCULATION
-    const baseAmount = 149;
+    const baseAmount = 399;
     const discount = parseInt(data.discount || 0);
     const safeDiscount = isNaN(discount) ? 0 : discount;
     const finalAmount = Math.round(baseAmount - (baseAmount * safeDiscount / 100));

@@ -624,7 +624,7 @@ function downloadViewer() {
 const couponUsed = localStorage.getItem("usedCoupon") || "None";
 const discount = Number(localStorage.getItem("discount")) || 0;
 
-const basePrice = 149;
+const basePrice = 399;
 const finalAmount = basePrice - discount;
 
 const content = `
@@ -658,7 +658,7 @@ const content = `
     margin:15px 0;
     font-size:18px;
   ">
-    <strong>Total Paid: ₹149</strong>
+    <strong>Total Paid: ₹399</strong>
   </div>
 
   <!-- LINKS -->
@@ -667,7 +667,7 @@ const content = `
 
   <!-- FINAL DETAILS -->
   <p><strong>Coupon Used:</strong> ${coupon}</p>
-  <p><strong>Final Amount Paid:</strong> ₹149</p>
+  <p><strong>Final Amount Paid:</strong> ₹399</p>
 
   <!-- THANK YOU -->
   <p style="margin-top:15px;">

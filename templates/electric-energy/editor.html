@@ -638,7 +638,7 @@ async function autoSave() {
   // ✅ ADD THESE
   couponUsed: localStorage.getItem("appliedCoupon") || "",
   discount: localStorage.getItem("discount") || 0,
-  finalAmount: localStorage.getItem("finalAmount") || 149,
+  finalAmount: localStorage.getItem("finalAmount") || 399,
   nextCoupon: localStorage.getItem("nextCoupon") || ""
 })
     });
@@ -835,7 +835,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const couponUsed = localStorage.getItem("appliedCoupon") || "No Coupon Applied";
 const discount = parseInt(localStorage.getItem("discount")) || 0;
-const finalAmount = parseInt(localStorage.getItem("finalAmount")) || 149;
+const finalAmount = parseInt(localStorage.getItem("finalAmount")) || 399;
 const nextCoupon = localStorage.getItem("nextCoupon") || "N/A";
   
   const content = `

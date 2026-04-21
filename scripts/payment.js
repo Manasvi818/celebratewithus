@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("Razorpay loaded:", typeof Razorpay);
 
   const BASE_URL = "https://celebratewithus.onrender.com";
-  let finalAmount = 14900;
+  let finalAmount = 39900;
   let usedCoupon = null;
 let appliedCoupon = "";
 let appliedDiscount = 0;
@@ -59,7 +59,7 @@ const projectId = "proj_" + Date.now();
         currency: data.currency,
         order_id: data.orderId,
         name: "Celebratewithus",
-        description: "Template Purchase ₹149",
+        description: "Template Purchase ₹399",
 
        handler: async function (response) {
 
@@ -80,7 +80,7 @@ const projectId = "proj_" + Date.now();
   projectId,
   coupon,
   discount,
-  amount: 149,
+  amount: 399,
 
   // ✅ ADD THESE
   name: "Guest",
