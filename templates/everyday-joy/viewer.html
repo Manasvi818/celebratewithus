@@ -381,7 +381,7 @@ body.sunset  { background:linear-gradient(180deg,#ffc6ff,#ff99c8); }
 <div id="lockScreen">
   <div class="lockBox">
     <h2 style="font-family:'Baloo 2';color:#e76f51;">Everyday Joy</h2>
-    <p>Enter password to unlock ☀️</p>
+    <p>Enter password to unlock </p>
     <input id="passInput" type="password" placeholder="Password">
     <button onclick="checkPassword()">Unlock</button>
   </div>
@@ -395,7 +395,7 @@ body.sunset  { background:linear-gradient(180deg,#ffc6ff,#ff99c8); }
 
 <header>
   <h1>Everyday Joy</h1>
-  <p>Small happy moments that matter the most 💛</p>
+  <p>Small happy moments that matter the most </p>
 </header>
 
 <section>
@@ -481,7 +481,7 @@ async function loadViewerData() {
       }
     }
   } catch (err) {
-    console.error("❌ Viewer load failed:", err);
+    console.error(" Viewer load failed:", err);
   }
 }
 
@@ -495,7 +495,7 @@ function checkPassword(){
   const entered=document.getElementById("passInput").value.trim();
 
   if(entered !== PASS){
-    alert("Wrong password ❌");
+    alert("Wrong password ");
     return;
   }
 
@@ -527,7 +527,7 @@ function render(){
       border-radius:10px;
       font-size:14px;
     ">
-      ${item.caption || "✨ No caption"}
+      ${item.caption || " No caption"}
     </div>
   </div>
 `;
@@ -555,7 +555,7 @@ function loadMessages(){
   const box = document.getElementById("messages");
 
   if(!messages){
-    box.innerHTML = "<p>No messages yet 💛</p>";
+    box.innerHTML = "<p>No messages yet </p>";
     return;
   }
 
@@ -763,7 +763,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- FOOTER -->
 <footer class="site-footer">
-  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+  <p>©  CelebrateWithUs.web • Crafted with 💛</p>
 </footer>
 
 </body>

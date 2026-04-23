@@ -477,7 +477,7 @@ header h1{
 <div id="lockScreen">
   <div class="lockBox">
     <h2 style="font-family:'Baloo 2';color:#e76f51;">Simple Delight</h2>
-    <p>Enter password to unlock ☀️</p>
+    <p>Enter password to unlock </p>
     <input id="passInput" type="password" placeholder="Password">
     <button onclick="checkPassword()">Unlock</button>
   </div>
@@ -573,12 +573,12 @@ function checkPassword(){
   const entered = document.getElementById("passInput").value.trim();
 
   if(!password){
-    alert("Password not set ❌");
+    alert("Password not set ");
     return;
   }
 
   if(entered !== password){
-    alert("Wrong password ❌");
+    alert("Wrong password ");
     return;
   }
 
@@ -630,7 +630,7 @@ function loadMessages(){
   box.innerHTML = "";
 
   if(!messages.trim()){
-    box.innerHTML = "<p>No messages yet 💛</p>";
+    box.innerHTML = "<p>No messages yet </p>";
     return;
   }
 
@@ -844,7 +844,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 <footer class="site-footer">
-  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+  <p>© CelebrateWithUs.web • Crafted with 💛</p>
 </footer>
 </body>
 </html>

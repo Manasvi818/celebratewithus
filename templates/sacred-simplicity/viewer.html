@@ -545,14 +545,14 @@ button{
 
 <!-- FIXED RIGHT CORNER BUTTONS -->
 <div class="cornerBtns">
-  <button id="decorBtn" class="actionBtn">✨ Decorations</button>
-  <button id="musicOpenBtn" class="actionBtn">🎵 Music</button>
+  <button id="decorBtn" class="actionBtn"> Decorations</button>
+  <button id="musicOpenBtn" class="actionBtn"> Music</button>
 </div>
 
 <!-- SURPRISE POPUP -->
 <div id="msgOverlay">
   <div class="popupCard">
-    <h3>⚡ Surprise</h3>
+    <h3> Surprise</h3>
     <div id="msgText"></div>
     <button id="closeMsg" class="btnSmall" style="width:100%;margin-top:12px;">Close</button>
   </div>
@@ -762,7 +762,7 @@ function render(){
       d.innerHTML=`
         <img src="${optimizeCloudinaryUrl(x.url,400)}"
      loading="lazy" onclick="openZoom('${x.url}',\`${cap}\`)">
-        <button class="tapBtn" onclick="showRandom(${i})">Surprise ⚡</button>
+        <button class="tapBtn" onclick="showRandom(${i})">Surprise </button>
         <p class="photoCaption">${x.caption || ""}</p>
       `;
       photoGrid.appendChild(d);
@@ -772,8 +772,8 @@ function render(){
   if(!data.length){
     photoGrid.innerHTML = `
       <div style="grid-column:1/-1;text-align:center;opacity:.75;font-family:Playfair Display;padding:20px;">
-        No media found 😭<br>
-        Upload photos/videos from the Editor first ⚡
+        No media found <br>
+        Upload photos/videos from the Editor first 
       </div>
     `;
   }
@@ -1020,7 +1020,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 <!-- FOOTER -->
 <footer class="site-footer">
-  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+  <p>© CelebrateWithUs.web • Crafted with 💛</p>
 </footer>
 </body>
 </html>

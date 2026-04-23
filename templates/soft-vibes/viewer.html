@@ -491,7 +491,7 @@ to{ box-shadow:0 0 25px rgba(216,166,118,.9); }
 <div id="lockScreen">
   <div class="lockBox">
     <h2 style="font-family:'Baloo 2';color:#e76f51;">Soft Vibes</h2>
-    <p>Enter password to unlock ☀️</p>
+    <p>Enter password to unlock </p>
     <input id="passInput" type="password" placeholder="Password">
     <button onclick="checkPassword()">Unlock</button>
   </div>
@@ -588,7 +588,7 @@ function checkPassword(){
   }
 
   if(enteredPassword !== password){
-    alert("Wrong password ❌");
+    alert("Wrong password ");
     return;
   }
 
@@ -606,7 +606,7 @@ function renderGallery(){
   gallery.innerHTML = "";
 
   if(!data.length){
-    gallery.innerHTML = "<p>No memories yet 🌼</p>";
+    gallery.innerHTML = "<p>No memories yet </p>";
     return;
   }
 
@@ -656,7 +656,7 @@ function loadMessages(){
   const box=document.getElementById("messages");
 
   if(!messages){
-    box.innerHTML="<p>No messages yet 💛</p>";
+    box.innerHTML="<p>No messages yet </p>";
     return;
   }
 
@@ -877,7 +877,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 });
 </script>
 <footer class="site-footer">
-  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+  <p>© CelebrateWithUs.web • Crafted with 💛</p>
 </footer>
 </body>
 </html>

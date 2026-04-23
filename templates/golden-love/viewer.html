@@ -379,7 +379,7 @@ border:1px solid rgba(212,160,23,.2);
 max-width:90%;
   ">
 
-    <h3>🕯️ Private Golden Love</h3>
+    <h3> Private Golden Love</h3>
 
     <div class="pass-wrap">
   <input
@@ -399,11 +399,11 @@ max-width:90%;
       background:#ffb703;
       cursor:pointer;
     ">
-      Enter 🕯️
+      Enter 
     </button>
 
     <p id="wrongPass" style="display:none;color:#ff9f1a;margin-top:10px;">
-      Wrong password 🤍
+      Wrong password 
     </p>
 
     <div style="
@@ -439,7 +439,7 @@ max-width:90%;
 <section class="message-box">
   <h2 class="msg-title">Leave a little feeling here </h2>
  <div id="viewerMessage" class="pink-msg-box">
-    A quiet feeling rests here 🤍
+    A quiet feeling rests here 
   </div>
 
 </section>
@@ -449,11 +449,11 @@ max-width:90%;
 <div id="topControls">
 
   <div class="controlBox" id="musicToggle">
-    🎶 Music
+     Music
   </div>
 
   <div class="controlBox" id="sparkleToggle">
-    ✨ Sparkles
+     Sparkles
   </div>
 
 </div>
@@ -487,7 +487,7 @@ function renderMessages() {
   if (!box) return;
 
   if (!messages || messages.trim() === "") {
-    box.innerHTML = "<p>A quiet feeling rests here 🤍</p>";
+    box.innerHTML = "<p>A quiet feeling rests here </p>";
     return;
   }
 
@@ -537,7 +537,7 @@ function setupMusic() {
 
   musicToggle.onclick = () => {
     if (!music) {
-      musicToggle.innerText = "🤍 No Music";
+      musicToggle.innerText = " No Music";
       return;
     }
 
@@ -550,11 +550,11 @@ function setupMusic() {
     if (playing) {
       bgAudio.pause();
       playing = false;
-      musicToggle.innerText = "🎶 Music";
+      musicToggle.innerText = "Play Music";
     } else {
       bgAudio.play();
       playing = true;
-      musicToggle.innerText = "⏸ Music";
+      musicToggle.innerText = "Stop Music";
     }
   };
 
@@ -772,14 +772,14 @@ sparkleBtn.onclick = () => {
   sparkleOn = !sparkleOn;
 
   if (sparkleOn){
-    sparkleBtn.innerText = "✨ Sparkles ON";
+    sparkleBtn.innerText = " Sparkles ON";
 
     document.addEventListener("mousemove", cursorSparkle);
 
     bgInterval = setInterval(backgroundSparkle, 300);
   } 
   else {
-    sparkleBtn.innerText = "✨ Sparkles";
+    sparkleBtn.innerText = " Sparkles OFF";
 
     document.removeEventListener("mousemove", cursorSparkle);
 
@@ -905,7 +905,7 @@ window.addEventListener("DOMContentLoaded", () => {
 </div>
 <!-- FOOTER -->
 <footer class="site-footer">
-  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+  <p>© CelebrateWithUs.web • Crafted with 💛</p>
 </footer>
 
 </body>

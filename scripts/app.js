@@ -34,28 +34,31 @@ window.addEventListener("scroll", () => {
 // ===============================
 // 3️⃣ Render Templates
 // ===============================
-function renderTemplates(vibe) {
+function renderTemplates(vibe) 
   templatesGrid.innerHTML = "";
 
   const filtered = window.TEMPLATES.filter(t => t.vibe === vibe);
 
   filtered.forEach(template => {
-    const btn = document.createElement("button");
-    btn.className = "template-pill";
-    btn.innerText = template.title;
 
-    btn.addEventListener("click", () => {
+  const card = document.createElement("div");
+  card.className = "template-card";
 
-  // ✅ SAVE TEMPLATE ID (VERY IMPORTANT)
-  localStorage.setItem("selectedTemplate", template.id);
+  card.innerHTML = `
+    <img src="${template.image}" alt="${template.title}">
+    <h3>${template.title}</h3>
+  `;
 
-  // redirect
-  window.location.href = `preview.html?template=${template.id}`;
+  // ✅ ADD CLICK HERE (THIS FIXES EVERYTHING)
+  card.addEventListener("click", () => {
+    showPreview(template);
+  });
+
+  templatesGrid.appendChild(card);
+
 });
 
-    templatesGrid.appendChild(btn);
-  });
-}
+    
 
 // Default: show formal templates
 renderTemplates("casual");
@@ -116,16 +119,11 @@ vibeButtons.forEach(button => {
 
     filtered.forEach(template => {
       const card = `
-  <div class="template-card" onclick="selectTemplate('${template.id}')">
+  <div class="template-card" data-id="${template.id}">
     <img src="${template.image}" alt="${template.title}">
     <h3>${template.title}</h3>
   </div>
-
-            <img src="${template.image}" alt="${template.title}">
-            <h3>${template.title}</h3>
-          </a>
-        </div>
-      `;
+`;
       templatesGrid.innerHTML += card;
     });
 
@@ -213,14 +211,53 @@ document.addEventListener("DOMContentLoaded", function () {
 // =====================================
 // ✅ SAVE TEMPLATE + REDIRECT FUNCTION
 // =====================================
-function selectTemplate(id) {
-  localStorage.setItem("selectedTemplate", id);
-  window.location.href = `preview.html?template=${id}`;
+
+
+function updatePreview(template) {
+  const frame = document.getElementById("previewFrame");
+
+  if (frame) {
+    frame.src = `/demo/${template.id}/index.html`;
+  }
 }
 
-app.post("/apply-coupon", (req, res) => {
-  const { code } = req.body;
+// 🔥 FORCE PREVIEW UPDATE (WORKS WITHOUT SEARCHING OLD CODE)
+document.addEventListener("click", function (e) {
 
-  const result = applyCoupon(code);
-  res.json(result);
+  const card = e.target.closest(".template-card");
+  if (!card) return;
+
+  const templateId = card.dataset.id;
+
+  const frame = document.getElementById("previewFrame");
+  const title = document.getElementById("previewTitle");
+
+  if (frame && templateId) {
+    frame.src = `/demo/${templateId}/index.html`;
+  }
+
+  if (title) {
+    title.innerText = templateId.replace(/-/g, " ");
+  }
+
 });
+
+function showPreview(template) {
+
+  const previewSection = document.getElementById("preview-section");
+  const frame = document.getElementById("previewFrame");
+  const title = document.getElementById("previewTitle");
+
+  // Show section
+  previewSection.classList.remove("hidden");
+  previewSection.classList.add("fade-slide");
+
+  // Set iframe
+  frame.src = `/demo/${template.id}/index.html`;
+
+  // Set title
+  title.innerText = template.title;
+
+  // Scroll to preview
+  previewSection.scrollIntoView({ behavior: "smooth" });
+}

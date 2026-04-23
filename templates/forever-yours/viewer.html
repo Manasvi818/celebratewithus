@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Forever Yours 💜</title>
+<title>Forever Yours </title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" href="https://celebratewithus.co.in/styles/images/logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Allura&family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
@@ -365,7 +365,7 @@ img, video{
 <!-- LOCK -->
 <div id="lockScreen">
   <div class="lockBox">
-    <h3>💜 Private Forever</h3>
+    <h3> Private Forever</h3>
     <input id="passInput" type="password" placeholder="Enter password">
     <button onclick="checkPassword()">Enter</button>
     <p id="wrongPass" style="display:none;color:pink;">Wrong password</p>
@@ -374,7 +374,7 @@ img, video{
 
 <section class="hero">
   <h1>Forever Yours</h1>
-  <p>Lavender dreams wrapped in eternal love 💜</p>
+  <p>Lavender dreams wrapped in eternal love </p>
 </section>
 
 <section class="gallery">
@@ -388,8 +388,8 @@ img, video{
     </div>
 
 <div id="topControls">
-  <div class="controlBox" id="musicToggle">🎶 Music</div>
-  <div class="controlBox" id="sparkleToggle">✨ Sparkles</div>
+  <div class="controlBox" id="musicToggle"> Music</div>
+  <div class="controlBox" id="sparkleToggle"> Sparkles</div>
 </div>
 
 <div id="sparkle-layer"></div>
@@ -414,7 +414,7 @@ function checkPassword(){
   const savedPass = password;
 
   if(!savedPass){
-    wrongPass.innerText = "No password set. Please set it in editor page 💜";
+    wrongPass.innerText = "No password set. Please set it in editor page ";
     wrongPass.style.display = "block";
     return;
   }
@@ -425,7 +425,7 @@ function checkPassword(){
     startSparkles();
     startMusic();
   }else{
-    wrongPass.innerText = "Wrong password 💜";
+    wrongPass.innerText = "Wrong password ";
     wrongPass.style.display="block";
   }
 }
@@ -447,7 +447,7 @@ async function loadViewerData() {
     }
 
   } catch (err) {
-    console.error("❌ Viewer load failed:", err);
+    console.error(" Viewer load failed:", err);
   }
 }
 
@@ -611,11 +611,11 @@ sparkleToggle.onclick=()=>{
   if(sparkleInterval){
     clearInterval(sparkleInterval);
     sparkleInterval=null;
-    sparkleToggle.innerText="✨ Sparkles";
+    sparkleToggle.innerText=" Sparkles OFF";
     sparkleToggle.classList.remove("active");
   }else{
     startSparkles();
-    sparkleToggle.innerText="✨ Sparkles ON";
+    sparkleToggle.innerText=" Sparkles ON";
     sparkleToggle.classList.add("active");
   }
 };
@@ -637,7 +637,7 @@ function startFloatingWords(){
 </script>
 
 <footer class="site-footer">
-  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+  <p>© CelebrateWithUs.web • Crafted with 💛</p>
 </footer>
 </body>
 </html>

@@ -508,8 +508,8 @@ img, video{
 
 <!-- PASSWORD -->
 <div id="passwordOverlay">
-  <h2>Electric Energy ⚡</h2>
-  <p style="margin-top:-6px;color:rgba(234,246,255,.75)">Enter password to unlock ✨</p>
+  <h2>Electric Energy </h2>
+  <p style="margin-top:-6px;color:rgba(234,246,255,.75)">Enter password to unlock </p>
   <div class="passWrap">
   <input id="pass" type="password" placeholder="Password">
 
@@ -527,7 +527,7 @@ img, video{
 
     <!-- TITLE + SUBTITLE -->
     <h1 class="hero-title">ELECTRIC<br>ENERGY</h1>
-    <p class="subtitle">Turn the night into memories that glow ✨</p>
+    <p class="subtitle">Turn the night into memories that glow </p>
 
     <!-- GALLERY SECTION -->
    <h2 class="sectionTitle cursiveTitle" id="galleryTitle">Voltage Vault</h2>
@@ -544,14 +544,14 @@ img, video{
 
 <!-- FIXED RIGHT CORNER BUTTONS -->
 <div class="cornerBtns">
-  <button id="decorBtn" class="actionBtn">✨ Decorations</button>
-  <button id="musicOpenBtn" class="actionBtn">🎵 Music</button>
+  <button id="decorBtn" class="actionBtn">Decorations</button>
+  <button id="musicOpenBtn" class="actionBtn">Music</button>
 </div>
 
 <!-- SURPRISE POPUP -->
 <div id="msgOverlay">
   <div class="popupCard">
-    <h3>⚡ Surprise</h3>
+    <h3> Surprise</h3>
     <div id="msgText"></div>
     <button id="closeMsg" class="btnSmall" style="width:100%;margin-top:12px;">Close</button>
   </div>
@@ -715,7 +715,7 @@ async function loadViewerData() {
 /* PASSWORD */
 function unlock(){
   if(!isLoaded){
-    alert("⏳ Please wait...");
+    alert(" Please wait...");
     return;
   }
 
@@ -778,7 +778,7 @@ function render(){
   src="${optimizeCloudinaryUrl(x.url, 400)}"
   loading="lazy"
   onclick="openZoom('${optimizeCloudinaryUrl(x.url, 800)}',\`${cap}\`)">
-        <button class="tapBtn" onclick="showRandom(${i})">Surprise ⚡</button>
+        <button class="tapBtn" onclick="showRandom(${i})">Surprise </button>
         <p class="photoCaption">${x.caption || ""}</p>
       `;
       photoGrid.appendChild(d);
@@ -788,8 +788,8 @@ function render(){
   if(!data.length){
     photoGrid.innerHTML = `
       <div style="grid-column:1/-1;text-align:center;opacity:.75;font-family:Playfair Display;padding:20px;">
-        No media found 😭<br>
-        Upload photos/videos from the Editor first ⚡
+        No media found <br>
+        Upload photos/videos from the Editor first 
       </div>
     `;
   }
@@ -973,7 +973,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- FOOTER -->
 <footer class="site-footer">
-  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+  <p>© 202 CelebrateWithUs.web • Crafted with 💛</p>
 </footer>
 
 </body>

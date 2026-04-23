@@ -440,18 +440,18 @@ img, video, audio{
 
   <input id="viewerPass" type="password" placeholder="Password">
 
-  <button onclick="unlockViewer()">Unlock ✨</button>
+  <button onclick="unlockViewer()">Unlock </button>
 
-  <p id="wrongPass">Wrong password ❌</p>
+  <p id="wrongPass">Wrong password </p>
 </div>
 
 <div id="confetti-layer"></div>
 
 <!-- TOP BUTTONS -->
 <div style="position:fixed; top:20px; right:20px; display:flex; flex-direction:column; gap:10px; z-index:9999;">
-  <div class="toggle" onclick="openTheme()">🎨 Theme</div>
-  <div class="toggle" onclick="openConfetti()">🎉 Confetti</div>
-  <div class="toggle" onclick="openMusic()">🎵 Music</div>
+  <div class="toggle" onclick="openTheme()"> Theme</div>
+  <div class="toggle" onclick="openConfetti()"> Confetti</div>
+  <div class="toggle" onclick="openMusic()"> Music</div>
 </div>
 
 <!-- HERO -->
@@ -478,11 +478,11 @@ img, video, audio{
   <h3>Letters in the Breeze</h3>
 
   <div class="breezy-msg-box" id="viewerMessage">
-    A little message is waiting to be written 🌿
+    A little message is waiting to be written 
   </div>
 
   <button class="send-btn" onclick="sendBreeze()">
-    ✨ Send a breezy sparkle
+     Send a breezy sparkle
   </button>
 </section>
 
@@ -547,27 +547,27 @@ img, video, audio{
     <h3 style="color:#2b6c74;margin-bottom:18px;">Choose your sky 🌤</h3>
 
     <button class="panel-btn" onclick="setTheme('#00d4ff','#fff1b8')">
-🌊 Neon Aqua → Sunny Yellow
+ Neon Aqua → Sunny Yellow
 </button>
 
 <button class="panel-btn" onclick="setTheme('#00ffb3','#00b3ff')">
-🍃 Tropical Green → Ocean Blue
+ Tropical Green → Ocean Blue
 </button>
 
 <button class="panel-btn" onclick="setTheme('#ff4d6d','#ffcc00')">
-🌺 Hot Pink → Bright Gold
+ Hot Pink → Bright Gold
 </button>
 
 <button class="panel-btn" onclick="setTheme('#7c3aed','#22d3ee')">
-💜 Violet → Electric Cyan
+ Violet → Electric Cyan
 </button>
 
 <button class="panel-btn" onclick="setTheme('#ff6a00','#ff00a8')">
-🔥 Sunset Orange → Neon Magenta
+ Sunset Orange → Neon Magenta
 </button>
 
 <button class="panel-btn" onclick="setTheme('#111827','#00f5ff')">
-🌙 Midnight Black → Neon Blue
+ Midnight Black → Neon Blue
 </button>
 
 
@@ -708,7 +708,7 @@ function loadMessages(){
   const viewerBox = document.getElementById("viewerMessage");
 
   if(!messages.trim()){
-    viewerBox.innerText = "No messages yet 💌";
+    viewerBox.innerText = "No messages yet ";
     return;
   }
 
@@ -1055,7 +1055,7 @@ zoomOverlay.addEventListener("click",(e)=>{
 </script>
 <!-- FOOTER -->
 <footer class="site-footer">
-  <p>© 2026 CelebrateWithUs.web • Crafted with 💛</p>
+  <p>©  CelebrateWithUs.web • Crafted with 💛</p>
 </footer>
 
 </body>
