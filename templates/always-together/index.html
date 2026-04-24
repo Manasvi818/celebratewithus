@@ -12,7 +12,6 @@ body {
   margin:0;
   font-family:sans-serif;
   background:#fff7f2;
-  text-align:center;
 }
 
 /* PASSWORD */
@@ -26,13 +25,11 @@ body {
   align-items:center;
   z-index:9999;
 }
-
 #passwordOverlay input{
-  padding:10px;
+  padding:12px;
   border-radius:10px;
   border:1px solid #d39;
 }
-
 #passwordOverlay button{
   margin-top:10px;
   padding:10px 20px;
@@ -41,21 +38,17 @@ body {
   background:#ff7b9a;
   color:white;
 }
+.hint{margin-top:10px;font-size:14px}
 
-.hint{
-  margin-top:10px;
-  font-size:14px;
-  color:#444;
-}
-
-/* TITLE */
+/* HEADER */
 .title{
   font-family:"Great Vibes";
-  font-size:48px;
+  font-size:50px;
+  text-align:center;
   color:#f2a67f;
 }
-
 .subtitle{
+  text-align:center;
   font-family:"Playfair Display";
 }
 
@@ -66,42 +59,47 @@ body {
   gap:10px;
   padding:10px;
 }
-
 .card{
   background:white;
   padding:8px;
   border-radius:12px;
 }
-
 .card img{
   width:100%;
   border-radius:10px;
-  cursor:pointer;
 }
-
-.btn{
+.tapBtn{
+  margin-top:6px;
   background:#ff9bb3;
   border:none;
   padding:6px 12px;
   border-radius:20px;
   color:white;
-  cursor:pointer;
+}
+.caption{
+  font-size:14px;
+  font-family:"Playfair Display";
+}
+
+/* MESSAGE */
+.note{
+  background:#fff6fa;
+  margin:10px;
+  padding:14px;
+  border-radius:12px;
+  font-family:"Playfair Display";
 }
 
 /* ZOOM */
 #zoomOverlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.7);
   display:none;
+  background:rgba(0,0,0,.7);
   justify-content:center;
   align-items:center;
 }
-
-#zoomImg{
-  max-width:90%;
-  border-radius:10px;
-}
+#zoomImg{max-width:90%}
 
 /* DECOR BUTTON */
 .decorBtn{
@@ -127,7 +125,7 @@ body {
   color:white;
 }
 
-/* DECOR OVERLAY */
+/* DECOR */
 #decorOverlay{
   position:fixed;
   inset:0;
@@ -136,8 +134,22 @@ body {
   align-items:center;
   background:rgba(0,0,0,.4);
 }
-
 #decorCard{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+}
+
+/* SURPRISE */
+#msgOverlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  background:rgba(0,0,0,.5);
+}
+#msgBox{
   background:white;
   padding:20px;
   border-radius:10px;
@@ -150,7 +162,7 @@ body {
 <!-- PASSWORD -->
 <div id="passwordOverlay">
   <h2>Enter Password</h2>
-  <input id="pass" type="password" placeholder="Password">
+  <input id="pass" type="password">
   <button onclick="unlock()">Unlock</button>
   <div class="hint">Demo Password: 123</div>
 </div>
@@ -162,19 +174,12 @@ body {
 <h1 class="title">Always Together</h1>
 <p class="subtitle">A collection of cherished moments</p>
 
-<h2>Memory Lane</h2>
+<h2 style="text-align:center;">Memory Lane</h2>
 
-<div class="grid">
-  <div class="card">
-    <img src="https://picsum.photos/300?1" onclick="zoom(this.src)">
-    <button class="btn" onclick="surprise()">Surprise ✨</button>
-  </div>
+<div class="grid" id="grid"></div>
 
-  <div class="card">
-    <img src="https://picsum.photos/300?2" onclick="zoom(this.src)">
-    <button class="btn" onclick="surprise()">Surprise ✨</button>
-  </div>
-</div>
+<h2 style="text-align:center;">Love Notes</h2>
+<div id="messages"></div>
 
 <!-- ZOOM -->
 <div id="zoomOverlay" onclick="this.style.display='none'">
@@ -189,58 +194,88 @@ body {
   </div>
 </div>
 
+<!-- SURPRISE -->
+<div id="msgOverlay">
+  <div id="msgBox">
+    <p id="msgText"></p>
+    <button onclick="closeMsg()">Close</button>
+  </div>
+</div>
+
 <script>
+
+/* DEMO DATA */
+const images = [
+  {url:"https://picsum.photos/400?1", cap:"That perfect smile 💛"},
+  {url:"https://picsum.photos/400?2", cap:"Laughing together 😂"},
+  {url:"https://picsum.photos/400?3", cap:"Memories forever 📸"},
+  {url:"https://picsum.photos/400?4", cap:"Pure happiness 💖"}
+];
+
+const notes = [
+  "You are the best part of every memory ❤️",
+  "These moments will stay forever ✨",
+  "Every picture tells our story 💫"
+];
+
+const cute = [
+  "You are magic ✨",
+  "Too cute 😭",
+  "Best memory ever 💖"
+];
 
 /* PASSWORD */
 function unlock(){
-  const val = document.getElementById("pass").value;
-  if(val === "123"){
-    document.getElementById("passwordOverlay").style.display="none";
-  } else {
-    alert("Wrong password");
-  }
+  if(pass.value==="123"){
+    passwordOverlay.style.display="none";
+    render();
+  }else alert("Wrong password");
+}
+
+/* RENDER */
+function render(){
+  grid.innerHTML="";
+  images.forEach((x,i)=>{
+    grid.innerHTML+=`
+      <div class="card">
+        <img src="${x.url}" onclick="zoom('${x.url}')">
+        <button class="tapBtn" onclick="surprise(${i})">Surprise</button>
+        <p class="caption">${x.cap}</p>
+      </div>
+    `;
+  });
+
+  notes.forEach(n=>{
+    messages.innerHTML+=`<div class="note">${n}</div>`;
+  });
 }
 
 /* ZOOM */
 function zoom(src){
-  document.getElementById("zoomImg").src = src;
-  document.getElementById("zoomOverlay").style.display = "flex";
+  zoomImg.src=src;
+  zoomOverlay.style.display="flex";
 }
 
 /* SURPRISE */
 function surprise(){
-  alert("This moment is special 💖");
+  msgText.innerText=cute[Math.floor(Math.random()*cute.length)];
+  msgOverlay.style.display="flex";
 }
+function closeMsg(){msgOverlay.style.display="none";}
 
 /* DECOR */
-function openDecor(){
-  document.getElementById("decorOverlay").style.display="flex";
-}
-
-function closeDecor(e){
-  if(e.target.id==="decorOverlay"){
-    document.getElementById("decorOverlay").style.display="none";
-  }
-}
-
+function openDecor(){decorOverlay.style.display="flex";}
+function closeDecor(e){if(e.target.id==="decorOverlay")decorOverlay.style.display="none";}
 function toggleNight(){
-  document.body.style.background = 
-    document.body.style.background === "black" ? "#fff7f2" : "black";
+  document.body.style.background =
+    document.body.style.background==="black" ? "#fff7f2" : "black";
 }
 
 /* FAKE MUSIC */
-let musicOn = false;
-
+let music=false;
 function toggleMusic(){
-  musicOn = !musicOn;
-
-  const btn = document.querySelector(".musicBtn");
-
-  if(musicOn){
-    btn.innerText = "Music On";
-  } else {
-    btn.innerText = "Music Off";
-  }
+  music=!music;
+  document.querySelector(".musicBtn").innerText = music ? "Music On" : "Music Off";
 }
 </script>
 
