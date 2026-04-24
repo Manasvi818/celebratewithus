@@ -71,7 +71,75 @@ button{
 <!-- YOUR PAGE CONTENT -->
 <h1 style="text-align:center;margin-top:40px;">Blush Love</h1>
 
+<div style="
+position:fixed;
+top:20px;
+right:20px;
+display:flex;
+flex-direction:column;
+gap:10px;
+z-index:999;
+">
+
+  <button onclick="toggleTheme()" style="
+  background:#ff8fab;
+  color:white;
+  border:none;
+  padding:10px 20px;
+  border-radius:20px;
+  ">
+  Theme 
+  </button>
+
+  <button onclick="toggleMusic()" style="
+  background:#ff8fab;
+  color:white;
+  border:none;
+  padding:10px 20px;
+  border-radius:20px;
+  ">
+  Music 
+  </button>
+
+  <button onclick="confetti()" style="
+  background:#ff8fab;
+  color:white;
+  border:none;
+  padding:10px 20px;
+  border-radius:20px;
+  ">
+  Love 
+  </button>
+
+</div>
+
 <div id="gallery" style="padding:20px;display:grid;grid-template-columns:repeat(2,1fr);gap:15px;"></div>
+
+<!-- MESSAGE SECTION -->
+<div style="text-align:center;margin-top:30px;">
+
+  <h2 style="font-family:'Great Vibes'; color:#b34b6a;">
+    Leave a little feeling 💌
+  </h2>
+
+  <div id="viewerMessage" style="
+    background:#ffd6e8;
+    margin:20px auto;
+    padding:20px;
+    border-radius:20px;
+    width:90%;
+    max-width:500px;
+  ">
+    No messages yet 💗
+  </div>
+
+  <textarea id="msgInput" placeholder="Write your message 💌"></textarea>
+
+  <br>
+
+  <button onclick="addMessage()">Send Message</button>
+
+</div>
 
 <script>
 
@@ -119,7 +187,67 @@ function render(){
 
 render();
 
+
+let messages = "";
+
+function addMessage(){
+  const input = document.getElementById("msgInput");
+  const text = input.value.trim();
+
+  if(!text) return;
+
+  if(messages){
+    messages += "\n" + text;
+  } else {
+    messages = text;
+  }
+
+  input.value = "";
+  renderMessages();
+}
+
+function renderMessages(){
+  const box = document.getElementById("viewerMessage");
+
+  if(!messages){
+    box.innerText = "No messages yet 💗";
+    return;
+  }
+
+  box.innerHTML = messages.split("\n")
+    .map(m => `<div style="margin:5px 0;">${m}</div>`)
+    .join("");
+}
+
+function toggleTheme(){
+  const body = document.body;
+
+  if(body.style.background.includes("255, 183")){
+    body.style.background = "linear-gradient(135deg,#ff5c8a,#ffd6e8)";
+  } else {
+    body.style.background = "linear-gradient(135deg,#FF8FAB,#FFB7A5)";
+  }
+}
+
+function confetti(){
+  for(let i=0;i<20;i++){
+    const c=document.createElement("div");
+    c.style.position="fixed";
+    c.style.top="-10px";
+    c.style.left=Math.random()*100+"vw";
+    c.style.width="10px";
+    c.style.height="10px";
+    c.style.background="pink";
+
+    c.style.animation="fall 3s linear forwards";
+
+    document.body.appendChild(c);
+
+    setTimeout(()=>c.remove(),3000);
+  }
+}
 </script>
+
 
 </body>
 </html>

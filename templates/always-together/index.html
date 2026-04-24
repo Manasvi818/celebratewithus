@@ -186,6 +186,39 @@ body.night{
   padding:20px;
   border-radius:10px;
 }
+
+/* NIGHT MODE FIXES */
+body.night .card{
+  background:#2a1b1f;
+  color:#ffe4ec;
+}
+
+body.night .note{
+  background:#2a1b1f;
+  color:#ffe4ec;
+}
+
+body.night #decorCard{
+  background:#2a1b1f;
+  color:#ffe4ec;
+}
+
+body.night #msgBox{
+  background:#2a1b1f;
+  color:#ffe4ec;
+}
+
+body.night .caption{
+  color:#ffd6e8;
+}
+
+body.night .btnSmall,
+body.night .tapBtn,
+body.night .decorBtn,
+body.night .musicBtn{
+  background:#ff7b9a;
+  color:white;
+}
 </style>
 </head>
 
@@ -261,8 +294,45 @@ function setNight(){
   document.body.classList.add("night");
 }
 
+let decorInterval;
+
 function applyDecor(){
-  alert("Decor applied ✨"); // demo only
+  const rate = document.getElementById("rate").value;
+  const size = document.getElementById("size").value;
+  const burst = document.getElementById("burst").value;
+
+  clearInterval(decorInterval);
+
+  decorInterval = setInterval(()=>{
+    createParticle(size, burst);
+  }, 1000 / (rate || 1));
+}
+
+function createParticle(size, type){
+  const el = document.createElement("div");
+
+  el.innerText = type === "Hearts" ? "💖" : "✨";
+
+  el.style.position = "fixed";
+  el.style.left = Math.random() * window.innerWidth + "px";
+  el.style.top = "-20px";
+  el.style.fontSize = size + "px";
+  el.style.pointerEvents = "none";
+  el.style.zIndex = 999;
+
+  document.body.appendChild(el);
+
+  let y = 0;
+
+  const fall = setInterval(()=>{
+    y += 3;
+    el.style.top = y + "px";
+
+    if(y > window.innerHeight){
+      clearInterval(fall);
+      el.remove();
+    }
+  }, 20);
 }
 
 /* DEMO DATA */
@@ -340,7 +410,8 @@ function applyDecor(){
 }
 
 /* FAKE MUSIC */
-let music=false;
+let audio = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
+audio.loop = true;
 function toggleMusic(){
   music=!music;
   document.querySelector(".musicBtn").innerText = music ? "Music On" : "Music Off";
