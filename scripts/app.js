@@ -6,14 +6,17 @@
    - Sticky shrink animation
    - Template rendering
    ============================================================ */
+document.addEventListener("DOMContentLoaded", () => {
 
-// ===============================
-// DOM ELEMENTS
-// ===============================
-const vibeButtons = document.querySelectorAll(".vibe-btn");
-const startBtn = document.getElementById("startBtn");
-const templatesGrid = document.getElementById("templatesGrid");
-const vibeSection = document.querySelector(".choose-vibe");
+  // ===============================
+  // DOM ELEMENTS
+  // ===============================
+  const vibeButtons = document.querySelectorAll(".vibe-btn");
+  const startBtn = document.getElementById("startBtn");
+  const templatesGrid = document.getElementById("templatesGrid");
+  const vibeSection = document.querySelector(".choose-vibe");
+
+  console.log("Buttons found:", vibeButtons.length); // 🔍 debug
 
 // ===============================
 // TEMPLATE DATA
@@ -61,98 +64,53 @@ const templates = {
 };
 
 // ===============================
-// RENDER FUNCTION
-// ===============================
-function showTemplates(vibe) {
-  templatesGrid.innerHTML = "";
+  // TEMPLATE DATA
+  // ===============================
+  const templates = { ... }; // keep same
 
-  const templatesSection = document.getElementById("templates-section");
-  templatesSection.classList.remove("hidden");
+  function showTemplates(vibe) {
+    templatesGrid.innerHTML = "";
 
-  if (!templates[vibe]) return;
+    const templatesSection = document.getElementById("templates-section");
+    templatesSection.classList.remove("hidden");
 
-  templates[vibe].forEach((templatePath) => {
-    const name = templatePath.split("/")[2].replace(/-/g, " ");
+    if (!templates[vibe]) return;
 
-    const btn = document.createElement("button");
-    btn.classList.add("template-btn");
+    templates[vibe].forEach((templatePath) => {
+      const name = templatePath.split("/")[2].replace(/-/g, " ");
 
-    btn.innerText = name;
+      const btn = document.createElement("button");
+      btn.classList.add("template-btn");
+      btn.innerText = name;
 
-    // ✅ REDIRECT ON CLICK
-    btn.addEventListener("click", () => {
-      window.location.href = `preview.html?template=${encodeURIComponent(templatePath)}`;
+      btn.addEventListener("click", () => {
+        window.location.href = `preview.html?template=${encodeURIComponent(templatePath)}`;
+      });
+
+      templatesGrid.appendChild(btn);
     });
-
-    templatesGrid.appendChild(btn);
-  });
-}
-
-// ===============================
-// START BUTTON
-// ===============================
-startBtn.addEventListener("click", () => {
-  vibeSection.scrollIntoView({ behavior: "smooth" });
-});
-
-// ===============================
-// SCROLL EFFECT
-// ===============================
-window.addEventListener("scroll", () => {
-  if (window.scrollY > 120) {
-    vibeSection.classList.add("shrunk");
-  } else {
-    vibeSection.classList.remove("shrunk");
   }
-});
 
-// ===============================
-// DEFAULT LOAD
-// ===============================
-showTemplates("casual");
-
-// ===============================
-// VIBE BUTTON CLICK
-// ===============================
-vibeButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const vibe = btn.dataset.vibe;
-    showTemplates(vibe);
+  startBtn.addEventListener("click", () => {
+    vibeSection.scrollIntoView({ behavior: "smooth" });
   });
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 120) {
+      vibeSection.classList.add("shrunk");
+    } else {
+      vibeSection.classList.remove("shrunk");
+    }
+  });
+
+  showTemplates("casual");
+
+  vibeButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      console.log("Clicked:", btn.dataset.vibe); // 🔍 debug
+      const vibe = btn.dataset.vibe;
+      showTemplates(vibe);
+    });
+  });
+
 });
-
-
-
-// =====================================
-// ✅ SAVE TEMPLATE + REDIRECT FUNCTION
-// =====================================
-
-
-function updatePreview(template) {
-  const frame = document.getElementById("previewFrame");
-
-  if (frame) {
-    frame.src = `/demo/${template.id}/index.html`;
-  }
-}
-
-
-function showPreview(template) {
-
-  const previewSection = document.getElementById("preview-section");
-  const frame = document.getElementById("previewFrame");
-  const title = document.getElementById("previewTitle");
-
-  // Show section
-  previewSection.classList.remove("hidden");
-  previewSection.classList.add("fade-slide");
-
-  // Set iframe
-  frame.src = `/demo/${template.id}/index.html`;
-
-  // Set title
-  title.innerText = template.title;
-
-  // Scroll to preview
-  previewSection.scrollIntoView({ behavior: "smooth" });
-}
