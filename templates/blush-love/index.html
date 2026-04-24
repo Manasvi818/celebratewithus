@@ -9,9 +9,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins&family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
+:root{
+  --font-main: 'Poppins', sans-serif;
+  --font-title: 'Playfair Display', serif;
+  --font-cursive: 'Great Vibes', cursive;
+}
+
 body{
   margin:0;
-  font-family:Poppins;
+    font-family: var(--font-main);
   background:linear-gradient(135deg,#FF8FAB,#FFB7A5);
 }
 
@@ -36,14 +42,14 @@ body{
 }
 
 .title{
-  font-family:'Playfair Display';
+    font-family: var(--font-title);
   font-size:60px;
   color:#b34b6a;
   margin:0;
 }
 
 .subtitle{
-  font-family:'Playfair Display';
+    font-family: var(--font-title);
   color:#b34b6a;
 }
 
@@ -73,7 +79,7 @@ body{
 
 .gallery h2{
   text-align:center;
-  font-family:'Great Vibes';
+  font-family: var(--font-cursive);
   color:#b34b6a;
   font-size:40px;
 }
@@ -315,10 +321,40 @@ const themes = [
 ];
 
 function setTheme(start, end){
-  document.body.style.background = `linear-gradient(135deg,${start},${end})`;
 
+  // 🎨 Background
+  document.body.style.background =
+    `linear-gradient(135deg,${start},${end})`;
+
+  // 🎨 Text colors
   document.querySelectorAll(".title, .subtitle, .gallery h2")
     .forEach(el => el.style.color = start);
+
+
+  // 🔥 FONT CHANGE LOGIC
+
+  // Soft romantic
+  if(start === "#FF8FAB" && end === "#FFB7A5"){
+    document.documentElement.style.setProperty("--font-main","Poppins, sans-serif");
+    document.documentElement.style.setProperty("--font-title","Playfair Display, serif");
+    document.documentElement.style.setProperty("--font-cursive","Great Vibes, cursive");
+  }
+
+  // Bold pink vibe
+  else if(start === "#FF5C8A" && end === "#FFD6E8"){
+    document.documentElement.style.setProperty("--font-main","Poppins, sans-serif");
+    document.documentElement.style.setProperty("--font-title","Poppins, sans-serif");
+    document.documentElement.style.setProperty("--font-cursive","Playfair Display, serif");
+  }
+
+  // Vanilla soft aesthetic
+  else if(end === "#FFFDF9"){
+    document.documentElement.style.setProperty("--font-main","Playfair Display, serif");
+    document.documentElement.style.setProperty("--font-title","Great Vibes, cursive");
+    document.documentElement.style.setProperty("--font-cursive","Great Vibes, cursive");
+  }
+
+  closeTheme();
 }
 
 function openTheme(){
