@@ -14,6 +14,11 @@ body {
   background:#fff7f2;
 }
 
+body.night{
+  background:#191113;
+  color:#ffe4ec;
+}
+
 /* PASSWORD */
 #passwordOverlay{
   position:fixed;
@@ -79,6 +84,33 @@ body {
 .caption{
   font-size:14px;
   font-family:"Playfair Display";
+}
+
+#decorCard{
+  background:white;
+  width:280px;
+  padding:18px;
+  border-radius:16px;
+  font-family:"Playfair Display";
+}
+
+.btnSmall{
+  background:#ff9bb3;
+  border:none;
+  border-radius:10px;
+  padding:8px 14px;
+  margin:6px 4px;
+  color:white;
+}
+
+.sectionTitle{
+  text-align:center;
+  font-family:"Great Vibes", cursive;
+  font-size:52px;
+  margin:18px 0 12px;
+  color:#f2a67f;
+  letter-spacing:1px;
+  font-weight:400;
 }
 
 /* MESSAGE */
@@ -174,11 +206,11 @@ body {
 <h1 class="title">Always Together</h1>
 <p class="subtitle">A collection of cherished moments</p>
 
-<h2 style="text-align:center;">Memory Lane</h2>
+<h2 class="sectionTitle">Memory Lane</h2>
 
 <div class="grid" id="grid"></div>
 
-<h2 style="text-align:center;">Love Notes</h2>
+<h2 class="sectionTitle">Love Notes</h2>
 <div id="messages"></div>
 
 <!-- ZOOM -->
@@ -187,10 +219,27 @@ body {
 </div>
 
 <!-- DECOR -->
-<div id="decorOverlay" onclick="closeDecor(event)">
+<div id="decorOverlay">
   <div id="decorCard">
     <h3>Decorations</h3>
-    <button onclick="toggleNight()">Toggle Night</button>
+
+    <p>Mode</p>
+    <button class="btnSmall" onclick="setDay()">Day</button>
+    <button class="btnSmall" onclick="setNight()">Night</button>
+
+    <p>Decoration / sec</p>
+    <input id="rate" type="range" min="0" max="10" value="3">
+
+    <p>Decoration size</p>
+    <input id="size" type="range" min="10" max="80" value="30">
+
+    <p>Burst style</p>
+    <select id="burst">
+      <option>Hearts</option>
+      <option>Sparkles</option>
+    </select>
+
+    <button class="btnSmall" style="width:100%" onclick="applyDecor()">Apply</button>
   </div>
 </div>
 
@@ -203,6 +252,18 @@ body {
 </div>
 
 <script>
+
+    function setDay(){
+  document.body.classList.remove("night");
+}
+
+function setNight(){
+  document.body.classList.add("night");
+}
+
+function applyDecor(){
+  alert("Decor applied ✨"); // demo only
+}
 
 /* DEMO DATA */
 const images = [
@@ -266,9 +327,16 @@ function closeMsg(){msgOverlay.style.display="none";}
 /* DECOR */
 function openDecor(){decorOverlay.style.display="flex";}
 function closeDecor(e){if(e.target.id==="decorOverlay")decorOverlay.style.display="none";}
-function toggleNight(){
-  document.body.style.background =
-    document.body.style.background==="black" ? "#fff7f2" : "black";
+function setDay(){
+  document.body.classList.remove("night");
+}
+
+function setNight(){
+  document.body.classList.add("night");
+}
+
+function applyDecor(){
+  alert("Decor applied ✨");
 }
 
 /* FAKE MUSIC */
@@ -277,6 +345,12 @@ function toggleMusic(){
   music=!music;
   document.querySelector(".musicBtn").innerText = music ? "Music On" : "Music Off";
 }
+
+decorOverlay.onclick = (e) => {
+  if(e.target === decorOverlay){
+    decorOverlay.style.display = "none";
+  }
+};
 </script>
 
 </body>

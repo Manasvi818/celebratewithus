@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blush Love Demo 💌</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&family=Great+Vibes&display=swap" rel="stylesheet">
+
+<style>
+/* KEEPING YOUR ORIGINAL STYLE (unchanged) */
+body {
+  margin:0;
+  font-family:Poppins;
+  background:linear-gradient(135deg,#FF8FAB,#FFB7A5);
+}
+
+/* --- PASSWORD --- */
+#passwordOverlay{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  background:linear-gradient(135deg,#ff8fab,#ffb7a5);
+  z-index:9999;
+  color:white;
+  font-family:'Playfair Display';
+}
+
+input{
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  text-align:center;
+}
+
+button{
+  margin-top:15px;
+  padding:12px 30px;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PASSWORD -->
+<div id="passwordOverlay">
+
+  <h1 style="font-size:46px;">Blush Love</h1>
+
+  <p>Enter the secret password</p>
+
+  <!-- ✅ PASSWORD SHOWN -->
+  <p style="opacity:0.9;">Password: <b>123</b></p>
+
+  <input id="viewerPass" type="password" placeholder="Password">
+
+  <button onclick="unlockViewer()">Unlock</button>
+
+  <p id="wrongPass" style="display:none;color:red;">
+    Wrong password
+  </p>
+
+</div>
+
+<!-- YOUR PAGE CONTENT -->
+<h1 style="text-align:center;margin-top:40px;">Blush Love</h1>
+
+<div id="gallery" style="padding:20px;display:grid;grid-template-columns:repeat(2,1fr);gap:15px;"></div>
+
+<script>
+
+/* ================================
+   ✅ PASSWORD FIXED HERE
+================================ */
+let PASS = "123";
+
+/* DEMO DATA (you can replace with backend data) */
+let data = [
+  {url:"https://picsum.photos/400?1", caption:"Memory 1"},
+  {url:"https://picsum.photos/400?2", caption:"Memory 2"}
+];
+
+/* ================================
+   PASSWORD FUNCTION
+================================ */
+function unlockViewer(){
+  const input = document.getElementById("viewerPass").value;
+
+  if(input === PASS){
+    document.getElementById("passwordOverlay").style.display = "none";
+  } else {
+    document.getElementById("wrongPass").style.display = "block";
+  }
+}
+
+/* ================================
+   RENDER
+================================ */
+function render(){
+  const gallery = document.getElementById("gallery");
+
+  data.forEach(x=>{
+    const div = document.createElement("div");
+
+    div.innerHTML = `
+      <img src="${x.url}" style="width:100%;border-radius:12px;">
+      <p style="text-align:center;">${x.caption}</p>
+    `;
+
+    gallery.appendChild(div);
+  });
+}
+
+render();
+
+</script>
+
+</body>
+</html>
