@@ -21,6 +21,13 @@ body{
   background:linear-gradient(135deg,#FF8FAB,#FFB7A5);
 }
 
+#confetti-layer{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9999;
+}
+
 /* PASSWORD */
 #passwordOverlay{
   position:fixed;
@@ -41,16 +48,18 @@ body{
   padding:30px 20px 10px;
 }
 
+.title, .subtitle, .gallery h2 {
+  color: var(--text-color, #b34b6a);
+}
+
 .title{
     font-family: var(--font-title);
   font-size:60px;
-  color:#b34b6a;
   margin:0;
 }
 
 .subtitle{
     font-family: var(--font-title);
-  color:#b34b6a;
 }
 
 /* BUTTONS */
@@ -80,7 +89,6 @@ body{
 .gallery h2{
   text-align:center;
   font-family: var(--font-cursive);
-  color:#b34b6a;
   font-size:40px;
 }
 
@@ -161,10 +169,45 @@ button{
 button:hover{
   background:#ff5c8a;
 }
+
+.confetti{
+  position:absolute;
+  width:10px;
+  height:14px;
+  top:-10px;
+  background:var(--c);
+  animation:fall 4s linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(360deg);
+    opacity:0;
+  }
+}
+
+.theme-btn{
+  display:block;
+  width:100%;
+  margin:8px 0;
+  padding:10px;
+  border:none;
+  border-radius:18px;
+  background:#ffe3ef;
+  cursor:pointer;
+  font-size:14px;
+  transition:0.25s;
+}
+
+.theme-btn:hover{
+  background:#ffb7d1;
+  transform:scale(1.03);
+}
 </style>
 </head>
 
 <body>
+<div id="confetti-layer"></div>
 
 <!-- PASSWORD -->
 <div id="passwordOverlay">
@@ -210,7 +253,7 @@ Confetti: <span id="confettiState">OFF</span>
 
 <!-- MESSAGE -->
 <div class="message-box">
-  <h2 style="font-family:'Great Vibes';color:#b34b6a;">
+  <h2 style="font-family:'Great Vibes';">
     Leave a little feeling 
   </h2>
 
@@ -279,7 +322,7 @@ function renderMessages(){
         padding:14px;
         border-radius:20px;
         margin-bottom:12px;
-        color:#ff8fab;
+        color: var(--text-color);
       ">
         ${m}
       </div>
@@ -306,6 +349,12 @@ function toggleConfetti(){
 
   document.getElementById("confettiState").innerText =
     confettiOn ? "ON" : "OFF";
+
+  if(confettiOn){
+    startConfetti();
+  } else {
+    stopConfetti();
+  }
 }
 
 /* THEME (FIXED ✅) */
@@ -329,7 +378,7 @@ function setTheme(start, end){
   // 🎨 Text colors
   document.querySelectorAll(".title, .subtitle, .gallery h2")
     .forEach(el => el.style.color = start);
-
+document.documentElement.style.setProperty("--text-color", start);
 
   // 🔥 FONT CHANGE LOGIC
 
@@ -387,12 +436,46 @@ function toggleMusic(){
 
 function showSweetMessage(){
   const msgs = [
-    "This moment feels like magic 💖",
+    "You are the star of every moment 💫",
     "Some memories stay forever ✨",
     "This is one of those perfect moments 💗"
   ];
 
-  alert(msgs[Math.floor(Math.random()*msgs.length)]);
+  document.getElementById("msgText").innerText =
+    msgs[Math.floor(Math.random()*msgs.length)];
+
+  document.getElementById("msgOverlay").style.display = "flex";
+}
+
+function closeMsg(){
+  document.getElementById("msgOverlay").style.display = "none";
+}
+
+let confettiInterval = null;
+
+function startConfetti(){
+  if(confettiInterval) return; // 🔥 prevent duplicate
+
+  const colors = ["#ff8fab","#ff5c8a","#ffd6e8","#ffc0cb"];
+
+  confettiInterval = setInterval(()=>{
+    for(let i=0;i<10;i++){
+      const c=document.createElement("div");
+      c.className="confetti";
+
+      c.style.left=Math.random()*100+"vw";
+      c.style.setProperty("--c", colors[Math.floor(Math.random()*colors.length)]);
+
+      document.getElementById("confetti-layer").appendChild(c);
+
+      setTimeout(()=>c.remove(),4000);
+    }
+  },300);
+}
+
+function stopConfetti(){
+  clearInterval(confettiInterval);
+  confettiInterval=null;
 }
 </script>
 <div id="musicPanel" style="
@@ -417,7 +500,7 @@ text-align:center;
 width:100%;
 padding:12px;
 border-radius:18px;
-background:#ff8fab;
+background:var(--text-color);
 color:white;
 border:none;
 " onclick="toggleMusic()">
@@ -477,6 +560,46 @@ text-align:center;
 
   </div>
 </div>
+
+</div>
+</div>
+
+<div id="msgOverlay" style="
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.35);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+
+<div id="msgBox" style="
+background:white;
+padding:24px;
+border-radius:24px;
+width:260px;
+text-align:center;
+font-family:var(--font-title);
+">
+
+<div id="msgText" style="
+font-size:18px;
+margin-bottom:18px;
+color:var(--text-color);
+">
+</div>
+
+<button onclick="closeMsg()" style="
+background:#FF8FAB;
+border:none;
+border-radius:20px;
+padding:10px 26px;
+color:white;
+cursor:pointer;
+">
+Close
+</button>
 
 </div>
 </div>
