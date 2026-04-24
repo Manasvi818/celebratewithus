@@ -67,12 +67,12 @@ const templates = {
   // TEMPLATE DATA
   // ===============================
  
-  function showTemplates(vibe) {
+function showTemplates(vibe) {
   templatesGrid.innerHTML = "";
 
   const templatesSection = document.getElementById("templates-section");
 
-  // ✅ FORCE DISPLAY
+  // show section
   templatesSection.style.display = "block";
   templatesSection.classList.remove("hidden");
 
@@ -82,7 +82,7 @@ const templates = {
     const name = templatePath.split("/")[2].replace(/-/g, " ");
 
     const btn = document.createElement("button");
-    btn.classList.add("vibe-btn");
+    btn.classList.add("vibe-btn"); // same style
     btn.innerText = name;
 
     btn.addEventListener("click", () => {
@@ -90,6 +90,12 @@ const templates = {
     });
 
     templatesGrid.appendChild(btn);
+  });
+
+  // ✅ ADD THIS (scroll effect)
+  templatesSection.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
   });
 }
 
