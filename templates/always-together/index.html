@@ -285,7 +285,7 @@ body.night .musicBtn{
 </div>
 
 <script>
-
+let music = false;
     function setDay(){
   document.body.classList.remove("night");
 }
@@ -405,9 +405,6 @@ function setNight(){
   document.body.classList.add("night");
 }
 
-function applyDecor(){
-  alert("Decor applied ✨");
-}
 
 /* FAKE MUSIC */
 let audio = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
