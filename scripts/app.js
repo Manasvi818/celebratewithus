@@ -66,8 +66,7 @@ const templates = {
 // ===============================
   // TEMPLATE DATA
   // ===============================
-  const templates = { ... }; // keep same
-
+ 
   function showTemplates(vibe) {
     templatesGrid.innerHTML = "";
 
