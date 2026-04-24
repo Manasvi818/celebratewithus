@@ -219,11 +219,18 @@ body.night .musicBtn{
   background:#ff7b9a;
   color:white;
 }
+
+#decorCanvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:50;
+}
 </style>
 </head>
 
 <body>
-
+<canvas id="decorCanvas"></canvas>
 <!-- PASSWORD -->
 <div id="passwordOverlay">
   <h2>Enter Password</h2>
@@ -294,46 +301,128 @@ function setNight(){
   document.body.classList.add("night");
 }
 
-let decorInterval;
+const c = document.getElementById("decorCanvas");
+const ctx = c.getContext("2d");
 
+let W, H, particles = [];
+
+function resizeCanvas(){
+  W = c.width = window.innerWidth;
+  H = c.height = window.innerHeight;
+}
+resizeCanvas();
+window.onresize = resizeCanvas;
+
+let decorCfg = {
+  rate: 3,
+  size: 30,
+  burst: "Hearts"
+};
+
+/* APPLY SETTINGS */
 function applyDecor(){
-  const rate = document.getElementById("rate").value;
-  const size = document.getElementById("size").value;
-  const burst = document.getElementById("burst").value;
-
-  clearInterval(decorInterval);
-
-  decorInterval = setInterval(()=>{
-    createParticle(size, burst);
-  }, 1000 / (rate || 1));
+  decorCfg.rate = +document.getElementById("rate").value;
+  decorCfg.size = +document.getElementById("size").value;
+  decorCfg.burst = document.getElementById("burst").value;
 }
 
-function createParticle(size, type){
-  const el = document.createElement("div");
+/* SPAWN PARTICLES */
+function spawnDecor(){
+  if(decorCfg.burst === "Hearts" && Math.random() < decorCfg.rate / 18){
+    particles.push({
+      x: Math.random() * W,
+      y: H,
+      r: decorCfg.size,
+      t: "heart"
+    });
+  }
 
-  el.innerText = type === "Hearts" ? "💖" : "✨";
+  if(decorCfg.burst === "Sparkles" && Math.random() < decorCfg.rate / 12){
+    particles.push({
+      x: Math.random() * W,
+      y: H,
+      r: decorCfg.size,
+      t: "star",
+      rot: Math.random() * Math.PI
+    });
+  }
+}
 
-  el.style.position = "fixed";
-  el.style.left = Math.random() * window.innerWidth + "px";
-  el.style.top = "-20px";
-  el.style.fontSize = size + "px";
-  el.style.pointerEvents = "none";
-  el.style.zIndex = 999;
+/* DRAW STAR */
+function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius){
+  let rot = Math.PI / 2 * 3;
+  let step = Math.PI / spikes;
 
-  document.body.appendChild(el);
+  ctx.beginPath();
+  ctx.moveTo(cx, cy - outerRadius);
 
-  let y = 0;
+  for(let i=0; i<spikes; i++){
+    ctx.lineTo(
+      cx + Math.cos(rot) * outerRadius,
+      cy + Math.sin(rot) * outerRadius
+    );
+    rot += step;
 
-  const fall = setInterval(()=>{
-    y += 3;
-    el.style.top = y + "px";
+    ctx.lineTo(
+      cx + Math.cos(rot) * innerRadius,
+      cy + Math.sin(rot) * innerRadius
+    );
+    rot += step;
+  }
 
-    if(y > window.innerHeight){
-      clearInterval(fall);
-      el.remove();
+  ctx.closePath();
+  ctx.fill();
+}
+
+/* DRAW LOOP */
+function drawDecor(){
+  ctx.clearRect(0,0,W,H);
+
+  particles.forEach((p,i)=>{
+   
+
+if(p.t === "heart"){
+  ctx.font = p.r + "px serif";
+
+  ctx.fillStyle = "#ff9bb3";
+
+  // ✨ ADD THESE 2 LINES HERE
+  ctx.shadowColor = "#ff9bb3";
+  ctx.shadowBlur = 10;
+
+  ctx.fillText("♥", p.x, p.y);
+}
+    
+    if(p.t === "star"){
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+
+      ctx.fillStyle = "#FFD700";
+      ctx.shadowColor = "#FFD700";
+      ctx.shadowBlur = 15;
+
+      drawStar(ctx, 0, 0, 5, p.r, p.r/2);
+
+      ctx.restore();
     }
-  }, 20);
+
+    ctx.shadowBlur = 0;
+
+    p.y -= 1.2;
+
+    if(p.y < -40){
+      particles.splice(i,1);
+    }
+  });
 }
+
+/* MAIN LOOP */
+(function loop(){
+  requestAnimationFrame(loop);
+  spawnDecor();
+  drawDecor();
+})();
 
 /* DEMO DATA */
 const images = [

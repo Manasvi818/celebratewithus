@@ -123,6 +123,25 @@ textarea{
   border-radius:12px;
   border:none;
 }
+
+.toggle{
+  background:#ff8fab;
+  color:white;
+  padding:10px 18px;
+  border-radius:30px;
+  cursor:pointer;
+  text-align:center;
+}
+
+.img-msg{
+  margin:10px auto;
+  display:block;
+  background:#FF8FAB;
+  color:white;
+  border:none;
+  padding:6px 16px;
+  border-radius:20px;
+}
 </style>
 </head>
 
@@ -144,9 +163,24 @@ textarea{
 </div>
 
 <!-- BUTTONS -->
-<div class="controls">
-  <button onclick="toggleTheme()">Theme </button>
-  <button onclick="toggleMusic()">Music </button>
+<div style="
+position:fixed;
+top:20px;
+right:20px;
+display:flex;
+flex-direction:column;
+gap:10px;
+z-index:999;
+">
+
+<div class="toggle" onclick="openTheme()">Theme</div>
+
+<div class="toggle" onclick="toggleConfetti()">
+Confetti: <span id="confettiState">OFF</span>
+</div>
+
+<div class="toggle" onclick="openMusic()">Music</div>
+
 </div>
 
 <!-- GALLERY -->
@@ -197,10 +231,11 @@ function render(){
     const div=document.createElement("div");
     div.className="card";
 
-    div.innerHTML=`
-      <img src="${x.url}">
-      <div class="caption">${x.caption}</div>
-    `;
+    div.innerHTML = `
+  <img src="${x.url}">
+  <button class="img-msg">tap gently</button>
+  <div class="caption">${x.caption}</div>
+`;
 
     gallery.appendChild(div);
   });
@@ -209,16 +244,29 @@ function render(){
 render();
 
 /* MESSAGE (PRE-FILLED LIKE VIEWER) */
-let messages=`You make ordinary days feel special 💗
+let messages = `
+"Pyaar perfect nahi hai... par tere saath perfect feel hota hai."
 ---
-These memories mean everything ✨`;
+"Tere saath sab kuch thoda sa Gulabi lagta hai..."
+---
+"Kabhi hasi, kabhi confusion... par tu ho toh sab sahi hai."
+`;
 
 function renderMessages(){
-  const box=document.getElementById("viewerMessage");
+  const box = document.getElementById("viewerMessage");
 
-  box.innerHTML=messages.split("\n---\n")
-    .map(m=>`<div style="margin-bottom:10px;">${m}</div>`)
-    .join("");
+  box.innerHTML = messages.split("\n---\n")
+    .map(m => `
+      <div style="
+        background:white;
+        padding:14px;
+        border-radius:20px;
+        margin-bottom:12px;
+        color:#ff8fab;
+      ">
+        ${m}
+      </div>
+    `).join("");
 }
 
 renderMessages();
@@ -234,28 +282,82 @@ function addMessage(){
   renderMessages();
 }
 
+let confettiOn = false;
+
+function toggleConfetti(){
+  confettiOn = !confettiOn;
+
+  document.getElementById("confettiState").innerText =
+    confettiOn ? "ON" : "OFF";
+}
+
 /* THEME (FIXED ✅) */
 let dark=false;
 
-function toggleTheme(){
-  dark=!dark;
 
-  if(dark){
-    document.body.style.background="linear-gradient(135deg,#ff5c8a,#ffd6e8)";
-  }else{
-    document.body.style.background="linear-gradient(135deg,#FF8FAB,#FFB7A5)";
-  }
+  let themeIndex = 0;
+
+const themes = [
+  {start:"#FF8FAB", end:"#FFB7A5"},
+  {start:"#FF5C8A", end:"#FFD6E8"},
+  {start:"#FF8FAB", end:"#FFFDF9"}
+];
+
+function setTheme(start, end){
+  document.body.style.background = `linear-gradient(135deg,${start},${end})`;
+
+  document.querySelectorAll(".title, .subtitle, .gallery h2")
+    .forEach(el => el.style.color = start);
+}
+
+function openTheme(){
+  themeIndex = (themeIndex + 1) % themes.length;
+  setTheme(themes[themeIndex].start, themes[themeIndex].end);
 }
 
 /* MUSIC (DEMO ONLY — NO REAL SOUND) */
+
+
+
+
+function openMusic(){
+  document.getElementById("musicPanel").style.display="flex";
+}
+
+function closeMusic(){
+  document.getElementById("musicPanel").style.display="none";
+}
+
 let playing=false;
 
 function toggleMusic(){
   playing=!playing;
-
   alert(playing ? "Music Playing 🎵" : "Music Paused ⏸");
 }
 </script>
+<div id="musicPanel" style="
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.35);
+display:none;
+justify-content:center;
+align-items:center;
+">
 
+<div style="
+background:white;
+padding:20px;
+border-radius:20px;
+text-align:center;
+">
+
+<h3>Background Music 🎶</h3>
+
+<button onclick="toggleMusic()">▶ Play Music</button>
+<br><br>
+<button onclick="closeMusic()">Close</button>
+
+</div>
+</div>
 </body>
 </html>
