@@ -111,7 +111,7 @@ function showTemplates(vibe) {
     }
   });
 
-  showTemplates("casual");
+  
 
   vibeButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
