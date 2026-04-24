@@ -66,21 +66,25 @@ const templates = {
 function showTemplates(vibe) {
   templatesGrid.innerHTML = "";
 
+  const templatesSection = document.getElementById("templates-section");
+  templatesSection.classList.remove("hidden");
+
   if (!templates[vibe]) return;
 
-    templatesSection.classList.remove("hidden");
+  templates[vibe].forEach((templatePath) => {
+    const name = templatePath.split("/")[2].replace(/-/g, " ");
 
+    const btn = document.createElement("button");
+    btn.classList.add("template-btn");
 
-  templates[vibe].forEach((templateSrc) => {
-    const card = document.createElement("div");
-    card.classList.add("template-card");
+    btn.innerText = name;
 
-    card.innerHTML = `
-      <iframe src="${templateSrc}" class="preview-frame" loading="lazy"></iframe>
-      <button class="use-btn">Use This</button>
-    `;
+    // ✅ REDIRECT ON CLICK
+    btn.addEventListener("click", () => {
+      window.location.href = `preview.html?template=${templatePath}`;
+    });
 
-    templatesGrid.appendChild(card);
+    templatesGrid.appendChild(btn);
   });
 }
 

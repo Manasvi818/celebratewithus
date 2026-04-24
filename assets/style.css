@@ -84,3 +84,16 @@ body {
   color: white;
   cursor: pointer;
 }
+
+.template-btn {
+  display: block;
+  width: 250px;
+  margin: 10px auto;
+  padding: 15px;
+  border-radius: 10px;
+  border: none;
+  background: #ff8ecf;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
