@@ -36,9 +36,9 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const templatePath = params.get("template");
+const templatePath = decodeURIComponent(params.get("template"));
 
-    const frame = document.getElementById("previewFrame");
+document.getElementById("previewFrame").src = templatePath;
 
     if (templatePath) {
       frame.src = templatePath;

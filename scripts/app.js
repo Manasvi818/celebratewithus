@@ -81,7 +81,7 @@ function showTemplates(vibe) {
 
     // ✅ REDIRECT ON CLICK
     btn.addEventListener("click", () => {
-      window.location.href = `preview.html?template=${templatePath}`;
+      window.location.href = `preview.html?template=${encodeURIComponent(templatePath)}`;
     });
 
     templatesGrid.appendChild(btn);
