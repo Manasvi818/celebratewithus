@@ -68,27 +68,30 @@ const templates = {
   // ===============================
  
   function showTemplates(vibe) {
-    templatesGrid.innerHTML = "";
+  templatesGrid.innerHTML = "";
 
-    const templatesSection = document.getElementById("templates-section");
-    templatesSection.classList.remove("hidden");
+  const templatesSection = document.getElementById("templates-section");
 
-    if (!templates[vibe]) return;
+  // ✅ FORCE DISPLAY
+  templatesSection.style.display = "block";
+  templatesSection.classList.remove("hidden");
 
-    templates[vibe].forEach((templatePath) => {
-      const name = templatePath.split("/")[2].replace(/-/g, " ");
+  if (!templates[vibe]) return;
 
-      const btn = document.createElement("button");
-      btn.classList.add("template-btn");
-      btn.innerText = name;
+  templates[vibe].forEach((templatePath) => {
+    const name = templatePath.split("/")[2].replace(/-/g, " ");
 
-      btn.addEventListener("click", () => {
-        window.location.href = `preview.html?template=${encodeURIComponent(templatePath)}`;
-      });
+    const btn = document.createElement("button");
+    btn.classList.add("template-btn");
+    btn.innerText = name;
 
-      templatesGrid.appendChild(btn);
+    btn.addEventListener("click", () => {
+      window.location.href = `preview.html?template=${encodeURIComponent(templatePath)}`;
     });
-  }
+
+    templatesGrid.appendChild(btn);
+  });
+}
 
   startBtn.addEventListener("click", () => {
     vibeSection.scrollIntoView({ behavior: "smooth" });
