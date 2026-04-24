@@ -82,7 +82,7 @@ const templates = {
     const name = templatePath.split("/")[2].replace(/-/g, " ");
 
     const btn = document.createElement("button");
-    btn.classList.add("template-btn");
+    btn.classList.add("vibe-btn");
     btn.innerText = name;
 
     btn.addEventListener("click", () => {

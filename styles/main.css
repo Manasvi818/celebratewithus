@@ -276,12 +276,19 @@ body {
   z-index: 1;
 }
 .templates h2{ font-size:36px; }
+
 .templates-grid{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 20px;
   margin-top:26px;
   
+}
+
+.templates-grid .vibe-btn {
+  padding: 10px 24px;
+  font-size: 14px;
 }
 
 @media (max-width: 900px) {
