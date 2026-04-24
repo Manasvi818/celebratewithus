@@ -79,7 +79,7 @@ function showTemplates(vibe) {
   if (!templates[vibe]) return;
 
   templates[vibe].forEach((templatePath) => {
-    const name = templatePath.split("/")[2].replace(/-/g, " ");
+    const name = templatePath.split("/")[1].replace(/-/g, " ");
 
     const btn = document.createElement("button");
     btn.classList.add("vibe-btn"); // same style
