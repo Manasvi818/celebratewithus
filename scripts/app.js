@@ -7,21 +7,92 @@
    - Template rendering
    ============================================================ */
 
-// Get DOM elements
+// ===============================
+// DOM ELEMENTS
+// ===============================
 const vibeButtons = document.querySelectorAll(".vibe-btn");
 const startBtn = document.getElementById("startBtn");
-const vibeSection = document.querySelector(".choose-vibe");
 const templatesGrid = document.getElementById("templatesGrid");
+const vibeSection = document.querySelector(".choose-vibe");
 
 // ===============================
-// 1️⃣ Start Button Scroll to Vibes
+// TEMPLATE DATA
+// ===============================
+const templates = {
+  family: [
+    "templates/family/home-happiness/index.html",
+    "templates/family/always-together/index.html",
+    "templates/family/warm-bonds/index.html",
+    "templates/family/cherished-times/index.html",
+    "templates/family/joyful-times/index.html"
+  ],
+
+  romantic: [
+    "templates/romantic/blush-love/index.html",
+    "templates/romantic/candlelight-moments/index.html",
+    "templates/romantic/forever-yours/index.html",
+    "templates/romantic/golden-love/index.html",
+    "templates/romantic/sweet-affection/index.html"
+  ],
+
+  casual: [
+    "templates/casual/easy-breezy/index.html",
+    "templates/casual/everyday-joy/index.html",
+    "templates/casual/simple-delight/index.html",
+    "templates/casual/soft-vibes/index.html",
+    "templates/casual/sunny-smiles/index.html"
+  ],
+
+  traditional: [
+    "templates/traditional/cultural-festive/index.html",
+    "templates/traditional/golden-mandala/index.html",
+    "templates/traditional/royal-aura/index.html",
+    "templates/traditional/sacred-simplicity/index.html",
+    "templates/traditional/vintage-glory/index.html"
+  ],
+
+  fun: [
+    "templates/fun/color-carnival/index.html",
+    "templates/fun/crazy-confetti/index.html",
+    "templates/fun/electric-energy/index.html",
+    "templates/fun/laugh-riot/index.html",
+    "templates/fun/party-pop/index.html"
+  ]
+};
+
+// ===============================
+// RENDER FUNCTION
+// ===============================
+function showTemplates(vibe) {
+  templatesGrid.innerHTML = "";
+
+  if (!templates[vibe]) return;
+
+    templatesSection.classList.remove("hidden");
+
+
+  templates[vibe].forEach((templateSrc) => {
+    const card = document.createElement("div");
+    card.classList.add("template-card");
+
+    card.innerHTML = `
+      <iframe src="${templateSrc}" class="preview-frame" loading="lazy"></iframe>
+      <button class="use-btn">Use This</button>
+    `;
+
+    templatesGrid.appendChild(card);
+  });
+}
+
+// ===============================
+// START BUTTON
 // ===============================
 startBtn.addEventListener("click", () => {
   vibeSection.scrollIntoView({ behavior: "smooth" });
 });
 
 // ===============================
-// 2️⃣ Sticky Shrink Animation
+// SCROLL EFFECT
 // ===============================
 window.addEventListener("scroll", () => {
   if (window.scrollY > 120) {
@@ -32,84 +103,19 @@ window.addEventListener("scroll", () => {
 });
 
 // ===============================
-// 3️⃣ Render Templates
+// DEFAULT LOAD
 // ===============================
-function renderTemplates(vibe) {
-  templatesGrid.innerHTML = "";
-
-  const filtered = window.TEMPLATES.filter(t => t.vibe === vibe);
-
-  filtered.forEach(template => {
-
-    const card = document.createElement("div");
-    card.className = "template-card";
-
-    card.innerHTML = `
-      <img src="${template.image}" alt="${template.title}">
-      <h3>${template.title}</h3>
-    `;
-
-    // ✅ CLICK HANDLER
-    card.addEventListener("click", () => {
-      showPreview(template);
-    });
-
-    templatesGrid.appendChild(card);
-
-  });
-}
-  
-
-    
-
-// Default: show formal templates
-renderTemplates("casual");
+showTemplates("casual");
 
 // ===============================
-// 4️⃣ Vibe Buttons Interaction
+// VIBE BUTTON CLICK
 // ===============================
-const templatesSection = document.getElementById("templates-section");
-
-vibeButtons.forEach(btn => {
+vibeButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
-
-    // Active button UI
-    vibeButtons.forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-
     const vibe = btn.dataset.vibe;
-
-    // Skeleton loading
-    templatesGrid.innerHTML = `
-      <div class='skeleton'></div>
-      <div class='skeleton'></div>
-      <div class='skeleton'></div>
-    `;
-
-    setTimeout(() => {
-
-      // Render templates
-      renderTemplates(vibe);
-
-      // Animate cards
-      document.querySelectorAll(".template-card").forEach((card, i) => {
-        setTimeout(() => card.classList.add("card-anim"), i * 80);
-      });
-
-      // Show section
-      templatesSection.classList.remove("hidden");
-      templatesSection.classList.add("fade-slide");
-
-      templatesSection.scrollIntoView({ behavior: "smooth" });
-
-    }, 350);
+    showTemplates(vibe);
   });
 });
-
-function goBack() {
-  window.history.back();
-}
-
 
 
 
