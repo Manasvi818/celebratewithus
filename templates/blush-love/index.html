@@ -21,6 +21,12 @@ body{
   background:linear-gradient(135deg,#FF8FAB,#FFB7A5);
 }
 
+.feeling-title{
+  font-family: var(--font-cursive);
+  color: var(--text-color, #b34b6a);
+  text-align:center;
+}
+
 #confetti-layer{
   position:fixed;
   inset:0;
@@ -376,9 +382,24 @@ function setTheme(start, end){
     `linear-gradient(135deg,${start},${end})`;
 
   // 🎨 Text colors
-  document.querySelectorAll(".title, .subtitle, .gallery h2")
-    .forEach(el => el.style.color = start);
-document.documentElement.style.setProperty("--text-color", start);
+ // 🎯 Decide readable text color
+let textColor = start;
+
+// If background is very light → use darker pink
+if(end === "#FFFDF9"){
+  textColor = "#b34b6a";   // darker readable pink
+}
+
+// If strong pink theme → slightly darker tone
+else if(start === "#FF5C8A"){
+  textColor = "#a8325c";
+}
+
+// Apply everywhere
+document.querySelectorAll(".title, .subtitle, .gallery h2, .feeling-title")
+  .forEach(el => el.style.color = textColor);
+
+document.documentElement.style.setProperty("--text-color", textColor);
 
   // 🔥 FONT CHANGE LOGIC
 
@@ -531,7 +552,7 @@ width:260px;
 text-align:center;
 ">
 
-<h3 style="color:#ff5c8a;margin-bottom:18px;">
+<h3 style="color:var(--text-color);margin-bottom:18px;">
       Choose your vibe 
     </h3>
 
