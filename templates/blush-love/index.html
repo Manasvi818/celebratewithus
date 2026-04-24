@@ -54,7 +54,7 @@ body{
   padding:30px 20px 10px;
 }
 
-.title, .subtitle, .gallery h2 {
+.title, .subtitle, .gallery h2, .feeling-title {
   color: var(--text-color, #b34b6a);
 }
 
@@ -394,10 +394,6 @@ if(end === "#FFFDF9"){
 else if(start === "#FF5C8A"){
   textColor = "#a8325c";
 }
-
-// Apply everywhere
-document.querySelectorAll(".title, .subtitle, .gallery h2, .feeling-title")
-  .forEach(el => el.style.color = textColor);
 
 document.documentElement.style.setProperty("--text-color", textColor);
 
