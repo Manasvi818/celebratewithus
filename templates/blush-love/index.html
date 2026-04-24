@@ -142,6 +142,19 @@ textarea{
   padding:6px 16px;
   border-radius:20px;
 }
+
+button{
+  border:none;
+  border-radius:20px;
+  padding:10px 20px;
+  cursor:pointer;
+  background:#ff8fab;
+  color:white;
+}
+
+button:hover{
+  background:#ff5c8a;
+}
 </style>
 </head>
 
@@ -197,8 +210,6 @@ Confetti: <span id="confettiState">OFF</span>
 
   <div id="viewerMessage"></div>
 
-  <textarea id="msgInput" placeholder="Write your message 💌"></textarea><br><br>
-  <button onclick="addMessage()">Send Message</button>
 </div>
 
 <script>
@@ -233,7 +244,7 @@ function render(){
 
     div.innerHTML = `
   <img src="${x.url}">
-  <button class="img-msg">tap gently</button>
+ <button class="img-msg" onclick="showSweetMessage()">tap gently</button>
   <div class="caption">${x.caption}</div>
 `;
 
@@ -311,8 +322,11 @@ function setTheme(start, end){
 }
 
 function openTheme(){
-  themeIndex = (themeIndex + 1) % themes.length;
-  setTheme(themes[themeIndex].start, themes[themeIndex].end);
+  document.getElementById("themePanel").style.display = "flex";
+}
+
+function closeTheme(){
+  document.getElementById("themePanel").style.display = "none";
 }
 
 /* MUSIC (DEMO ONLY — NO REAL SOUND) */
@@ -334,6 +348,16 @@ function toggleMusic(){
   playing=!playing;
   alert(playing ? "Music Playing 🎵" : "Music Paused ⏸");
 }
+
+function showSweetMessage(){
+  const msgs = [
+    "This moment feels like magic 💖",
+    "Some memories stay forever ✨",
+    "This is one of those perfect moments 💗"
+  ];
+
+  alert(msgs[Math.floor(Math.random()*msgs.length)]);
+}
 </script>
 <div id="musicPanel" style="
 position:fixed;
@@ -353,9 +377,70 @@ text-align:center;
 
 <h3>Background Music 🎶</h3>
 
-<button onclick="toggleMusic()">▶ Play Music</button>
+<button style="
+width:100%;
+padding:12px;
+border-radius:18px;
+background:#ff8fab;
+color:white;
+border:none;
+" onclick="toggleMusic()">
+▶ Play Music
+</button>
+
 <br><br>
 <button onclick="closeMusic()">Close</button>
+
+</div>
+</div>
+
+<div id="themePanel" style="
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.35);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+
+<div style="
+background:white;
+padding:24px;
+border-radius:26px;
+width:260px;
+text-align:center;
+">
+
+<h3 style="color:#ff5c8a;margin-bottom:18px;">
+      Choose your vibe 
+    </h3>
+
+<button class="theme-btn" onclick="setTheme('#FF8FAB','#FFB7A5')">
+ Soft Strawberry →  Peach
+</button>
+
+<button class="theme-btn" onclick="setTheme('#FF5C8A','#FFD6E8')">
+ Strong Pink → Baby
+</button>
+
+<button class="theme-btn" onclick="setTheme('#FF8FAB','#FFFDF9')">
+ Strawberry → Vanilla
+</button>
+
+<button class="theme-btn" onclick="setTheme('#FFB7A5','#FFFDF9')">
+ Peach → Vanilla
+</button>
+
+<button class="theme-btn" onclick="setTheme('#FF5C8A','#FFB7A5')">
+ Bold Love Blend
+</button>
+
+<br><br>
+<button onclick="closeTheme()">Close</button>
+
+  </div>
+</div>
 
 </div>
 </div>
