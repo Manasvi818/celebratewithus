@@ -179,9 +179,6 @@ button{
     </button>
 
     <!-- ✅ PASSWORD TEXT -->
-    <p style="margin-top:10px;font-size:13px;color:#ffd27d;">
-      Demo Password: <b>123</b>
-    </p>
 
     <p id="wrongPass" style="display:none;color:#ff9f1a;margin-top:8px;">
       Wrong password
@@ -230,20 +227,12 @@ button{
   <div class="btn" id="spark">Sparkles</div>
 </div>
 
-
+<p style="margin-top:10px;font-size:13px;color:#ffd27d;">
+  Demo Password: <b>123</b>
+</p>
 
 <script>
-function checkPassword(){
-  const input = document.getElementById("passInput").value;
 
-  if(input === "123"){
-    document.getElementById("lockScreen").style.display = "none";
-  } else {
-    document.getElementById("wrongPass").style.display = "block";
-  }
-}
-
-/* DATA */
 let data = [
   {
     type:"image",
@@ -263,6 +252,28 @@ let data = [
     caption:"A moving moment"
   }
 ];
+
+let messages = `You are my calm place 🤍
+---
+Every moment feels warm 🕯️
+---
+Some memories glow forever ✨`;
+
+let music = "";
+let PASS = "123";
+    
+function checkPassword(){
+  const input = document.getElementById("passInput").value;
+
+  if(input === "123"){
+    document.getElementById("lockScreen").style.display = "none";
+  } else {
+    document.getElementById("wrongPass").style.display = "block";
+  }
+}
+
+/* DATA */
+
 
 const grid = document.getElementById("grid");
 
@@ -308,11 +319,14 @@ msg.innerHTML = `
 💌 Some memories glow forever ✨
 `;
 
-/* MUSIC */
-let playing=false;
-music.onclick=()=>{
-  playing=!playing;
-  music.innerText=playing?"Pause":"Music";
+/* MUSIC (DEMO MODE FIX) */
+let playing = false;
+
+const musicBtn = document.getElementById("music");
+
+musicBtn.onclick = () => {
+  playing = !playing;
+  musicBtn.innerText = playing ? "⏸ Music" : "🎶 Music";
 };
 
 /* SPARK */
