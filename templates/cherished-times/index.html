@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cherished Times — Demo</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===================== BASIC ===================== */
+
+body{
+  margin:0;
+  font-family:'Playfair Display', serif;
+  background:linear-gradient(135deg,#dfe8d8,#cbd8c1);
+  color:#2f3a2f;
+}
+
+.page{
+  max-width:1000px;
+  margin:auto;
+  padding:20px;
+}
+
+/* ===================== TITLE ===================== */
+
+.bigTitle{
+  text-align:center;
+  font-size:50px;
+  color:#6f8168;
+}
+
+.subTitle{
+  text-align:center;
+  color:#5d6a5b;
+}
+
+/* ===================== BUTTONS ===================== */
+
+.topBtns{
+  position:fixed;
+  right:15px;
+  top:15px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+button{
+  padding:10px;
+  border:none;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+.floatingBtn{
+  background:#6f8168;
+  color:white;
+}
+
+/* ===================== GALLERY ===================== */
+
+.galleryGrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.photoCard{
+  background:white;
+  border-radius:15px;
+  padding:10px;
+}
+
+.photoFrame img{
+  width:100%;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.photoCaption{
+  margin-top:5px;
+  font-size:14px;
+}
+
+.surpriseBtn{
+  margin-top:5px;
+  background:#6f8168;
+  color:white;
+}
+
+/* ===================== MESSAGES ===================== */
+
+.stickyNote{
+  background:white;
+  padding:10px;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+/* ===================== OVERLAY ===================== */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal{
+  background:white;
+  padding:20px;
+  border-radius:15px;
+  text-align:center;
+}
+
+/* ===================== PASSWORD ===================== */
+
+#passwordOverlay{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#dfe8d8;
+}
+
+.passCard{
+  background:white;
+  padding:20px;
+  border-radius:15px;
+  text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- PASSWORD -->
+<div id="passwordOverlay">
+  <div class="passCard">
+    <h2>Enter Password</h2>
+    <p>Demo Password: <b>123</b></p>
+    <input id="pass" type="password">
+    <br><br>
+    <button onclick="unlock()">Unlock</button>
+    <p id="wrongPass" style="color:red;display:none;">Wrong password</p>
+  </div>
+</div>
+
+<!-- BUTTONS -->
+<div class="topBtns">
+  <button class="floatingBtn" onclick="openDecor()">Decor</button>
+  <button class="floatingBtn" onclick="openMusic()">Music</button>
+</div>
+
+<div class="page">
+
+<h1 class="bigTitle">CHERISHED TIMES</h1>
+<p class="subTitle">Love that lasts through quiet moments</p>
+
+<!-- GALLERY -->
+<div class="galleryGrid" id="gallery"></div>
+
+<!-- MESSAGES -->
+<h2 style="text-align:center;">Thoughts</h2>
+<div id="messages"></div>
+
+</div>
+
+<!-- SURPRISE -->
+<div class="overlay" id="surpriseBox">
+  <div class="modal">
+    <p id="surpriseText"></p>
+    <button onclick="closeSurprise()">Close</button>
+  </div>
+</div>
+
+<!-- ZOOM -->
+<div class="overlay" id="zoomBox">
+  <img id="zoomImg" style="max-width:90%;">
+</div>
+
+<!-- MUSIC -->
+<div class="overlay" id="musicBox">
+  <div class="modal">
+    <h3>Music</h3>
+    <button id="musicBtn" onclick="toggleMusic()">▶ Play</button>
+    <br><br>
+    <button onclick="closeMusic()">Close</button>
+  </div>
+</div>
+
+<!-- DECOR -->
+<div class="overlay" id="decorBox">
+  <div class="modal">
+    <h3>Theme</h3>
+    <button onclick="setDay()">Day</button>
+    <button onclick="setNight()">Night</button>
+    <br><br>
+    <button onclick="closeDecor()">Close</button>
+  </div>
+</div>
+
+<script>
+
+/* ================= PASSWORD ================= */
+
+function unlock(){
+  if(document.getElementById("pass").value==="123"){
+    passwordOverlay.style.display="none";
+  }else{
+    wrongPass.style.display="block";
+  }
+}
+
+/* ================= DATA ================= */
+
+let images=[
+  {url:"https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",caption:"Memory 🌿"},
+  {url:"https://images.unsplash.com/photo-1517841905240-472988babdf9",caption:"Smile 🤍"},
+  {url:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",caption:"Peace ✨"},
+  {url:"https://images.unsplash.com/photo-1492724441997-5dc865305da7",caption:"Golden 💛"}
+];
+
+let messages=[
+  "You are my calm 🌿",
+  "Forever memories 🤍",
+  "Soft love ✨"
+];
+
+/* ================= RENDER ================= */
+
+let gallery=document.getElementById("gallery");
+
+images.forEach((img,i)=>{
+  let div=document.createElement("div");
+  div.className="photoCard";
+
+  div.innerHTML=`
+    <div class="photoFrame">
+      <img src="${img.url}" onclick="zoom('${img.url}')">
+    </div>
+    <button class="surpriseBtn" onclick="surprise()">Surprise</button>
+    <div class="photoCaption">${img.caption}</div>
+  `;
+
+  gallery.appendChild(div);
+});
+
+/* ================= MESSAGES ================= */
+
+let msgBox=document.getElementById("messages");
+
+messages.forEach(m=>{
+  let div=document.createElement("div");
+  div.className="stickyNote";
+  div.innerText=m;
+  msgBox.appendChild(div);
+});
+
+/* ================= SURPRISE ================= */
+
+let texts=["So special 💛","Beautiful memory ✨","Forever moment 🤍"];
+
+function surprise(){
+  surpriseText.innerText=texts[Math.floor(Math.random()*texts.length)];
+  surpriseBox.style.display="flex";
+}
+
+function closeSurprise(){
+  surpriseBox.style.display="none";
+}
+
+/* ================= ZOOM ================= */
+
+function zoom(src){
+  zoomImg.src=src;
+  zoomBox.style.display="flex";
+}
+
+zoomBox.onclick=()=>zoomBox.style.display="none";
+
+/* ================= MUSIC ================= */
+
+let audio=new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
+audio.loop=true;
+let playing=false;
+
+function openMusic(){musicBox.style.display="flex";}
+function closeMusic(){musicBox.style.display="none";}
+
+function toggleMusic(){
+  if(playing){
+    audio.pause();
+    musicBtn.innerText="▶ Play";
+  }else{
+    audio.play();
+    musicBtn.innerText="⏸ Pause";
+  }
+  playing=!playing;
+}
+
+/* ================= DECOR ================= */
+
+function openDecor(){decorBox.style.display="flex";}
+function closeDecor(){decorBox.style.display="none";}
+
+function setDay(){
+  document.body.style.background="#dfe8d8";
+}
+
+function setNight(){
+  document.body.style.background="#1a1f1a";
+  document.body.style.color="white";
+}
+
+</script>
+
+</body>
+</html>

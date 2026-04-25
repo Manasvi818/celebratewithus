@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Candlelight Demo</title>
+
+<style>
+body{
+  margin:0;
+  background:#0d0503;
+  color:#ffd8a8;
+  font-family:sans-serif;
+}
+
+/* LOCK */
+#lock{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#0d0503;
+}
+.box{
+  background:#1a0f0a;
+  padding:20px;
+  border-radius:15px;
+  text-align:center;
+}
+input{
+  padding:10px;
+  width:100%;
+}
+button{
+  margin-top:10px;
+  padding:10px;
+  background:#ffb703;
+  border:none;
+}
+
+/* GALLERY */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  padding:20px;
+}
+img{
+  width:100%;
+  cursor:pointer;
+}
+
+/* MESSAGE */
+.msg{
+  padding:20px;
+  text-align:center;
+}
+
+/* CONTROLS */
+.controls{
+  position:fixed;
+  top:10px;
+  right:10px;
+}
+.btn{
+  background:#ffb703;
+  padding:8px;
+  margin:5px;
+  cursor:pointer;
+}
+
+/* SPARK */
+.spark{
+  position:fixed;
+  width:5px;
+  height:5px;
+  background:#ffd27d;
+  border-radius:50%;
+  animation:up 4s linear;
+}
+@keyframes up{
+  from{transform:translateY(100vh);}
+  to{transform:translateY(-10vh);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div id="lock">
+  <div class="box">
+    <h3>Password</h3>
+    <input id="pass">
+    <p>Demo password: 123</p>
+    <button onclick="login()">Enter</button>
+    <p id="err" style="display:none;color:red;">Wrong</p>
+  </div>
+</div>
+
+<h1 style="text-align:center;">Candlelight Moments</h1>
+
+<div class="grid" id="grid"></div>
+
+<div class="msg" id="msg"></div>
+
+<div class="controls">
+  <div class="btn" id="music">Music</div>
+  <div class="btn" id="spark">Sparkles</div>
+</div>
+
+<script>
+function login(){
+  if(pass.value=="123"){
+    lock.style.display="none";
+  }else{
+    err.style.display="block";
+  }
+}
+
+/* DATA */
+let data=[
+  "https://images.unsplash.com/photo-1519681393784-d120267933ba",
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
+];
+
+data.forEach(src=>{
+  let img=document.createElement("img");
+  img.src=src;
+  grid.appendChild(img);
+});
+
+msg.innerHTML="You are my calm place 🤍<br><br>Memories glow forever ✨";
+
+/* MUSIC */
+let playing=false;
+music.onclick=()=>{
+  playing=!playing;
+  music.innerText=playing?"Pause":"Music";
+};
+
+/* SPARK */
+let on=false,inter;
+spark.onclick=()=>{
+  on=!on;
+  if(on){
+    inter=setInterval(()=>{
+      let s=document.createElement("div");
+      s.className="spark";
+      s.style.left=Math.random()*100+"vw";
+      document.body.appendChild(s);
+      setTimeout(()=>s.remove(),4000);
+    },300);
+  }else clearInterval(inter);
+};
+</script>
+
+</body>
+</html>
