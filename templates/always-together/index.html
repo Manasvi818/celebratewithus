@@ -143,6 +143,12 @@ body.night{
   padding:8px 14px;
   border-radius:20px;
   color:white;
+  font-size:20px;
+display:flex;
+align-items:center;
+justify-content:center;
+width:60px;
+height:40px;
 }
 
 /* MUSIC BUTTON */
@@ -155,6 +161,13 @@ body.night{
   padding:8px 14px;
   border-radius:20px;
   color:white;
+
+  font-size:20px;
+display:flex;
+align-items:center;
+justify-content:center;
+width:60px;
+height:40px;
 }
 
 /* DECOR */
@@ -240,8 +253,13 @@ body.night .musicBtn{
 </div>
 
 <!-- BUTTONS -->
-<button class="decorBtn" onclick="openDecor()">Decor</button>
-<button class="musicBtn" onclick="toggleMusic()">Music Off</button>
+<button class="decorBtn" onclick="openDecor()">
+  🏠💖
+</button>
+
+<button class="musicBtn" onclick="toggleMusic()" id="musicBtn">
+  🎵
+</button>
 
 <h1 class="title">Always Together</h1>
 <p class="subtitle">A collection of cherished moments</p>
@@ -498,16 +516,21 @@ function setNight(){
 /* FAKE MUSIC */
 let audio = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
 audio.loop = true;
-function toggleMusic(){
-  music=!music;
-  document.querySelector(".musicBtn").innerText = music ? "Music On" : "Music Off";
-}
 
-decorOverlay.onclick = (e) => {
-  if(e.target === decorOverlay){
-    decorOverlay.style.display = "none";
+function toggleMusic(){
+  music = !music;
+
+  const btn = document.getElementById("musicBtn");
+
+  if(music){
+    audio.play();
+    btn.innerHTML = "🎶";   // playing
+  } else {
+    audio.pause();
+    btn.innerHTML = "🎵";   // paused
   }
-};
+}
+;
 </script>
 
 </body>

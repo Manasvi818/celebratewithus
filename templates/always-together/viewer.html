@@ -462,6 +462,25 @@ body.night #msgText{color:#ffe4ec;}
     gap:8px;
   }
 }
+
+.iconBtn{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+
+  width:80px;
+  height:70px;
+  padding:6px;
+
+  font-size:12px;
+  line-height:1;
+}
+
+.iconBtn div{
+  font-size:22px;
+}
 </style>
 </head>
 
@@ -477,9 +496,14 @@ body.night #msgText{color:#ffe4ec;}
 </div>
 
 <div class="page">
-<button id="decorBtn" class="decorBtn"> Decorations</button>
-<button id="musicOpenBtn" class="decorBtn" style="top:70px;">
-   Music
+<button id="decorBtn" class="decorBtn iconBtn">
+  <span>Decor</span>
+  <div>🏠💖</div>
+</button>
+
+<button id="musicOpenBtn" class="decorBtn iconBtn" style="top:90px;">
+  <span>Music</span>
+  <div id="musicIcon">🎵</div>
 </button>
 <div class="title-wrap">
   <h1 class="hero-title soft-title">Always Together</h1>
@@ -631,12 +655,12 @@ function toggleMusic(){
   }
 
   if(isPlaying){
-    bgAudio.pause();
-    musicBtn.textContent = "▶ Play Music";
-  }else{
-    bgAudio.play();
-    musicBtn.textContent = "⏸ Pause Music";
-  }
+  bgAudio.pause();
+  icon.innerHTML = "🎵";   // paused
+}else{
+  bgAudio.play();
+  icon.innerHTML = "🎶";   // playing
+}
 
   isPlaying = !isPlaying;
 }
