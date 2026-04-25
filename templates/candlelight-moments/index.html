@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 <title>Candlelight Demo</title>
 
 <style>
@@ -10,7 +12,8 @@ body{
   margin:0;
   background:#0d0503;
   color:#ffd8a8;
-  font-family:sans-serif;
+    font-family:'Poppins', sans-serif;
+
 }
 
 /* LOCK */
@@ -46,9 +49,18 @@ button{
   gap:10px;
   padding:20px;
 }
-img{
+.card{
+  background:rgba(255,255,255,0.08);
+  border-radius:18px;
+  overflow:hidden;
+  backdrop-filter:blur(6px);
+  box-shadow:0 10px 30px rgba(0,0,0,.6);
+}
+
+.card img,
+.card video{
   width:100%;
-  cursor:pointer;
+  display:block;
 }
 
 /* MESSAGE */
@@ -83,54 +95,218 @@ img{
   from{transform:translateY(100vh);}
   to{transform:translateY(-10vh);opacity:0;}
 }
+
+.pass-wrap{
+  position:relative;
+}
+
+.pass-wrap input{
+  padding-right:40px;
+}
+
+.pass-wrap span{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  color:#ffb703;
+}
 </style>
 </head>
 
 <body>
+<h2 style="
+  text-align:center;
+  font-family:'Allura',cursive;
+  font-size:48px;
+  margin-top:40px;
+  opacity:0.9;
+">
+  Moments by the flame
+</h2>
 
-<div id="lock">
-  <div class="box">
-    <h3>Password</h3>
-    <input id="pass">
-    <p>Demo password: 123</p>
-    <button onclick="login()">Enter</button>
-    <p id="err" style="display:none;color:red;">Wrong</p>
+<h2 style="
+  text-align:center;
+  font-family:'Allura',cursive;
+  font-size:48px;
+  margin-top:20px;
+  opacity:0.9;
+">
+  Leave a little feeling here
+</h2>
+
+<div id="lockScreen" style="
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at center,#2b160c,#0d0503);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+">
+
+  <div style="
+    background:rgba(255,190,120,.12);
+    padding:34px;
+    border-radius:26px;
+    text-align:center;
+    color:#ffd8a8;
+    box-shadow:
+      0 0 40px rgba(255,180,90,.35),
+      inset 0 0 20px rgba(255,200,120,.15);
+    width:300px;
+  ">
+
+    <h3 style="margin-bottom:10px;">Private Candlelight</h3>
+
+    <div class="pass-wrap">
+      <input id="passInput" type="password" placeholder="Enter password">
+      <span id="togglePass">👁️</span>
+    </div>
+
+    <button onclick="checkPassword()" style="
+      margin-top:18px;
+      padding:12px 26px;
+      border-radius:30px;
+      border:none;
+      background:#ffb703;
+      font-weight:500;
+      cursor:pointer;
+      box-shadow:0 6px 20px rgba(255,180,60,.4);
+    ">
+      Enter 🕯️
+    </button>
+
+    <!-- ✅ PASSWORD TEXT -->
+    <p style="margin-top:10px;font-size:13px;color:#ffd27d;">
+      Demo Password: <b>123</b>
+    </p>
+
+    <p id="wrongPass" style="display:none;color:#ff9f1a;margin-top:8px;">
+      Wrong password
+    </p>
+
   </div>
 </div>
 
-<h1 style="text-align:center;">Candlelight Moments</h1>
+<h1 style="
+  font-family:'Allura',cursive;
+  text-align:center;
+  font-size:60px;
+  color:#ffb703;
+  text-shadow:
+    0 0 20px rgba(255,180,60,.6),
+    0 0 40px rgba(255,140,40,.4);
+  margin-top:30px;
+">
+  Candlelight Moments
+</h1>
+
+<p style="
+  text-align:center;
+  letter-spacing:3px;
+  color:#ffe6c7;
+  margin-top:5px;
+">
+  SOME MEMORIES DON’T SPEAK — THEY GLOW QUIETLY IN THE DARK.
+</p>
 
 <div class="grid" id="grid"></div>
 
-<div class="msg" id="msg"></div>
+<div style="
+  width:90%;
+  box-shadow:0 0 35px rgba(255,180,90,.35);
+  margin:30px auto;
+  padding:20px;
+  border-radius:20px;
+  background:rgba(255,190,120,.1);
+  text-align:center;
+  
+" id="msg"></div>
 
 <div class="controls">
   <div class="btn" id="music">Music</div>
   <div class="btn" id="spark">Sparkles</div>
 </div>
 
+
+
 <script>
-function login(){
-  if(pass.value=="123"){
-    lock.style.display="none";
-  }else{
-    err.style.display="block";
+function checkPassword(){
+  const input = document.getElementById("passInput").value;
+
+  if(input === "123"){
+    document.getElementById("lockScreen").style.display = "none";
+  } else {
+    document.getElementById("wrongPass").style.display = "block";
   }
 }
 
 /* DATA */
-let data=[
-  "https://images.unsplash.com/photo-1519681393784-d120267933ba",
-  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
+let data = [
+  {
+    type:"image",
+    url:"https://images.unsplash.com/photo-1519681393784-d120267933ba",
+    caption:"A quiet candle night",
+    memory:"That peaceful night 🤍"
+  },
+  {
+    type:"image",
+    url:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+    caption:"Golden memories",
+    memory:"Everything felt warm ✨"
+  },
+  {
+    type:"video",
+    url:"https://www.w3schools.com/html/mov_bbb.mp4",
+    caption:"A moving moment"
+  }
 ];
 
-data.forEach(src=>{
-  let img=document.createElement("img");
-  img.src=src;
-  grid.appendChild(img);
+const grid = document.getElementById("grid");
+
+data.forEach(item => {
+  let card = document.createElement("div");
+card.className = "card";
+
+  let media;
+  if(item.type === "video"){
+    media = document.createElement("video");
+    media.src = item.url;
+    media.controls = true;
+  } else {
+    media = document.createElement("img");
+    media.src = item.url;
+  }
+
+  card.appendChild(media);
+
+  let cap = document.createElement("div");
+  cap.innerText = item.caption;
+  cap.style.textAlign = "center";
+  cap.style.padding = "8px";
+
+  card.appendChild(cap);
+
+  if(item.memory){
+  let mem = document.createElement("div");
+  mem.innerText = "🕯️ " + item.memory;
+  mem.style.fontSize = "13px";
+  mem.style.opacity = "0.8";
+  mem.style.textAlign = "center";
+  mem.style.paddingBottom = "10px";
+  card.appendChild(mem);
+}
+
+  grid.appendChild(card);
 });
 
-msg.innerHTML="You are my calm place 🤍<br><br>Memories glow forever ✨";
+msg.innerHTML = `
+💌 You are my calm place 🤍 <br><br>
+💌 Every moment feels warm 🕯️ <br><br>
+💌 Some memories glow forever ✨
+`;
 
 /* MUSIC */
 let playing=false;
@@ -152,6 +328,15 @@ spark.onclick=()=>{
       setTimeout(()=>s.remove(),4000);
     },300);
   }else clearInterval(inter);
+};
+
+const passInput = document.getElementById("passInput");
+const togglePass = document.getElementById("togglePass");
+
+togglePass.onclick = () => {
+  const hidden = passInput.type === "password";
+  passInput.type = hidden ? "text" : "password";
+  togglePass.innerText = hidden ? "🙈" : "👁️";
 };
 </script>
 

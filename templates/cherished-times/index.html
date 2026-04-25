@@ -1,76 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Cherished Times — Demo</title>
+<title>Cherished Times — Demo Viewer</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Allura&display=swap" rel="stylesheet">
 
 <style>
 
-/* ===================== BASIC ===================== */
+/* ===== ROOT (same as viewer) ===== */
+:root{
+  --sage:#7f8f77;
+  --card:#eef3ea;
+  --card2:#f7faf5;
+  --text:#2f3a2f;
+  --muted:#5d6a5b;
+  --border:#cdd8c8;
+}
 
+/* ===== BODY ===== */
 body{
   margin:0;
-  font-family:'Playfair Display', serif;
+  font-family:'Playfair Display',serif;
   background:linear-gradient(135deg,#dfe8d8,#cbd8c1);
-  color:#2f3a2f;
 }
 
-.page{
-  max-width:1000px;
-  margin:auto;
-  padding:20px;
+/* ===== LEAF BACKGROUND ===== */
+.leaves{
+  position:fixed;
+  inset:0;
+  opacity:.25;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cg fill='none' stroke='%237a8b74' stroke-opacity='.2' stroke-width='2'%3E%3Cpath d='M60 120c40-55 90-55 130 0'/%3E%3C/g%3E%3C/svg%3E");
 }
 
-/* ===================== TITLE ===================== */
-
-.bigTitle{
-  text-align:center;
-  font-size:50px;
-  color:#6f8168;
-}
-
-.subTitle{
-  text-align:center;
-  color:#5d6a5b;
-}
-
-/* ===================== BUTTONS ===================== */
-
+/* ===== BUTTONS ===== */
 .topBtns{
   position:fixed;
-  right:15px;
   top:15px;
+  right:15px;
   display:flex;
   flex-direction:column;
   gap:10px;
 }
 
-button{
-  padding:10px;
+.floatingBtn{
+  background:linear-gradient(#8ea086,#6f8168);
+  color:white;
   border:none;
-  border-radius:20px;
+  padding:10px 15px;
+  border-radius:999px;
   cursor:pointer;
 }
 
-.floatingBtn{
-  background:#6f8168;
-  color:white;
+/* ===== TITLE ===== */
+.titleWrap{text-align:center;margin-top:20px;}
+.bigTitle{font-size:60px;color:#8ea086;}
+.subTitle{font-family:"Allura";}
+
+/* ===== PANEL ===== */
+.panel{
+  background:rgba(255,255,255,0.5);
+  border-radius:20px;
+  padding:15px;
 }
 
-/* ===================== GALLERY ===================== */
-
+/* ===== GRID ===== */
 .galleryGrid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
-  gap:12px;
+  gap:10px;
 }
 
 .photoCard{
-  background:white;
+  background:var(--card2);
   border-radius:15px;
   padding:10px;
 }
@@ -83,58 +87,47 @@ button{
 
 .photoCaption{
   margin-top:5px;
-  font-size:14px;
 }
 
 .surpriseBtn{
-  margin-top:5px;
+  width:100%;
   background:#6f8168;
   color:white;
+  border:none;
+  margin-top:5px;
+  padding:8px;
 }
 
-/* ===================== MESSAGES ===================== */
-
-.stickyNote{
-  background:white;
-  padding:10px;
-  border-radius:10px;
-  margin-top:10px;
-}
-
-/* ===================== OVERLAY ===================== */
-
+/* ===== OVERLAY ===== */
 .overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.6);
   display:none;
-  align-items:center;
   justify-content:center;
+  align-items:center;
+  background:rgba(0,0,0,0.6);
 }
 
 .modal{
   background:white;
   padding:20px;
   border-radius:15px;
-  text-align:center;
 }
 
-/* ===================== PASSWORD ===================== */
-
+/* ===== PASSWORD ===== */
 #passwordOverlay{
   position:fixed;
   inset:0;
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   background:#dfe8d8;
 }
 
 .passCard{
   background:white;
   padding:20px;
-  border-radius:15px;
-  text-align:center;
+  border-radius:20px;
 }
 
 </style>
@@ -142,184 +135,119 @@ button{
 
 <body>
 
+<div class="leaves"></div>
+
 <!-- PASSWORD -->
 <div id="passwordOverlay">
   <div class="passCard">
     <h2>Enter Password</h2>
     <p>Demo Password: <b>123</b></p>
-    <input id="pass" type="password">
-    <br><br>
+    <input id="pass">
     <button onclick="unlock()">Unlock</button>
-    <p id="wrongPass" style="color:red;display:none;">Wrong password</p>
+    <p id="wrongPass" style="display:none;color:red;">Wrong</p>
   </div>
 </div>
 
 <!-- BUTTONS -->
 <div class="topBtns">
-  <button class="floatingBtn" onclick="openDecor()">Decor</button>
-  <button class="floatingBtn" onclick="openMusic()">Music</button>
+  <button class="floatingBtn" onclick="decorOverlay.style.display='flex'">Decorations</button>
+  <button class="floatingBtn" onclick="musicOverlay.style.display='flex'">Music</button>
 </div>
 
-<div class="page">
-
+<div class="titleWrap">
 <h1 class="bigTitle">CHERISHED TIMES</h1>
 <p class="subTitle">Love that lasts through quiet moments</p>
-
-<!-- GALLERY -->
-<div class="galleryGrid" id="gallery"></div>
-
-<!-- MESSAGES -->
-<h2 style="text-align:center;">Thoughts</h2>
-<div id="messages"></div>
-
 </div>
+
+<div class="panel">
+<div class="galleryGrid" id="photoGrid"></div>
+</div>
+
+<h2 style="text-align:center;">Thoughts</h2>
+<div id="messageList"></div>
 
 <!-- SURPRISE -->
-<div class="overlay" id="surpriseBox">
-  <div class="modal">
-    <p id="surpriseText"></p>
-    <button onclick="closeSurprise()">Close</button>
-  </div>
+<div class="overlay" id="msgOverlay">
+<div class="modal">
+<p id="msgText"></p>
+<button onclick="msgOverlay.style.display='none'">Close</button>
 </div>
-
-<!-- ZOOM -->
-<div class="overlay" id="zoomBox">
-  <img id="zoomImg" style="max-width:90%;">
 </div>
 
 <!-- MUSIC -->
-<div class="overlay" id="musicBox">
-  <div class="modal">
-    <h3>Music</h3>
-    <button id="musicBtn" onclick="toggleMusic()">▶ Play</button>
-    <br><br>
-    <button onclick="closeMusic()">Close</button>
-  </div>
+<div class="overlay" id="musicOverlay">
+<div class="modal">
+<button onclick="toggleMusic()" id="musicBtn">▶ Play</button>
+</div>
 </div>
 
 <!-- DECOR -->
-<div class="overlay" id="decorBox">
-  <div class="modal">
-    <h3>Theme</h3>
-    <button onclick="setDay()">Day</button>
-    <button onclick="setNight()">Night</button>
-    <br><br>
-    <button onclick="closeDecor()">Close</button>
-  </div>
+<div class="overlay" id="decorOverlay">
+<div class="modal">
+<button onclick="setNight()">Night</button>
+<button onclick="setDay()">Day</button>
+</div>
 </div>
 
 <script>
 
-/* ================= PASSWORD ================= */
-
+/* PASSWORD */
 function unlock(){
-  if(document.getElementById("pass").value==="123"){
+  if(pass.value==="123"){
     passwordOverlay.style.display="none";
   }else{
     wrongPass.style.display="block";
   }
 }
 
-/* ================= DATA ================= */
-
-let images=[
-  {url:"https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",caption:"Memory 🌿"},
-  {url:"https://images.unsplash.com/photo-1517841905240-472988babdf9",caption:"Smile 🤍"},
-  {url:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",caption:"Peace ✨"},
-  {url:"https://images.unsplash.com/photo-1492724441997-5dc865305da7",caption:"Golden 💛"}
+/* DATA */
+let data=[
+{url:"https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",caption:"Memory 🌿"},
+{url:"https://images.unsplash.com/photo-1517841905240-472988babdf9",caption:"Smile 🤍"}
 ];
 
-let messages=[
-  "You are my calm 🌿",
-  "Forever memories 🤍",
-  "Soft love ✨"
-];
+let messages=["Forever","Memories"];
 
-/* ================= RENDER ================= */
-
-let gallery=document.getElementById("gallery");
-
-images.forEach((img,i)=>{
-  let div=document.createElement("div");
-  div.className="photoCard";
-
-  div.innerHTML=`
+/* RENDER */
+data.forEach(x=>{
+  let d=document.createElement("div");
+  d.className="photoCard";
+  d.innerHTML=`
     <div class="photoFrame">
-      <img src="${img.url}" onclick="zoom('${img.url}')">
+      <img src="${x.url}">
     </div>
-    <button class="surpriseBtn" onclick="surprise()">Surprise</button>
-    <div class="photoCaption">${img.caption}</div>
+    <button class="surpriseBtn" onclick="showRandom()">Surprise</button>
+    <div class="photoCaption">${x.caption}</div>
   `;
-
-  gallery.appendChild(div);
+  photoGrid.appendChild(d);
 });
 
-/* ================= MESSAGES ================= */
-
-let msgBox=document.getElementById("messages");
-
+/* MESSAGES */
 messages.forEach(m=>{
-  let div=document.createElement("div");
-  div.className="stickyNote";
-  div.innerText=m;
-  msgBox.appendChild(div);
+  let d=document.createElement("div");
+  d.innerText=m;
+  messageList.appendChild(d);
 });
 
-/* ================= SURPRISE ================= */
-
-let texts=["So special 💛","Beautiful memory ✨","Forever moment 🤍"];
-
-function surprise(){
-  surpriseText.innerText=texts[Math.floor(Math.random()*texts.length)];
-  surpriseBox.style.display="flex";
+/* SURPRISE */
+function showRandom(){
+  msgText.innerText="Beautiful memory ✨";
+  msgOverlay.style.display="flex";
 }
 
-function closeSurprise(){
-  surpriseBox.style.display="none";
-}
-
-/* ================= ZOOM ================= */
-
-function zoom(src){
-  zoomImg.src=src;
-  zoomBox.style.display="flex";
-}
-
-zoomBox.onclick=()=>zoomBox.style.display="none";
-
-/* ================= MUSIC ================= */
-
+/* MUSIC */
 let audio=new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
-audio.loop=true;
 let playing=false;
 
-function openMusic(){musicBox.style.display="flex";}
-function closeMusic(){musicBox.style.display="none";}
-
 function toggleMusic(){
-  if(playing){
-    audio.pause();
-    musicBtn.innerText="▶ Play";
-  }else{
-    audio.play();
-    musicBtn.innerText="⏸ Pause";
-  }
+  if(playing){audio.pause();musicBtn.innerText="▶ Play";}
+  else{audio.play();musicBtn.innerText="⏸ Pause";}
   playing=!playing;
 }
 
-/* ================= DECOR ================= */
-
-function openDecor(){decorBox.style.display="flex";}
-function closeDecor(){decorBox.style.display="none";}
-
-function setDay(){
-  document.body.style.background="#dfe8d8";
-}
-
-function setNight(){
-  document.body.style.background="#1a1f1a";
-  document.body.style.color="white";
-}
+/* DECOR */
+function setNight(){document.body.style.background="#111";}
+function setDay(){document.body.style.background="#dfe8d8";}
 
 </script>
 
