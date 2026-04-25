@@ -56,8 +56,23 @@ body{
 
 /* ===== TITLE ===== */
 .titleWrap{text-align:center;margin-top:20px;}
-.bigTitle{font-size:60px;color:#8ea086;}
-.subTitle{font-family:"Allura";}
+
+.bigTitle{
+  color:#8ea086;
+  font-size:clamp(2.5rem,8vw,6rem);
+  font-weight:700;
+  letter-spacing:2px;
+  text-shadow:
+    0 0 18px rgba(110,158,42,0.6),
+    0 0 40px rgba(184,248,148,0.45);
+}
+
+.subTitle{
+  font-family:"Allura",cursive;
+  font-size:18px;
+  color:#5d6a5b;
+  letter-spacing:2px;
+}
 
 /* ===== PANEL ===== */
 .panel{
@@ -91,11 +106,14 @@ body{
 
 .surpriseBtn{
   width:100%;
-  background:#6f8168;
-  color:white;
+  margin-top:8px;
   border:none;
-  margin-top:5px;
-  padding:8px;
+  border-radius:16px;
+  padding:12px;
+  font-weight:700;
+  background:linear-gradient(180deg,#8ea086,#6f8168);
+  color:white;
+  cursor:pointer;
 }
 
 /* ===== OVERLAY ===== */
@@ -109,9 +127,48 @@ body{
 }
 
 .modal{
-  background:white;
-  padding:20px;
-  border-radius:15px;
+  width:min(340px,92vw);
+  background:#d7dbd2;
+  border-radius:22px;
+  padding:22px 18px;
+  box-shadow:0 30px 60px rgba(0,0,0,.25);
+  text-align:center;
+}
+
+.modal h3{
+  font-size:26px;
+  margin-bottom:10px;
+  color:#2f3a2f;
+}
+
+.modal p{
+  text-align:left;
+  margin:10px 0 6px;
+  font-size:16px;
+  color:#2f3a2f;
+}
+
+.modalBtn{
+  width:100%;
+  margin-top:10px;
+  border:none;
+  border-radius:18px;
+  padding:14px;
+  font-weight:700;
+  font-size:16px;
+  cursor:pointer;
+  background:linear-gradient(180deg,#8ea086,#6f8168);
+  color:white;
+}
+
+.modalBtn.secondary{
+  background:#cfd4c9;
+  color:#2f3a2f;
+}
+
+input[type="range"]{
+  width:100%;
+  accent-color:#6f8168;
 }
 
 /* ===== PASSWORD ===== */
@@ -166,6 +223,14 @@ body{
 <h2 style="text-align:center;">Thoughts</h2>
 <div id="messageList"></div>
 
+<h3>Music</h3>
+<p style="margin:0;color:#5d6a5b;font-size:14px;">
+  Background music for this page
+</p>
+
+<button id="musicBtn" class="modalBtn">▶ Play Music</button>
+<button class="modalBtn secondary">Close</button>
+
 <!-- SURPRISE -->
 <div class="overlay" id="msgOverlay">
 <div class="modal">
@@ -183,10 +248,32 @@ body{
 
 <!-- DECOR -->
 <div class="overlay" id="decorOverlay">
-<div class="modal">
-<button onclick="setNight()">Night</button>
-<button onclick="setDay()">Day</button>
-</div>
+  <div class="modal">
+    <h3>Decorations</h3>
+
+    <div style="text-align:left">
+
+      <p>Mode</p>
+      <button class="modalBtn" onclick="setDay()">Day</button>
+      <button class="modalBtn" onclick="setNight()">Night</button>
+
+      <p>Decoration / sec</p>
+      <input type="range" min="0" max="10" value="3">
+
+      <p>Decoration size</p>
+      <input type="range" min="10" max="80" value="30">
+
+      <p>Burst style</p>
+      <select style="width:100%;padding:10px;border-radius:12px;">
+        <option>Hearts</option>
+        <option>Leaves</option>
+      </select>
+
+      <button class="modalBtn">Apply</button>
+      <button class="modalBtn secondary" onclick="decorOverlay.style.display='none'">Close</button>
+
+    </div>
+  </div>
 </div>
 
 <script>
