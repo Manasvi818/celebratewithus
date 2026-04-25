@@ -336,6 +336,9 @@ function applyDecor(){
   decorCfg.rate = +document.getElementById("rate").value;
   decorCfg.size = +document.getElementById("size").value;
   decorCfg.burst = document.getElementById("burst").value;
+
+    document.getElementById("decorOverlay").style.display = "none"; // ✅ CLOSE BOX
+
 }
 
 /* SPAWN PARTICLES */
