@@ -583,25 +583,34 @@ function loadMusic(){
   if(music){
     audio.src = music;
     audio.volume = 0.6;
-    audio.play();
-    musicToggle.textContent = "⏸";
+
+    audio.play()
+      .then(()=>{
+        musicToggle.textContent = "⏸";
+      })
+      .catch(()=>{
+        // autoplay blocked → user must click button
+        musicToggle.textContent = "▶️";
+        console.log("Autoplay blocked. User interaction needed.");
+      });
   }
 }
 
-musicToggle.onclick=()=>{
-  const audio=document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicToggle");
+
+musicBtn.onclick = () => {
+  const audio = document.getElementById("bgMusic");
 
   if(!audio.src){
-    alert("No music selected in editor 🎵");
-    return;
+    audio.src = music; // ensure source exists
   }
 
   if(audio.paused){
     audio.play();
-    musicToggle.textContent="⏸";
-  }else{
+    musicBtn.textContent = "⏸";
+  } else {
     audio.pause();
-    musicToggle.textContent="▶️";
+    musicBtn.textContent = "▶️";
   }
 };
 
