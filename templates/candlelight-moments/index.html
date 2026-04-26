@@ -156,6 +156,39 @@ body::before{
   pointer-events:none;
   transform:translate(-50%,-50%);
 }
+
+.enter-btn{
+  margin-top:18px;
+  padding:12px 28px;
+  border:none;
+  border-radius:30px;
+
+  background:linear-gradient(145deg,#ffb703,#ff8c42);
+  color:#3b1f00;
+
+  font-weight:500;
+  font-size:15px;
+  cursor:pointer;
+
+  box-shadow:
+    0 6px 20px rgba(255,180,60,.45),
+    0 0 15px rgba(255,140,40,.35);
+
+  transition:all .3s ease;
+}
+
+/* hover glow */
+.enter-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 10px 25px rgba(255,180,60,.6),
+    0 0 25px rgba(255,140,40,.5);
+}
+
+/* click effect */
+.enter-btn:active{
+  transform:scale(.96);
+}
 </style>
 </head>
 
@@ -171,7 +204,9 @@ body::before{
       <span onclick="togglePass()">👁️</span>
     </div>
 
-    <button onclick="checkPassword()">Enter</button>
+    <button onclick="checkPassword()" class="enter-btn">
+  Enter 🕯️
+</button>
 
     <p>Demo Password: <b>123</b></p>
     <p id="err" style="display:none;color:red;">Wrong</p>
