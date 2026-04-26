@@ -296,10 +296,23 @@ function togglePass(){
 }
 
 /* DATA */
-let data=[
-  {url:"https://images.unsplash.com/photo-1519681393784-d120267933ba",cap:"Memory 1"},
-  {url:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e",cap:"Memory 2"}
-];
+data = [
+    {
+      type: "image",
+      url: "https://images.unsplash.com/photo-1608889175631-7d3f9b89e0ee",
+      caption: "Festive vibes "
+    },
+    {
+      type: "image",
+      url: "https://images.unsplash.com/photo-1606788075761-1f0e8c9c1b9d",
+      caption: "Celebration moments "
+    },
+    {
+      type: "video",
+      url: "https://www.w3schools.com/html/mov_bbb.mp4",
+      caption: "Festive video "
+    }
+  ];
 
 data.forEach(i=>{
   let c=document.createElement("div");
