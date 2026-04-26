@@ -378,10 +378,18 @@ msg.innerHTML = `
 let playing = false;
 
 const musicBtn = document.getElementById("music");
+const bgMusic = document.getElementById("bgMusic");
 
 musicBtn.onclick = () => {
   playing = !playing;
-  musicBtn.innerText = playing ? "⏸ Music" : "🎶 Music";
+
+  if (playing) {
+    bgMusic.play();
+    musicBtn.innerText = "⏸ Music";
+  } else {
+    bgMusic.pause();
+    musicBtn.innerText = "🎶 Music";
+  }
 };
 
 
@@ -433,7 +441,12 @@ document.addEventListener("mousemove", e=>{
 });
 
 </script>
+<audio id="bgMusic" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
 <div id="flame"></div>
+
 <div id="sparkle-layer"></div>
 </body>
 </html>

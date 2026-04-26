@@ -409,13 +409,31 @@ function showRandom(){
 }
 
 /* MUSIC */
-let audio=new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
-let playing=false;
+/* ================= MUSIC ================= */
+
+let song = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+// 👉 You can replace this with ANY song link
+
+let bgAudio = null;
+let isPlaying = false;
 
 function toggleMusic(){
-  if(playing){audio.pause();musicBtn.innerText="▶ Play";}
-  else{audio.play();musicBtn.innerText="⏸ Pause";}
-  playing=!playing;
+
+  if(!bgAudio){
+    bgAudio = new Audio(song);
+    bgAudio.loop = true;
+    bgAudio.volume = 0.6;
+  }
+
+  if(isPlaying){
+    bgAudio.pause();
+    musicBtn.textContent = "▶ Play Music";
+  }else{
+    bgAudio.play();
+    musicBtn.textContent = "⏸ Pause Music";
+  }
+
+  isPlaying = !isPlaying;
 }
 
 /* DECOR */
