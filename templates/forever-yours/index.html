@@ -439,39 +439,57 @@ async function loadViewerData() {
     const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
     const result = await res.json();
 
-    if (result.success) {
-      data = result.data || [];
-      messages = result.messages || "";
-      music = result.music || "";
-      
-        if (!data.length) {
-    data = [
-      {
-        type: "image",
-        url: "https://images.unsplash.com/photo-1504198458649-3128b932f49b?w=800&auto=format",
-        caption: "A beautiful memory "
-      },
-      {
-        type: "image",
-        url: "https://images.unsplash.com/photo-1493244040629-496f6d136cc3?w=800&auto=format",
-        caption: "Moments that stay forever"
-      }
-    ];
-  }
+    data = result.data || [];
+messages = result.messages || "";
+music = result.music || "";
 
-  if (!messages) {
-    messages = "This is a demo message 💜\n---\nYou can customize this page in your own version.";
-  }
-
-
-      renderGallery();
-      renderMessages();
-      setupMusic();
+// ✅ ALWAYS RUN DEMO (outside condition)
+if (!data.length) {
+  data = [
+    {
+      type: "image",
+      url: "https://picsum.photos/500/300?random=1",
+      caption: "A beautiful memory 💜"
+    },
+    {
+      type: "image",
+      url: "https://picsum.photos/500/300?random=2",
+      caption: "Moments that stay forever"
     }
+  ];
+}
+
+if (!messages) {
+  messages = "This is a demo message 💜\n---\nYou can customize this page in your own version.";
+}
+
+renderGallery();
+renderMessages();
+
+    
 
   } catch (err) {
-    console.error(" Viewer load failed:", err);
-  }
+  console.error(" Viewer load failed:", err);
+
+  // ✅ FORCE DEMO CONTENT
+  data = [
+    {
+      type: "image",
+      url: "https://picsum.photos/500/300?random=1",
+      caption: "A beautiful memory 💜"
+    },
+    {
+      type: "image",
+      url: "https://picsum.photos/500/300?random=2",
+      caption: "Moments that stay forever"
+    }
+  ];
+
+  messages = "This is a demo message 💜\n---\nYou can customize this page in your own version.";
+
+  renderGallery();
+  renderMessages();
+}
 }
 
 /* LOAD DATA */
@@ -515,17 +533,26 @@ function renderGallery(){
     let media;
 
     if(item.type==="video"){
-      media=document.createElement("video");
-      media.src = item.url.includes("res.cloudinary.com")
-  ? item.url.replace("/upload/", "/upload/f_auto,q_auto,w_500/")
-  : item.url;
-      media.controls=true;
-    }else{
-      media=document.createElement("img");
-      media.src = item.url.includes("res.cloudinary.com")
-  ? item.url.replace("/upload/", "/upload/f_auto,q_auto,w_500/")
-  : item.url;
-    }
+  media=document.createElement("video");
+  media.src = item.url.includes("res.cloudinary.com")
+    ? item.url.replace("/upload/", "/upload/f_auto,q_auto,w_500/")
+    : item.url;
+
+  media.onerror = () => {
+    media.src = "https://via.placeholder.com/400?text=Demo+Image";
+  };
+
+  media.controls=true;
+}else{
+  media=document.createElement("img");
+  media.src = item.url.includes("res.cloudinary.com")
+    ? item.url.replace("/upload/", "/upload/f_auto,q_auto,w_500/")
+    : item.url;
+
+  media.onerror = () => {
+    media.src = "https://via.placeholder.com/400?text=Demo+Image";
+  };
+}
 
     media.onclick=()=>{
       if(item.type!=="video"){

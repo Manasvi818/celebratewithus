@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" href="https://celebratewithus.co.in/styles/images/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+  --bg-main:#fbf7ef;
+  --gold-soft:#e7c77f;
+  --gold:#d4a017;
+  --navy-soft:#1f2a38;
+  --text-main:#6e5730;
+}
+
+*{
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  margin:0;
+  background:linear-gradient(135deg,#fbf7ef,#f5ead6,#fffaf2);
+  color:var(--text-main);
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* 🌟 subtle constellation background */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    radial-gradient(circle at 15% 25%, rgba(212,160,23,.15) 2px, transparent 3px),
+    radial-gradient(circle at 70% 60%, rgba(212,160,23,.12) 2px, transparent 3px),
+    radial-gradient(circle at 40% 80%, rgba(212,160,23,.10) 2px, transparent 3px);
+  background-size:300px 300px;
+  pointer-events:none;
+  animation:starShift 20s linear infinite;
+}
+
+@keyframes starShift{
+  from{background-position:0 0;}
+  to{background-position:300px 300px;}
+}
+
+/* HERO */
+.hero{
+  padding:30px 20px 40px;
+  text-align:center;
+  margin-top:-20px;
+}
+
+.title{
+  font-family:'Allura',cursive;
+  font-size:clamp(2.5rem, 10vw, 8rem);
+  text-align:center;
+   margin-bottom:0;    /* Remove bottom gap */
+  line-height:1;
+  color:var(--gold);
+  text-shadow:0 0 25px rgba(212,160,23,.35);
+}
+
+.subtitle{
+  font-family:'Libre Baskerville',serif;
+  letter-spacing:4px;
+  font-size:16px;
+   margin-top:8px; 
+  opacity:.7;
+  text-transform:uppercase;
+}
+
+/* GALLERY */
+.gallery{
+  max-width:1150px;
+  margin:auto;
+  padding:10px 20px 30px;
+}
+
+/* REPLACE existing .grid style in viewer with: */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  max-width: 1150px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+@media(max-width:600px){
+  .grid div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.card{
+  background:white;
+  border-radius:26px;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.08);
+  transition:.4s ease;
+  position:relative;
+}
+
+.card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border:2px solid rgba(212,160,23,.15);
+  border-radius:26px;
+  pointer-events:none;
+}
+
+.card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 30px 70px rgba(212,160,23,.25);
+}
+
+.card img,
+.card video{
+  width:100%;
+  height:auto;
+  max-height:320px;
+  object-fit:cover;
+}
+
+img, video{
+  max-width:100%;
+  height:auto;
+}
+
+.caption{
+  padding:18px;
+  text-align:center;
+  font-style:italic;
+  color:#8a6d3b;
+}
+
+/* MESSAGE SECTION */
+.message-box{
+  margin:70px 0;
+  text-align:center;
+}
+
+.pink-msg-box{
+  width:min(92%,950px);
+  margin:auto;
+  padding:50px;
+  border-radius:32px;
+  background:linear-gradient(145deg,#fffdf8,#f5ead6);
+  box-shadow:0 25px 70px rgba(212,160,23,.15);
+  font-size:18px;
+  line-height:1.8;
+  transition:opacity .3s;
+}
+
+/* CONTROL BUTTONS */
+.controlBox{
+  background:linear-gradient(45deg,#e7c77f,#d4a017);
+  color:white;
+  padding:12px 22px;
+  border-radius:40px;
+  cursor:pointer;
+  box-shadow:0 12px 30px rgba(212,160,23,.35);
+  transition:.3s;
+}
+
+.controlBox:hover{
+  transform:scale(1.1);
+}
+
+/* ZOOM */
+#zoomModal{
+  position:fixed;
+  inset:0;
+  background:rgba(255,250,240,.95);
+  backdrop-filter:blur(8px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+}
+
+#zoomModal img{
+  max-width:90%;
+  max-height:85%;
+  border-radius:26px;
+  box-shadow:0 0 70px rgba(212,160,23,.35);
+}
+
+#zoomClose{
+  position:absolute;
+  top:25px;
+  right:30px;
+  font-size:28px;
+  color:var(--gold);
+  cursor:pointer;
+}
+
+.loveWord{
+  position:fixed;
+  bottom:-40px;
+  font-family:'Libre Baskerville', serif;
+  font-size:14px;
+  letter-spacing:2px;
+  color:rgba(212,160,23,.8);
+  animation:floatUp 10s linear forwards;
+  pointer-events:none;
+  z-index:9997;
+}
+
+@keyframes floatUp{
+  from{
+    transform:translateY(0);
+    opacity:0;
+  }
+  10%{opacity:1;}
+  to{
+    transform:translateY(-120vh);
+    opacity:0;
+  }
+}
+
+.floating-heart{
+  position:fixed;
+  bottom:-30px;
+  font-size:20px;
+  pointer-events:none;
+  z-index:9998;
+  animation:heartFloat 8s linear forwards;
+}
+
+@keyframes heartFloat{
+  from{
+    transform:translateY(0);
+    opacity:0;
+  }
+  10%{opacity:1;}
+  to{
+    transform:translateY(-120vh);
+    opacity:0;
+  }
+}
+
+#topControls{
+  position:fixed;
+  top:20px;
+  right:25px;
+  display:flex;
+  gap:14px;
+  z-index:9999;
+  flex-direction:column;
+}
+
+.msg-title{
+  text-align:center;
+  font-family:'Allura', cursive;
+  font-size:3.2rem;
+  color:var(--gold);
+  margin-bottom:35px;
+  text-shadow:0 5px 20px rgba(212,160,23,.25);
+   margin:10px 0 15px; 
+}
+
+#lockScreen h3{
+  font-family:'Allura',cursive;
+  font-size:2.8rem;
+  color:var(--gold);
+  margin-bottom:10px;
+}
+
+.sparkle{
+  position:fixed;
+  width:10px;
+  height:10px;
+  background:radial-gradient(circle,#fff8c6,#ffd700,#d4a017);
+  border-radius:50%;
+  pointer-events:none;
+  animation:goldSparkle 1s ease-out forwards;
+  box-shadow:0 0 20px rgba(255,215,0,.9);
+  z-index:9999;
+}
+
+@keyframes goldSparkle{
+  from{
+    transform:scale(1);
+    opacity:1;
+  }
+  to{
+    transform:scale(0.2) translateY(-15px);
+    opacity:0;
+  }
+}
+
+.site-footer{
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+  font-size:14px;
+  color:var(--maroon);
+  opacity:.8;
+}
+
+.card video {
+  width: 100%;
+  max-height: 280px;
+}
+
+@media (max-width:600px){
+
+  body{
+    padding:10px;
+  }
+
+  .wrap, .gallery, .pink-msg-box{
+    padding:14px;
+  }
+
+  .hero{
+    padding:16px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+  h2{
+    font-size:20px;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  input, textarea, select{
+    width:100%;
+  }
+
+  #topControls{
+    top:10px;
+    right:10px;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+  <section class="hero">
+  <h1 class="title">Golden Love</h1>
+  <h2 class="subtitle">Written in the stars ✨</h2>
+</section>
+
+<div id="lockScreen" style="
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,#fbf7ef,#f5ead6,#fffaf2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+">
+
+  <div style="
+    padding:30px;
+    border-radius:22px;
+    text-align:center;
+   background:linear-gradient(145deg,#fffdf8,#f5ead6);
+color:#6e5730;
+box-shadow:0 25px 70px rgba(212,160,23,.25);
+border:1px solid rgba(212,160,23,.2);
+    width:420px;
+max-width:90%;
+  ">
+
+    <h3> Private Golden Love</h3>
+
+    <div class="pass-wrap">
+  <input
+    id="passInput"
+    type="password"
+    placeholder="Enter password"
+  >
+  <span id="togglePass">👁️</span>
+</div>
+
+
+    <button onclick="checkPassword()" style="
+      margin-top:16px;
+      padding:10px 22px;
+      border-radius:30px;
+      border:none;
+      background:#ffb703;
+      cursor:pointer;
+    ">
+      Enter 
+    </button>
+
+    <p id="wrongPass" style="display:none;color:#ff9f1a;margin-top:10px;">
+      Wrong password 
+    </p>
+
+    <div style="
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-top:10px;
+">
+
+  <p id="hintText" style="
+    display:none;
+    font-size:13px;
+    color:#ffd27d;
+    opacity:0.9;
+    text-shadow:0 0 8px rgba(255,200,120,.6);
+    margin:0;
+  ">
+    💡 <span id="hintValue"></span>
+  </p>
+
+</div>
+
+  </div>
+</div>
+
+<section class="gallery">
+  <h2 class="msg-title">Moments by the flame </h2>
+
+  <div class="grid"></div>
+</section>
+
+<section class="message-box">
+  <h2 class="msg-title">Leave a little feeling here </h2>
+ <div id="viewerMessage" class="pink-msg-box">
+    A quiet feeling rests here 
+  </div>
+
+</section>
+
+
+<!-- TOP CONTROL BOX -->
+<div id="topControls">
+
+  <div class="controlBox" id="musicToggle">
+     Music
+  </div>
+
+  <div class="controlBox" id="sparkleToggle">
+     Sparkles
+  </div>
+
+</div>
+
+<!-- sparkle layer -->
+<div id="sparkle-layer"></div>
+<script>
+
+ const projectId = window.location.pathname.split("/").pop();
+
+let items = [];
+let messages = "";
+let music = "";
+let password = "";
+
+let bgAudio = null;
+let playing = false;
+/* Floating Hearts */
+setInterval(()=>{
+  const heart=document.createElement("div");
+  heart.className="floating-heart";
+  heart.innerHTML="💛";
+  heart.style.left=Math.random()*100+"vw";
+  heart.style.animationDuration=(4+Math.random()*4)+"s";
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),8000);
+},900);
+
+function renderMessages() {
+  const box = document.getElementById("viewerMessage");
+  if (!box) return;
+
+  if (!messages || messages.trim() === "") {
+    box.innerHTML = "<p>A quiet feeling rests here </p>";
+    return;
+  }
+
+  const parts = messages.split("\n---\n").filter(m => m.trim() !== "");
+  box.innerHTML = parts.map(m =>
+    `<p style="margin-bottom:20px;">${m.replace(/\n/g, "<br>")}</p>`
+  ).join('<hr style="border:none;border-top:1px solid rgba(212,160,23,.2);margin:20px 0;">');
+}
+
+  /* 🔐 PASSWORD */
+  
+
+  function setupPassword() {
+  // just sets password variable, checkPassword is global below
+}
+
+function checkPassword() {
+  const lock = document.getElementById("lockScreen");
+  const input = document.getElementById("passInput").value;
+
+  if (!password || password === "") {
+    lock.style.display = "none";
+    startMusic();
+    return;
+  }
+
+  if (input === password) {
+    lock.style.display = "none";
+    startMusic();
+  } else {
+    document.getElementById("wrongPass").style.display = "block";
+  }
+}
+
+function setupMusic() {
+  if (!music) return;
+
+  bgAudio = new Audio(music);
+  bgAudio.loop = true;
+  bgAudio.volume = 0.6;
+}
+
+  /* 🎶 MUSIC */
+    
+
+  const musicToggle = document.getElementById("musicToggle");
+
+  musicToggle.onclick = () => {
+    if (!music) {
+      musicToggle.innerText = " No Music";
+      return;
+    }
+
+    if (!bgAudio) {
+      bgAudio = new Audio(music);
+      bgAudio.loop = true;
+      bgAudio.volume = 0.6;
+    }
+
+    if (playing) {
+      bgAudio.pause();
+      playing = false;
+      musicToggle.innerText = "Play Music";
+    } else {
+      bgAudio.play();
+      playing = true;
+      musicToggle.innerText = "Stop Music";
+    }
+  };
+
+async function loadViewerData() {
+  try {
+    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const result = await res.json();
+
+    if (result.success) {
+      items = result.data || [];
+      messages = result.messages || "";
+      music = result.music || "";
+      password = result.password || "";
+
+      render();
+      renderMessages();
+      setupPassword();
+      setupMusic();
+    }
+
+  } catch (err) {
+    console.error("❌ Load failed:", err);
+  }
+}
+
+  function startMusic(){
+  if (!music) return;
+
+  if (!bgAudio){
+    bgAudio = new Audio(music);
+    bgAudio.loop = true;
+    bgAudio.volume = 0.5;
+  }
+
+  bgAudio.muted = true;
+
+bgAudio.play()
+  .then(() => {
+    // unmute after play starts
+    setTimeout(() => {
+      bgAudio.muted = false;
+    }, 300);
+  })
+  .catch(() => {
+    console.log("Autoplay blocked");
+  });
+  playing = true;
+
+  const musicToggle = document.getElementById("musicToggle");
+  musicToggle.innerText = "⏸ Music";
+}
+
+ /* 👁️ PASSWORD HINT TOGGLE */
+const hintText = document.getElementById("hintText");
+const hintValue = document.getElementById("hintValue");
+const hint = localStorage.getItem("viewerPassword_hint");
+
+if (hintText && hintValue && hint && hint.trim() !== "") {
+  hintValue.innerText = hint;
+}
+
+const passInput = document.getElementById("passInput");
+const togglePass = document.getElementById("togglePass");
+
+togglePass.onclick = () => {
+  const hidden = passInput.type === "password";
+  passInput.type = hidden ? "text" : "password";
+  togglePass.innerText = hidden ? "🙈" : "👁️";
+};
+
+function optimizeCloudinaryUrl(url, width = 500) {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width}/`);
+}
+
+/* 🖼️ LOAD GALLERY + MESSAGES */
+function render() {
+  const grid = document.querySelector(".grid");
+
+  grid.innerHTML = "";
+
+  if(items.length === 0){
+    grid.innerHTML = `<p style="text-align:center;grid-column:1/-1;">No moments yet 🤍</p>`;
+    return;
+  }
+
+  // ✅ Separate videos and images
+  const videos = items.filter(item => item.type === "video");
+  const images = items.filter(item => item.type !== "video");
+
+  // ✅ VIDEO SECTION — full width, one per row
+  if (videos.length > 0) {
+    const videoSection = document.createElement("div");
+    videoSection.style.cssText = `
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    `;
+
+    videos.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const media = document.createElement("video");
+      media.controls = true;
+      media.src = item.url;
+      card.appendChild(media);
+
+      if (item.caption && item.caption.trim() !== "") {
+        const cap = document.createElement("p");
+        cap.style.cssText = `
+  text-align:center;
+  font-style:italic;
+  color:#d4a017;
+  text-shadow:0 0 8px rgba(212,160,23,0.5);
+  padding:10px 16px 4px;
+  margin:0;
+  font-size:15px;
+`;
+        cap.innerText = item.caption;
+        card.appendChild(cap);
+      }
+
+      if (item.memory && item.memory.trim() !== "") {
+        const mem = document.createElement("p");
+        mem.style.cssText = `text-align:center;color:#a07840;padding:4px 16px 14px;margin:0;font-size:13px;line-height:1.6;opacity:0.85;`;
+        mem.innerText = item.memory;
+        card.appendChild(mem);
+      }
+
+      videoSection.appendChild(card);
+    });
+
+    grid.appendChild(videoSection);
+  }
+
+  // ✅ IMAGE SECTION — 2 per row on desktop, 1 on mobile
+  if (images.length > 0) {
+    const imageSection = document.createElement("div");
+    imageSection.style.cssText = `
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+    `;
+
+    images.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const media = document.createElement("img");
+      media.src = optimizeCloudinaryUrl(item.url, 500);
+      media.style.cursor = "zoom-in";
+      media.onclick = () => openZoom(item.url, item.caption || "");
+      card.appendChild(media);
+
+      if (item.caption && item.caption.trim() !== "") {
+        const cap = document.createElement("p");
+        cap.style.cssText = `
+  text-align:center;
+  font-style:italic;
+  color:#d4a017;
+  text-shadow:0 0 8px rgba(212,160,23,0.5);
+  padding:10px 16px 4px;
+  margin:0;
+  font-size:15px;
+`;
+        cap.innerText = item.caption;
+        card.appendChild(cap);
+      }
+
+      if (item.memory && item.memory.trim() !== "") {
+        const mem = document.createElement("p");
+        mem.style.cssText = `text-align:center;color:#a07840;padding:4px 16px 14px;margin:0;font-size:13px;line-height:1.6;opacity:0.85;`;
+        mem.innerText = item.memory;
+        card.appendChild(mem);
+      }
+
+      imageSection.appendChild(card);
+    });
+
+    grid.appendChild(imageSection);
+  }
+}
+
+/* ✨ GOLDEN SPARKLE SYSTEM */
+let sparkleOn = false;
+let bgInterval = null;
+
+const sparkleBtn = document.getElementById("sparkleToggle");
+
+/* Cursor sparkle */
+function cursorSparkle(e){
+  const sparkle = document.createElement("div");
+  sparkle.className = "sparkle";
+  sparkle.style.left = e.clientX + "px";
+  sparkle.style.top = e.clientY + "px";
+  document.body.appendChild(sparkle);
+  setTimeout(()=>sparkle.remove(),800);
+}
+
+/* Background sparkle */
+function backgroundSparkle(){
+  const sparkle = document.createElement("div");
+  sparkle.className = "sparkle";
+  sparkle.style.left = Math.random()*100 + "vw";
+  sparkle.style.top = Math.random()*100 + "vh";
+  document.body.appendChild(sparkle);
+  setTimeout(()=>sparkle.remove(),1500);
+}
+
+sparkleBtn.onclick = () => {
+  sparkleOn = !sparkleOn;
+
+  if (sparkleOn){
+    sparkleBtn.innerText = " Sparkles ON";
+
+    document.addEventListener("mousemove", cursorSparkle);
+
+    bgInterval = setInterval(backgroundSparkle, 300);
+  } 
+  else {
+    sparkleBtn.innerText = " Sparkles OFF";
+
+    document.removeEventListener("mousemove", cursorSparkle);
+
+    clearInterval(bgInterval);
+  }
+};
+
+  /* 🔥 FLAME CURSOR + TRAIL */
+const flame = document.getElementById("flame");
+
+document.addEventListener("mousemove", e => {
+  if (!flame) return;
+  flame.style.left = e.clientX + "px";
+  flame.style.top = e.clientY + "px";
+
+  const trail = document.createElement("div");
+  trail.className = "flameTrail";
+  trail.style.left = e.clientX + "px";
+  trail.style.top = e.clientY + "px";
+  document.body.appendChild(trail);
+  setTimeout(() => trail.remove(), 800);
+
+  const sparkCount = Math.random() > 0.6 ? 2 : 1;
+
+  for (let i = 0; i < sparkCount; i++) {
+    const spark = document.createElement("div");
+    spark.className = "goldSpark";
+    spark.style.left = e.clientX + (Math.random() * 10 - 5) + "px";
+    spark.style.top = e.clientY + (Math.random() * 10 - 5) + "px";
+    document.body.appendChild(spark);
+    setTimeout(() => spark.remove(), 600);
+  }
+});
+
+/* 🔍 ZOOM MODAL LOGIC */
+// ✅ REPLACE WITH (declared at top level so openZoom works globally)
+let zoomModal, zoomImg, zoomCaption, zoomClose;
+
+function openZoom(src, caption){
+  if (!zoomModal || !zoomImg) return;
+  zoomImg.src = src;
+  if (zoomCaption) zoomCaption.innerText = caption || "";
+  zoomModal.style.display = "flex";
+}
+
+function closeZoom(){
+  if (!zoomModal || !zoomImg) return;
+  zoomModal.style.display = "none";
+  zoomImg.src = "";
+  if (zoomCaption) zoomCaption.innerText = "";
+}
+
+// Then inside your existing DOMContentLoaded listener, ADD:
+window.addEventListener("DOMContentLoaded", () => {
+  zoomModal  = document.getElementById("zoomModal");
+  zoomImg    = document.getElementById("zoomImg");
+  zoomCaption= document.getElementById("zoomCaption");
+  zoomClose  = document.getElementById("zoomClose");
+
+  if (zoomClose) zoomClose.onclick = closeZoom;
+  if (zoomModal) zoomModal.onclick = (e) => {
+    if (e.target === zoomModal) closeZoom();
+  };
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeZoom();
+  });
+
+  loadViewerData(); // keep this here too
+});
+
+  /* 💌 FLOATING WORDS */
+ const loveWords = [
+  "forever",
+  "always you",
+  "soft warmth",
+  "our moment",
+  "quiet love",
+  "gentle hearts",
+  "golden silence",
+  "safe with you",
+  "just us",
+  "together",
+  "slow love",
+  "warm nights",
+  "your presence",
+  "my calm",
+  "my peace",
+  "endless glow",
+  "soft smiles",
+  "held gently",
+  "unspoken love",
+  "heart home",
+  "you feel like home",
+  "where I belong",
+  "still with you",
+  "only us here"
+];
+
+
+  setInterval(() => {
+    const word = document.createElement("div");
+    word.className = "loveWord";
+    word.innerText =
+      loveWords[Math.floor(Math.random() * loveWords.length)];
+    word.style.left = Math.random() * 90 + "vw";
+    document.body.appendChild(word);
+
+    setTimeout(() => word.remove(), 10000);
+  }, 5000);
+
+</script>
+<div id="flame"></div>
+
+<!-- 🔍 ZOOM MODAL -->
+<div id="zoomModal">
+  <span id="zoomClose">✕</span>
+
+  <div id="zoomBox">
+    <img id="zoomImg" />
+    <div id="zoomCaption"></div>
+  </div>
+</div>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© CelebrateWithUs.web • Crafted with 💛</p>
+</footer>
+
+</body>
+</html>
