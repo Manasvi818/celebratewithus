@@ -24,7 +24,19 @@
 body{
   margin:0;
   font-family:'Playfair Display',serif;
-  background:linear-gradient(135deg,#dfe8d8,#cbd8c1);
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255,255,255,.6), rgba(255,255,255,0) 60%),
+    linear-gradient(135deg, #dfe8d8, #cbd8c1);
+  color:#2f3a2f;
+  transition:.35s;
+  overflow-x:hidden;
+}
+
+body.night{
+  background:
+    radial-gradient(circle at 20% 10%, rgba(0,0,0,.35), rgba(0,0,0,0) 60%),
+    linear-gradient(135deg, #141a14, #202720);
+  color:#eef6ea;
 }
 
 /* ===== LEAF BACKGROUND ===== */
@@ -46,12 +58,19 @@ body{
 }
 
 .floatingBtn{
-  background:linear-gradient(#8ea086,#6f8168);
-  color:white;
   border:none;
-  padding:10px 15px;
+  background:linear-gradient(180deg, #8ea086, #6f8168);
+  color:white;
+  padding:10px 18px;
   border-radius:999px;
   cursor:pointer;
+  font-weight:700;
+  box-shadow:0 12px 22px rgba(0,0,0,.15);
+  transition:.25s ease;
+}
+
+.floatingBtn:hover{
+  transform:scale(1.03);
 }
 
 /* ===== TITLE ===== */
@@ -67,14 +86,10 @@ body{
     0 0 40px rgba(184,248,148,0.45);
 }
 
-.bigTitle{
-  color:#8ea086;
-  font-size:clamp(2.5rem,8vw,6rem);
-  font-weight:700;
-  letter-spacing:2px;
-  text-shadow:
-    0 0 18px rgba(110,158,42,0.6),
-    0 0 40px rgba(184,248,148,0.45);
+.titleWrap{
+  text-align:center;
+  padding-top:10px;
+  margin-bottom:18px;
 }
 
 .subTitle{
@@ -87,9 +102,12 @@ body{
 
 /* ===== PANEL ===== */
 .panel{
-  background:rgba(255,255,255,0.5);
-  border-radius:20px;
-  padding:15px;
+  background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.35));
+  border:1px solid #cdd8c8;
+  border-radius:22px;
+  padding:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  backdrop-filter: blur(8px);
 }
 
 /* ===== GRID ===== */
@@ -101,8 +119,15 @@ body{
 
 .photoCard{
   background:var(--card2);
-  border-radius:15px;
+  border:1px solid #cdd8c8;
+  border-radius:18px;
   padding:10px;
+  box-shadow:0 10px 18px rgba(0,0,0,.06);
+}
+.photoFrame{
+  border-radius:14px;
+  overflow:hidden;
+  border:4px solid rgba(255,255,255,.55);
 }
 
 .photoFrame img{
@@ -115,6 +140,9 @@ body{
   margin-top:5px;
 }
 
+.surpriseBtn:hover{
+  transform:scale(1.02);
+}
 .surpriseBtn{
   width:100%;
   margin-top:8px;
@@ -266,12 +294,63 @@ input[type="range"]{
   color:#6f8168;
   margin-top:25px;
 }
+
+.messagesWrap{
+  margin-top:18px;
+}
+
+.messagesWrap h2{
+  text-align:center;
+  font-family:"Playfair Display";
+  color:#5d6a5b;
+}
+
+.page{
+  position:relative;
+  z-index:2;
+  max-width:1120px;
+  margin:auto;
+  padding:22px 18px 40px;
+}
+
+.galleryTitle{
+  font-family:"Playfair Display";
+  font-size:18px;
+  margin:2px 0 14px;
+  color:#5d6a5b;
+  display:flex;
+  justify-content:space-between;
+}
+#decorCanvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:1;
+}
+
+body.night .panel{
+  background:rgba(40,50,40,0.6);
+  border-color:#3a463a;
+}
+
+body.night .photoCard{
+  background:#2a322a;
+  border-color:#3a463a;
+}
+
+body.night .stickyNote{
+  background:#2a322a;
+  border-color:#3a463a;
+  color:#eef6ea;
+}
 </style>
 </head>
 
 <body>
 
 <div class="leaves"></div>
+
+<canvas id="decorCanvas"></canvas>
 
 <!-- PASSWORD -->
 <div id="passwordOverlay">
@@ -291,19 +370,28 @@ input[type="range"]{
 </div>
 
 <div class="titleWrap">
-<h1 class="bigTitle">CHERISHED TIMES</h1>
+<h1 class="bigTitle">CHERISHED<br> TIMES</h1>
 <p class="subTitle">Love that lasts through quiet moments.</p>
 <div class="hrLeaf"></div>
 </div>
 
-<div class="panel">
-<div class="galleryGrid" id="photoGrid"></div>
+<div class="page">
+
+<div class="galleryTitle">
+  <span>Gallery</span>
+  <span style="opacity:.75;font-size:13px;">Tap photo to zoom</span>
 </div>
 
-<h2 class="thoughtTitle">Thoughts</h2>
-<div id="messageList"></div>
+  <div class="panel">
+    <div class="galleryGrid" id="photoGrid"></div>
+  </div>
 
+  <div class="messagesWrap">
+    <h2>Thoughts</h2>
+    <div id="messageList"></div>
+  </div>
 
+</div>
 
 <!-- SURPRISE -->
 <div class="overlay" id="msgOverlay">
@@ -311,6 +399,14 @@ input[type="range"]{
 <p id="msgText"></p>
 <button onclick="msgOverlay.style.display='none'">Close</button>
 </div>
+</div>
+
+<!-- ✅ ADD THIS HERE -->
+<div class="overlay" id="imgZoomOverlay">
+  <div style="text-align:center;">
+    <img id="zoomImg" style="max-width:90%;border-radius:16px;">
+    <div id="zoomCaption" style="margin-top:10px;color:white;"></div>
+  </div>
 </div>
 
 <!-- MUSIC -->
@@ -343,13 +439,13 @@ input[type="range"]{
       <button class="modalBtn" onclick="setNight()">Night</button>
 
       <p>Decoration / sec</p>
-      <input type="range" min="0" max="10" value="3">
+      <input id="rate" type="range" min="0" max="10" value="3">
 
       <p>Decoration size</p>
-      <input type="range" min="10" max="80" value="30">
+      <input id="size" type="range" min="10" max="80" value="30">
 
       <p>Burst style</p>
-      <select style="width:100%;padding:10px;border-radius:12px;">
+      <select id="burst" style="width:100%;padding:10px;border-radius:12px;">
         <option>Hearts</option>
         <option>Leaves</option>
       </select>
@@ -386,7 +482,7 @@ data.forEach(x=>{
   d.className="photoCard";
   d.innerHTML=`
     <div class="photoFrame">
-      <img src="${x.url}">
+      <img src="${x.url}" onclick="openZoom('${x.url}','${x.caption}')">
     </div>
     <button class="surpriseBtn" onclick="showRandom()">Surprise</button>
     <div class="photoCaption">${x.caption}</div>
@@ -437,12 +533,90 @@ function toggleMusic(){
 }
 
 /* DECOR */
-function setNight(){document.body.style.background="#111";}
-function setDay(){document.body.style.background="#dfe8d8";}
+function setNight(){
+  document.body.classList.add("night");
+}
+
+function setDay(){
+  document.body.classList.remove("night");
+}
+
+const canvas = document.getElementById("decorCanvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function createParticle(){
+  particles.push({
+    x: Math.random()*canvas.width,
+    y: canvas.height,
+    size: Math.random()*20+10,
+    vx: (Math.random()-0.5)*1.5,
+    vy: Math.random()*1 + 0.5
+  });
+}
 
 function applyDecor(){
-  decorOverlay.style.display="none";
+  decorOverlay.style.display = "none";
 }
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  particles.forEach((p,i)=>{
+
+    ctx.font = p.size + "px serif";
+
+    if(document.getElementById("burst").value === "Leaves"){
+      ctx.fillText("🍃",p.x,p.y);
+      p.x += (Math.random()-0.5)*2;
+    }else{
+      ctx.fillText("♥",p.x,p.y);
+    }
+
+    p.y -= p.vy * (document.getElementById("rate").value * 0.3);
+p.x += p.vx;
+p.size = document.getElementById("size").value;
+
+    if(p.y<0) particles.splice(i,1);
+  });
+
+  requestAnimationFrame(draw);
+}
+
+function openZoom(src,cap){
+  zoomImg.src = src;
+  zoomCaption.textContent = cap;
+  imgZoomOverlay.style.display = "flex";
+}
+
+imgZoomOverlay.onclick = (e)=>{
+  if(e.target.id === "imgZoomOverlay"){
+    imgZoomOverlay.style.display = "none";
+  }
+};
+
+musicOverlay.onclick = e=>{
+  if(e.target === musicOverlay){
+    musicOverlay.style.display="none";
+  }
+};
+
+decorOverlay.onclick = e=>{
+  if(e.target === decorOverlay){
+    decorOverlay.style.display="none";
+  }
+};
+
+setInterval(()=>{
+  if(particles.length < 120){
+    createParticle();
+  }
+},200);
+draw();
 </script>
 
 </body>

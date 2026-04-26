@@ -3,173 +3,156 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
-<title>Candlelight Demo</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+<title>Candlelight Moments Demo</title>
 
 <style>
 body{
   margin:0;
   background:radial-gradient(circle at center,#2b160c,#0d0503);
   color:#ffd8a8;
-  font-family:'Poppins', sans-serif;
+  font-family:'Poppins',sans-serif;
 }
 
+/* glow */
 body::before{
   content:"";
   position:fixed;
   inset:0;
-  background:
-    radial-gradient(circle at 50% 70%, rgba(255,180,90,.35), transparent 60%);
-  pointer-events:none;
+  background:radial-gradient(circle at 50% 70%, rgba(255,180,90,.25), transparent 60%);
   animation:flicker 4s infinite alternate;
 }
+@keyframes flicker{from{opacity:.6}to{opacity:1}}
 
-@keyframes flicker{
-  from{opacity:.6}
-  to{opacity:1}
-}
-
-/* LOCK */
-#lock{
-  position:absolute;
+/* password */
+#lockScreen{
+  position:fixed;
   inset:0;
   display:flex;
   align-items:center;
   justify-content:center;
-    background:radial-gradient(circle at center,#2b160c,#0d0503);
-
+  background:radial-gradient(circle,#2b160c,#0d0503);
+  z-index:99999;
 }
-.box{
-  background:#1a0f0a;
-  padding:20px;
-  border-radius:15px;
+.lock-box{
+  background:rgba(255,190,120,.15);
+  padding:30px;
+  border-radius:22px;
   text-align:center;
+  box-shadow:0 0 40px rgba(255,180,90,.45);
+  width:280px;
+  box-sizing:border-box; 
+}
+.pass-wrap{
+  position:relative;
 }
 .pass-wrap input{
   width:100%;
-  padding:12px 42px 12px 12px;
+  padding:12px 40px 12px 12px;
   border-radius:12px;
   border:1px solid #ffcc88;
   background:#1a0f0a;
   color:#ffe8be;
-  outline:none;
+  box-sizing:border-box;
 }
-.pass-wrap{
-  position:relative;
-  width:100%;
-  overflow:hidden;   /* ✅ prevents overflow */
-}
-button{
-  margin-top:10px;
-  padding:10px;
-  background:#ffb703;
-  border:none;
-}
-
-/* GALLERY */
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  padding:20px;
-}
-.card{
-  background:rgba(255,255,255,0.08);
-  border-radius:18px;
-  overflow:hidden;
-  backdrop-filter:blur(6px);
-  box-shadow:0 10px 30px rgba(0,0,0,.6);
-}
-
-.card img,
-.card video{
-  width:100%;
-  display:block;
-}
-
-/* MESSAGE */
-.msg{
-  padding:20px;
-  text-align:center;
-}
-
-/* CONTROLS */
-.controls{
-  position:fixed;
-  top:10px;
-  right:10px;
-}
-.btn{
-  background:#ffb703;
-  padding:8px;
-  margin:5px;
-  cursor:pointer;
-}
-
-/* SPARK */
-.spark{
-  position:absolute;
-  width:6px;
-  height:6px;
-  background:#ffd27d;
-  border-radius:50%;
-  box-shadow:0 0 12px rgba(255,220,150,.9);
-  animation:up 4s linear;
-}
-@keyframes up{
-  from{
-    transform:translateY(0);
-    opacity:1;
-  }
-  to{
-    transform:translateY(-120vh);
-    opacity:0;
-  }
-}
-
-#sparkle-layer{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:9998;
-}
-
-.pass-wrap{
-  position:relative;
-}
-
-.pass-wrap input{
-  padding-right:40px;
-}
-
 .pass-wrap span{
   position:absolute;
   right:10px;
   top:50%;
   transform:translateY(-50%);
   cursor:pointer;
-  color:#ffb703;
 }
 
+/* hero */
+.hero{
+  text-align:center;
+  padding:30px;
+}
+.title{
+  font-family:'Allura';
+  font-size:60px;
+  color:#ffb703;
+  text-shadow:0 0 20px rgba(255,180,60,.6);
+}
+.subtitle{
+  letter-spacing:3px;
+}
+
+/* gallery */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
+  padding:20px;
+}
+.card{
+  background:rgba(255,255,255,0.08);
+  border-radius:20px;
+  overflow:hidden;
+}
+.card img{
+  width:100%;
+}
+.caption{
+  text-align:center;
+  padding:10px;
+}
+
+/* message */
+.msg-box{
+  margin:20px auto;
+  width:90%;
+  padding:20px;
+  border-radius:20px;
+  background:rgba(255,190,120,.1);
+  text-align:center;
+}
+
+/* controls */
+#topControls{
+  position:fixed;
+  top:20px;
+  right:20px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
 .controlBox{
-  background:rgba(255,183,55,0.95);
-  backdrop-filter: blur(6px);
-  color:#3b1f00;
+  background:#ffb703;
   padding:10px 18px;
   border-radius:30px;
-  font-size:14px;
   cursor:pointer;
-  box-shadow:0 8px 25px rgba(255,180,60,.45);
 }
 
+/* spark */
+.spark{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:#ffd27d;
+  border-radius:50%;
+  animation:spark 4s linear;
+}
+@keyframes spark{
+  from{transform:translateY(100vh)}
+  to{transform:translateY(-20vh);opacity:0}
+}
+
+#sparkLayer{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+
+/* flame */
 #flame{
   position:fixed;
-  width:14px;
-  height:14px;
+  width:12px;
+  height:12px;
+  background:orange;
   border-radius:50%;
-  background:radial-gradient(circle,#ffd27d,#ff9f1a);
-  box-shadow:0 0 20px orange;
   pointer-events:none;
   transform:translate(-50%,-50%);
 }
@@ -178,275 +161,124 @@ button{
 
 <body>
 
-
-<div id="lockScreen" style="
-  position:fixed;
-  inset:0;
-  background:radial-gradient(circle at center,#2b160c,#0d0503);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:99999;
-">
-
-  <div style="
-    background:rgba(255,190,120,.12);
-    padding:34px 28px;
-    border-radius:26px;
-    text-align:center;
-    color:#ffd8a8;
-    box-sizing:border-box;
-    box-shadow:
-      0 0 40px rgba(255,180,90,.35),
-      inset 0 0 20px rgba(255,200,120,.15);
-    width:300px;
-max-width:90vw;
-  ">
-
-    <h3 style="margin-bottom:10px;">Private Candlelight</h3>
+<!-- PASSWORD -->
+<div id="lockScreen">
+  <div class="lock-box">
+    <h3>Private Candlelight</h3>
 
     <div class="pass-wrap">
       <input id="passInput" type="password" placeholder="Enter password">
-      <span id="togglePass">👁️</span>
+      <span onclick="togglePass()">👁️</span>
     </div>
 
-    <button onclick="checkPassword()" style="
-      margin-top:18px;
-      padding:12px 26px;
-      border-radius:30px;
-      border:none;
-      background:#ffb703;
-      font-weight:500;
-      cursor:pointer;
-      box-shadow:0 6px 20px rgba(255,180,60,.4);
-    ">
-      Enter 🕯️
-    </button>
+    <button onclick="checkPassword()">Enter</button>
 
-    <!-- ✅ PASSWORD TEXT -->
-<p style="margin-top:10px;font-size:13px;color:#ffd27d;">
-  Demo Password: <b>123</b>
-</p>
-    <p id="wrongPass" style="display:none;color:#ff9f1a;margin-top:8px;">
-      Wrong password
-    </p>
-
+    <p>Demo Password: <b>123</b></p>
+    <p id="err" style="display:none;color:red;">Wrong</p>
   </div>
 </div>
 
-<h1 style="
-  font-family:'Allura',cursive;
+<!-- HERO -->
+<div class="hero">
+  <h1 class="title">Candlelight Moments</h1>
+  <p class="subtitle">Some memories glow quietly</p>
+</div>
+
+<!-- GALLERY TITLE -->
+<h2 style="
   text-align:center;
-  font-size:60px;
-  color:#ffb703;
-  text-shadow:
-    0 0 20px rgba(255,180,60,.6),
-    0 0 40px rgba(255,140,40,.4);
+  font-family:'Allura',cursive;
+  font-size:42px;
   margin-top:30px;
 ">
-  Candlelight Moments
-</h1>
-
-<p style="
-  text-align:center;
-  letter-spacing:3px;
-  color:#ffe6c7;
-  margin-top:2px;
-">
-  SOME MEMORIES DON’T SPEAK — THEY GLOW QUIETLY IN THE DARK.
-</p>
-
-
-
-<h2 style="text-align:center;font-family:'Allura';margin-top:30px;">
   Moments by the flame
 </h2>
 
+<!-- GALLERY -->
 <div class="grid" id="grid"></div>
 
-<h2 style="text-align:center;font-family:'Allura';margin-top:60px;">
+<!-- MESSAGE TITLE -->
+<h2 style="
+  text-align:center;
+  font-family:'Allura',cursive;
+  font-size:42px;
+  margin-top:40px;
+">
   Leave a little feeling here
 </h2>
 
-<div id="msg" style="
-  width:90%;
-  margin:30px auto;
-  padding:20px;
-  border-radius:20px;
-  background:rgba(255,190,120,.1);
-  text-align:center;
-  box-shadow:0 0 35px rgba(255,180,90,.35);
-  line-height:1.7;
-"></div>
+<!-- MESSAGE -->
+<div class="msg-box" id="msg"></div>
 
-<div class="controls">
- <div class="controlBox" id="music">🎶 Music</div>
-<div class="controlBox" id="spark">✨ Sparkles</div>
+<!-- CONTROLS -->
+<div id="topControls">
+  <div class="controlBox" id="musicBtn">🎶 Music</div>
+  <div class="controlBox" id="sparkBtn">✨ Sparkles</div>
 </div>
 
+<audio id="audio" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+</audio>
 
+<div id="sparkLayer"></div>
+<div id="flame"></div>
 
 <script>
 
-let data = [
-  {
-    type:"image",
-    url:"https://images.unsplash.com/photo-1519681393784-d120267933ba",
-    caption:"A quiet candle night",
-    memory:"That peaceful night 🤍"
-  },
-  {
-    type:"image",
-    url:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-    caption:"Golden memories",
-    memory:"Everything felt warm ✨"
-  },
-  {
-    type:"video",
-    url:"https://www.w3schools.com/html/mov_bbb.mp4",
-    caption:"A moving moment"
-  }
-];
-
-let messages = `You are my calm place 🤍
----
-Every moment feels warm 🕯️
----
-Some memories glow forever ✨`;
-
-let music = "";
-let PASS = "123";
-    
+/* PASSWORD */
 function checkPassword(){
-  const input = document.getElementById("passInput").value;
-
-  if(input === "123"){
-    document.getElementById("lockScreen").style.display = "none";
-  } else {
-    document.getElementById("wrongPass").style.display = "block";
-  }
+  if(passInput.value==="123"){
+    lockScreen.style.display="none";
+  }else err.style.display="block";
+}
+function togglePass(){
+  passInput.type=passInput.type==="password"?"text":"password";
 }
 
 /* DATA */
+let data=[
+  {url:"https://images.unsplash.com/photo-1519681393784-d120267933ba",cap:"Memory 1"},
+  {url:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e",cap:"Memory 2"}
+];
 
-
-const grid = document.getElementById("grid");
-
-data.forEach(item => {
-  let card = document.createElement("div");
-card.className = "card";
-
-  let media;
-  if(item.type === "video"){
-    media = document.createElement("video");
-    media.src = item.url;
-    media.controls = true;
-  } else {
-    media = document.createElement("img");
-    media.src = item.url;
-  }
-
-  card.appendChild(media);
-
-  let cap = document.createElement("div");
-  cap.innerText = item.caption;
-  cap.style.textAlign = "center";
-  cap.style.padding = "8px";
-
-  card.appendChild(cap);
-
-  if(item.memory){
-  let mem = document.createElement("div");
-  mem.innerText = "🕯️ " + item.memory;
-  mem.style.fontSize = "13px";
-  mem.style.opacity = "0.8";
-  mem.style.textAlign = "center";
-  mem.style.paddingBottom = "10px";
-  card.appendChild(mem);
-}
-
-  grid.appendChild(card);
+data.forEach(i=>{
+  let c=document.createElement("div");
+  c.className="card";
+  c.innerHTML=`<img src="${i.url}"><div class="caption">${i.cap}</div>`;
+  grid.appendChild(c);
 });
 
-msg.innerHTML = `
-💌 You are my calm place 🤍 <br><br>
-💌 Every moment feels warm 🕯️ <br><br>
-💌 Some memories glow forever ✨
-`;
+msg.innerHTML="💌 You are my calm place<br><br>💌 Moments glow forever";
 
-/* MUSIC (DEMO MODE FIX) */
-let playing = false;
-
-const musicBtn = document.getElementById("music");
-const bgMusic = document.getElementById("bgMusic");
-
-musicBtn.onclick = () => {
-  playing = !playing;
-
-  if (playing) {
-    bgMusic.play();
-    musicBtn.innerText = "⏸ Music";
-  } else {
-    bgMusic.pause();
-    musicBtn.innerText = "🎶 Music";
-  }
+/* MUSIC */
+let playing=false;
+musicBtn.onclick=()=>{
+  playing=!playing;
+  if(playing){audio.play();musicBtn.innerText="⏸ Music";}
+  else{audio.pause();musicBtn.innerText="🎶 Music";}
 };
 
-
-/* SPARKLE*/
-const sparkleBtn = document.getElementById("spark");
-const sparkleLayer = document.getElementById("sparkle-layer");
-
-let sparkleOn = false;
-let sparkleInterval;
-
-sparkleBtn.onclick = () => {
-  sparkleOn = !sparkleOn;
-
-  sparkleBtn.innerText = sparkleOn ? "✨ ON" : "✨ Sparkles";
-
-  if (sparkleOn) {
-    sparkleInterval = setInterval(() => {
-      let s = document.createElement("div");
-      s.className = "spark";
-      s.style.left = Math.random() * 100 + "vw";
-
-      sparkleLayer.appendChild(s);  // ✅ FIXED
-
-      setTimeout(() => s.remove(), 4000);
-    }, 300);
-  } else {
-    clearInterval(sparkleInterval);
-  }
+/* SPARKLES */
+let on=false,inter;
+sparkBtn.onclick=()=>{
+  on=!on;
+  if(on){
+    inter=setInterval(()=>{
+      let s=document.createElement("div");
+      s.className="spark";
+      s.style.left=Math.random()*100+"vw";
+      sparkLayer.appendChild(s);
+      setTimeout(()=>s.remove(),4000);
+    },300);
+  }else clearInterval(inter);
 };
 
-
-const passInput = document.getElementById("passInput");
-const togglePass = document.getElementById("togglePass");
-
-togglePass.onclick = () => {
-  const hidden = passInput.type === "password";
-  passInput.type = hidden ? "text" : "password";
-  togglePass.innerText = hidden ? "🙈" : "👁️";
-
-  
-}
-
-
-document.addEventListener("mousemove", e=>{
-  const flame = document.getElementById("flame");
-
-  flame.style.left = e.clientX+"px";
-  flame.style.top = e.clientY+"px";
+/* FLAME */
+document.addEventListener("mousemove",e=>{
+  flame.style.left=e.clientX+"px";
+  flame.style.top=e.clientY+"px";
 });
-
 </script>
-<audio id="bgMusic" loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-</audio>
 
-<div id="flame"></div>
-
-<div id="sparkle-layer"></div>
 </body>
 </html>

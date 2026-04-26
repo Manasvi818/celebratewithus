@@ -728,45 +728,40 @@ Let’s do this again!`;
 
 music = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
 
-document.getElementById("lockScreen").style.display = "none";
-const viewer = document.getElementById("viewerPage");
-viewer.style.display = "block";
-viewer.classList.add("show");
 
-initViewerFeatures();
 
 function checkPassword(){
   const savedPassword = "123";
   const entered = document.getElementById("passInput").value.trim();
 
-
-  
+  // ✅ ADD THIS (missing in your file)
+  if (entered !== savedPassword) {
+    alert("Wrong password ❌");
+    return;
+  }
 
   // ✅ UNLOCK
   document.getElementById("lockScreen").style.display = "none";
   const viewer = document.getElementById("viewerPage");
   viewer.style.display = "block";
   requestAnimationFrame(() => viewer.classList.add("show"));
-initViewerFeatures();   // ✅ ADD THIS
 
-  // 🎵 LOAD SAVED MUSIC
-  const musicUrl = music;
+  initViewerFeatures();
+
+  // 🎵 LOAD MUSIC
   const audio = document.getElementById("bgMusic");
   const btn   = document.getElementById("musicToggle");
 
-  if (musicUrl && audio) {
-    audio.src = musicUrl;
+  if (music) {
+    audio.src = music;
     audio.volume = 0.65;
 
     audio.play().then(() => {
-      isPlaying = true;
       btn.textContent = "⏸";
     }).catch(() => {
-      btn.textContent = "▶️"; // autoplay blocked
+      btn.textContent = "▶️";
     });
   }
-
-  
 }
 
 // 🎵 PLAY / PAUSE BUTTON
@@ -774,12 +769,8 @@ document.getElementById("musicToggle").addEventListener("click", async () => {
   const audio = document.getElementById("bgMusic");
   const btn = document.getElementById("musicToggle");
 
-  const musicUrl = music;
-
- 
-
   if (!audio.src) {
-    audio.src = musicUrl;
+    audio.src = music;
     audio.volume = 0.65;
   }
 
@@ -787,14 +778,14 @@ document.getElementById("musicToggle").addEventListener("click", async () => {
     if (audio.paused) {
       await audio.play();
       btn.textContent = "⏸";
-      isPlaying = true;
     } else {
       audio.pause();
       btn.textContent = "▶️";
-      isPlaying = false;
     }
-  } 
-);
+  } catch (err) {
+    console.log("Music error", err);
+  }
+});
 
 </script>
 
