@@ -15,9 +15,24 @@ body{
   font-family:'Poppins', sans-serif;
 }
 
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 70%, rgba(255,180,90,.35), transparent 60%);
+  pointer-events:none;
+  animation:flicker 4s infinite alternate;
+}
+
+@keyframes flicker{
+  from{opacity:.6}
+  to{opacity:1}
+}
+
 /* LOCK */
 #lock{
-  position:fixed;
+  position:absolute;
   inset:0;
   display:flex;
   align-items:center;
@@ -38,6 +53,12 @@ body{
   border:1px solid #ffcc88;
   background:#1a0f0a;
   color:#ffe8be;
+  outline:none;
+}
+.pass-wrap{
+  position:relative;
+  width:100%;
+  overflow:hidden;   /* ✅ prevents overflow */
 }
 button{
   margin-top:10px;
@@ -88,16 +109,30 @@ button{
 
 /* SPARK */
 .spark{
-  position:fixed;
-  width:5px;
-  height:5px;
+  position:absolute;
+  width:6px;
+  height:6px;
   background:#ffd27d;
   border-radius:50%;
+  box-shadow:0 0 12px rgba(255,220,150,.9);
   animation:up 4s linear;
 }
 @keyframes up{
-  from{transform:translateY(100vh);}
-  to{transform:translateY(-10vh);opacity:0;}
+  from{
+    transform:translateY(0);
+    opacity:1;
+  }
+  to{
+    transform:translateY(-120vh);
+    opacity:0;
+  }
+}
+
+#sparkle-layer{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9998;
 }
 
 .pass-wrap{
@@ -156,7 +191,7 @@ button{
 
   <div style="
     background:rgba(255,190,120,.12);
-    padding:34px;
+    padding:34px 28px;
     border-radius:26px;
     text-align:center;
     color:#ffd8a8;
@@ -165,6 +200,7 @@ button{
       0 0 40px rgba(255,180,90,.35),
       inset 0 0 20px rgba(255,200,120,.15);
     width:300px;
+max-width:90vw;
   ">
 
     <h3 style="margin-bottom:10px;">Private Candlelight</h3>
@@ -210,17 +246,17 @@ button{
 ">
   Candlelight Moments
 </h1>
-<div style="height:20px;"></div>
+
 <p style="
   text-align:center;
   letter-spacing:3px;
   color:#ffe6c7;
-  margin-top:5px;
+  margin-top:2px;
 ">
   SOME MEMORIES DON’T SPEAK — THEY GLOW QUIETLY IN THE DARK.
 </p>
 
-<div style="height:20px;"></div>
+
 
 <h2 style="text-align:center;font-family:'Allura';margin-top:30px;">
   Moments by the flame
@@ -350,22 +386,25 @@ musicBtn.onclick = () => {
 
 
 /* SPARKLE*/
-const sparkBtn = document.getElementById("spark");
+const sparkleBtn = document.getElementById("spark");
+const sparkleLayer = document.getElementById("sparkle-layer");
 
 let sparkleOn = false;
 let sparkleInterval;
 
-sparkBtn.onclick = () => {
+sparkleBtn.onclick = () => {
   sparkleOn = !sparkleOn;
 
-  sparkBtn.innerText = sparkleOn ? "✨ ON" : "✨ Sparkles";
+  sparkleBtn.innerText = sparkleOn ? "✨ ON" : "✨ Sparkles";
 
   if (sparkleOn) {
     sparkleInterval = setInterval(() => {
       let s = document.createElement("div");
       s.className = "spark";
       s.style.left = Math.random() * 100 + "vw";
-      document.body.appendChild(s);
+
+      sparkleLayer.appendChild(s);  // ✅ FIXED
+
       setTimeout(() => s.remove(), 4000);
     }, 300);
   } else {
@@ -395,5 +434,6 @@ document.addEventListener("mousemove", e=>{
 
 </script>
 <div id="flame"></div>
+<div id="sparkle-layer"></div>
 </body>
 </html>

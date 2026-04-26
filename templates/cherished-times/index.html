@@ -55,7 +55,17 @@ body{
 }
 
 /* ===== TITLE ===== */
-.titleWrap{text-align:center;margin-top:20px;}
+.bigTitle{
+  color:#8ea086;
+  font-size:clamp(3rem,8vw,6rem);
+  font-weight:700;
+  letter-spacing:3px;
+  text-align:center;
+
+  text-shadow:
+    0 0 18px rgba(110,158,42,0.6),
+    0 0 40px rgba(184,248,148,0.45);
+}
 
 .bigTitle{
   color:#8ea086;
@@ -70,8 +80,9 @@ body{
 .subTitle{
   font-family:"Allura",cursive;
   font-size:18px;
-  color:#5d6a5b;
   letter-spacing:2px;
+  color:#5d6a5b;
+  margin-top:10px;
 }
 
 /* ===== PANEL ===== */
@@ -182,9 +193,41 @@ input[type="range"]{
 }
 
 .passCard{
-  background:white;
-  padding:20px;
-  border-radius:20px;
+  width:min(320px,88vw);
+  background:rgba(255,255,255,0.65);
+  border-radius:22px;
+  padding:22px 18px;
+  text-align:center;
+  box-shadow:0 20px 40px rgba(0,0,0,.18);
+}
+
+.passCard h2{
+  font-size:28px;
+  margin-bottom:6px;
+}
+
+.passCard p{
+  color:#5d6a5b;
+  font-size:14px;
+}
+
+.passCard input{
+  width:100%;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid #cdd8c8;
+  margin-top:10px;
+}
+
+.passCard button{
+  width:100%;
+  margin-top:14px;
+  padding:12px;
+  border-radius:999px;
+  border:none;
+  background:linear-gradient(180deg,#7f8f77,#5e6e59);
+  color:white;
+  font-weight:700;
 }
 
 /* ===== MESSAGE BUBBLE ===== */
@@ -214,6 +257,14 @@ input[type="range"]{
   top:-12px;
   transform:translateX(-50%);
   font-size:16px;
+}
+
+.thoughtTitle{
+  text-align:center;
+  font-family:"Playfair Display";
+  font-size:26px;
+  color:#6f8168;
+  margin-top:25px;
 }
 </style>
 </head>
@@ -249,7 +300,7 @@ input[type="range"]{
 <div class="galleryGrid" id="photoGrid"></div>
 </div>
 
-<h2 style="text-align:center;">Thoughts</h2>
+<h2 class="thoughtTitle">Thoughts</h2>
 <div id="messageList"></div>
 
 
@@ -264,9 +315,20 @@ input[type="range"]{
 
 <!-- MUSIC -->
 <div class="overlay" id="musicOverlay">
-<div class="modal">
-<button onclick="toggleMusic()" id="musicBtn">▶ Play</button>
-</div>
+  <div class="modal">
+    <h3>Music</h3>
+    <p style="color:#5d6a5b;font-size:14px;margin:0;">
+      Background music for this page
+    </p>
+
+    <button id="musicBtn" class="modalBtn" onclick="toggleMusic()">
+      ▶ Play Music
+    </button>
+
+    <button class="modalBtn secondary" onclick="musicOverlay.style.display='none'">
+      Close
+    </button>
+  </div>
 </div>
 
 <!-- DECOR -->
@@ -292,7 +354,7 @@ input[type="range"]{
         <option>Leaves</option>
       </select>
 
-      <button class="modalBtn">Apply</button>
+      <button class="modalBtn" onclick="applyDecor()">Apply</button>
       <button class="modalBtn secondary" onclick="decorOverlay.style.display='none'">Close</button>
 
     </div>
@@ -360,6 +422,9 @@ function toggleMusic(){
 function setNight(){document.body.style.background="#111";}
 function setDay(){document.body.style.background="#dfe8d8";}
 
+function applyDecor(){
+  decorOverlay.style.display="none";
+}
 </script>
 
 </body>
