@@ -379,17 +379,30 @@ border:1px solid rgba(212,160,23,.2);
 max-width:90%;
   ">
 
-    <h3> Private Golden Love</h3>
-
+    <h3>This is a Demo Page</h3>
+<p style="font-size:14px;opacity:0.8;">Password: 123</p>
+<p style="font-size:12px;opacity:0.6;">
+  This is a preview — content is for demo purposes only
+</p>
     <div class="pass-wrap">
   <input
     id="passInput"
     type="password"
-    placeholder="Enter password"
+    placeholder="Enter password (123)"
   >
   <span id="togglePass">👁️</span>
 </div>
-
+<button style="
+  margin-top:12px;
+  padding:8px 16px;
+  border-radius:20px;
+  border:none;
+  background:#d4a017;
+  color:white;
+  cursor:pointer;
+">
+  Create Your Own Page ✨
+</button>
 
     <button onclick="checkPassword()" style="
       margin-top:16px;
@@ -464,10 +477,29 @@ max-width:90%;
 
  const projectId = window.location.pathname.split("/").pop();
 
-let items = [];
-let messages = "";
-let music = "";
-let password = "";
+let items = [
+  {
+    type: "image",
+    url: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format",
+    caption: "A golden evening together",
+    memory: "One of those moments that stayed forever."
+  },
+  {
+    type: "image",
+    url: "https://images.unsplash.com/photo-1492724441997-5dc865305da7?w=800&auto=format",
+    caption: "Soft silence",
+    memory: "Where words weren’t needed."
+  },
+  {
+    type: "video",
+    url: "https://www.w3schools.com/html/mov_bbb.mp4",
+    caption: "A moving memory"
+  }
+];
+
+let messages = `You feel like home.\n---\nThis space holds quiet love.\n---\nForever, softly.`;
+let music = "https://www.bensound.com/bensound-music/bensound-romantic.mp3";
+let password = "123";
 
 let bgAudio = null;
 let playing = false;
@@ -533,52 +565,9 @@ function setupMusic() {
   /* 🎶 MUSIC */
     
 
-  const musicToggle = document.getElementById("musicToggle");
+  
 
-  musicToggle.onclick = () => {
-    if (!music) {
-      musicToggle.innerText = " No Music";
-      return;
-    }
 
-    if (!bgAudio) {
-      bgAudio = new Audio(music);
-      bgAudio.loop = true;
-      bgAudio.volume = 0.6;
-    }
-
-    if (playing) {
-      bgAudio.pause();
-      playing = false;
-      musicToggle.innerText = "Play Music";
-    } else {
-      bgAudio.play();
-      playing = true;
-      musicToggle.innerText = "Stop Music";
-    }
-  };
-
-async function loadViewerData() {
-  try {
-    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
-    const result = await res.json();
-
-    if (result.success) {
-      items = result.data || [];
-      messages = result.messages || "";
-      music = result.music || "";
-      password = result.password || "";
-
-      render();
-      renderMessages();
-      setupPassword();
-      setupMusic();
-    }
-
-  } catch (err) {
-    console.error("❌ Load failed:", err);
-  }
-}
 
   function startMusic(){
   if (!music) return;
@@ -638,7 +627,7 @@ function render() {
   grid.innerHTML = "";
 
   if(items.length === 0){
-    grid.innerHTML = `<p style="text-align:center;grid-column:1/-1;">No moments yet 🤍</p>`;
+    grid.innerHTML = `<p style="text-align:center;grid-column:1/-1;">This is a demo gallery ✨</p>`;
     return;
   }
 
@@ -834,6 +823,7 @@ function closeZoom(){
 
 // Then inside your existing DOMContentLoaded listener, ADD:
 window.addEventListener("DOMContentLoaded", () => {
+
   zoomModal  = document.getElementById("zoomModal");
   zoomImg    = document.getElementById("zoomImg");
   zoomCaption= document.getElementById("zoomCaption");
@@ -848,7 +838,38 @@ window.addEventListener("DOMContentLoaded", () => {
     if (e.key === "Escape") closeZoom();
   });
 
-  loadViewerData(); // keep this here too
+  // ✅ FIXED MUSIC BUTTON (safe)
+  const musicToggle = document.getElementById("musicToggle");
+
+  musicToggle.onclick = () => {
+    if (!music) {
+      musicToggle.innerText = "No Music";
+      return;
+    }
+
+    if (!bgAudio) {
+      bgAudio = new Audio(music);
+      bgAudio.loop = true;
+      bgAudio.volume = 0.6;
+    }
+
+    if (playing) {
+      bgAudio.pause();
+      playing = false;
+      musicToggle.innerText = "Play Music";
+    } else {
+      bgAudio.play();
+      playing = true;
+      musicToggle.innerText = "Stop Music";
+    }
+  };
+
+  // ✅ IMPORTANT: render demo content
+  render();
+  renderMessages();
+  setupPassword();
+  setupMusic();
+
 });
 
   /* 💌 FLOATING WORDS */
