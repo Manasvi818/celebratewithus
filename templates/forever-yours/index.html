@@ -442,6 +442,9 @@ async function loadViewerData() {
     data = result.data || [];
 messages = result.messages || "";
 music = result.music || "";
+if (!music) {
+  music = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+}
 
 // ✅ ALWAYS RUN DEMO (outside condition)
 if (!data.length) {
@@ -465,7 +468,7 @@ if (!messages) {
 
 renderGallery();
 renderMessages();
-
+setupMusic();   // ✅ ADD THIS
     
 
   } catch (err) {
