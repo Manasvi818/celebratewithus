@@ -90,6 +90,26 @@ border:1px solid var(--softShadow);
 border-radius:26px;
 padding:20px;
 box-shadow:var(--shadow);
+  overflow:hidden;
+
+  .card img,
+.card video{
+  width:100%;
+  max-width:100%;
+  display:block;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:14px;
+  width:100%;
+}
+
+.card{
+  width:100%;
+  max-width:100%;
+}
 }
 
 /* Title */
