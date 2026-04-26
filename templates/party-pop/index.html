@@ -92,6 +92,8 @@ body::after{
   padding:20px;
   box-shadow:var(--shadow);
   backdrop-filter: blur(14px);
+    overflow:hidden;
+
 }
 
 /* Title */
@@ -486,6 +488,25 @@ img, video{
   }
 
 }
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:14px;
+  width:100%;
+}
+
+.card{
+  width:100%;
+  max-width:100%;
+}
+
+.card img,
+.card video{
+  width:100%;
+  max-width:100%;
+  display:block;
+}
 </style>
 </head>
 
@@ -621,6 +642,16 @@ data = [
     caption: "Party vibes ✨"
   },
   {
+    type: "image",
+    url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1777227394/laugh_riot1_ikcksd.jpg",
+    caption: "Fun moment 😂"
+  },
+  {
+    type: "image",
+    url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1777227394/laugh_riot2_rp3vso.jpg",
+    caption: "Crazy vibes 😎"
+  },
+  {
     type: "video",
     url: "https://www.w3schools.com/html/mov_bbb.mp4"
   }
@@ -637,7 +668,7 @@ let isLoaded = false;
 function loadViewerData() {
   
   // optional demo music
-  song = "https://www.w3schools.com/html/horse.mp3";
+  song = "https://res.cloudinary.com/di8n4lsjz/video/upload/v1771235760/Confetti_Explosion_ui9h2p.mp3";
 
   render();
   loadMessages();
