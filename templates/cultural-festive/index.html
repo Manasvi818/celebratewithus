@@ -336,7 +336,7 @@ body.midnight .caption{
 <p style="margin-top:10px; color:#7B1E2B;">
   This is a Demo Page <br>
   Password: 123
-</p>il
+</p>
   <input type="password" id="passInput" placeholder="Enter password">
   <button class="unlockBtn" onclick="unlock()">Unlock</button>
 </div>
@@ -426,6 +426,7 @@ body.midnight .caption{
 /* ===== STORAGE KEYS (must match editor) ===== */
 const projectId = window.location.pathname.split("/").pop();
 
+let data = [];   // ✅ ADD THIS LINE
 
 let messages = "";
 let music = "";
@@ -724,7 +725,7 @@ window.addEventListener("DOMContentLoaded", () => {
   password = "123";
 
   // 🎞 Demo media
- let data = [
+  data = [
     {
       type: "image",
       url: "https://images.unsplash.com/photo-1608889175631-7d3f9b89e0ee",
