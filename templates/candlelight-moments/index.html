@@ -10,10 +10,9 @@
 <style>
 body{
   margin:0;
-  background:#0d0503;
+  background:radial-gradient(circle at center,#2b160c,#0d0503);
   color:#ffd8a8;
-    font-family:'Poppins', sans-serif;
-
+  font-family:'Poppins', sans-serif;
 }
 
 /* LOCK */
@@ -23,7 +22,8 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  background:#0d0503;
+    background:radial-gradient(circle at center,#2b160c,#0d0503);
+
 }
 .box{
   background:#1a0f0a;
@@ -31,9 +31,13 @@ body{
   border-radius:15px;
   text-align:center;
 }
-input{
-  padding:10px;
+.pass-wrap input{
   width:100%;
+  padding:12px 42px 12px 12px;
+  border-radius:12px;
+  border:1px solid #ffcc88;
+  background:#1a0f0a;
+  color:#ffe8be;
 }
 button{
   margin-top:10px;
@@ -112,29 +116,33 @@ button{
   cursor:pointer;
   color:#ffb703;
 }
+
+.controlBox{
+  background:rgba(255,183,55,0.95);
+  backdrop-filter: blur(6px);
+  color:#3b1f00;
+  padding:10px 18px;
+  border-radius:30px;
+  font-size:14px;
+  cursor:pointer;
+  box-shadow:0 8px 25px rgba(255,180,60,.45);
+}
+
+#flame{
+  position:fixed;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:radial-gradient(circle,#ffd27d,#ff9f1a);
+  box-shadow:0 0 20px orange;
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+}
 </style>
 </head>
 
 <body>
-<h2 style="
-  text-align:center;
-  font-family:'Allura',cursive;
-  font-size:48px;
-  margin-top:40px;
-  opacity:0.9;
-">
-  Moments by the flame
-</h2>
 
-<h2 style="
-  text-align:center;
-  font-family:'Allura',cursive;
-  font-size:48px;
-  margin-top:20px;
-  opacity:0.9;
-">
-  Leave a little feeling here
-</h2>
 
 <div id="lockScreen" style="
   position:fixed;
@@ -152,6 +160,7 @@ button{
     border-radius:26px;
     text-align:center;
     color:#ffd8a8;
+    box-sizing:border-box;
     box-shadow:
       0 0 40px rgba(255,180,90,.35),
       inset 0 0 20px rgba(255,200,120,.15);
@@ -179,7 +188,9 @@ button{
     </button>
 
     <!-- ✅ PASSWORD TEXT -->
-
+<p style="margin-top:10px;font-size:13px;color:#ffd27d;">
+  Demo Password: <b>123</b>
+</p>
     <p id="wrongPass" style="display:none;color:#ff9f1a;margin-top:8px;">
       Wrong password
     </p>
@@ -199,7 +210,7 @@ button{
 ">
   Candlelight Moments
 </h1>
-
+<div style="height:20px;"></div>
 <p style="
   text-align:center;
   letter-spacing:3px;
@@ -209,27 +220,35 @@ button{
   SOME MEMORIES DON’T SPEAK — THEY GLOW QUIETLY IN THE DARK.
 </p>
 
+<div style="height:20px;"></div>
+
+<h2 style="text-align:center;font-family:'Allura';margin-top:30px;">
+  Moments by the flame
+</h2>
+
 <div class="grid" id="grid"></div>
 
-<div style="
+<h2 style="text-align:center;font-family:'Allura';margin-top:60px;">
+  Leave a little feeling here
+</h2>
+
+<div id="msg" style="
   width:90%;
-  box-shadow:0 0 35px rgba(255,180,90,.35);
   margin:30px auto;
   padding:20px;
   border-radius:20px;
   background:rgba(255,190,120,.1);
   text-align:center;
-  
-" id="msg"></div>
+  box-shadow:0 0 35px rgba(255,180,90,.35);
+  line-height:1.7;
+"></div>
 
 <div class="controls">
-  <div class="btn" id="music">Music</div>
-  <div class="btn" id="spark">Sparkles</div>
+ <div class="controlBox" id="music">🎶 Music</div>
+<div class="controlBox" id="spark">✨ Sparkles</div>
 </div>
 
-<p style="margin-top:10px;font-size:13px;color:#ffd27d;">
-  Demo Password: <b>123</b>
-</p>
+
 
 <script>
 
@@ -329,20 +348,31 @@ musicBtn.onclick = () => {
   musicBtn.innerText = playing ? "⏸ Music" : "🎶 Music";
 };
 
-/* SPARK */
-let on=false,inter;
-spark.onclick=()=>{
-  on=!on;
-  if(on){
-    inter=setInterval(()=>{
-      let s=document.createElement("div");
-      s.className="spark";
-      s.style.left=Math.random()*100+"vw";
+
+/* SPARKLE*/
+const sparkBtn = document.getElementById("spark");
+
+let sparkleOn = false;
+let sparkleInterval;
+
+sparkBtn.onclick = () => {
+  sparkleOn = !sparkleOn;
+
+  sparkBtn.innerText = sparkleOn ? "✨ ON" : "✨ Sparkles";
+
+  if (sparkleOn) {
+    sparkleInterval = setInterval(() => {
+      let s = document.createElement("div");
+      s.className = "spark";
+      s.style.left = Math.random() * 100 + "vw";
       document.body.appendChild(s);
-      setTimeout(()=>s.remove(),4000);
-    },300);
-  }else clearInterval(inter);
+      setTimeout(() => s.remove(), 4000);
+    }, 300);
+  } else {
+    clearInterval(sparkleInterval);
+  }
 };
+
 
 const passInput = document.getElementById("passInput");
 const togglePass = document.getElementById("togglePass");
@@ -351,8 +381,19 @@ togglePass.onclick = () => {
   const hidden = passInput.type === "password";
   passInput.type = hidden ? "text" : "password";
   togglePass.innerText = hidden ? "🙈" : "👁️";
-};
-</script>
 
+  
+}
+
+
+document.addEventListener("mousemove", e=>{
+  const flame = document.getElementById("flame");
+
+  flame.style.left = e.clientX+"px";
+  flame.style.top = e.clientY+"px";
+});
+
+</script>
+<div id="flame"></div>
 </body>
 </html>
