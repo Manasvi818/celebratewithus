@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CelebrateWithUs — Templates</title>
+  <title>CelebrateWithUs</title>
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
-  <!-- Main Styles -->
+  <!-- Main CSS -->
   <link rel="stylesheet" href="styles/main.css" />
 </head>
+
 <body>
 
 <!-- NAVBAR -->
@@ -21,9 +21,9 @@
 
     <div class="nav-links">
       <a href="#">Home</a>
-      <a href="#">Features</a>
-      <a href="#">How It Works</a>
-      <a href="#">Pricing</a>
+      <a href="#features">Features</a>
+      <a href="#how">How It Works</a>
+      <a href="#pricing">Pricing</a>
       <a href="#">Demo</a>
       <a href="#">FAQs</a>
     </div>
@@ -38,6 +38,7 @@
 
     <div class="hero-split">
 
+      <!-- LEFT -->
       <div class="hero-left">
         <p class="tagline">💖 Made for Every Special Moment</p>
 
@@ -63,6 +64,7 @@
         </div>
       </div>
 
+      <!-- RIGHT -->
       <div class="hero-right">
         <img src="https://i.imgur.com/8Km9tLL.png" alt="preview">
       </div>
@@ -75,39 +77,76 @@
 <main class="container">
 
 <!-- FEATURES -->
-<section class="features">
+<section id="features" class="features">
   <h2 class="section-title">Everything You Get 💖</h2>
   <p class="section-subtitle">Powerful features to make your memories special</p>
 
   <div class="features-grid">
-    <div class="feature-card">🔒 Password Protection</div>
-    <div class="feature-card">♾️ Lifetime Access</div>
-    <div class="feature-card">🔗 Shareable Link</div>
-    <div class="feature-card">📸 Photos & Videos</div>
+
+    <div class="feature-card">
+      🔒
+      <h3>Password Protection</h3>
+      <p>Keep your webpage private and share only with people you trust.</p>
+    </div>
+
+    <div class="feature-card">
+      ♾️
+      <h3>Lifetime Access</h3>
+      <p>Pay once and access forever. No expiry.</p>
+    </div>
+
+    <div class="feature-card">
+      🔗
+      <h3>Custom Link</h3>
+      <p>Share your celebration anywhere with a unique link.</p>
+    </div>
+
+    <div class="feature-card">
+      📸
+      <h3>Photos, Videos & Music</h3>
+      <p>Add unlimited memories and make it truly yours.</p>
+    </div>
+
   </div>
 </section>
 
 <!-- HOW IT WORKS -->
-<section class="how-it-works">
+<section id="how" class="how-it-works">
   <h2 class="section-title">How It Works</h2>
 
   <div class="steps">
-    <div class="step">1. Choose Vibe</div>
-    <div class="step">2. Add Memories</div>
-    <div class="step">3. Share</div>
+
+    <div class="step">
+      <h3>1</h3>
+      <p>Choose Your Vibe</p>
+    </div>
+
+    <div class="step">
+      <h3>2</h3>
+      <p>Add Your Memories</p>
+    </div>
+
+    <div class="step">
+      <h3>3</h3>
+      <p>Share & Celebrate</p>
+    </div>
+
   </div>
 </section>
 
 <!-- DEMO -->
 <section class="demo-section">
+
   <div class="demo-left">
     <h2>See It In Action</h2>
-    <button class="secondary-btn">View Demo</button>
+    <p>Here’s a preview of a live celebration page.</p>
+    <button class="secondary-btn">View Live Demo</button>
   </div>
 
   <div class="demo-right">
-    <img src="https://i.imgur.com/2yaf2wb.png">
+    <img src="https://i.imgur.com/2yaf2wb.png" alt="demo">
   </div>
+
 </section>
 
 <!-- TESTIMONIALS -->
@@ -115,20 +154,42 @@
   <h2 class="section-title">What Our Users Say</h2>
 
   <div class="testimonial-grid">
-    <div class="testimonial">Amazing experience ❤️</div>
-    <div class="testimonial">Very easy to use</div>
-    <div class="testimonial">Loved it!</div>
+
+    <div class="testimonial">
+      <p>"I created a page for my girlfriend — she loved it ❤️"</p>
+      <span>— Rohit Sharma ⭐⭐⭐⭐⭐</span>
+    </div>
+
+    <div class="testimonial">
+      <p>"Super easy to use and looks amazing!"</p>
+      <span>— Priya Mehta ⭐⭐⭐⭐⭐</span>
+    </div>
+
+    <div class="testimonial">
+      <p>"Best way to make memories digital."</p>
+      <span>— Ankit Verma ⭐⭐⭐⭐⭐</span>
+    </div>
+
   </div>
 </section>
 
 <!-- PRICING -->
-<section class="pricing">
-  <h2 class="section-title">Simple Pricing</h2>
+<section id="pricing" class="pricing">
+  <h2 class="section-title">Simple, Transparent Pricing</h2>
 
   <div class="price-card">
     <h3>₹199</h3>
     <p>Lifetime Access</p>
-    <button class="primary-btn">Get Started</button>
+
+    <ul style="text-align:left; margin:15px 0;">
+      <li>✔ Unlimited Pages</li>
+      <li>✔ Password Protection</li>
+      <li>✔ Photos, Videos, Music</li>
+      <li>✔ Custom Shareable Link</li>
+      <li>✔ No Expiry</li>
+    </ul>
+
+    <button class="primary-btn">Get Started Now →</button>
   </div>
 </section>
 
@@ -136,7 +197,7 @@
 
 <!-- FOOTER -->
 <footer class="site-footer">
-  <p>© CelebrateWithUs.web • Crafted with 💛</p>
+  <p>© 2025 CelebrateWithUs • Crafted with 💛</p>
 </footer>
 
 </body>
