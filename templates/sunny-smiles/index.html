@@ -796,43 +796,62 @@ const MUSIC_KEY = `music_${projectId}`;
 
 let isPlaying = false;
 
-function checkPassword(){
+function unlockUI(){
   const savedPassword = "123";
   const entered = document.getElementById("passInput").value.trim();
 
-  
-
   if (entered !== savedPassword) {
     alert("Wrong password ❌");
-    return;
+    return false;
   }
 
-  // ✅ UNLOCK
+    // ✅ move unlock here
   document.getElementById("lockScreen").style.display = "none";
- const viewer = document.getElementById("viewerPage");
-viewer.style.display = "block";
-requestAnimationFrame(() => viewer.classList.add("show"));
+  const viewer = document.getElementById("viewerPage");
+  viewer.style.display = "block";
+  requestAnimationFrame(() => viewer.classList.add("show"));
 
+  
 
-  setTimeout(() => {
+  return true;
+}
+
+async function checkPassword(){
+
+  await loadViewerData();   // ✅ load data first
+
+  const unlocked = unlockUI();   // ✅ correct function
+
+  if (!unlocked) return;
+
+  // 🎵 PLAY MUSIC
   const audio = document.getElementById("bgMusic");
   const btn   = document.getElementById("musicToggle");
 
   if (music && audio) {
-    audio.src = music;
-    audio.volume = 0.6;
-   audio.muted = true;
+   audio.src = music;
+audio.volume = 0.6;
 
-    audio.play().then(() => {
-      audio.muted = false;
-      isPlaying = true;
-      btn.textContent = "⏸";
-    }).catch(() => {
-      btn.textContent = "▶️";
-    });
-  }
-}, 200);
+// ✅ fix autoplay restriction
+audio.muted = true;
+
+try {
+  await audio.play();   // allowed because muted
+  audio.muted = false;  // unmute after play
+  isPlaying = true;
+  btn.textContent = "⏸";
+} catch (e) {
+  btn.textContent = "▶️";
+  console.log("Autoplay blocked:", e);
 }
+  }
+
+  initViewerFeatures();
+}
+
+  
+
+  
 
 // 🎵 PLAY / PAUSE BUTTON
 document.getElementById("musicToggle").addEventListener("click", () => {
@@ -1137,19 +1156,6 @@ function initViewerFeatures(){
   });
 }
 
-
-/* Hook into unlock */
-const _oldCheck = checkPassword;
-
-checkPassword = async function(){
-  await loadViewerData();   // ✅ LOAD FIRST
-
-  _oldCheck();              // ✅ THEN CHECK PASSWORD
-
-  if(document.getElementById("viewerPage").style.display === "block"){
-    initViewerFeatures();
-  }
-};
 
 /* 😊 Cursor Emoji Trail */
 (function emojiTrail() {
