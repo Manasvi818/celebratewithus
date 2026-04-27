@@ -814,22 +814,24 @@ viewer.style.display = "block";
 requestAnimationFrame(() => viewer.classList.add("show"));
 
 
-  // 🎵 LOAD SAVED MUSIC
-  const musicUrl = music;
+  setTimeout(() => {
   const audio = document.getElementById("bgMusic");
   const btn   = document.getElementById("musicToggle");
 
-  if (musicUrl && audio) {
-    audio.src = musicUrl;
+  if (music && audio) {
+    audio.src = music;
     audio.volume = 0.6;
+   audio.muted = true;
 
     audio.play().then(() => {
+      audio.muted = false;
       isPlaying = true;
       btn.textContent = "⏸";
     }).catch(() => {
-      btn.textContent = "▶️"; // autoplay blocked
+      btn.textContent = "▶️";
     });
   }
+}, 200);
 }
 
 // 🎵 PLAY / PAUSE BUTTON
