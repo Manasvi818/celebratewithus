@@ -736,11 +736,7 @@ body.night .modalBtn.secondary{
    PASSWORD
 =========================== */
 function unlock(){
-  if(!isLoaded){
-    alert("Wait...");
-    return;
-  }
-
+  
   const entered = document.getElementById("pass").value.trim();
 
   if(entered === PASS){
