@@ -14,39 +14,7 @@
 </head>
 <body>
 
-  <!-- Fading / Sliding Animations -->
-  <style>
-    .hidden { display:none; opacity:0; }
-    .fade-slide {
-      display:block !important;
-      animation: fadeSlideDown 0.55s cubic-bezier(.25,.1,.25,1) forwards;
-    }
-    @keyframes fadeSlideDown {
-      0% { opacity:0; transform:translateY(-12px); filter:blur(6px); }
-      100%{ opacity:1; transform:translateY(0); filter:blur(0px); }
-    }
-
-    /* 🌸 Pink Pastel Gradient Glow Line */
-    .color-line {
-      width: 0;
-      height: 4px;
-      max-width: 650px;
-      background: linear-gradient(to right, #ff8ecf, #ffb7dd, #ffd6e8, #ffe4f2);
-      margin: 14px auto 0;
-      border-radius: 6px;
-      animation: grow-line 1.8s forwards ease-in-out, glow 3s infinite alternate ease-in-out;
-    }
-
-    @keyframes grow-line {
-      from { width: 0; }
-      to   { width: 650px; }
-    }
-
-    @keyframes glow {
-      from { box-shadow: 0 0 4px rgba(255,139,207,0.25); }
-      to   { box-shadow: 0 0 12px rgba(255,139,207,0.9); }
-    }
-  </style>
+<!-- NAVBAR -->
 <nav class="navbar">
   <div class="nav-container">
     <div class="logo">💖 CelebrateWithUs</div>
@@ -63,152 +31,78 @@
     <button class="nav-btn">Start Creating</button>
   </div>
 </nav>
-  <!-- HERO SECTION -->
-  <div class="hero-split">
 
-  <!-- LEFT SIDE -->
-  <div class="hero-left">
-    <p class="tagline">💖 Made for Every Special Moment</p>
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
 
-    <h1>
-      Create Beautiful Personalized Celebration Pages
-      <span class="highlight">in Minutes</span>
-    </h1>
+    <div class="hero-split">
 
-    <p class="subtitle">
-      Surprise your loved ones with a custom webpage filled with photos, messages, videos, music and more.
-    </p>
+      <div class="hero-left">
+        <p class="tagline">💖 Made for Every Special Moment</p>
 
-    <div class="hero-buttons">
-      <button class="primary-btn">Start Creating →</button>
-      <button class="secondary-btn">View Demo</button>
-    </div>
+        <h1>
+          Create Beautiful Personalized Celebration Pages
+          <span class="highlight">in Minutes</span>
+        </h1>
 
-    <div class="hero-features">
-      <span>✔ No Coding</span>
-      <span>✔ Mobile Friendly</span>
-      <span>✔ Lifetime Access</span>
-      <span>✔ Secure & Private</span>
-    </div>
-  </div>
+        <p class="subtitle">
+          Surprise your loved ones with a custom webpage filled with photos, messages, videos, music and more.
+        </p>
 
-  <!-- RIGHT SIDE (THIS WAS MISSING IN YOUR SITE) -->
-  <div class="hero-right">
-    <img src="https://i.imgur.com/8Km9tLL.png" alt="preview">
-  </div>
+        <div class="hero-buttons">
+          <button class="primary-btn">Start Creating →</button>
+          <button class="secondary-btn">View Demo</button>
+        </div>
 
-</div>
-
-  <main class="container">
-
-    <!-- CHOOSE VIBE -->
-    <section class="choose-vibe" id="vibe-section">
-      <h2>Choose Your Occasion Vibe</h2>
-      <p class="muted">Select how you want your celebration to feel:</p>
-
-      <div class="vibes" id="vibeButtons">
-        <button class="vibe-btn" data-vibe="casual">Casual</button>
-        <button class="vibe-btn" data-vibe="romantic">Romantic</button>
-        <button class="vibe-btn" data-vibe="traditional">Traditional</button>
-        <button class="vibe-btn" data-vibe="family">Family-Time</button>
-        <button class="vibe-btn" data-vibe="fun">Fun / Quirky</button>
+        <div class="hero-features">
+          <span>✔ No Coding</span>
+          <span>✔ Mobile Friendly</span>
+          <span>✔ Lifetime Access</span>
+          <span>✔ Secure & Private</span>
+        </div>
       </div>
-    </section>
 
-    <!-- TEMPLATES (Hidden by default) -->
-    <section class="templates hidden" id="templates-section">
-      <h2>Pick Your Favorite Template</h2>
-      <p class="muted">Choose one that fits your celebration vibe:</p>
-      <div id="templatesGrid" class="templates-grid"></div>
-      
-    </section>
+      <div class="hero-right">
+        <img src="https://i.imgur.com/8Km9tLL.png" alt="preview">
+      </div>
 
-    <!-- TEMPLATE PREVIEW -->
-<section class="template-preview hidden" id="preview-section">
-  <h2>Preview</h2>
+    </div>
 
-  <div class="preview-box">
-  <h1 class="template-title" id="previewTitle">Easy Breezy</h1>
-  <div class="preview-wrapper">
-  <iframe id="previewFrame"></iframe>
-</div>
-</div>
+  </div>
+</header>
 
-  
-</section>
+<main class="container">
 
-    <!-- PRICING -->
-    <section class="features">
+<!-- FEATURES -->
+<section class="features">
   <h2 class="section-title">Everything You Get 💖</h2>
-<p class="section-subtitle">Powerful features to make your memories special</p>
+  <p class="section-subtitle">Powerful features to make your memories special</p>
 
   <div class="features-grid">
-
-    <div class="feature-card">
-      <div class="icon">🔒</div>
-      <h3>Password Protection</h3>
-      <p>Keep your webpage private and share only with people you trust.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="icon">♾️</div>
-      <h3>Lifetime Access</h3>
-      <p>Pay once and access your webpage forever. No expiry.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="icon">🔗</div>
-      <h3>Shareable Link</h3>
-      <p>Send your webpage to anyone with a simple link.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="icon">📸</div>
-      <h3>Add Your Photos</h3>
-      <p>Upload unlimited memories and create a beautiful gallery.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="icon">💌</div>
-      <h3>Custom Messages</h3>
-      <p>Write captions, notes, and heartfelt messages.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="icon">📱</div>
-      <h3>Mobile Friendly</h3>
-      <p>Works perfectly on phones, tablets, and desktops.</p>
-    </div>
-
+    <div class="feature-card">🔒 Password Protection</div>
+    <div class="feature-card">♾️ Lifetime Access</div>
+    <div class="feature-card">🔗 Shareable Link</div>
+    <div class="feature-card">📸 Photos & Videos</div>
   </div>
 </section>
 
+<!-- HOW IT WORKS -->
 <section class="how-it-works">
   <h2 class="section-title">How It Works</h2>
 
   <div class="steps">
-    <div class="step">
-      <h3>1</h3>
-      <p>Choose Your Vibe</p>
-    </div>
-
-    <div class="step">
-      <h3>2</h3>
-      <p>Add Your Memories</p>
-    </div>
-
-    <div class="step">
-      <h3>3</h3>
-      <p>Share & Celebrate</p>
-    </div>
+    <div class="step">1. Choose Vibe</div>
+    <div class="step">2. Add Memories</div>
+    <div class="step">3. Share</div>
   </div>
 </section>
 
+<!-- DEMO -->
 <section class="demo-section">
   <div class="demo-left">
     <h2>See It In Action</h2>
-    <p>Here’s a preview of a live celebration page.</p>
-    <button class="secondary-btn">View Live Demo</button>
+    <button class="secondary-btn">View Demo</button>
   </div>
 
   <div class="demo-right">
@@ -216,58 +110,34 @@
   </div>
 </section>
 
+<!-- TESTIMONIALS -->
 <section class="testimonials">
   <h2 class="section-title">What Our Users Say</h2>
 
   <div class="testimonial-grid">
-    <div class="testimonial">
-      <p>"Made my girlfriend cry ❤️"</p>
-      <span>— Rohit Sharma</span>
-    </div>
-
-    <div class="testimonial">
-      <p>"Super easy and beautiful pages!"</p>
-      <span>— Priya Mehta</span>
-    </div>
-
-    <div class="testimonial">
-      <p>"Best way to celebrate online."</p>
-      <span>— Ankit Verma</span>
-    </div>
+    <div class="testimonial">Amazing experience ❤️</div>
+    <div class="testimonial">Very easy to use</div>
+    <div class="testimonial">Loved it!</div>
   </div>
 </section>
 
+<!-- PRICING -->
 <section class="pricing">
   <h2 class="section-title">Simple Pricing</h2>
 
   <div class="price-card">
-    <h3>₹399</h3>
+    <h3>₹199</h3>
     <p>Lifetime Access</p>
     <button class="primary-btn">Get Started</button>
   </div>
 </section>
 
-  </main>
+</main>
 
-  <!-- FOOTER -->
-  <footer class="site-footer">
+<!-- FOOTER -->
+<footer class="site-footer">
   <p>© CelebrateWithUs.web • Crafted with 💛</p>
-
-  <div class="footer-links">
-    <a href="terms.html">Terms & Conditions</a> |
-    <a href="privacy.html">Privacy Policy</a> |
-    <a href="refund.html">Refund Policy</a> |
-    <a href="contact.html">Contact Us</a> |
-    <a href="faq.html">FAQs</a>
-  </div>
 </footer>
-
-  <!-- Scripts -->
-
-  <script src="scripts/app.js"></script>
-
-  <!-- Smooth Scroll -->
-  
 
 </body>
 </html>
