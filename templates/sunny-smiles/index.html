@@ -839,10 +839,10 @@ document.getElementById("musicToggle").addEventListener("click", () => {
 
   if (isPlaying) {
     audio.pause();
-    musicToggle.textContent = "▶️";
+    document.getElementById("musicToggle").textContent = "▶️";
   } else {
     audio.play();
-    musicToggle.textContent = "⏸";
+    document.getElementById("musicToggle").textContent = "⏸";
   }
   isPlaying = !isPlaying;
 });

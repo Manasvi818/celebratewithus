@@ -565,17 +565,20 @@ async function loadViewerData(){
     const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
     const result = await res.json();
 
-    if(result.success){
-      data = result.data || [];
-      messages = result.messages || "";
-      music = result.music || "";
-        password = "123"; // ✅ fixed demo password
+    if(result.success && result.data && result.data.length){
+  data = result.data;
+  messages = result.messages || "";
+  music = result.music || "";
+}else{
+  throw new Error("Empty data"); // forces fallback
+}
 
+password = "123";
 
-      renderGallery();
-      loadMessages();
-      loadMusic();
-    }
+renderGallery();
+loadMessages();
+loadMusic();
+
   }catch(err){
   console.error("Viewer load failed", err);
 
@@ -583,7 +586,7 @@ async function loadViewerData(){
   data = [
     {
       type: "image",
-      url: "https://images.unsplash.com/photo-1518199266791-5375a83190b7",
+      url: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=800&auto=format",
       caption: "Happy vibes 🌸"
     },
     {
