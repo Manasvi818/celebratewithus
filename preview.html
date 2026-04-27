@@ -40,9 +40,7 @@ const templatePath = decodeURIComponent(params.get("template"));
 
 document.getElementById("previewFrame").src = templatePath;
 
-    if (templatePath) {
-      frame.src = templatePath;
-    }
+    
 
     function goBack() {
       window.history.back();
