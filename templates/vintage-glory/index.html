@@ -588,7 +588,7 @@ box-shadow:0 0 10px rgba(201,163,107,.6);
 <!-- PASSWORD -->
 <div id="passwordOverlay">
   <h2>Vintage Glory</h2>
-  <p style="margin-top:-6px;color:#000;font-weight:600">
+  <p style="margin-top:-6px;color:black;font-weight:600">
   This is a Demo Page<br>
   Password: 123
 </p>
@@ -693,17 +693,6 @@ box-shadow:0 0 10px rgba(201,163,107,.6);
 </div>
 
 <script>
-// ✅ STRONG SAFE FIX (won’t break anything)
-try {
-  if (typeof frame === "undefined") {
-    window.frame = {
-      src: "",
-      contentWindow: {}
-    };
-  }
-} catch (e) {}
-
-let isLoaded = false;
 /* =========================
    STORAGE KEYS (MATCH EDITOR)
 ========================= */
@@ -726,84 +715,43 @@ song = music;
 let bgAudio = null;
 let isPlaying = false;
 
-async function loadViewerData() {
-  try {
-    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
-    const result = await res.json();
+ function loadViewerData() {
 
-    if (result.success) {
-      data = result.data || [];
-      messages = result.messages || "";
-      music = result.music || "";
-      password = result.password || "";
-
-data = [
-  {
-    type: "image",
-    url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1776488823/cultural_festive/enpi3kesh8ntdazbtzxj.jpg",
-    caption: "Vintage Memory"
-  },
-  {
-    type: "image",
-    url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1776488822/cultural_festive/zps8chsddqq4e7qn0fst.jpg",
-    caption: "Golden Moment"
-  },
-  {
-    type: "video",
-    url: "https://res.cloudinary.com/di8n4lsjz/video/upload/v1776488877/cultural_festive/jzof86veepqd2r0piahy.mp4",
-    caption: "Demo Video"
-  }
-];
-
-messages = "This is a demo message 💛\n---\nMemories live forever ✨";
-
- music = "https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771542/IndieRaag_aoboya.mp3";
-  song = music;
-
-
-      PASS = "123";
-
-
-      if (music) {
-        song = music;
-        playMusic();
-      }
-
-      
-
-
-      isLoaded = true;
-render();
-loadMessages();
-    }
-  } catch (err) {
-  console.error("❌ Viewer load failed:", err);
-
-  // ✅ FORCE DEMO DATA (fallback)
+  // DEMO IMAGES + VIDEO
   data = [
     {
       type: "image",
       url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1776488823/cultural_festive/enpi3kesh8ntdazbtzxj.jpg",
-      caption: "Vintage Memory"
+      caption: "Beautiful Moment"
     },
     {
       type: "image",
       url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1776488822/cultural_festive/zps8chsddqq4e7qn0fst.jpg",
-      caption: "Golden Moment"
+      caption: "Golden Memory"
     },
     {
       type: "video",
       url: "https://res.cloudinary.com/di8n4lsjz/video/upload/v1776488877/cultural_festive/jzof86veepqd2r0piahy.mp4",
-      caption: "Demo Video"
+      caption: "Sample Video"
     }
   ];
 
-  messages = "This is a demo message 💛\n---\nMemories live forever ✨";
+  // DEMO MESSAGES
+  messages = `This is a demo memory 💛
+---
+Moments like this stay forever ✨
+---
+Made with love for demo preview`;
 
-  isLoaded = true;
+  // DEMO MUSIC
+  song = "https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771542/IndieRaag_aoboya.mp3";
+
+  PASS = "123";
+
   render();
-loadMessages();
-}
+  loadMessages();
+
+  document.getElementById("passwordOverlay").style.display = "flex";
 }
 
 function playMusic(){
@@ -842,44 +790,33 @@ function toggleMusic(){
 
 /* PASSWORD */
 function unlock(){
+  document.getElementById("passwordOverlay").style.display="none";
+  playMusic();
+  isPlaying = true;
+}
 
-  const input = document.getElementById("pass").value.trim();
-
-  if(input === "123"){
-
-    if(!isLoaded){
-      alert("Loading... please wait ⏳");
-      return;
-    }
-
+  if(input === PASS){
     document.getElementById("passwordOverlay").style.display="none";
-
     playMusic();
-    isPlaying = true;
-
-    render();
-    loadMessages();
-
+isPlaying = true;
+ render();
+ loadMessages();
   }else{
     document.getElementById("wrongPass").style.display="block";
   }
 
-}
 
-document.getElementById("pass").addEventListener("keydown", (e) => {
-  if (e.key === "Enter") unlock();
-});
+
+pass.addEventListener("keydown",(e)=>{ if(e.key==="Enter") unlock(); });
 
 /* RENDER */
 function render(){
 
- const videoContainer = document.getElementById("videoContainer");
-const photoGrid = document.getElementById("photoGrid");
-const messageList = document.getElementById("messageList");
 
-videoContainer.innerHTML = "";
-photoGrid.innerHTML = "";
-messageList.innerHTML = "";
+
+  videoContainer.innerHTML="";
+  photoGrid.innerHTML="";
+  messageList.innerHTML="";
 
   // 🎥 VIDEOS (1 PER ROW)
   data.forEach(x=>{
@@ -912,7 +849,7 @@ messageList.innerHTML = "";
 
 }
 
-
+loadMessages();
 
 /* START RENDER AFTER EVERYTHING LOADED */
 
@@ -972,19 +909,13 @@ applyBtn.onclick = ()=>{
 
 /* LOAD MESSAGES */
 function loadMessages(){
-
-  const messageList = document.getElementById("messageList"); // ✅ ADD THIS
-
   const txt = messages;
-
   if(!txt.trim()){
     messageList.innerHTML = `<div style="text-align:center;opacity:.75;font-family:Playfair Display;">
       (No messages yet)
     </div>`;
     return;
   }
-
-  messageList.innerHTML = ""; // ✅ CLEAR BEFORE ADDING
 
   txt.split("\n---\n").forEach(m=>{
     const d=document.createElement("div");
@@ -993,6 +924,7 @@ function loadMessages(){
     messageList.appendChild(d);
   });
 }
+loadMessages();
 
 
 /* OVERLAYS */
