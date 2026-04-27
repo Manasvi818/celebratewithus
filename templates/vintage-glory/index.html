@@ -809,6 +809,8 @@ function unlock(){
   const input = document.getElementById("pass").value.trim();
 
   if(input === "123"){
+        console.log("Unlocked");   // ✅ ADD THIS LINE HERE
+
     document.getElementById("passwordOverlay").style.display="none";
     playMusic();
     isPlaying = true;
@@ -862,7 +864,7 @@ function render(){
 
 }
 
-loadMessages();
+
 
 /* START RENDER AFTER EVERYTHING LOADED */
 
