@@ -693,6 +693,16 @@ box-shadow:0 0 10px rgba(201,163,107,.6);
 </div>
 
 <script>
+// ✅ STRONG SAFE FIX (won’t break anything)
+try {
+  if (typeof frame === "undefined") {
+    window.frame = {
+      src: "",
+      contentWindow: {}
+    };
+  }
+} catch (e) {}
+
 let isLoaded = false;
 /* =========================
    STORAGE KEYS (MATCH EDITOR)
