@@ -827,11 +827,13 @@ pass.addEventListener("keydown",(e)=>{ if(e.key==="Enter") unlock(); });
 /* RENDER */
 function render(){
 
+ const videoContainer = document.getElementById("videoContainer");
+const photoGrid = document.getElementById("photoGrid");
+const messageList = document.getElementById("messageList");
 
-
-  videoContainer.innerHTML="";
-  photoGrid.innerHTML="";
-  messageList.innerHTML="";
+videoContainer.innerHTML = "";
+photoGrid.innerHTML = "";
+messageList.innerHTML = "";
 
   // 🎥 VIDEOS (1 PER ROW)
   data.forEach(x=>{
@@ -939,7 +941,6 @@ function loadMessages(){
     messageList.appendChild(d);
   });
 }
-loadMessages();
 
 
 /* OVERLAYS */
