@@ -928,13 +928,19 @@ applyBtn.onclick = ()=>{
 
 /* LOAD MESSAGES */
 function loadMessages(){
+
+  const messageList = document.getElementById("messageList"); // ✅ ADD THIS
+
   const txt = messages;
+
   if(!txt.trim()){
     messageList.innerHTML = `<div style="text-align:center;opacity:.75;font-family:Playfair Display;">
       (No messages yet)
     </div>`;
     return;
   }
+
+  messageList.innerHTML = ""; // ✅ CLEAR BEFORE ADDING
 
   txt.split("\n---\n").forEach(m=>{
     const d=document.createElement("div");
