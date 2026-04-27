@@ -693,6 +693,7 @@ box-shadow:0 0 10px rgba(201,163,107,.6);
 </div>
 
 <script>
+  let PASS = "123";
 /* =========================
    STORAGE KEYS (MATCH EDITOR)
 ========================= */
@@ -748,8 +749,6 @@ Made with love for demo preview`;
 
   PASS = "123";
 
-  render();
-  loadMessages();
 
   document.getElementById("passwordOverlay").style.display = "flex";
 }
@@ -790,21 +789,22 @@ function toggleMusic(){
 
 /* PASSWORD */
 function unlock(){
-  document.getElementById("passwordOverlay").style.display="none";
-  playMusic();
-  isPlaying = true;
-}
 
-  if(input === PASS){
+  const input = document.getElementById("pass").value.trim();
+
+  if(input === "123"){
     document.getElementById("passwordOverlay").style.display="none";
+
     playMusic();
-isPlaying = true;
- render();
- loadMessages();
-  }else{
+    isPlaying = true;
+
+    render();          // 🔥 THIS WAS MISSING
+    loadMessages();    // 🔥 THIS WAS MISSING
+
+  } else {
     document.getElementById("wrongPass").style.display="block";
   }
-
+}
 
 
 pass.addEventListener("keydown",(e)=>{ if(e.key==="Enter") unlock(); });
@@ -849,7 +849,6 @@ function render(){
 
 }
 
-loadMessages();
 
 /* START RENDER AFTER EVERYTHING LOADED */
 
@@ -924,7 +923,7 @@ function loadMessages(){
     messageList.appendChild(d);
   });
 }
-loadMessages();
+
 
 
 /* OVERLAYS */
