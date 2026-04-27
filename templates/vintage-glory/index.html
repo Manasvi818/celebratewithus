@@ -822,7 +822,9 @@ function unlock(){
 
 }
 
-pass.addEventListener("keydown",(e)=>{ if(e.key==="Enter") unlock(); });
+document.getElementById("pass").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") unlock();
+});
 
 /* RENDER */
 function render(){
