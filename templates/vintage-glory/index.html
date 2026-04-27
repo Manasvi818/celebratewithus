@@ -693,6 +693,7 @@ box-shadow:0 0 10px rgba(201,163,107,.6);
 </div>
 
 <script>
+let isLoaded = false;
 /* =========================
    STORAGE KEYS (MATCH EDITOR)
 ========================= */
@@ -809,13 +810,20 @@ function unlock(){
   const input = document.getElementById("pass").value.trim();
 
   if(input === "123"){
-        console.log("Unlocked");   // ✅ ADD THIS LINE HERE
+
+    if(!isLoaded){
+      alert("Loading... please wait ⏳");
+      return;
+    }
 
     document.getElementById("passwordOverlay").style.display="none";
+
     playMusic();
     isPlaying = true;
+
     render();
     loadMessages();
+
   }else{
     document.getElementById("wrongPass").style.display="block";
   }
