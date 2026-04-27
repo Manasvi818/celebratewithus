@@ -237,8 +237,88 @@ section {
 .site-footer {
   text-align: center;
   padding: 30px;
+
   background: #fff;
   margin-top: 50px;
   font-size: 14px;
   color: #777;
+}
+
+/* HOW IT WORKS SECTION */
+.how-it-works {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+/* Steps layout */
+.steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 50px;
+  position: relative;
+}
+
+/* DOTTED LINE */
+.steps::before {
+  content: "";
+  position: absolute;
+  top: 50px;
+  left: 15%;
+  width: 70%;
+  height: 2px;
+  border-top: 2px dashed #ddd;
+  z-index: 0;
+}
+
+/* EACH STEP */
+.step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* CIRCLE */
+.step-circle {
+  width: 90px;
+  height: 90px;
+  background: white;
+  border-radius: 50%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  position: relative;
+}
+
+/* NUMBER BADGE */
+.step-number {
+  position: absolute;
+  top: -10px;
+  background: #7c3aed;
+  color: white;
+  font-size: 12px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  line-height: 26px;
+}
+
+/* ICON */
+.icon {
+  font-size: 28px;
+}
+
+/* TEXT */
+.step h3 {
+  margin-top: 15px;
+  font-size: 16px;
+}
+
+.step p {
+  font-size: 13px;
+  color: #666;
+  margin-top: 5px;
 }
