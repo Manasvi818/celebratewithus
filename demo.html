@@ -106,6 +106,21 @@ body{
   color:#4f46e5;
   font-weight:600;
 }
+
+@media (max-width: 600px){
+  .grid{
+    grid-template-columns: 1fr;
+    padding:20px;
+  }
+
+  .card{
+    height:150px;
+  }
+
+  .header h1{
+    font-size:26px;
+  }
+}
 </style>
 </head>
 
@@ -118,7 +133,7 @@ body{
   <p>Select a vibe to preview your celebration page</p>
 </div>
 
-<div class="grid">
+<div class="grid" id="mainGrid">
 
   <div class="card casual" onclick="showTemplates('casual')">
     <h3>Casual</h3>
@@ -175,7 +190,7 @@ const templates = {
 
 function showTemplates(type){
 
-  document.querySelector(".grid").style.display = "none";
+  document.getElementById("mainGrid").style.display = "none";
   document.querySelector(".header").style.display = "none";
 
   const section = document.getElementById("templateSection");
@@ -197,7 +212,7 @@ function showTemplates(type){
 }
 
 function goBack(){
-  document.querySelector(".grid").style.display = "grid";
+  document.getElementById("mainGrid").style.display = "grid";
   document.querySelector(".header").style.display = "block";
   document.getElementById("templateSection").style.display = "none";
 }
