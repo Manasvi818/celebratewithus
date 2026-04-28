@@ -506,3 +506,85 @@ section {
     grid-template-columns: repeat(3, 1fr); /* clean layout */
   }
 }
+
+/* =========================
+   🔥 MOBILE FIX (CRITICAL)
+========================= */
+@media (max-width: 768px){
+
+  /* Fix hero layout */
+  .hero-split{
+    flex-direction: column;   /* stack vertically */
+    text-align: center;
+  }
+
+  .hero{
+    padding: 50px 15px;
+  }
+
+  .hero h1{
+    font-size: 28px;
+  }
+
+  .subtitle{
+    font-size: 14px;
+  }
+
+  /* Fix buttons */
+  .hero-buttons{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    align-items:center;
+  }
+
+  .primary-btn,
+  .secondary-btn{
+    width: 100%;
+    max-width: 260px;
+  }
+
+  /* Fix images */
+  .hero-right{
+    margin-top:20px;
+  }
+
+  .mockup-card img{
+    width:100%;
+    max-width:300px;
+  }
+
+  .mockup-phone{
+    position: static;   /* 🔥 IMPORTANT */
+    margin-top:15px;
+  }
+
+  .mockup-phone img{
+    width:120px;
+  }
+
+  /* Fix demo section */
+  .demo-section{
+    flex-direction: column;
+    text-align:center;
+  }
+
+  .demo-right img{
+    max-width:100%;
+  }
+
+  /* Fix steps section */
+  .steps{
+    flex-direction: column;
+    gap:30px;
+  }
+
+  .steps::before{
+    display:none; /* remove line */
+  }
+
+  /* Prevent horizontal scroll */
+  body{
+    overflow-x:hidden;
+  }
+}
