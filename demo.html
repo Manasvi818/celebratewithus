@@ -200,21 +200,61 @@ body{
 
   <div class="grid" id="templateGrid"></div>
 
-  <button onclick="goBack()" style="
-    margin-top:20px;
-    padding:10px 20px;
-    border:none;
-    border-radius:10px;
-    background:#4f46e5;
-    color:white;
-    cursor:pointer;
-  ">
-    ← Back
-  </button>
+  <button id="backBtn" onclick="goBack()" style="
+  margin-top:20px;
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  color:white;
+  cursor:pointer;
+">
+  ← Back
+</button>
+
+</div>
+
+<!-- PREVIEW SECTION -->
+<div id="previewSection" style="display:none; padding:20px;">
+
+  <h2 id="previewTitle"></h2>
+
+  <iframe id="previewFrame"
+    style="width:100%; height:70vh; border:none; border-radius:12px; background:white;">
+  </iframe>
+
+  <button id="previewBackBtn" onclick="closePreview()" style="
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+">
+  ← Back
+</button>
+
+<button id="buyBtn" onclick="buyNow()" style="
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+">
+  Buy Now
+</button>
+
+  </div>
 
 </div>
 
 <script>
+
+const themeStyles = {
+  casual: "#22c55e",        // green
+  traditional: "#f59e0b",   // gold
+  family: "#3b82f6",        // blue
+  fun: "#ec4899",           // pink
+  romantic: "#ef4444"       // red
+};
+
+let currentTheme = "";
 
 const templates = {
   casual: ["casual1.html","casual2.html","casual3.html","casual4.html","casual5.html"],
@@ -225,7 +265,7 @@ const templates = {
 };
 
 function showTemplates(type){
-
+document.getElementById("backBtn").style.background = themeStyles[type];
   document.getElementById("mainGrid").style.display = "none";
   document.querySelector(".header").style.display = "none";
 
@@ -234,7 +274,12 @@ function showTemplates(type){
   const title = document.getElementById("templateTitle");
 
   section.style.display = "block";
-  title.innerText = type.charAt(0).toUpperCase() + type.slice(1) + " Templates";
+  currentTheme = type;
+
+title.innerText = type.charAt(0).toUpperCase() + type.slice(1) + " Templates";
+
+// Apply theme color
+document.getElementById("templateSection").style.background = themeStyles[type] + "15"; // light tint
 
   grid.innerHTML = "";
 
@@ -242,7 +287,7 @@ function showTemplates(type){
     const div = document.createElement("div");
     div.className = "card";
     div.innerHTML = `<h3>Template ${index+1}</h3>`;
-    div.onclick = () => window.location.href = page;
+    div.onclick = () => openPreview(page);
     grid.appendChild(div);
   });
 }
@@ -253,6 +298,41 @@ function goBack(){
   document.getElementById("templateSection").style.display = "none";
 }
 
+let selectedPage = "";
+
+function openPreview(page){
+  selectedPage = page;
+
+  document.getElementById("templateSection").style.display = "none";
+document.getElementById("previewSection").style.background = themeStyles[currentTheme] + "15";
+document.getElementById("previewTitle").style.color = themeStyles[currentTheme];
+
+// 🎨 Apply theme to preview buttons
+document.getElementById("previewBackBtn").style.background = "#6b7280";
+document.getElementById("previewBackBtn").style.color = "white";
+
+document.getElementById("buyBtn").style.background = themeStyles[currentTheme];
+document.getElementById("buyBtn").style.color = "white";
+
+  const preview = document.getElementById("previewSection");
+  const frame = document.getElementById("previewFrame");
+  const title = document.getElementById("previewTitle");
+
+  preview.style.display = "block";
+
+  frame.src = page;
+  title.innerText = "Live Preview";
+}
+
+function closePreview(){
+  document.getElementById("previewSection").style.display = "none";
+  document.getElementById("templateSection").style.display = "block";
+}
+
+function buyNow(){
+  // redirect to payment page
+  window.location.href = "payment.html?template=" + selectedPage;
+}
 
 </script>
 
