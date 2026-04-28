@@ -199,6 +199,24 @@ body{
   transform:scale(1.05);
   box-shadow:0 10px 20px rgba(0,0,0,0.2);
 }
+
+.theme-back{
+  margin-top:30px;
+  padding:12px 26px;
+  border:none;
+  border-radius:12px;
+  font-weight:600;
+  color:white;
+  cursor:pointer;
+
+  background:#6b7280;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+  transition:0.3s;
+}
+
+.theme-back:hover{
+  transform:translateY(-2px);
+}
 </style>
 </head>
 
@@ -242,7 +260,9 @@ body{
 
   <div class="grid" id="templateGrid"></div>
 
-  
+  <button id="themeBackBtn" onclick="goBack()" class="theme-back">
+  ← Back
+</button>
 
 </div>
 
@@ -332,7 +352,7 @@ const templates = {
 };
 
 function showTemplates(type){
-document.getElementById("backBtn").style.background = themeStyles[type];
+document.getElementById("themeBackBtn").style.background = themeStyles[type];
   document.getElementById("mainGrid").style.display = "none";
   document.querySelector(".header").style.display = "none";
 
@@ -426,8 +446,7 @@ document.getElementById("buyBtn").style.color = "white";
   title.style.background = `linear-gradient(135deg, ${themeStyles[currentTheme]}, #ec4899)`;
 title.style.webkitBackgroundClip = "text";
 title.style.webkitTextFillColor = "transparent";
-title.style.webkitBackgroundClip = "text";
-title.style.webkitTextFillColor = "transparent";
+
 }
 
 function closePreview(){
