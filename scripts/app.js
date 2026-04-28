@@ -23,43 +23,43 @@ document.addEventListener("DOMContentLoaded", () => {
 // ===============================
 const templates = {
   family: [
-    "templates/home-happiness/index.html",
-    "templates/always-together/index.html",
-    "templates/warm-bonds/index.html",
-    "templates/cherished-times/index.html",
-    "templates/joyful-times/index.html"
+    "templates/home-happiness/home-happiness-index.html",
+    "templates/always-together/always-together-index.html",
+    "templates/warm-bonds/warm-bonds-index.html",
+    "templates/cherished-times/cherished-times-index.html",
+    "templates/joyful-times/joyful-times-index.html"
   ],
 
   romantic: [
-    "templates/blush-love/index.html",
-    "templates/candlelight-moments/index.html",
-    "templates/forever-yours/index.html",
-    "templates/golden-love/index.html",
-    "templates/sweet-affection/index.html"
+    "templates/blush-love/blush-love-index.html",
+    "templates/candlelight-moments/candlelight-moments-index.html",
+    "templates/forever-yours/forever-yours-index.html",
+    "templates/golden-love/golden-love-index.html",
+    "templates/sweet-affection/sweet-affection-index.html"
   ],
 
   casual: [
-    "templates/easy-breezy/index.html",
-    "templates/everyday-joy/index.html",
-    "templates/simple-delight/index.html",
-    "templates/soft-vibes/index.html",
-    "templates/sunny-smiles/index.html"
+    "templates/easy-breezy/easy-breezy-index.html",
+    "templates/everyday-joy/everyday-joy-index.html",
+    "templates/simple-delight/simple-delight-index.html",
+    "templates/soft-vibes/soft-vibes-index.html",
+    "templates/sunny-smiles/sunny-smiles-index.html"
   ],
 
   traditional: [
-    "templates/cultural-festive/index.html",
-    "templates/golden-mandala/index.html",
-    "templates/royal-aura/index.html",
-    "templates/sacred-simplicity/index.html",
-    "templates/vintage-glory/index.html"
+    "templates/cultural-festive/cultural-festive-index.html",
+    "templates/golden-mandala/golden-mandala-index.html",
+    "templates/royal-aura/royal-aura-index.html",
+    "templates/sacred-simplicity/sacred-simplicity-index.html",
+    "templates/vintage-glory/vintage-glory-index.html"
   ],
 
   fun: [
-    "templates/color-carnival/index.html",
-    "templates/crazy-confetti/index.html",
-    "templates/electric-energy/index.html",
-    "templates/laugh-riot/index.html",
-    "templates/party-pop/index.html"
+    "templates/color-carnival/color-carnival-index.html",
+    "templates/crazy-confetti/crazy-confetti-index.html",
+    "templates/electric-energy/electric-energy-index.html",
+    "templates/laugh-riot/laugh-riot-index.html",
+    "templates/party-pop/party-pop-index.html"
   ]
 };
 

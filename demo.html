@@ -165,7 +165,7 @@ body{
 <a href="index.html" class="back">← Back</a>
 
 <div class="header">
-  <h1>Choose Your Style ✨</h1>
+  <h1>Choose Your Style </h1>
   <p>Select a vibe to preview your celebration page</p>
 </div>
 
@@ -257,11 +257,45 @@ const themeStyles = {
 let currentTheme = "";
 
 const templates = {
-  casual: ["casual1.html","casual2.html","casual3.html","casual4.html","casual5.html"],
-  traditional: ["traditional1.html","traditional2.html","traditional3.html","traditional4.html","traditional5.html"],
-  family: ["family1.html","family2.html","family3.html","family4.html","family5.html"],
-  fun: ["fun1.html","fun2.html","fun3.html","fun4.html","fun5.html"],
-  romantic: ["vintage-glory.html","romantic2.html","romantic3.html","romantic4.html","romantic5.html"]
+  family: [
+    "templates/home-happiness/home-happiness-index.html",
+    "templates/always-together/always-together-index.html",
+    "templates/warm-bonds/warm-bonds-index.html",
+    "templates/cherished-times/cherished-times-index.html",
+    "templates/joyful-times/joyful-times-index.html"
+  ],
+
+  romantic: [
+    "templates/blush-love/blush-love-index.html",
+    "templates/candlelight-moments/candlelight-moments-index.html",
+    "templates/forever-yours/forever-yours-index.html",
+    "templates/golden-love/golden-love-index.html",
+    "templates/sweet-affection/sweet-affection-index.html"
+  ],
+
+  casual: [
+    "templates/easy-breezy/easy-breezy-index.html",
+    "templates/everyday-joy/everyday-joy-index.html",
+    "templates/simple-delight/simple-delight-index.html",
+    "templates/soft-vibes/soft-vibes-index.html",
+    "templates/sunny-smiles/sunny-smiles-index.html"
+  ],
+
+  traditional: [
+    "templates/cultural-festive/cultural-festive-index.html",
+    "templates/golden-mandala/golden-mandala-index.html",
+    "templates/royal-aura/royal-aura-index.html",
+    "templates/sacred-simplicity/sacred-simplicity-index.html",
+    "templates/vintage-glory/vintage-glory-index.html"
+  ],
+
+  fun: [
+    "templates/color-carnival/color-carnival-index.html",
+    "templates/crazy-confetti/crazy-confetti-index.html",
+    "templates/electric-energy/electric-energy-index.html",
+    "templates/laugh-riot/laugh-riot-index.html",
+    "templates/party-pop/party-pop-index.html"
+  ]
 };
 
 function showTemplates(type){
