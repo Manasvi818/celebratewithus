@@ -11,81 +11,198 @@
 body{
   margin:0;
   font-family:Inter, sans-serif;
-  background:linear-gradient(135deg,#fdfbfb,#ebedee);
+  background:linear-gradient(135deg,#f8fafc,#eef2ff);
   text-align:center;
 }
 
-h1{
-  margin-top:40px;
-  font-size:32px;
+/* HEADER */
+.header{
+  padding:50px 20px 20px;
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:20px;
-  padding:40px;
-}
-
-.card{
-  background:white;
-  padding:30px;
-  border-radius:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.1);
-  cursor:pointer;
-  transition:0.3s;
-}
-
-.card:hover{
-  transform:translateY(-8px);
-}
-
-.card h3{
+.header h1{
+  font-size:36px;
   margin:0;
 }
 
-/* Different colors */
-.casual{background:#ffe4e6;}
-.traditional{background:#fff7ed;}
-.family{background:#ecfeff;}
-.fun{background:#f0fdf4;}
-.romantic{background:#fdf2f8;}
+.header p{
+  color:#6b7280;
+  margin-top:10px;
+}
 
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:25px;
+  padding:40px;
+  max-width:1000px;
+  margin:auto;
+}
+
+/* CARD */
+.card{
+  position:relative;
+  height:180px;
+  border-radius:22px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:0.3s;
+  display:flex;
+  align-items:end;
+  justify-content:left;
+  padding:20px;
+  color:white;
+  font-weight:600;
+  font-size:18px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+
+.card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.25);
+}
+
+.card h3{
+  position:relative;
+  z-index:2;
+}
+
+/* HOVER */
+.card:hover{
+  transform:translateY(-8px) scale(1.03);
+  box-shadow:0 20px 40px rgba(0,0,0,0.15);
+}
+
+/* BACKGROUNDS */
+.casual{
+  background:url("https://res.cloudinary.com/di8n4lsjz/image/upload/v1777389359/casual_xaue1t.jpg") center/cover;
+}
+
+.traditional{
+  background:url("https://res.cloudinary.com/di8n4lsjz/image/upload/v1777389119/Screenshot_2026-04-28_204053_vaf2am.png") center/cover;
+}
+
+.family{
+  background:url("https://res.cloudinary.com/di8n4lsjz/image/upload/v1777389248/family_pj1lkr.jpg") center/cover;
+}
+
+.fun{
+  background:url("https://res.cloudinary.com/di8n4lsjz/image/upload/v1777389645/fun-quirky_qw0qd1.jpg") center/cover;
+}
+
+.romantic{
+  background:url("https://res.cloudinary.com/di8n4lsjz/image/upload/v1777388872/romantic_sloukt.jpg") center/cover;
+}
+
+/* BACK BUTTON */
+.back{
+  position:absolute;
+  top:20px;
+  left:20px;
+  text-decoration:none;
+  color:#4f46e5;
+  font-weight:600;
+}
 </style>
 </head>
 
 <body>
 
-<h1>Choose Your Style 💖</h1>
+<a href="index.html" class="back">← Back</a>
+
+<div class="header">
+  <h1>Choose Your Style ✨</h1>
+  <p>Select a vibe to preview your celebration page</p>
+</div>
 
 <div class="grid">
 
-  <div class="card casual" onclick="go('casual.html')">
+  <div class="card casual" onclick="showTemplates('casual')">
     <h3>Casual</h3>
   </div>
 
-  <div class="card traditional" onclick="go('traditional.html')">
+  <div class="card traditional" onclick="showTemplates('traditional')">
     <h3>Traditional</h3>
   </div>
 
-  <div class="card family" onclick="go('family.html')">
+  <div class="card family" onclick="showTemplates('family')">
     <h3>Family Time</h3>
   </div>
 
-  <div class="card fun" onclick="go('fun.html')">
+  <div class="card fun" onclick="showTemplates('fun')">
     <h3>Fun & Quirky</h3>
   </div>
 
-  <div class="card romantic" onclick="go('vintage-glory.html')">
+  <div class="card romantic" onclick="showTemplates('romantic')">
     <h3>Romantic</h3>
   </div>
 
 </div>
 
+<!-- TEMPLATE OPTIONS (HIDDEN) -->
+<div id="templateSection" style="display:none; padding:40px;">
+
+  <h2 id="templateTitle"></h2>
+
+  <div class="grid" id="templateGrid"></div>
+
+  <button onclick="goBack()" style="
+    margin-top:20px;
+    padding:10px 20px;
+    border:none;
+    border-radius:10px;
+    background:#4f46e5;
+    color:white;
+    cursor:pointer;
+  ">
+    ← Back
+  </button>
+
+</div>
+
 <script>
-function go(page){
-  window.location.href = page;
+
+const templates = {
+  casual: ["casual1.html","casual2.html","casual3.html","casual4.html","casual5.html"],
+  traditional: ["traditional1.html","traditional2.html","traditional3.html","traditional4.html","traditional5.html"],
+  family: ["family1.html","family2.html","family3.html","family4.html","family5.html"],
+  fun: ["fun1.html","fun2.html","fun3.html","fun4.html","fun5.html"],
+  romantic: ["vintage-glory.html","romantic2.html","romantic3.html","romantic4.html","romantic5.html"]
+};
+
+function showTemplates(type){
+
+  document.querySelector(".grid").style.display = "none";
+  document.querySelector(".header").style.display = "none";
+
+  const section = document.getElementById("templateSection");
+  const grid = document.getElementById("templateGrid");
+  const title = document.getElementById("templateTitle");
+
+  section.style.display = "block";
+  title.innerText = type.charAt(0).toUpperCase() + type.slice(1) + " Templates";
+
+  grid.innerHTML = "";
+
+  templates[type].forEach((page, index) => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `<h3>Template ${index+1}</h3>`;
+    div.onclick = () => window.location.href = page;
+    grid.appendChild(div);
+  });
 }
+
+function goBack(){
+  document.querySelector(".grid").style.display = "grid";
+  document.querySelector(".header").style.display = "block";
+  document.getElementById("templateSection").style.display = "none";
+}
+
+
 </script>
 
 </body>
