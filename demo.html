@@ -242,16 +242,7 @@ body{
 
   <div class="grid" id="templateGrid"></div>
 
-  <button id="backBtn" onclick="goBack()" style="
-  margin-top:20px;
-  padding:10px 20px;
-  border:none;
-  border-radius:10px;
-  color:white;
-  cursor:pointer;
-">
-  ← Back
-</button>
+  
 
 </div>
 
@@ -355,7 +346,15 @@ document.getElementById("backBtn").style.background = themeStyles[type];
 title.innerText = type.charAt(0).toUpperCase() + type.slice(1) + " Templates";
 
 // Apply theme color
-document.getElementById("templateSection").style.background = themeStyles[type] + "15"; // light tint
+document.getElementById("templateSection").style.background = `
+  radial-gradient(circle at 20% 20%, ${themeStyles[type]}33, transparent 50%),
+  radial-gradient(circle at 80% 30%, ${themeStyles[type]}22, transparent 60%),
+  linear-gradient(135deg, #fdfbff, #f3f0ff)
+`;
+
+document.querySelectorAll(".card").forEach(card => {
+  card.style.boxShadow = `0 20px 40px ${themeStyles[type]}33`;
+});
 
   grid.innerHTML = "";
 
@@ -399,7 +398,13 @@ function openPreview(page){
   selectedPage = page;
 
   document.getElementById("templateSection").style.display = "none";
-document.getElementById("previewSection").style.background = themeStyles[currentTheme] + "15";
+
+document.getElementById("previewSection").style.background = `
+  radial-gradient(circle at 20% 20%, ${themeStyles[currentTheme]}33, transparent 50%),
+  radial-gradient(circle at 80% 30%, ${themeStyles[currentTheme]}22, transparent 60%),
+  linear-gradient(135deg, #fdfbff, #f3f0ff)
+`;
+
 document.getElementById("previewTitle").style.color = themeStyles[currentTheme];
 
 // 🎨 Apply theme to preview buttons
@@ -417,6 +422,12 @@ document.getElementById("buyBtn").style.color = "white";
 
   frame.src = page;
   title.innerText = "Live Preview";
+
+  title.style.background = `linear-gradient(135deg, ${themeStyles[currentTheme]}, #ec4899)`;
+title.style.webkitBackgroundClip = "text";
+title.style.webkitTextFillColor = "transparent";
+title.style.webkitBackgroundClip = "text";
+title.style.webkitTextFillColor = "transparent";
 }
 
 function closePreview(){
