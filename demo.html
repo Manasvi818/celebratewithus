@@ -363,7 +363,41 @@ document.getElementById("themeBackBtn").style.background = themeStyles[type];
   section.style.display = "block";
   currentTheme = type;
 
-title.innerText = type.charAt(0).toUpperCase() + type.slice(1) + " Templates";
+ttitle.innerText = type.charAt(0).toUpperCase() + type.slice(1) + " Templates";
+
+// 🎨 ADD FROM HERE
+if(type === "traditional"){
+  title.style.background = `linear-gradient(135deg, #f59e0b, #b45309)`;
+}
+
+if(type === "casual"){
+  title.style.background = `linear-gradient(135deg, #22c55e, #16a34a)`;
+}
+
+if(type === "family"){
+  title.style.background = `linear-gradient(135deg, #3b82f6, #1d4ed8)`;
+}
+
+if(type === "fun"){
+  title.style.background = `linear-gradient(135deg, #ec4899, #db2777)`;
+}
+
+if(type === "romantic"){
+  title.style.background = `linear-gradient(135deg, #ef4444, #b91c1c)`;
+}
+
+// IMPORTANT (keep this always)
+title.style.webkitBackgroundClip = "text";
+title.style.webkitTextFillColor = "transparent";
+
+// 🎨 THEME TITLE STYLE (IMPORTANT)
+
+title.style.webkitBackgroundClip = "text";
+title.style.webkitTextFillColor = "transparent";
+
+title.style.fontWeight = "700";
+title.style.letterSpacing = "1px";
+title.style.marginBottom = "20px";
 
 // Apply theme color
 document.getElementById("templateSection").style.background = `
