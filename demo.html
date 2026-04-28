@@ -13,67 +13,77 @@ body{
   font-family:Inter, sans-serif;
   background:linear-gradient(135deg,#f8fafc,#eef2ff);
   text-align:center;
+  overflow-x:hidden; /* 🔥 prevents horizontal scroll */
 }
 
 /* HEADER */
 .header{
-  padding:50px 20px 20px;
+  padding:40px 20px 10px;
 }
 
 .header h1{
-  font-size:36px;
+  font-size:clamp(24px, 5vw, 36px); /* 🔥 responsive text */
   margin:0;
 }
 
 .header p{
   color:#6b7280;
   margin-top:10px;
+  font-size:clamp(13px, 3vw, 16px);
 }
 
 /* GRID */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:25px;
-  padding:40px;
+  gap:20px;
+  padding:20px;
   max-width:1000px;
   margin:auto;
+  width:100%;
 }
 
 /* CARD */
 .card{
   position:relative;
-  height:180px;
-  border-radius:22px;
+  height:clamp(140px, 25vw, 180px); /* 🔥 responsive height */
+  border-radius:18px;
   overflow:hidden;
   cursor:pointer;
   transition:0.3s;
   display:flex;
-  align-items:end;
-  justify-content:left;
-  padding:20px;
+  align-items:flex-end;
+  justify-content:flex-start;
+  padding:15px;
   color:white;
   font-weight:600;
-  font-size:18px;
+  font-size:clamp(14px, 2.5vw, 18px);
   box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  background-size:cover;
+  background-position:center;
 }
 
+/* overlay */
 .card::after{
   content:"";
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,0.25);
+  background:linear-gradient(
+    to top,
+    rgba(0,0,0,0.6),
+    rgba(0,0,0,0.2)
+  );
 }
 
 .card h3{
   position:relative;
   z-index:2;
+  word-break:break-word; /* 🔥 prevents overflow */
 }
 
 /* HOVER */
 .card:hover{
-  transform:translateY(-8px) scale(1.03);
-  box-shadow:0 20px 40px rgba(0,0,0,0.15);
+  transform:translateY(-6px) scale(1.02);
 }
 
 /* BACKGROUNDS */
@@ -100,25 +110,51 @@ body{
 /* BACK BUTTON */
 .back{
   position:absolute;
-  top:20px;
-  left:20px;
-  text-decoration:none;
-  color:#4f46e5;
-  font-weight:600;
+  top:15px;
+  left:15px;
+  font-size:14px;
 }
 
+/* TEMPLATE SECTION */
+#templateSection{
+  padding:20px;
+}
+
+#templateTitle{
+  font-size:clamp(18px, 4vw, 26px);
+}
+
+/* =========================
+   MOBILE
+========================= */
 @media (max-width: 600px){
+
   .grid{
-    grid-template-columns: 1fr;
-    padding:20px;
+    grid-template-columns:1fr;
   }
 
   .card{
     height:150px;
   }
+}
 
-  .header h1{
-    font-size:26px;
+/* =========================
+   TABLET
+========================= */
+@media (min-width: 601px) and (max-width: 1024px){
+
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+/* =========================
+   DESKTOP
+========================= */
+@media (min-width: 1025px){
+
+  .grid{
+    grid-template-columns:repeat(3,1fr);
   }
 }
 </style>
