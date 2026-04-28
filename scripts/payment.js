@@ -1,4 +1,8 @@
 
+const selectedTemplate = urlParams.get("template");
+const urlParams = new URLSearchParams(window.location.search);
+
+
 document.addEventListener("DOMContentLoaded", () => {
 
   console.log("TEMPLATE:", localStorage.getItem("selectedTemplate"));
