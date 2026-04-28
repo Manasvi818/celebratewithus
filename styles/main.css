@@ -395,3 +395,42 @@ section {
 section {
   padding: 80px 20px;
 }
+
+/* 🔥 DEMO BUTTON (MATCH IMAGE STYLE) */
+.demo-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+
+  padding:12px 22px;
+  border-radius:999px;
+
+  font-family:Inter, sans-serif;
+  font-weight:600;
+  font-size:14px;
+
+  color:white;
+  text-decoration:none;
+
+  background:linear-gradient(135deg,#5f6dfc,#d946ef);
+  box-shadow:0 6px 20px rgba(0,0,0,0.15);
+
+  transition:all 0.3s ease;
+}
+
+.demo-btn:hover{
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.curve-line{
+  display:block;
+  width:60px;
+  height:20px;
+  margin-top:10px;
+
+  border-bottom:3px solid #d946ef;
+  border-radius:50%;
+
+  transform:rotate(-20deg);
+}
