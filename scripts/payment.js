@@ -1,20 +1,19 @@
 
-const selectedTemplate = urlParams.get("template");
+const originalAmount = 39900;
+
 const urlParams = new URLSearchParams(window.location.search);
+const selectedTemplate = urlParams.get("template");
 
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  console.log("TEMPLATE:", localStorage.getItem("selectedTemplate"));
-  console.log("Razorpay loaded:", typeof Razorpay);
-
-  const BASE_URL = "https://celebratewithus.onrender.com";
+const BASE_URL = "https://celebratewithus.onrender.com";
   let finalAmount = 39900;
   let usedCoupon = null;
 let appliedCoupon = "";
 let appliedDiscount = 0;
 
-const projectId = "proj_" + Date.now();
+document.addEventListener("DOMContentLoaded", () => {
+
+  console.log("TEMPLATE:", localStorage.getItem("selectedTemplate"));
+  console.log("Razorpay loaded:", typeof Razorpay);
 
   const payBtn = document.getElementById("rzpButton");
 
@@ -22,6 +21,10 @@ const projectId = "proj_" + Date.now();
     payBtn.addEventListener("click", openCheckout);
   }
 
+});
+const projectId = "proj_" + Date.now();
+
+  
   async function openCheckout() {
 
     const selectedTemplate = localStorage.getItem("selectedTemplate");
@@ -84,7 +87,7 @@ const projectId = "proj_" + Date.now();
   projectId,
   coupon,
   discount,
-  amount: 399,
+  amount: finalAmount / 100,
 
   // ✅ ADD THESE
   name: "Guest",
@@ -135,21 +138,39 @@ try {
         }
       };
 
-      const rzp = new Razorpay(options);
-      rzp.open();
+      const btn = document.getElementById("rzpButton");
 
-      rzp.on("payment.failed", function () {
-        alert("Payment failed — please try again.");
-      });
+btn.innerText = "Processing...";
+btn.style.opacity = "0.7";
+btn.disabled = true;
 
-    } catch (error) {
-      console.error("ERROR:", error);
-      alert("Something went wrong: " + error.message);
-    }
+const rzp = new Razorpay(options);
+rzp.open();
+
+rzp.on("payment.failed", function () {
+  alert("Payment failed — please try again.");
+
+  btn.innerText = "Pay Now";
+  btn.style.opacity = "1";
+  btn.disabled = false;
+});
+
+} catch (error) {
+  console.error("ERROR:", error);
+  alert("Something went wrong: " + error.message);
+}
   }
 
   // OPTIONAL: Coupon function
-  window.applyCoupon = async function () {
+  
+
+  window.selectVibe = function(vibe){
+    localStorage.setItem("selectedTemplate", vibe);
+  };
+
+
+
+window.applyCoupon = async function () {
     const code = document.getElementById("coupon").value;
 
     const res = await fetch(`${BASE_URL}/apply-coupon`, {
@@ -163,7 +184,7 @@ try {
     if (data.valid) {
       usedCoupon = code;
 
-      finalAmount = finalAmount - (finalAmount * data.discount / 100);
+      finalAmount = originalAmount - (originalAmount * data.discount / 100);
 
       appliedCoupon = code;
 appliedDiscount = data.discount;
@@ -171,14 +192,10 @@ appliedDiscount = data.discount;
       document.getElementById("discountMsg").innerText =
         `Discount applied: ${data.discount}%`;
 
-      
+      document.getElementById("priceDisplay").innerText =
+  "₹" + (finalAmount / 100);
+  
     } else {
       alert("Invalid or used coupon");
     }
   };
-
-  window.selectVibe = function(vibe){
-    localStorage.setItem("selectedTemplate", vibe);
-  };
-
-});

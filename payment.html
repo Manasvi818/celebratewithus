@@ -63,27 +63,6 @@ animation:fadeIn 0.6s ease;
   line-height:1.5;
 }
 
-/* BUTTON */
-.btn{
-  margin-top:20px;
-  padding:12px 20px;
-  border:none;
-  border-radius:12px;
-
-  font-weight:600;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-.primary{
-  background:linear-gradient(135deg,#7c3aed,#ec4899);
-  color:white;
-}
-
-.primary:hover{
-  transform:scale(1.05);
-}
-
 /* BACK BUTTON */
 .back-btn{
   display:inline-block;
@@ -116,42 +95,52 @@ animation:fadeIn 0.6s ease;
   color:white;
   cursor:pointer;
 }
+
+.pay-btn{
+  margin-top:20px;
+  width:100%;
+  padding:14px;
+
+  border:none;
+  border-radius:14px;
+
+  font-size:16px;
+  font-weight:600;
+  color:white;
+
+  background:linear-gradient(135deg,#7c3aed,#ec4899);
+
+  box-shadow:0 10px 25px rgba(124,58,237,0.4);
+
+  cursor:pointer;
+  transition:0.3s ease;
+}
+
+.pay-btn:hover{
+  transform:scale(1.03);
+  box-shadow:0 20px 40px rgba(124,58,237,0.5);
+}
+
 </style>
 
 </head>
 
 <body>
-
-  <main class="payment-page">
-    <h1 class="payment-title">Complete Your Purchase 💳</h1>
-    <p class="muted">
-  After payment, kindly download <strong>payment invoice/reciept</strong> before making changes in the <strong>Editor page</strong>.
-</p>
-
-    <button id="rzpButton" class="btn primary big">Pay Now</button>
-
-    <p class="muted">
-  If you face any query or issue, reach out to us at <strong>celebratewithus10@gmail.com</strong>
-</p>
-
-    <a href="index.html" class="back-btn">← Back</a>
-  </main>
-
-  <!-- VERY IMPORTANT: Razorpay Checkout Script -->
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-  <!-- Your payment logic -->
-  <script src="scripts/payment.js"></script>
+  
 
 <main class="payment-page">
 
-  <h1 class="payment-title">Complete Your Purchase 💳</h1>
+  <h1 class="payment-title">Complete Your Purchase </h1>
 
   <p class="muted">
     After payment, kindly download <strong>payment invoice/receipt</strong> before making changes in the <strong>Editor page</strong>.
   </p>
 
-  <button id="rzpButton" class="btn primary big">Pay Now</button>
+<p style="font-size:18px; margin:10px 0;">
+  Price: <strong id="priceDisplay">₹399</strong>
+</p>
+
+  <button id="rzpButton" class="pay-btn">Pay Now </button>
 
   <p class="muted">
     If you face any query or issue, reach out to us at <strong>celebratewithus10@gmail.com</strong>
@@ -168,6 +157,21 @@ animation:fadeIn 0.6s ease;
   <a href="index.html" class="back-btn">← Back</a>
 
 </main>
+<!-- VERY IMPORTANT: Razorpay Checkout Script -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+  <!-- Your payment logic -->
+  <script src="scripts/payment.js"></script>
+
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("rzpButton");
+  if (btn) {
+    btn.innerText = "Pay Now";
+    btn.disabled = false;
+    btn.style.opacity = "1";
+  }
+});
+</script>
 </body>
 </html>
