@@ -12,6 +12,12 @@ document.addEventListener("DOMContentLoaded", () => {
   } else if (selectedStyle === "family") {
     loadFamilyTemplates();
   }
+   else if (selectedStyle === "romantic") {
+    loadRomanticTemplates();
+  }
+   else if (selectedStyle === "fun") {
+    loadFunTemplates();
+  }
 });
 
 function loadCasualTemplates() {
