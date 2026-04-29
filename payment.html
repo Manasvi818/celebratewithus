@@ -6,6 +6,118 @@
   <title>Complete Your Purchase</title>
   <link rel="stylesheet" href="styles/main.css" />
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+body{
+  margin:0;
+  font-family:Inter, sans-serif;
+
+  background:
+    radial-gradient(circle at 20% 20%, rgba(124,58,237,0.15), transparent 50%),
+    radial-gradient(circle at 80% 30%, rgba(236,72,153,0.12), transparent 60%),
+    linear-gradient(135deg,#fdfbff,#f3f0ff);
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+/* CARD */
+.payment-page{
+  width:90%;
+  max-width:480px;
+  padding:30px;
+
+  background:rgba(255,255,255,0.6);
+  backdrop-filter:blur(14px);
+
+  border-radius:20px;
+  box-shadow:0 20px 50px rgba(0,0,0,0.15);
+
+  text-align:center;
+animation:fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* TITLE */
+.payment-title{
+  font-size:clamp(24px,5vw,32px);
+  font-weight:700;
+
+  background:linear-gradient(135deg,#7c3aed,#ec4899);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+
+  margin-bottom:10px;
+}
+
+/* TEXT */
+.muted{
+  font-size:14px;
+  color:#555;
+  line-height:1.5;
+}
+
+/* BUTTON */
+.btn{
+  margin-top:20px;
+  padding:12px 20px;
+  border:none;
+  border-radius:12px;
+
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.primary{
+  background:linear-gradient(135deg,#7c3aed,#ec4899);
+  color:white;
+}
+
+.primary:hover{
+  transform:scale(1.05);
+}
+
+/* BACK BUTTON */
+.back-btn{
+  display:inline-block;
+  margin-top:15px;
+  font-size:14px;
+  text-decoration:none;
+  color:#7c3aed;
+}
+
+/* COUPON */
+.coupon-box{
+  margin-top:20px;
+  display:flex;
+  gap:10px;
+  justify-content:center;
+}
+
+.coupon-input{
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  width:60%;
+}
+
+.coupon-btn{
+  padding:10px 14px;
+  border:none;
+  border-radius:10px;
+  background:#7c3aed;
+  color:white;
+  cursor:pointer;
+}
+</style>
+
 </head>
 
 <body>
@@ -31,20 +143,31 @@
   <!-- Your payment logic -->
   <script src="scripts/payment.js"></script>
 
-<div class="coupon-box">
-  <input 
-    type="text" 
-    id="coupon" 
-    class="coupon-input" 
-    placeholder="Enter coupon code"
-  >
+<main class="payment-page">
 
-  <button class="coupon-btn" onclick="applyCoupon()">
-    Apply
-  </button>
-</div>
+  <h1 class="payment-title">Complete Your Purchase 💳</h1>
 
-<p id="discountMsg"></p>
+  <p class="muted">
+    After payment, kindly download <strong>payment invoice/receipt</strong> before making changes in the <strong>Editor page</strong>.
+  </p>
+
+  <button id="rzpButton" class="btn primary big">Pay Now</button>
+
+  <p class="muted">
+    If you face any query or issue, reach out to us at <strong>celebratewithus10@gmail.com</strong>
+  </p>
+
+  <!-- ✅ COUPON INSIDE -->
+  <div class="coupon-box">
+    <input type="text" id="coupon" class="coupon-input" placeholder="Enter coupon code">
+    <button class="coupon-btn" onclick="applyCoupon()">Apply</button>
+  </div>
+
+  <p id="discountMsg"></p>
+
+  <a href="index.html" class="back-btn">← Back</a>
+
+</main>
 
 </body>
 </html>
