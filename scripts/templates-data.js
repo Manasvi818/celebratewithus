@@ -111,15 +111,13 @@ function openTemplate(templateName) {
   document.getElementById("templateModal").style.display = "block";
 }
 
-function showDemo() {
-  const template = window.TEMPLATES.find(t => t.id === selectedTemplate);
-
-  if (!template || !template.demo) {
-    alert("Demo not available");
+window.showDemo = function() {
+  if (!selectedTemplateId) {
+    alert("No template selected");
     return;
   }
 
-  window.location.href = template.demo;
+  window.location.href = `../demos/${selectedTemplateId}.html`;
 }
 
 function buyNow() {
