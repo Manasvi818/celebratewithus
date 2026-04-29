@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose Your Style</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #f3e7ff, #e6f7ff);
+    }
+
+    .container {
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #7b2cbf;
+      margin-bottom: 5px;
+    }
+
+    p {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      padding: 10px 16px;
+      border-radius: 25px;
+      border: none;
+      background: linear-gradient(45deg, #ff4d6d, #7b2cbf);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .card {
+      position: relative;
+      margin: 15px 0;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      filter: brightness(0.75);
+    }
+
+    .card h2 {
+      position: absolute;
+      bottom: 15px;
+      left: 15px;
+      color: white;
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+<button class="back-btn" onclick="goBack()">← Back</button>
+
+<div class="container">
+  <h1>Choose Your Style</h1>
+  <p>Select a vibe to preview your celebration page</p>
+
+  <!-- Casual -->
+  <div class="card" onclick="selectStyle('casual')">
+    <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777389359/casual_xaue1t.jpg" />
+    <h2>Casual</h2>
+  </div>
+
+  <!-- Traditional -->
+  <div class="card" onclick="selectStyle('traditional')">
+    <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777389119/Screenshot_2026-04-28_204053_vaf2am.png" />
+    <h2>Traditional</h2>
+  </div>
+
+  <!-- Family -->
+  <div class="card" onclick="selectStyle('family')">
+    <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777389248/family_pj1lkr.jpg" />
+    <h2>Family Time</h2>
+  </div>
+
+  <!-- Party -->
+  <div class="card" onclick="selectStyle('party')">
+    <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777388872/romantic_sloukt.jpg" />
+    <h2>Party</h2>
+  </div>
+
+  <!-- Fun -->
+  <div class="card" onclick="selectStyle('fun')">
+    <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777389645/fun-quirky_qw0qd1.jpg" />
+    <h2>Fun/Quirky</h2>
+  </div>
+
+</div>
+
+<script>
+  function selectStyle(style) {
+    window.location.href = `templates.html?style=${style}`;
+  }
+
+  function goBack() {
+    window.history.back();
+  }
+</script>
+
+</body>
+</html>

@@ -1,3 +1,40 @@
+
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const selectedStyle = params.get("style");
+
+  console.log("Selected Style:", selectedStyle);
+
+  if (selectedStyle === "casual") {
+    loadCasualTemplates();
+  } else if (selectedStyle === "traditional") {
+    loadTraditionalTemplates();
+  } else if (selectedStyle === "family") {
+    loadFamilyTemplates();
+  }
+});
+
+function loadCasualTemplates() {
+  console.log("Loading Casual Templates");
+  // render casual templates here
+}
+
+function loadTraditionalTemplates() {
+  console.log("Loading Traditional Templates");
+}
+
+function loadFamilyTemplates() {
+  console.log("Loading Family Templates");
+}
+
+function loadRomanticTemplates() {
+  console.log("Loading Romantic Templates");
+}
+
+function loadFunTemplates() {
+  console.log("Loading Fun Templates");
+}
+
 // scripts/templates-data.js
 // Full list of all 30 templates
 
@@ -66,3 +103,23 @@ function selectVibeFromList(templateId) {
 
   console.log("✅ Selected:", templateId);
 }
+
+let selectedTemplate = "";
+
+function openTemplate(templateName) {
+  selectedTemplate = templateName;
+  document.getElementById("templateModal").style.display = "block";
+}
+
+function showDemo() {
+  window.location.href = `viewer.html?template=${selectedTemplate}&demo=true`;
+}
+
+function buyNow() {
+  window.location.href = `checkout.html?template=${selectedTemplate}`;
+}
+
+const params = new URLSearchParams(window.location.search);
+const selectedStyle = params.get("style");
+
+console.log("Selected Style:", selectedStyle);

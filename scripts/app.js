@@ -122,3 +122,11 @@ function showTemplates(vibe) {
   });
 
 });
+
+function goToStyles() {
+  window.location.href = "choose-style.html";
+}
+
+function selectStyle(style) {
+  window.location.href = `templates.html?style=${style}`;
+}

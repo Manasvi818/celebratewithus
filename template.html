@@ -1,78 +1,167 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Template Viewer / Editor</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Templates</title>
 
-  <link rel="stylesheet" href="../styles/main.css" />
-  <link rel="stylesheet" href="../styles/template.css">
+  <link rel="stylesheet" href="../styles/main.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #e6fff7, #f0f9ff);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 20px 0;
+      color: #5f9ea0;
+    }
+
+    .templates-container {
+      padding: 20px;
+    }
+
+    .template-card {
+      position: relative;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .template-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      filter: brightness(0.7);
+    }
+
+    .template-card h3 {
+      position: absolute;
+      bottom: 15px;
+      left: 15px;
+      color: white;
+      margin: 0;
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+    }
+
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      margin: 40% auto;
+      width: 80%;
+      max-width: 300px;
+    }
+
+    .modal button {
+      margin: 10px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .demo-btn {
+      background: #6c5ce7;
+      color: white;
+    }
+
+    .buy-btn {
+      background: #00b894;
+      color: white;
+    }
+  </style>
 </head>
 
 <body>
 
-<header class="viewer-header">
-  <a href="index.html" class="back">← Back to Gallery</a>
-</header>
+<h1 id="pageTitle">Templates</h1>
 
-<main class="custom-layout">
+<div class="templates-container" id="templatesContainer"></div>
 
-  <div class="left-panel">
-    <a href="index.html" class="btn back-btn">← Back</a>
-    <button class="btn msg-btn">Message</button>
-    <a href="payment.html" class="btn pay-btn">Proceed to Payment</a>
+<!-- MODAL -->
+<div id="templateModal" class="modal">
+  <div class="modal-content">
+    <h3>Choose Option</h3>
+    <button class="demo-btn" onclick="showDemo()">Show Demo</button>
+    <button class="buy-btn" onclick="buyNow()">Buy Now</button>
   </div>
-
-  <div class="right-panel">
-
-  <iframe 
-    id="templateFrame"
-    style="width:100%; height:600px; border:none; border-radius:12px;">
-  </iframe>
-
-  <h2 id="templateTitle"></h2>
-
 </div>
 
-</main>
-
-<footer class="site-footer">
-  <p>© 2025 CelebrateWithUs.web</p>
-</footer>
-
-<!-- ✅ IMPORTANT: Correct paths -->
 <script src="../scripts/templates-data.js"></script>
-<script src="../scripts/app.js"></script>
 
 <script>
-function getTemplateId() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("id");
+let selectedTemplateId = "";
+
+// ✅ Get style from URL
+const params = new URLSearchParams(window.location.search);
+const selectedStyle = params.get("style");
+
+// ✅ Set title
+document.getElementById("pageTitle").innerText =
+  selectedStyle ? selectedStyle.toUpperCase() + " Templates" : "Templates";
+
+// ✅ Filter templates
+const filteredTemplates = window.TEMPLATES.filter(
+  t => t.style === selectedStyle
+);
+
+// ✅ Render templates
+const container = document.getElementById("templatesContainer");
+
+filteredTemplates.forEach(template => {
+  const div = document.createElement("div");
+  div.className = "template-card";
+  div.onclick = () => openModal(template.id);
+
+  div.innerHTML = `
+    <img src="${template.image}" />
+    <h3>${template.title}</h3>
+  `;
+
+  container.appendChild(div);
+});
+
+// ✅ Open modal
+function openModal(id) {
+  selectedTemplateId = id;
+  document.getElementById("templateModal").style.display = "block";
 }
 
-function loadTemplate() {
-  const id = getTemplateId();
-
-  if (!id) {
-    console.error("No template ID found in URL");
-    return;
-  }
-
-  const template = window.TEMPLATES.find(t => t.id === id);
-
-  if (!template) {
-    console.error("Template not found");
-    return;
-  }
-
-  // ✅ Load preview page inside iframe
-  document.getElementById("templateFrame").src =
-    "../preview.html?template=" + template.id;
-
-  document.getElementById("templateTitle").innerText = template.title;
+// ✅ Show demo → go to viewer
+function showDemo() {
+  window.location.href = `viewer.html?id=${selectedTemplateId}&demo=true`;
 }
 
-loadTemplate();
+// ✅ Buy now → go to payment
+function buyNow() {
+  window.location.href = `payment.html?id=${selectedTemplateId}`;
+}
+
+// ✅ Close modal on outside click
+window.onclick = function(e) {
+  const modal = document.getElementById("templateModal");
+  if (e.target === modal) {
+    modal.style.display = "none";
+  }
+};
 </script>
 
 </body>
