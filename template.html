@@ -117,10 +117,7 @@ window.showDemo = function() {
     return;
   }
 
-    const demoId = "demo"; // temporary ID for preview
-
-
-    window.location.href = `viewer.html?id=${selectedTemplateId}`;
+  window.location.href = `../templates/${selectedTemplateId}/viewer.html?id=${selectedTemplateId}`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
