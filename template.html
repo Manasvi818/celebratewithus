@@ -117,8 +117,9 @@ window.showDemo = function() {
     return;
   }
 
-  window.location.href = `../demos/${selectedTemplateId}.html`;
+  window.location.href = `../templates/${selectedTemplateId}/viewer.html`;
 }
+
 document.addEventListener("DOMContentLoaded", () => {
 
   const params = new URLSearchParams(window.location.search);
