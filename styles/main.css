@@ -588,3 +588,25 @@ section {
     overflow-x:hidden;
   }
 }
+
+.primary-btn {
+  background: linear-gradient(45deg, #ff4d6d, #7b2cbf);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(123, 44, 191, 0.3);
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(123, 44, 191, 0.4);
+}
+
+.primary-btn:active {
+  transform: scale(0.98);
+}
