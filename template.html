@@ -110,9 +110,10 @@
 <script>
 let selectedTemplateId = "";
 
-// ✅ Get style from URL
 const params = new URLSearchParams(window.location.search);
 const selectedStyle = params.get("style");
+
+console.log("Selected Style:", selectedStyle);
 
 // ✅ Set title
 document.getElementById("pageTitle").innerText =
@@ -120,7 +121,8 @@ document.getElementById("pageTitle").innerText =
 
 // ✅ Filter templates
 const filteredTemplates = window.TEMPLATES.filter(
-  t => t.style === selectedStyle
+    t => t.vibe === selectedStyle
+
 );
 
 // ✅ Render templates
