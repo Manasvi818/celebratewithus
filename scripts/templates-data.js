@@ -112,7 +112,7 @@ function openTemplate(templateName) {
 }
 
 function showDemo() {
-  window.location.href = `viewer.html?template=${selectedTemplate}&demo=true`;
+  window.location.href = `viewer.html?id=${selectedTemplate}&demo=true`;
 }
 
 function buyNow() {
