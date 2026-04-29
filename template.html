@@ -110,6 +110,15 @@
 <script>
 
   let selectedTemplateId = "";
+
+window.showDemo = function() {
+  if (!selectedTemplateId) {
+    alert("No template selected");
+    return;
+  }
+
+  window.location.href = `../demos/${selectedTemplateId}.html`;
+}
 document.addEventListener("DOMContentLoaded", () => {
 
   const params = new URLSearchParams(window.location.search);
