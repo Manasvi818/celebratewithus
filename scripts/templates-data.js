@@ -119,7 +119,3 @@ function buyNow() {
   window.location.href = `checkout.html?template=${selectedTemplate}`;
 }
 
-const params = new URLSearchParams(window.location.search);
-const selectedStyle = params.get("style");
-
-console.log("Selected Style:", selectedStyle);
