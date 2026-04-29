@@ -221,13 +221,14 @@ body{
 .preview-img{
   width:100%;
   height:100%;
-  background-size:110%;
+  background-size:cover;
   background-position:center;
   transition:0.4s ease;
 }
 
 .card:hover .preview-img{
-  background-size:130%;
+    transform:scale(1.08);   /* smooth zoom */
+
 }
 </style>
 </head>
@@ -447,15 +448,9 @@ document.querySelectorAll(".card").forEach(card => {
     const div = document.createElement("div");
     div.className = "card";
     div.innerHTML = `
-  <div style="
-    width:100%;
-    height:100%;
-    background:url('${previewImages[type][index]}') center/cover no-repeat;
-    border-radius:18px;
-    display:flex;
-    align-items:flex-end;
-    padding:10px;
-  ">
+  <div class="preview-img"
+     style="background-image:url('${previewImages[type][index]}')">
+
     <span style="
       background:rgba(0,0,0,0.6);
       padding:5px 10px;
