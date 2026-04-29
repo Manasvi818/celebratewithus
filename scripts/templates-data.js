@@ -104,23 +104,4 @@ function selectVibeFromList(templateId) {
   console.log("✅ Selected:", templateId);
 }
 
-let selectedTemplate = "";
-
-function openTemplate(templateName) {
-  selectedTemplate = templateName;
-  document.getElementById("templateModal").style.display = "block";
-}
-
-window.showDemo = function() {
-  if (!selectedTemplateId) {
-    alert("No template selected");
-    return;
-  }
-
-  window.location.href = `../demos/${selectedTemplateId}.html`;
-}
-
-function buyNow() {
-  window.location.href = `checkout.html?template=${selectedTemplate}`;
-}
 
