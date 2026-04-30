@@ -194,7 +194,19 @@ section {
 .demo-section {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 50px;
+}
+
+.demo-left {
+  flex: 1;
+  max-width: 450px;
+}
+
+.demo-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .demo-right img {
