@@ -137,7 +137,7 @@ animation:fadeIn 0.6s ease;
   </p>
 
 <p style="font-size:18px; margin:10px 0;">
-  Price: <strong id="priceDisplay">₹399</strong>
+  Price: <strong id="priceDisplay">₹199</strong>
 </p>
 
   <button id="rzpButton" class="pay-btn">Pay Now </button>
@@ -164,14 +164,28 @@ animation:fadeIn 0.6s ease;
   <script src="scripts/payment.js"></script>
 
   <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("rzpButton");
-  if (btn) {
-    btn.innerText = "Pay Now";
-    btn.disabled = false;
-    btn.style.opacity = "1";
-  }
-});
+
+document.getElementById("rzpButton").onclick = function () {
+
+  var options = {
+    "key": "YOUR_RAZORPAY_KEY", // 🔥 replace this
+    "amount": 19900, // in paise (₹199 = 19900)
+    "currency": "INR",
+    "name": "CelebrateWithUs",
+    "description": "Payment for Celebration Page",
+    "handler": function (response){
+        alert("Payment Successful!");
+        console.log(response);
+    },
+    "theme": {
+        "color": "#7c3aed"
+    }
+  };
+
+  var rzp = new Razorpay(options);
+  rzp.open();
+}
+
 </script>
 </body>
 </html>

@@ -1,11 +1,11 @@
 
-const originalAmount = 39900;
+const originalAmount = 19900;
 
 const urlParams = new URLSearchParams(window.location.search);
 const selectedTemplate = urlParams.get("template");
 
 const BASE_URL = "https://celebratewithus.onrender.com";
-  let finalAmount = 39900;
+  let finalAmount = 19900;
   let usedCoupon = null;
 let appliedCoupon = "";
 let appliedDiscount = 0;
@@ -66,7 +66,7 @@ const projectId = "proj_" + Date.now();
         currency: data.currency,
         order_id: data.orderId,
         name: "Celebratewithus",
-        description: "Template Purchase ₹399",
+        description: "Template Purchase ₹199",
 
        handler: async function (response) {
 
