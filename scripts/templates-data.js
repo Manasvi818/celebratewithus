@@ -18,6 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
    else if (selectedStyle === "fun") {
     loadFunTemplates();
   }
+  else if (selectedStyle === "party") {
+    loadFunTemplates();
+  }
 });
 
 function loadCasualTemplates() {
@@ -39,6 +42,10 @@ function loadRomanticTemplates() {
 
 function loadFunTemplates() {
   console.log("Loading Fun Templates");
+}
+
+function loadPartyTemplates() {
+  console.log("Loading Party Templates");
 }
 
 // scripts/templates-data.js
