@@ -168,19 +168,33 @@ animation:fadeIn 0.6s ease;
 document.getElementById("rzpButton").onclick = function () {
 
   var options = {
-    "key": "YOUR_RAZORPAY_KEY", // 🔥 replace this
-    "amount": 19900, // in paise (₹199 = 19900)
-    "currency": "INR",
-    "name": "CelebrateWithUs",
-    "description": "Payment for Celebration Page",
-    "handler": function (response){
-        alert("Payment Successful!");
-        console.log(response);
-    },
-    "theme": {
-        "color": "#7c3aed"
-    }
-  };
+  "key": "rzp_live_SescqcbG1uyRJf",
+  "amount": 19900,
+  "currency": "INR",
+  "name": "CelebrateWithUs",
+  "description": "Payment for Celebration Page",
+
+  "handler": function (response){
+      alert("Payment Successful!");
+      window.location.href = "success.html"; // ✅ redirect after payment
+  },
+
+  "modal": {
+      "ondismiss": function(){
+          alert("Payment Cancelled"); // ✅ when user closes popup
+      }
+  },
+
+  "prefill": {
+      "name": "Customer",
+      "email": "test@email.com",
+      "contact": "9999999999"
+  },
+
+  "theme": {
+      "color": "#7c3aed"
+  }
+};
 
   var rzp = new Razorpay(options);
   rzp.open();
