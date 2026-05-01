@@ -7,12 +7,20 @@ const express = require("express");
 const app = express();
 
 // ✅ CORS - single clean middleware, no duplicates
-app.use((req, res, next) => {
-  const allowed = [
+const cors = require("cors");
+
+app.use(cors({
+  origin: [
     "https://www.celebratewithus.co.in",
     "https://celebratewithus.co.in"
-  ];
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
 
+app.options("*", cors());
+app.use(express.json());
   const origin = req.headers.origin;
 
   // ✅ Allow all your domains safely
