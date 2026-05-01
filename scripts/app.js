@@ -129,5 +129,5 @@ function goToStyles() {
 }
 
 function selectStyle(style) {
-  window.location.href = `template.html?style=${style}`;
+  window.location.href = `pages/template.html?style=${style}`;
 }
