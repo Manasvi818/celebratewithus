@@ -164,6 +164,10 @@ animation:fadeIn 0.6s ease;
   <script src="scripts/payment.js"></script>
 
   <script>
+function selectTemplate(templateName) {
+  localStorage.setItem("selectedTemplate", templateName);
+  window.location.href = "payment.html";
+}
 
 document.getElementById("rzpButton").onclick = function () {
 
@@ -208,6 +212,8 @@ document.getElementById("rzpButton").onclick = function () {
   var rzp = new Razorpay(options);
   rzp.open();
 }
+
+
 
 </script>
 </body>

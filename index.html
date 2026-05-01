@@ -281,7 +281,9 @@
       <li>✔ No Expiry</li>
     </ul>
 
-    <button class="primary-btn">Get Started Now →</button>
+    <button class="primary-btn" onclick="selectTemplate('easy-breezy')">
+  Get Started Now →
+</button>
   </div>
 </section>
 
@@ -295,6 +297,12 @@ This page contains affiliate links. We may earn a commission at no extra cost to
 <footer class="site-footer">
   <p> CelebrateWithUs • Crafted with 💛</p>
 </footer>
+
 <script src="scripts/app.js"></script>
+
+function selectTemplate(templateName) {
+  localStorage.setItem("selectedTemplate", templateName);
+  window.location.href = "payment.html";
+}
 </body>
 </html>
