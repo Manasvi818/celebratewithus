@@ -7,38 +7,19 @@ const express = require("express");
 const app = express();
 
 // ✅ CORS - single clean middleware, no duplicates
-const cors = require("cors");
-
-app.use(cors({
-  origin: [
+app.use((req, res, next) => {
+  const allowed = [
     "https://www.celebratewithus.co.in",
     "https://celebratewithus.co.in"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
-}));
-
-app.options("*", cors());
-app.use(express.json());
+  ];
   const origin = req.headers.origin;
-
-  // ✅ Allow all your domains safely
-  if (!origin || allowed.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin || "*");
+  if (allowed.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
   }
-
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
   res.setHeader("Access-Control-Allow-Credentials", "true");
-
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
+  if (req.method === "OPTIONS") return res.sendStatus(200);
   next();
 });
 
