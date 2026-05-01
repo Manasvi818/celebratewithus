@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../styles/template.css">
 </head>
 <div class="template-view">
-  <img id="templateImage" src="" alt="Template Image" />
+  <iframe id="templateFrame" style="width:100%; height:80vh; border:none;"></iframe>
   <h2 id="templateTitle"></h2>
 </div>
 <body>
@@ -45,8 +45,8 @@ function loadTemplate() {
   }
 
   // ✅ Load preview page inside iframe
-  document.getElementById("templateFrame").src =
-    "../preview.html?template=" + template.id;
+  document.getElementById("templateImage").src =
+  "../templates/" + template.id + "/preview.jpg";
 
   document.getElementById("templateTitle").innerText = template.title;
 }
