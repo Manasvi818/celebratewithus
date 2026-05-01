@@ -58,6 +58,11 @@
       width: 100%;
       height: 100%;
       background: rgba(0,0,0,0.6);
+
+       /* 👇 ADD THIS */
+ 
+  align-items: center;
+  justify-content: center;
     }
 
     .modal-content {
@@ -178,6 +183,7 @@ if (!templates[style]) {
 
 // ✅ Open modal
 function openModal(templateId) {
+    console.log("Opening modal for:", templateId); // 👈 check console
   selectedTemplate = templateId;
   document.getElementById("templateModal").style.display = "block";
 }
