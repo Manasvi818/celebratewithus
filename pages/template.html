@@ -45,9 +45,9 @@ function loadTemplate() {
     return;
   }
 
-  // ✅ Load preview page inside iframe
+  // ✅ FIXED PATH (matches your folder)
   document.getElementById("templateImage").src =
-  "../templates/" + template.id + "/preview.jpg";
+    "../previews/" + template.id + ".png";
 
   document.getElementById("templateTitle").innerText = template.title;
 }
