@@ -175,9 +175,18 @@ document.getElementById("rzpButton").onclick = function () {
   "description": "Payment for Celebration Page",
 
   "handler": function (response){
-      alert("Payment Successful!");
-      window.location.href = "editor.html"; // ✅ redirect after payment
-  },
+
+    alert("Payment Successful!");
+
+    // Get selected template
+    const template = localStorage.getItem("selectedTemplate");
+
+    if(template){
+        window.location.href = "templates/" + template + "/editor.html";
+    } else {
+        alert("Error: No template selected!");
+    }
+},
 
   "modal": {
       "ondismiss": function(){
