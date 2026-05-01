@@ -8,17 +8,21 @@ const app = express();
    
 const cors = require("cors");
 
-app.use(cors({
-  origin: [
+app.use((req, res, next) => {
+  const allowed = [
     "https://www.celebratewithus.co.in",
-    "https://celebratewithus.co.in",
-    "https://celebratewithus-ebr0.onrender.com"
-  ],
-  methods: ["GET","POST","PUT","DELETE"],
-  credentials: true
-}));
-
-app.options("*", cors());
+    "https://celebratewithus.co.in"
+  ];
+  const origin = req.headers.origin;
+  if (allowed.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  if (req.method === "OPTIONS") return res.sendStatus(200);
+  next();
+});
 
 const PORT = process.env.PORT || 10000;  // ✅ DEFINE EARLY
 
