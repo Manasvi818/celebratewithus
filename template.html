@@ -163,9 +163,9 @@ if (!templates[style]) {
     card.className = "template-card";
 
     card.innerHTML = `
-      <img src="../templates/${template}/preview.jpg">
-      <h3>${template}</h3>
-    `;
+  <img src="/assets/images/${template}.png">
+  <h3>${template}</h3>
+`;
 
     card.onclick = () => {
       window.location.href = `../payment.html?template=${template}`;
