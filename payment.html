@@ -169,6 +169,10 @@ function selectTemplate(templateName) {
   window.location.href = "payment.html";
 }
 
+// DEBUG: check what's available
+console.log("URL param:", new URLSearchParams(window.location.search).get("template"));
+console.log("localStorage:", localStorage.getItem("selectedTemplate"));
+
 document.getElementById("rzpButton").onclick = function () {
 
   var options = {
