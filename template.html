@@ -112,7 +112,6 @@
 const params = new URLSearchParams(window.location.search);
 const style = params.get("style");
 
-// 🎯 Define templates for each style
 const templates = {
   casual: [
     "easy-breezy",
@@ -120,7 +119,6 @@ const templates = {
     "simple-delight",
     "soft-vibes",
     "sunny-smiles"
-    
   ],
   traditional: [
     "traditional-template",
@@ -148,12 +146,11 @@ const templates = {
     "electric-energy",
     "color-carnival",
     "party-poo",
-    "laugh-riot",
-
+    "laugh-riot"
   ]
 };
 
-const container = document.getElementById("templateContainer");
+const container = document.getElementById("templatesContainer");
 
 if (!templates[style]) {
   container.innerHTML = "<p>No templates found</p>";
@@ -162,18 +159,15 @@ if (!templates[style]) {
   templates[style].forEach(template => {
 
     const card = document.createElement("div");
-    card.style.margin = "20px";
-    card.style.cursor = "pointer";
+    card.className = "template-card";
 
     card.innerHTML = `
-      <div style="border-radius:15px; overflow:hidden; box-shadow:0 10px 20px rgba(0,0,0,0.1)">
-        <img src="templates/${template}/preview.jpg" style="width:100%; height:200px; object-fit:cover;">
-        <h3 style="padding:10px;">${template}</h3>
-      </div>
+      <img src="../templates/${template}/preview.jpg">
+      <h3>${template}</h3>
     `;
 
     card.onclick = () => {
-      window.location.href = `payment.html?template=${template}`;
+      window.location.href = `../payment.html?template=${template}`;
     };
 
     container.appendChild(card);
