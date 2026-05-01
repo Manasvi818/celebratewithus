@@ -182,12 +182,9 @@ document.getElementById("rzpButton").onclick = function () {
 "handler": function (response){
     alert("Payment Successful!");
 
-    // ❌ Old code - reads from URL param (which is never set)
-    // const params = new URLSearchParams(window.location.search);
-    // const template = params.get("template");
-
     // ✅ Fix - read from localStorage (matches how index.html saves it)
-    const template = localStorage.getItem("selectedTemplate");
+    const params = new URLSearchParams(window.location.search);
+    const template = params.get("template") || localStorage.getItem("selectedTemplate");
 
     if(template){
         window.location.href = "templates/" + template + "/editor.html";
