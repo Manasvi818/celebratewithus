@@ -105,83 +105,82 @@
   </div>
 </div>
 
+
 <script src="../scripts/templates-data.js"></script>
 
 <script>
+const params = new URLSearchParams(window.location.search);
+const style = params.get("style");
 
-  let selectedTemplateId = "";
+// 🎯 Define templates for each style
+const templates = {
+  casual: [
+    "easy-breezy",
+    "everyday-joy",
+    "simple-delight",
+    "soft-vibes",
+    "sunny-smiles"
+    
+  ],
+  traditional: [
+    "traditional-template",
+    "cultural-festive",
+    "royal-aura",
+    "sarced-simplicity",
+    "vintage-glory"
+  ],
+  family: [
+    "always-together",
+    "cherished-times",
+    "home-happiness",
+    "joyful-times",
+    "warm-bonds"
+  ],
+  romantic: [
+    "forever-yours",
+    "blush-love",
+    "candlelight-moments",
+    "golden-love",
+    "sweet-affection"
+  ],
+  fun: [
+    "crazy-confetti",
+    "electric-energy",
+    "color-carnival",
+    "party-poo",
+    "laugh-riot",
 
-window.showDemo = function() {
-  if (!selectedTemplateId) {
-    alert("No template selected");
-    return;
-  }
+  ]
+};
 
-  window.location.href = `templates/${selectedTemplateId}/${selectedTemplateId}-index.html`;
-}
+const container = document.getElementById("templateContainer");
 
-document.addEventListener("DOMContentLoaded", () => {
+if (!templates[style]) {
+  container.innerHTML = "<p>No templates found</p>";
+} else {
 
-  const params = new URLSearchParams(window.location.search);
-  const selectedStyle = params.get("style");
+  templates[style].forEach(template => {
 
-  console.log("Selected Style:", selectedStyle);
-  console.log("All Templates:", window.TEMPLATES);
+    const card = document.createElement("div");
+    card.style.margin = "20px";
+    card.style.cursor = "pointer";
 
-  // ✅ TITLE
-  document.getElementById("pageTitle").innerText =
-    selectedStyle ? selectedStyle.toUpperCase() + " Templates" : "Templates";
-
-  // ✅ FILTER
-  const filteredTemplates = window.TEMPLATES.filter(
-    t => t.vibe === selectedStyle
-  );
-
-  console.log("Filtered:", filteredTemplates);
-
-  // ❗ If empty → show message
-  if (filteredTemplates.length === 0) {
-    document.getElementById("templatesContainer").innerHTML =
-      "<p>No templates found</p>";
-    return;
-  }
-
-  // ✅ RENDER
-  const container = document.getElementById("templatesContainer");
-
-  filteredTemplates.forEach(template => {
-    const div = document.createElement("div");
-    div.className = "template-card";
-    div.onclick = () => openModal(template.id);
-
-    div.innerHTML = `
-      <img src="${template.image}" />
-      <h3>${template.title}</h3>
+    card.innerHTML = `
+      <div style="border-radius:15px; overflow:hidden; box-shadow:0 10px 20px rgba(0,0,0,0.1)">
+        <img src="templates/${template}/preview.jpg" style="width:100%; height:200px; object-fit:cover;">
+        <h3 style="padding:10px;">${template}</h3>
+      </div>
     `;
 
-    container.appendChild(div);
+    card.onclick = () => {
+      window.location.href = `payment.html?template=${template}`;
+    };
+
+    container.appendChild(card);
+
   });
 
-  // ✅ MODAL
-  window.openModal = function(id) {
-    selectedTemplateId = id;
-    document.getElementById("templateModal").style.display = "block";
-  }
-
-
-
-  window.buyNow = function() {
-    window.location.href = `payment.html?id=${selectedTemplateId}`;
-  }
-
-  window.onclick = function(e) {
-    const modal = document.getElementById("templateModal");
-    if (e.target === modal) {
-      modal.style.display = "none";
-    }
-  }
-
-});
+}
 </script>
 
 </body>
