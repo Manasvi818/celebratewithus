@@ -305,7 +305,16 @@ h2, h3{ text-align:center; font-family:"Playfair Display",serif; }
 let music = "";
 let password = "";
 
-  const projectId = window.location.pathname.split("/").pop();
+let projectId = localStorage.getItem("projectId");
+const selectedTemplate = localStorage.getItem("selectedTemplate");
+
+if (!projectId) {
+  projectId = `${selectedTemplate}-${Date.now()}`;
+  localStorage.setItem("projectId", projectId);
+}
+
+console.log("FINAL PROJECT ID:", projectId);
+  
 const STORAGE_KEY = `project_${projectId}`;
 
 console.log("PROJECT ID:", projectId);
@@ -733,8 +742,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function downloadViewer() {
   autoSave();
 
-  const template = window.location.pathname.split("/")[2];
-  const projectId = window.location.pathname.split("/").pop();
+   const template = localStorage.getItem("selectedTemplate");
 
   // ✅ Download viewer ZIP
   window.open(`/download?template=${template}&projectId=${projectId}`);
@@ -873,8 +881,7 @@ link.click();
 async function goToViewer() {
   await autoSave();   // 🔥 wait for DB save
 
-  const template = window.location.pathname.split("/")[2];
-  const projectId = window.location.pathname.split("/").pop();
+    const template = window.location.pathname.split("/")[2];
 
   window.location.href = `/viewer/${template}/${projectId}`;
 }
