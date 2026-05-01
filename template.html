@@ -109,6 +109,8 @@
 <script src="../scripts/templates-data.js"></script>
 
 <script>
+  let selectedTemplate = "";
+
 const params = new URLSearchParams(window.location.search);
 const style = params.get("style");
 console.log("STYLE PARAM:", style);
@@ -167,15 +169,43 @@ if (!templates[style]) {
   <h3>${template}</h3>
 `;
 
-    card.onclick = () => {
-      window.location.href = `../payment.html?template=${template}`;
-    };
-
+   card.onclick = () => openModal(template);
     container.appendChild(card);
 
   });
 
 }
+
+// ✅ Open modal
+function openModal(templateId) {
+  selectedTemplate = templateId;
+  document.getElementById("templateModal").style.display = "block";
+}
+
+// ✅ Show demo
+function showDemo() {
+  if (!selectedTemplate) return;
+
+  window.location.href =
+    `../templates/${selectedTemplate}/${selectedTemplate}-index.html`;
+}
+
+// ✅ Buy now
+function buyNow() {
+  if (!selectedTemplate) return;
+
+  window.location.href =
+    `../payment.html?template=${selectedTemplate}`;
+}
+
+// ✅ Close modal when clicking outside
+window.onclick = function (e) {
+  const modal = document.getElementById("templateModal");
+  if (e.target === modal) {
+    modal.style.display = "none";
+  }
+};
+
 </script>
 
 </body>
