@@ -188,7 +188,7 @@ document.getElementById("rzpButton").onclick = function () {
 
     // ✅ Fix - read from localStorage (matches how index.html saves it)
     const params = new URLSearchParams(window.location.search);
-    const template = params.get("template") || localStorage.getItem("selectedTemplate");
+const template = params.get("template");
 
     if(template){
         window.location.href = "templates/" + template + "/editor.html";

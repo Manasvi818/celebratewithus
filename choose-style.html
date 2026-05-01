@@ -74,31 +74,31 @@
   <p>Select a vibe to preview your celebration page</p>
 
   <!-- Casual -->
-  <div class="card" onclick="selectStyle('casual')">
+  <div class="card" onclick="selectStyle('casual-template')">
     <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777389359/casual_xaue1t.jpg" />
     <h2>Casual</h2>
   </div>
 
   <!-- Traditional -->
-  <div class="card" onclick="selectStyle('traditional')">
+  <div class="card" onclick="selectStyle('traditional-template')">
     <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777389119/Screenshot_2026-04-28_204053_vaf2am.png" />
     <h2>Traditional</h2>
   </div>
 
   <!-- Family -->
-  <div class="card" onclick="selectStyle('family')">
+  <div class="card" onclick="selectStyle('family-template')">
     <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777389248/family_pj1lkr.jpg" />
     <h2>Family Time</h2>
   </div>
 
   <!-- Romantic -->
-  <div class="card" onclick="selectStyle('romantic')">
+  <div class="card" onclick="selectStyle('romantic-template')">
     <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777388872/romantic_sloukt.jpg" />
     <h2>Romantic</h2>
   </div>
 
   <!-- Fun -->
-  <div class="card" onclick="selectStyle('fun')">
+  <div class="card" onclick="selectStyle('fun-template')">
     <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777389645/fun-quirky_qw0qd1.jpg" />
     <h2>Fun/Quirky</h2>
   </div>
@@ -106,9 +106,9 @@
 </div>
 
 <script>
-  function selectStyle(style) {
-    window.location.href = `template.html?style=${style}`;
-  }
+  function selectStyle(template) {
+  window.location.href = `payment.html?template=${template}`;
+}
 
   function goBack() {
     window.history.back();
