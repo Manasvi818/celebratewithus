@@ -183,7 +183,8 @@ document.getElementById("rzpButton").onclick = function () {
     alert("Payment Successful!");
 
     // Get selected template
-    const template = localStorage.getItem("selectedTemplate");
+    const params = new URLSearchParams(window.location.search);
+const template = params.get("template");
 
     if(template){
         window.location.href = "templates/" + template + "/editor.html";
