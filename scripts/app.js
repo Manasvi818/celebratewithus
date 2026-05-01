@@ -124,7 +124,8 @@ function showTemplates(vibe) {
 });
 
 function goToStyles() {
-  window.location.href = "choose-style.html";
+  window.location.href = "styles.html"; ✅
+
 }
 
 function selectStyle(style) {

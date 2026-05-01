@@ -1,10 +1,16 @@
+const params = new URLSearchParams(window.location.search);
+const template = params.get("template");
+
+console.log("TEMPLATE:", template);
+
 const res = await fetch("https://celebratewithus.onrender.com/create-order", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
   },
   body: JSON.stringify({
-    amountINR: 199
+    amountINR: 199,
+    template // ✅ pass template
   })
 });
 
