@@ -12,8 +12,7 @@ app.use(cors({
   origin: [
     "https://www.celebratewithus.co.in",
     "https://celebratewithus.co.in",
-    "https://celebratewithus-1.onrender.com",
-    "https://celebratewithus.onrender.com"
+    "https://celebratewithus-ebr0.onrender.com"
   ],
   methods: ["GET","POST","PUT","DELETE"],
   credentials: true
