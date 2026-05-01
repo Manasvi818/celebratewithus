@@ -178,19 +178,23 @@ document.getElementById("rzpButton").onclick = function () {
   "name": "CelebrateWithUs",
   "description": "Payment for Celebration Page",
 
-  "handler": function (response){
-
+  // In payment.html, change this handler:
+"handler": function (response){
     alert("Payment Successful!");
 
-    // Get selected template
-    const params = new URLSearchParams(window.location.search);
-const template = params.get("template");
+    // ❌ Old code - reads from URL param (which is never set)
+    // const params = new URLSearchParams(window.location.search);
+    // const template = params.get("template");
+
+    // ✅ Fix - read from localStorage (matches how index.html saves it)
+    const template = localStorage.getItem("selectedTemplate");
 
     if(template){
         window.location.href = "templates/" + template + "/editor.html";
     } else {
         alert("Error: No template selected!");
     }
+
 },
 
   "modal": {
