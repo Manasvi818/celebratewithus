@@ -47,10 +47,11 @@ function loadTemplate() {
   }
 
   // ✅ FIXED PATH (matches your folder)
-  document.getElementById("templateImage").src =
-    "../previews/" + template.id + ".png";
+  const imagePath = "../previews/" + template.id + ".png";
 
-  document.getElementById("templateTitle").innerText = template.title;
+console.log("Loading image:", imagePath);
+
+document.getElementById("templateImage").src = imagePath;
 }
 
 loadTemplate();
