@@ -10,6 +10,20 @@ const app = express();
 
 const cors = require("cors");
 
+app.use(cors({
+  origin: [
+    "https://www.celebratewithus.co.in",
+    "https://celebratewithus.co.in"
+  ],
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
+
+app.options("*", cors());
+
+app.use(express.json());
+
 // ✅ CORS — must be first, no wildcard, no manual headers
 const allowedOrigins = [
   "https://www.celebratewithus.co.in",
@@ -17,8 +31,7 @@ const allowedOrigins = [
 ];
 const corsOptions = { origin: allowedOrigins, credentials: true };
 
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // handle preflight
+
 
 app.get("/cors-test", (req, res) => {
   res.json({ cors: "working", time: Date.now() });
