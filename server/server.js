@@ -231,7 +231,24 @@ app.post("/verify-payment", async (req, res) => {
       template
     } = req.body;
 
-    console.log("FULL BODY:", req.body);
+    console.log("=== VERIFY DEBUG START ===");
+
+console.log("FULL BODY:", req.body);
+
+console.log("ORDER ID:", razorpay_order_id);
+console.log("PAYMENT ID:", razorpay_payment_id);
+console.log("SIGNATURE FROM FRONTEND:", razorpay_signature);
+
+const debug_signature = crypto
+  .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+  .update(razorpay_order_id + "|" + razorpay_payment_id)
+  .digest("hex");
+
+console.log("GENERATED SIGNATURE:", debug_signature);
+
+console.log("=== VERIFY DEBUG END ===");
+
+    
     console.log("🔥 TEMPLATE RECEIVED:", template);
 
     const templateName = (req.body.template || "").toLowerCase().trim();
