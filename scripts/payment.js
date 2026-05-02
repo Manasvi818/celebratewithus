@@ -1,4 +1,4 @@
-const BASE_URL = "https://celebratewithus.onrender.com";
+const BASE_URL = "https://celebratewithus-1-qwb2.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
