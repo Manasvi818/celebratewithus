@@ -696,13 +696,19 @@ async function loadViewerData() {
     const res = await fetch(`https://celebratewithus-1-qwb2.onrender.com/get-project/${projectId}`);
     const result = await res.json();
 
+    console.log("FULL RESULT:", result);        // ✅ ADD
+    console.log("PASSWORD FROM DB:", result.password);  // ✅ ADD
+
+
     if (result.success) {
       data = result.data || [];
       messages = result.messages || "";
       music = result.music || "";
-
-      password = result.password || "";
+     password = result.password || "";
       PASS = password;
+
+ console.log("PASS SET TO:", PASS);    
+
       document.getElementById("passwordOverlay").style.display = "flex";
       isLoaded = true;   // ✅ IMPORTANT
 
