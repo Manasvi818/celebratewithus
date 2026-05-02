@@ -17,6 +17,12 @@ app.use(cors());           // 🔥 simplest and guaranteed to work
 app.options("*", cors());
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.setHeader('Permissions-Policy', 'accelerometer=(), gyroscope=(), magnetometer=()');
+  res.setHeader('Access-Control-Expose-Headers', 'x-rtb-fingerprint-id, request-id');
+  next();
+});
+
 app.get("/cors-test", (req, res) => {
   res.json({ cors: "working", time: Date.now() });
 });
@@ -425,6 +431,7 @@ app.get("/download", async (req, res) => {
     if (!fs.existsSync(viewerPath) || !fs.existsSync(editorPath)) {
       return res.status(404).send("Template files missing");
     }
+
 
     res.setHeader("Content-Disposition", `attachment; filename=${templateId}.zip`);
     res.setHeader("Content-Type", "application/zip");

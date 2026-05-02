@@ -102,6 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
       rzp.open();
 
       rzp.on("payment.failed", function () {
+          console.error("Payment failed:", response.error);
         alert("Payment failed. Try again.");
         btn.innerText = "Pay Now";
         btn.disabled = false;
