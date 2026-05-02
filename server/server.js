@@ -13,8 +13,8 @@ const cors = require("cors");
 
 app.use(cors());           // 🔥 simplest and guaranteed to work
 
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+
+app.options("*", cors());
 app.use(express.json());
 
 app.get("/cors-test", (req, res) => {
