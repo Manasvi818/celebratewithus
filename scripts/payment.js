@@ -75,6 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
               return;
             }
 
+            localStorage.setItem("invoicePath", result.invoice);
+
             // ✅ SUCCESS FLOW
             alert("Payment successful!");
 

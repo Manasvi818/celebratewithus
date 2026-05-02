@@ -344,8 +344,7 @@ async function autoSave() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 
   try {
-    await fetch("https://celebratewithus-1-qwb2.onrender.com/save-project
-", {
+    await fetch("https://celebratewithus-1-qwb2.onrender.com/save-project"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -357,7 +356,7 @@ async function autoSave() {
 music: music,
 password: password
       })
-    });
+    };
 
     console.log("Saved to DB");
   } catch (err) {
@@ -741,7 +740,8 @@ function copyViewerLink() {
   const invoicePath = localStorage.getItem("invoicePath");
 
   if (!invoicePath) {
-    alert("Invoice not found ❌ Please complete payment first");
+    const fallbackPath = `/invoices/invoice_${projectId}.pdf`;
+    window.open(`https://celebratewithus-1-qwb2.onrender.com${fallbackPath}`, "_blank");
     return;
   }
 

@@ -758,7 +758,8 @@ async function goToViewer() {
   const invoicePath = localStorage.getItem("invoicePath");
 
   if (!invoicePath) {
-    alert("Invoice not found ❌ Please complete payment first");
+    const fallbackPath = `/invoices/invoice_${projectId}.pdf`;
+    window.open(`https://celebratewithus-1-qwb2.onrender.com${fallbackPath}`, "_blank");
     return;
   }
 
