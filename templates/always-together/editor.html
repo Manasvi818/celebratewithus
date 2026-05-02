@@ -305,13 +305,22 @@ h2, h3{ text-align:center; font-family:"Playfair Display",serif; }
 let music = "";
 let password = "";
 
+const params = new URLSearchParams(window.location.search);
+const templateFromURL = params.get("template");
+
 let projectId = localStorage.getItem("projectId");
-const selectedTemplate = localStorage.getItem("selectedTemplate");
+let selectedTemplate = templateFromURL || localStorage.getItem("selectedTemplate");
+
+if (!selectedTemplate) {
+  alert("Template missing ❌");
+}
 
 if (!projectId) {
   projectId = `${selectedTemplate}-${Date.now()}`;
   localStorage.setItem("projectId", projectId);
 }
+
+localStorage.setItem("selectedTemplate", selectedTemplate);
 
 console.log("FINAL PROJECT ID:", projectId);
   

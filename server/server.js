@@ -6,22 +6,15 @@ const path = require("path");
 const express = require("express");
 const app = express();
 
+const cors = require("cors");
+
+app.use(cors({
+  origin: "*", // ✅ TEMP FIX (allow all)
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 // ✅ CORS - single clean middleware, no duplicates
-app.use((req, res, next) => {
-  const allowed = [
-    "https://www.celebratewithus.co.in",
-    "https://celebratewithus.co.in"
-  ];
-  const origin = req.headers.origin;
-  if (allowed.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-  }
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  if (req.method === "OPTIONS") return res.sendStatus(200);
-  next();
-});
 
 const PORT = process.env.PORT || 10000;
 
