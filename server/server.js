@@ -11,7 +11,23 @@ const app = express();
 
 const cors = require("cors");
 
-app.use(cors());           // 🔥 simplest and guaranteed to work
+app.use(cors({
+  origin: [
+    "https://www.celebratewithus.co.in",
+    "https://celebratewithus.co.in",
+    "https://celebratewithus-1-qwb2.onrender.com"
+  ],
+  credentials: true
+}));
+
+app.options("*", cors({
+  origin: [
+    "https://www.celebratewithus.co.in",
+    "https://celebratewithus.co.in",
+    "https://celebratewithus-1-qwb2.onrender.com"
+  ],
+  credentials: true
+}));
 
 
 app.options("*", cors());
