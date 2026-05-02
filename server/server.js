@@ -7,38 +7,26 @@ const path = require("path");
 const express = require("express");
 const app = express();
 
-// ✅ ADD THIS HERE (exact location)
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  next();
-});
-
+const { createCoupon, applyCoupon, markUsed } = require("./coupon");
+const Project = require("./models/Project");
+const PDFDocument = require("pdfkit");
+const fs = require("fs");
+const path = require("path");
+const express = require("express");
 const cors = require("cors");
 
+const app = express();
+
+// ✅ CORS — must be first, no wildcard, no manual headers
 const allowedOrigins = [
   "https://www.celebratewithus.co.in",
   "https://celebratewithus.co.in"
 ];
+const corsOptions = { origin: allowedOrigins, credentials: true };
 
-app.use(cors({
-  origin: ["https://www.celebratewithus.co.in", "https://celebratewithus.co.in"],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
-}));
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // handle preflight
 
-// Handle preflight for ALL routes
-app.options("*", cors({
-  origin: ["https://www.celebratewithus.co.in", "https://celebratewithus.co.in"],
-  credentials: true
-}));
 
 // ✅ CORS - single clean middleware, no duplicates
 
