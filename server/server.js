@@ -22,6 +22,11 @@ app.use((req, res, next) => {
 
 const cors = require("cors");
 
+const allowedOrigins = [
+  "https://www.celebratewithus.co.in",
+  "https://celebratewithus.co.in"
+];
+
 app.use(cors({
   origin: ["https://www.celebratewithus.co.in", "https://celebratewithus.co.in"],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],

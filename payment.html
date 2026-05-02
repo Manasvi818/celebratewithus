@@ -166,7 +166,8 @@ animation:fadeIn 0.6s ease;
   <script>
 function selectTemplate(templateName) {
   localStorage.setItem("selectedTemplate", templateName);
-  window.location.href = "payment.html";
+  window.location.href = `payment.html?template=${templateName}`;
+
 }
 
 // DEBUG: check what's available
