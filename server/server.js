@@ -9,13 +9,9 @@ const app = express();
 const cors = require("cors");
 
 app.use(cors({
-  origin: [
-    "https://celebratewithus.co.in",
-    "https://www.celebratewithus.co.in"
-  ],
+  origin: "*",   // ✅ allow all (fix immediately)
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.options("*", cors());
