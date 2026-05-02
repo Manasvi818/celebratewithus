@@ -20,7 +20,20 @@ app.use((req, res, next) => {
   next();
 });
 
-const cors = require("cors"); // (you can keep or remove, not needed now)
+const cors = require("cors");
+
+app.use(cors({
+  origin: ["https://www.celebratewithus.co.in", "https://celebratewithus.co.in"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
+
+// Handle preflight for ALL routes
+app.options("*", cors({
+  origin: ["https://www.celebratewithus.co.in", "https://celebratewithus.co.in"],
+  credentials: true
+}));
 
 // ✅ CORS - single clean middleware, no duplicates
 
