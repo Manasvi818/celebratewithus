@@ -187,6 +187,10 @@ app.get("/payment", (req, res) => {
 // CREATE ORDER
 // ------------------------------------------------------
 app.post("/create-order", async (req, res) => {
+    res.header("Access-Control-Allow-Origin", "https://www.celebratewithus.co.in");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  
+
   try {
     const { amountINR = 99, currency = "INR", receipt, notes = {} } = req.body;
 
@@ -220,6 +224,10 @@ app.post("/create-order", async (req, res) => {
 // VERIFY PAYMENT
 // ------------------------------------------------------
 app.post("/verify-payment", async (req, res) => {
+    res.header("Access-Control-Allow-Origin", "https://www.celebratewithus.co.in");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+ 
+
   try {
     let {
       razorpay_order_id,
