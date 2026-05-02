@@ -331,8 +331,7 @@ function editMsg(index){
 
 async function loadFromDB() {
   try {
-    const res = await fetch(`https://celebratewithus-1-qwb2.onrender.com/get-project
-/${projectId}`);
+    const res = await fetch(`https://celebratewithus-1-qwb2.onrender.com/get-project/${projectId}`);
     const result = await res.json();
 
     if (result.success) {
@@ -385,8 +384,7 @@ async function autoSave() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 
   try {
-    await fetch("https://celebratewithus-1-qwb2.onrender.com/save-project
-", {
+    await fetch("https://celebratewithus-1-qwb2.onrender.com/save-project", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -578,6 +576,7 @@ async function savePass(){
   passSaved.style.display="block";
   setTimeout(()=>passSaved.style.display="none",1500);
 }
+
 function saveHint(){
   localStorage.setItem("viewerPassword_hint", passHint.value);
 
