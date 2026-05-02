@@ -62,7 +62,7 @@ async function openCheckout() {
 
     // 💳 RAZORPAY OPTIONS
 const options = {
-  key: data.keyId,
+  key_id: data.keyId,
   amount: data.amount,
   currency: data.currency,
   order_id: data.orderId,
