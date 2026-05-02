@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Baloo+2:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
 
-<script src="/scripts/editor-common.js"></script>
+
 
 <style>
 body{
@@ -356,8 +356,7 @@ async function autoSave() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 
   try {
-    await fetch("https://celebratewithus-1-qwb2.onrender.com/save-project
-", {
+    await fetch("https://celebratewithus-1-qwb2.onrender.com/save-project", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
