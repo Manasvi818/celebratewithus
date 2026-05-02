@@ -7,15 +7,8 @@ const path = require("path");
 const express = require("express");
 const app = express();
 
-const { createCoupon, applyCoupon, markUsed } = require("./coupon");
-const Project = require("./models/Project");
-const PDFDocument = require("pdfkit");
-const fs = require("fs");
-const path = require("path");
-const express = require("express");
-const cors = require("cors");
 
-const app = express();
+const cors = require("cors");
 
 // ✅ CORS — must be first, no wildcard, no manual headers
 const allowedOrigins = [
