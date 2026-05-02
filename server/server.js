@@ -11,12 +11,7 @@ const app = express();
 
 const cors = require("cors");
 
-const corsOptions = {
-  origin: true,
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
-};
+app.use(cors());           // 🔥 simplest and guaranteed to work
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
