@@ -3,20 +3,24 @@ const Project = require("./models/Project");
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
+
 const express = require("express");
 const app = express();
 
+// ✅ ADD THIS HERE (exact location)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-const cors = require("cors");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
 
-// ✅ MOVE CORS HERE (TOP LEVEL)
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
+  next();
+});
 
-app.options("*", cors());
+const cors = require("cors"); // (you can keep or remove, not needed now)
 
 // ✅ CORS - single clean middleware, no duplicates
 
