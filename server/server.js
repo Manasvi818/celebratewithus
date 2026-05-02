@@ -14,7 +14,9 @@ const cors = require("cors");
 const corsOptions = {
   origin: [
     "https://www.celebratewithus.co.in",
-    "https://celebratewithus.co.in"
+    "https://celebratewithus.co.in",
+        "https://celebratewithus-1-qwb2.onrender.com"  // 🔥 ADD THIS
+
   ],
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
