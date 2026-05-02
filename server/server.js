@@ -10,14 +10,15 @@ const app = express();
 
 const cors = require("cors");
 
+const cors = require("cors");
+
 const corsConfig = {
   origin: [
     "https://www.celebratewithus.co.in",
     "https://celebratewithus.co.in"
   ],
   methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+  allowedHeaders: ["Content-Type", "Authorization"]
 };
 
 app.use(cors(corsConfig));
