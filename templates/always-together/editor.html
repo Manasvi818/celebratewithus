@@ -511,6 +511,8 @@ function uploadLocal(e){
 
 /* Save */
 async function autoSave() {
+    console.log("SAVING PASSWORD:", password); // ✅ ADD THIS
+
   // 1. Save locally
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 
