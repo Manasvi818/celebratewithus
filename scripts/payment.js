@@ -61,9 +61,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 "Content-Type": "application/json"
               },
               body: JSON.stringify({
-                ...response,
-                template
-              })
+  razorpay_payment_id: response.razorpay_payment_id,
+  razorpay_order_id: response.razorpay_order_id,
+  razorpay_signature: response.razorpay_signature,
+  template
+})
             });
 
             const result = await verifyRes.json();
