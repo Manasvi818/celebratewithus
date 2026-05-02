@@ -6,10 +6,12 @@ const path = require("path");
 const express = require("express");
 const app = express();
 
+
 const cors = require("cors");
 
+// ✅ MOVE CORS HERE (TOP LEVEL)
 app.use(cors({
-  origin: "*",   // ✅ allow all (fix immediately)
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
