@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // ✅ SUCCESS FLOW
             alert("Payment successful!");
 
-            window.location.href = `templates/${template}/editor.html`;
+            window.location.href = `/editor/${template}/${result.projectId}`;
 
           } catch (err) {
             console.error("VERIFY ERROR:", err);
@@ -101,9 +101,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       rzp.open();
 
-      rzp.on("payment.failed", function () {
-          console.error("Payment failed:", response.error);
-        alert("Payment failed. Try again.");
+      rzp.on("payment.failed", function (response) {
+  console.error("Payment failed:", response.error);
+  alert("Payment failed: " + response.error.description);
         btn.innerText = "Pay Now";
         btn.disabled = false;
       });
