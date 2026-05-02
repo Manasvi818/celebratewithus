@@ -8,27 +8,25 @@ const express = require("express");
 const app = express();
 
 
-const cors = require("cors");
 
 const cors = require("cors");
 
-const corsConfig = {
-  origin: [
-    "https://www.celebratewithus.co.in",
-    "https://celebratewithus.co.in"
-  ],
+// ✅ SIMPLE + GUARANTEED WORKING
+app.use(cors({
+  origin: "*",
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
-};
+}));
 
-app.use(cors(corsConfig));
-app.options("*", cors(corsConfig));
+// ✅ FORCE HANDLE PREFLIGHT
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.sendStatus(200);
+});
 
 app.use(express.json());
-
-app.get("/cors-test", (req, res) => {
-  res.json({ cors: "working", time: Date.now() });
-});
 
 // ✅ CORS - single clean middleware, no duplicates
 
