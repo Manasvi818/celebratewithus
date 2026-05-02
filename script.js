@@ -3,7 +3,7 @@ const template = params.get("template");
 
 console.log("TEMPLATE:", template);
 
-const res = await fetch("https://celebratewithus.onrender.com/create-order", {
+const res = await fetch("https://celebratewithus-ebr0.onrender.com/create-order", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
@@ -26,7 +26,7 @@ var options = {
   handler: function (response) {
     console.log("Payment Success:", response);
 
-   fetch("https://celebratewithus.onrender.com/verify-payment", {
+   fetch("https://celebratewithus-ebr0.onrender.com/verify-payment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

@@ -333,7 +333,7 @@ const MSG_KEY = `msg_${projectId}`;
 
 
   try {
-    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const res = await fetch(`https://celebratewithus-ebr0.onrender.com/get-project/${projectId}`);
     const result = await res.json();
 
     
@@ -516,7 +516,7 @@ async function autoSave() {
 
   // 2. Save to MongoDB
   try {
-    await fetch("https://celebratewithus.onrender.com/save-project", {
+    await fetch("https://celebratewithus-ebr0.onrender.com/save-project", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
