@@ -676,6 +676,8 @@ function unlock(){
   const entered = document.getElementById("pass").value.trim();
   const saved = PASS.trim();
 
+    console.log("Entered:", entered, "| Saved:", saved, "| Match:", entered === saved);
+
   if(entered === saved){
     document.getElementById("passwordOverlay").style.display = "none";
     document.getElementById("wrongPass").style.display = "none";
