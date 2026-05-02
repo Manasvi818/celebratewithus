@@ -4,7 +4,7 @@ const originalAmount = 19900;
 const urlParams = new URLSearchParams(window.location.search);
 const selectedTemplate = urlParams.get("template");
 
-const BASE_URL = "https://celebratewithus-ebr0.onrender.com";
+const BASE_URL = "https://celebratewithus.onrender.com";
 
 let finalAmount = 19900;
 let appliedCoupon = "";
