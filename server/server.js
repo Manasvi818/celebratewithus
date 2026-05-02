@@ -20,6 +20,9 @@ const corsOptions = { origin: allowedOrigins, credentials: true };
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions)); // handle preflight
 
+app.get("/cors-test", (req, res) => {
+  res.json({ cors: "working", time: Date.now() });
+});
 
 // ✅ CORS - single clean middleware, no duplicates
 

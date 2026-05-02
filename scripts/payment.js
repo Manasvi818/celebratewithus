@@ -41,6 +41,7 @@ async function openCheckout() {
     const res = await fetch(`${BASE_URL}/create-order`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+       credentials: "include", 
       body: JSON.stringify({
         amountINR: finalAmount / 100,
         template // ✅ FIXED (important)
