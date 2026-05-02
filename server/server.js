@@ -10,7 +10,7 @@ const app = express();
 
 const cors = require("cors");
 
-app.use(cors({
+const corsConfig = {
   origin: [
     "https://www.celebratewithus.co.in",
     "https://celebratewithus.co.in"
@@ -18,20 +18,12 @@ app.use(cors({
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
-}));
+};
 
-app.options("*", cors());
+app.use(cors(corsConfig));
+app.options("*", cors(corsConfig));
 
 app.use(express.json());
-
-// ✅ CORS — must be first, no wildcard, no manual headers
-const allowedOrigins = [
-  "https://www.celebratewithus.co.in",
-  "https://celebratewithus.co.in"
-];
-const corsOptions = { origin: allowedOrigins, credentials: true };
-
-
 
 app.get("/cors-test", (req, res) => {
   res.json({ cors: "working", time: Date.now() });
@@ -88,7 +80,7 @@ app.use(session({
 
 console.log("CORS ENABLED ✅");
 
-app.use(bodyParser.json());
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // 🔐 Payment gate middleware
