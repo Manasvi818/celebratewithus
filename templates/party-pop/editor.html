@@ -534,7 +534,8 @@ function waitForCloudinary(){
 
 async function loadFromDB() {
   try {
-    const res = await fetch(`https://celebratewithus.onrender.com/get-project/${projectId}`);
+    const res = await fetch(`https://celebratewithus-1-qwb2.onrender.com/get-project
+/${projectId}`);
     const result = await res.json();
 
     if (result.success) {
@@ -775,7 +776,8 @@ async function autoSave() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 
   try {
-    await fetch("https://celebratewithus.onrender.com/save-project", {
+    await fetch("https://celebratewithus-1-qwb2.onrender.com/save-project
+", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
