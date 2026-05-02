@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
               return;
             }
 
+            localStorage.setItem("projectId", result.projectId);
             localStorage.setItem("invoicePath", result.invoice);
 
             // ✅ SUCCESS FLOW
