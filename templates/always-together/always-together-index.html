@@ -64,6 +64,10 @@ body.night{
   gap:10px;
   padding:10px;
 }
+@media(max-width:560px){
+  .grid{ grid-template-columns:1fr; }
+}
+
 .card{
   background:white;
   padding:8px;
@@ -530,7 +534,7 @@ function setNight(){
 
 
 /* FAKE MUSIC */
-let audio = new Audio("https://res.cloudinary.com/di8n4lsjz/video/upload/v1767464752/togetherness.mp3_icrfo4.mp3");
+let audio = new Audio("https://res.cloudinary.com/di8n4lsjz/video/upload/v1767464745/warm-memories.mp3_dlvzch.mp3");
 audio.loop = true;
 
 function toggleMusic(){
