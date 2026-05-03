@@ -444,10 +444,12 @@ textarea {
 
   .grid{
   display:grid;
-  grid-template-columns: 1fr; 
-  gap:16px;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
 }
-
+@media(max-width:560px){
+  .grid{ grid-template-columns:1fr; }
+}
 
   .card {
   overflow: visible;
