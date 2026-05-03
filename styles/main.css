@@ -730,3 +730,9 @@ section {
   .nav-btn { display: none; }
   .hamburger { display: flex; }
 }
+
+@media (max-width: 768px) {
+  .testimonial-grid {
+    flex-direction: column;
+  }
+}
