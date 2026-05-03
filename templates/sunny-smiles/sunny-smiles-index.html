@@ -818,40 +818,26 @@ function unlockUI(){
 
 async function checkPassword(){
 
-  await loadViewerData();   // ✅ load data first
-
-  const unlocked = unlockUI();   // ✅ correct function
-
+ const unlocked = unlockUI();   // check password first (sync)
   if (!unlocked) return;
 
-  // 🎵 PLAY MUSIC
-  const audio = document.getElementById("bgMusic");
-  const btn   = document.getElementById("musicToggle");
+  await loadViewerData(); 
 
-  if (music && audio) {
-   audio.src = music;
-audio.volume = 0.6;
+// 🎵 PLAY MUSIC
+const audio = document.getElementById("bgMusic");
+const btn   = document.getElementById("musicToggle");
 
-// ✅ fix autoplay restriction
-audio.muted = true;
-
-try {
-  await audio.play();   // allowed because muted
-  audio.muted = false;  // unmute after play
-  isPlaying = true;
-  btn.textContent = "⏸";
-} catch (e) {
-  btn.textContent = "▶️";
-  console.log("Autoplay blocked:", e);
-}
+if (music && audio) {
+    audio.src = music;
+    audio.volume = 0.6;
+    audio.loop = true;
+    audio.play()
+      .then(() => { isPlaying = true; btn.textContent = "⏸"; })
+      .catch(() => { btn.textContent = "▶️"; });
   }
 
   initViewerFeatures();
 }
-
-  
-
-  
 
 // 🎵 PLAY / PAUSE BUTTON
 document.getElementById("musicToggle").addEventListener("click", () => {
@@ -926,7 +912,7 @@ async function loadViewerData() {
   messages = "You are sunshine ☀️\n---\nKeep smiling always 💛";
 
   // 🔹 Demo Music
-  music = "https://www.bensound.com/bensound-music/bensound-sunny.mp3";
+  music = "https://res.cloudinary.com/di8n4lsjz/video/upload/v1770185330/A_Song_Between_Us_kmouli.mp3";
 }
 
 const gallerySection = document.getElementById("gallerySection");

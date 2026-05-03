@@ -631,7 +631,7 @@ loadMusic();
   ];
 
   messages = "This is a demo message 💛\n---\nEnjoy the memories ✨";
-  music = "https://res.cloudinary.com/di8n4lsjz/video/upload/v1770185336/Picnic_Day_cizzyf.mp3";
+  music = "https://res.cloudinary.com/di8n4lsjz/video/upload/v1770185333/Moments_in_Music_sg5vmr.mp3";
 
   renderGallery();
   loadMessages();
@@ -649,6 +649,12 @@ function checkPassword(){
 
   document.getElementById("lockScreen").style.display="none";
   document.getElementById("viewerPage").style.display="block";
+
+const audio = document.getElementById("bgMusic");
+  if(audio.src){
+    audio.play().catch(() => console.log("Autoplay blocked"));
+    musicToggle.textContent = "⏸";
+  }
 }
 
 /* GALLERY */
@@ -735,10 +741,7 @@ function loadMusic(){
   if(music){
     audio.src=music;
     audio.volume=0.6;
-    audio.play().catch(() => {
-  console.log("Autoplay blocked");
-});
-    musicToggle.textContent="⏸";
+        musicToggle.textContent = "▶️";  // show play icon
   }
 }
 
