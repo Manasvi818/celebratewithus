@@ -63,6 +63,10 @@ line-height:1;
 color:var(--text-main);
 }
 
+@media(max-width:560px){
+  .title{ font-size:4.5rem; }
+}
+
 .subtitle{
 font-family:'Libre Baskerville',serif;
 letter-spacing:4px;
@@ -446,17 +450,54 @@ function unlock(){
 function loadViewerData(){
 
   data = [
-    {
-      type:"image",
-      url:"https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=800",
-      caption:"A beautiful memory 💛",
-      memory:"This was one of our happiest moments."
-    },
-    {
-      type:"image",
-      url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1776496157/forever_yours/xq7zl52k7o6hgn2l6cli.jpg",
-      caption:"Smiles forever ✨"
-    },
+   {
+    type: "image",
+    url: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format",
+    caption: "A golden evening together",
+    memory: "One of those moments that stayed forever."
+  },
+  {
+    type: "image",
+    url: "https://images.unsplash.com/photo-1492724441997-5dc865305da7?w=800&auto=format",
+    caption: "Soft silence",
+    memory: "Where words weren’t needed."
+  },
+   {
+    type: "image",
+    url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824069/romantic2_idvlns.jpg", 
+    caption:"The moment everything changed",
+    memory: "Where love feels like a fairytale."
+  },
+  {
+    type: "image",
+    url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824067/romantic3_qzczak.jpg",
+     caption:"Every detail planned… just for you.",
+     memory: "Us, being us… and that’s enough."
+   },
+  {
+    type: "image",
+    url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824030/romantic5_win3kt.jpg", 
+    caption:"Built this moment, just to see you smile",
+    memory: "Just us, and this moment."
+  },
+  {
+    type: "image",
+    url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824028/romantic6_bvw2yd.jpg", 
+    caption:"You’re my favorite reason to smile.",
+    memory: "And I’ll hold your hand through it all."
+  },
+  {
+    type: "image",
+    url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824065/romantic4_fppicj.jpg",
+     caption:"With you, every sunset feels perfect.",
+     memory: "Every laugh feels better with you."
+   },
+  {
+    type: "image",
+    url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824072/romantic1_szxefv.jpg", 
+    caption:"It’s always been you.",
+    memory: "Forever feels right here."
+  },
     {
       type:"video",
       url:"https://res.cloudinary.com/di8n4lsjz/video/upload/v1774204952/warm_bonds/qlfo4s9mrshe1lejpgxk.mp4",
@@ -466,7 +507,7 @@ function loadViewerData(){
 
   messages = "You are my favorite person 💖\n---\nEvery moment with you matters ✨";
 
-  music = "https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771542/IndieRaag_aoboya.mp3";
+  music = "https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024733/Falling_Slowly_czfydq.mp3";
 
   PASS = "123";
   isLoaded = true;

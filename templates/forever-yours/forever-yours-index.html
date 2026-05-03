@@ -116,6 +116,10 @@ body{
 
   margin-bottom:8px;       /* less gap */
 }
+@media(max-width:560px){
+  .hero h1{ font-size:5rem; }
+}
+
 
 .hero p{
   font-family:'Playfair Display';
@@ -450,16 +454,12 @@ if (!music) {
 // ✅ ALWAYS RUN DEMO (outside condition)
 if (!data.length) {
   data = [
-    {
-      type: "image",
-      url: "https://picsum.photos/500/300?random=1",
-      caption: "A beautiful memory 💜"
-    },
-    {
-      type: "image",
-      url: "https://picsum.photos/500/300?random=2",
-      caption: "Moments that stay forever"
-    }
+     {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824069/romantic2_idvlns.jpg", caption:"The moment everything changed"},
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824067/romantic3_qzczak.jpg", caption:"Every detail planned… just for you."},
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824030/romantic5_win3kt.jpg", caption:"Built this moment, just to see you smile"},
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824028/romantic6_bvw2yd.jpg", caption:"You’re my favorite reason to smile."},
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824065/romantic4_fppicj.jpg", caption:"With you, every sunset feels perfect."},
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824072/romantic1_szxefv.jpg", caption:"It’s always been you."}
   ];
 }
 

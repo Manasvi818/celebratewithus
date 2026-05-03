@@ -289,23 +289,37 @@ Music: <span id="musicState">OFF</span>
 
 /* PASSWORD */
 let PASS="123";
-
 function unlockViewer(){
-  const val=document.getElementById("viewerPass").value;
+  const val = document.getElementById("viewerPass").value;
 
-  if(val===PASS){
-    document.getElementById("passwordOverlay").style.display="none";
-  }else{
-    document.getElementById("wrongPass").style.display="block";
+  if(val === PASS){
+    document.getElementById("passwordOverlay").style.display = "none";
+    
+    // 🎵 autoplay on unlock
+    bgAudio = new Audio(song);
+    bgAudio.loop = true;
+    bgAudio.volume = 0.6;
+    bgAudio.play()
+      .then(() => {
+        playing = true;
+        document.getElementById("musicState").innerText = "ON";
+      })
+      .catch(() => {});
+
+  } else {
+    document.getElementById("wrongPass").style.display = "block";
   }
 }
 
 /* GALLERY DATA */
 const data=[
-  {url:"https://picsum.photos/400?1",caption:"This moment felt like magic "},
-  {url:"https://picsum.photos/400?2",caption:"Smiles we’ll remember forever "},
-  {url:"https://picsum.photos/400?3",caption:"A memory frozen in time "},
-  {url:"https://picsum.photos/400?4",caption:"Happiness lives here "}
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824069/romantic2_idvlns.jpg", caption:"The moment everything changed"},
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824067/romantic3_qzczak.jpg", caption:"Every detail planned… just for you."},
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824030/romantic5_win3kt.jpg", caption:"Built this moment, just to see you smile"},
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824028/romantic6_bvw2yd.jpg", caption:"You’re my favorite reason to smile."},
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824065/romantic4_fppicj.jpg", caption:"With you, every sunset feels perfect."},
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824072/romantic1_szxefv.jpg", caption:"It’s always been you."}
+
 ];
 
 function render(){
@@ -462,13 +476,26 @@ function closeMusic(){
   document.getElementById("musicPanel").style.display="none";
 }
 
-let playing=false;
+let playing = false;
+let bgAudio = null;
+const song = "https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024745/Pink_Silence_cpqqba.mp3";
 
 function toggleMusic(){
-  playing = !playing;
+  if(!bgAudio){
+    bgAudio = new Audio(song);
+    bgAudio.loop = true;
+    bgAudio.volume = 0.6;
+  }
 
-  document.getElementById("musicState").innerText =
-    playing ? "ON" : "OFF";
+  if(playing){
+    bgAudio.pause();
+    document.getElementById("musicState").innerText = "OFF";
+  } else {
+    bgAudio.play().catch(()=>{});
+    document.getElementById("musicState").innerText = "ON";
+  }
+
+  playing = !playing;
 }
 
 function showSweetMessage(){

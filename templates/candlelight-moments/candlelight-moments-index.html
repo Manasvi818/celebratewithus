@@ -87,6 +87,9 @@ body::before{
   gap:18px;
   padding:20px;
 }
+@media(max-width:560px){
+  .grid{ grid-template-columns:1fr; }
+}
 .card{
   background:rgba(255,255,255,0.08);
   border-radius:20px;
@@ -277,7 +280,7 @@ body::before{
 </div>
 
 <audio id="audio" loop>
-  <source src="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024740/One_Love_pq1obq.mp3">
+  <source src="https://res.cloudinary.com/di8n4lsjz/video/upload/v1769024741/Lights_cfhsxj.mp3">
 </audio>
 
 <div id="sparkLayer"></div>
@@ -297,22 +300,12 @@ function togglePass(){
 
 /* DATA */
 data = [
-    {
-      type:"image",
-      url:"https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=800",
-      caption:"A beautiful memory 💛",
-      memory:"This was one of our happiest moments."
-    },
-    {
-      type:"image",
-      url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1776496157/forever_yours/xq7zl52k7o6hgn2l6cli.jpg",
-      caption:"Smiles forever ✨"
-    },
-    {
-      type:"video",
-      url:"https://res.cloudinary.com/di8n4lsjz/video/upload/v1774204952/warm_bonds/qlfo4s9mrshe1lejpgxk.mp4",
-      caption:"A special video 🎥"
-    }
+   {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824069/romantic2_idvlns.jpg", caption:"The moment everything changed"},
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824067/romantic3_qzczak.jpg", caption:"Every detail planned… just for you."},
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824030/romantic5_win3kt.jpg", caption:"Built this moment, just to see you smile"},
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824028/romantic6_bvw2yd.jpg", caption:"You’re my favorite reason to smile."},
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824065/romantic4_fppicj.jpg", caption:"With you, every sunset feels perfect."},
+  {url:"https://res.cloudinary.com/di8n4lsjz/image/upload/v1777824072/romantic1_szxefv.jpg", caption:"It’s always been you."}
   ];
 
 data.forEach(i=>{
