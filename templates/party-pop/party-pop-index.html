@@ -489,13 +489,6 @@ img, video{
 
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2, 1fr);
-  gap:14px;
-  width:100%;
-}
-
 .card{
   width:100%;
   max-width:100%;
@@ -647,9 +640,42 @@ data = [
     url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1777227394/laugh_riot2_rp3vso.jpg",
     caption: "Crazy vibes 😎"
   },
+   {
+    type: "image",
+    url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1777810138/cc5_hdqvst.jpg",
+    caption: "Best carnival day ",
+    memory: "We laughed so much here!"
+  },
   {
-    type: "video",
-    url: "https://res.cloudinary.com/di8n4lsjz/video/upload/v1776099838/blush_love/qbrwqklgenoowycqnfms.mp4"
+    type: "image",
+    url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1777810137/cc4_mcwg99.jpg",
+    caption: "Colors everywhere ",
+    memory: "This moment felt magical"
+  },
+
+  {
+    type: "image",
+    url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1777810138/cc3_gecczm.jpg",
+    caption: "Happiness looks like this.",
+    memory: "Messy, but worth it."
+  },
+  {
+    type: "image",
+    url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1777810129/cc1_flfevp.jpg",
+    caption: "Colors everywhere ",
+    memory: "Caught in 4K."
+  },
+  {
+    type: "image",
+    url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1777810140/cc2_iptduy.jpg",
+    caption: "Turn the music up!",
+    memory: "Zero rules, only vibes."
+  },
+  {
+    type: "image",
+    url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1777810136/cc6_jqmcpy.jpg",
+    caption: "Smiles, but make it aesthetic.",
+    memory: "Extra? Always."
   }
 ];
 
@@ -664,7 +690,7 @@ let isLoaded = false;
 function loadViewerData() {
   
   // optional demo music
-  song = "https://res.cloudinary.com/di8n4lsjz/video/upload/v1771235760/Confetti_Explosion_ui9h2p.mp3";
+  song = "https://res.cloudinary.com/di8n4lsjz/video/upload/v1771235694/Festival_Frenzy_zjuycu.mp3";
 
   render();
   loadMessages();
