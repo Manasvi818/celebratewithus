@@ -687,20 +687,26 @@ async function loadViewerData() {
     // ✅ FALLBACK DEMO DATA
     if (!data.length) {
       data = [
-        {
-          type: "image",
-          url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1776488822/cultural_festive/zps8chsddqq4e7qn0fst.jpg",
-          caption: "Royal celebration ✨"
-        },
-        {
-          type: "image",
-          url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1776488823/cultural_festive/axb0sziajixpivh9j75i.jpg",
-          caption: "Golden memories 💛"
-        },
-        {
-          type: "video",
-          url: "https://res.cloudinary.com/di8n4lsjz/video/upload/v1776488877/cultural_festive/jzof86veepqd2r0piahy.mp4"
-        }
+       {
+    type: "image",
+    url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1776488823/cultural_festive/enpi3kesh8ntdazbtzxj.jpg",
+    caption: "Golden memories ✨"
+  },
+  {
+    type: "image",
+    url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1776488822/cultural_festive/zps8chsddqq4e7qn0fst.jpg",
+    caption: "Moments that shine 💛"
+  },
+  {
+      type: "image",
+      url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1777802147/cf1_bxjlqq.jpg",
+      caption: "Celebrate like nobody’s watching. "
+    },
+  {
+  type: "image",
+  url: "https://res.cloudinary.com/di8n4lsjz/image/upload/v1776488821/cultural_festive/twg4gz8aqmi4ietbubav.jpg",
+  caption: "Every moment matters 🌙"
+}
       ];
 
       messages = "A royal evening to remember 👑\n---\nMoments that shine forever ✨";
@@ -711,7 +717,7 @@ async function loadViewerData() {
     loadMessages();
 
     // ✅ MUSIC
-    song = music || "https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771542/IndieRaag_aoboya.mp3";
+    song = music || "https://res.cloudinary.com/di8n4lsjz/video/upload/v1773771526/SurSnap_yhzctb.mp3";
 
   } catch (err) {
     console.error("Error loading data:", err);
