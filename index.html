@@ -31,9 +31,25 @@
 <a href="faq.html">FAQs</a>
     </div>
 
-    <button class="primary-btn" onclick="goToStyles()">Start Creating</button>
+    <button class="nav-btn" onclick="goToStyles()">Start Creating</button>
+
+<div class="hamburger" onclick="toggleMenu()">
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
   </div>
 </nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="#features" onclick="document.getElementById('mobileMenu').classList.remove('open')">Features</a>
+  <a href="#how" onclick="document.getElementById('mobileMenu').classList.remove('open')">How It Works</a>
+  <a href="#pricing" onclick="document.getElementById('mobileMenu').classList.remove('open')">Pricing</a>
+  <a href="demo.html">Demo</a>
+  <a href="faq.html">FAQs</a>
+  <button class="nav-btn" onclick="goToStyles()">Start Creating</button>
+</div>
 
 <!-- HERO -->
 <header class="hero">
@@ -74,11 +90,11 @@
         <div class="hero-right">
 
   <div class="mockup-card">
-    <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777318636/Screenshot_2026-04-28_010546_fvrwzi.png">
+    <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777318636/Screenshot_2026-04-28_010546_fvrwzi.png" loading="lazy">
   </div>
 
   <div class="mockup-phone">
-    <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777318708/Screenshot_2026-04-28_010600_qjdrlt.png">
+    <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777318708/Screenshot_2026-04-28_010600_qjdrlt.png" loading="lazy">
   </div>
 
 </div>
@@ -184,7 +200,7 @@
   <div class="demo-right">
 
   <div class="demo-card">
-    <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777318861/ChatGPT_Image_Apr_28_2026_01_10_42_AM_tymzzv.png">
+    <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777318861/ChatGPT_Image_Apr_28_2026_01_10_42_AM_tymzzv.png" loading="lazy">
 
     <div class="play-btn">▶</div>
 
@@ -230,7 +246,7 @@
 
     <!-- PRODUCT 1 -->
     <div class="shop-card">
-      <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777566956/gift_pze8oc.jpg" alt="Gift Box">
+      <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777566956/gift_pze8oc.jpg" alt="Gift Box" loading="lazy">
       <h3>Romantic Gift Box</h3>
       <p>Perfect surprise for birthdays & anniversaries</p>
 
@@ -241,7 +257,7 @@
 
     <!-- PRODUCT 2 -->
     <div class="shop-card">
-      <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777566950/decoration_gmwd8b.jpg" alt="Decoration Kit">
+      <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777566950/decoration_gmwd8b.jpg" alt="Decoration Kit" loading="lazy">
       <h3>Party Decoration Kit</h3>
       <p>Decorate your celebration beautifully</p>
 
@@ -252,7 +268,7 @@
 
     <!-- PRODUCT 3 -->
     <div class="shop-card">
-      <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777566952/cake_xclcfj.jpg" alt="Cake">
+      <img src="https://res.cloudinary.com/di8n4lsjz/image/upload/v1777566952/cake_xclcfj.jpg" alt="Cake" loading="lazy">
       <h3>Custom Cake</h3>
       <p>Add sweetness to your surprise</p>
 
@@ -314,6 +330,10 @@ function goToStyles() {
 
 function goToPayment(templateName) {
   window.location.href = "payment.html?template=" + templateName;
+}
+
+function toggleMenu() {
+  document.getElementById("mobileMenu").classList.toggle("open");
 }
 </script>
 
