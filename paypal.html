@@ -8,37 +8,114 @@
   <script src="https://www.paypal.com/sdk/js?client-id=AWwHV5kZpZ6qwAM3BReNPv7-GXSB5xE4iOwgetjDA8F6aVnaCuQo8Wr2dJBNZSLz6Wt8NNKj8Yp9Lcc1&currency=USD"></script>
 
   <style>
-    body{
-      margin:0;
-      min-height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      font-family:Arial, sans-serif;
+   *{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-      background:
-      radial-gradient(circle at top left,#ede9fe,#fdf2f8);
-    }
+body{
+  min-height:100vh;
 
-    .paypal-card{
-      width:90%;
-      max-width:500px;
-      background:white;
-      padding:30px;
-      border-radius:20px;
-      box-shadow:0 15px 40px rgba(0,0,0,0.12);
-      text-align:center;
-    }
+  display:flex;
+  justify-content:center;
+  align-items:center;
 
-    h1{
-      color:#7c3aed;
-      margin-bottom:10px;
-    }
+  padding:20px;
 
-    p{
-      color:#555;
-      margin-bottom:25px;
-    }
+  font-family:Arial,sans-serif;
+
+  background:
+  radial-gradient(circle at top left,#ede9fe,#fdf2f8);
+}
+
+/* CARD */
+.paypal-card{
+  width:100%;
+  max-width:500px;
+
+  background:white;
+
+  padding:40px 30px;
+
+  border-radius:24px;
+
+  box-shadow:0 15px 40px rgba(0,0,0,0.12);
+
+  text-align:center;
+
+  animation:fadeIn 0.5s ease;
+}
+
+/* TITLE */
+h1{
+  color:#7c3aed;
+
+  font-size:clamp(28px,5vw,40px);
+
+  margin-bottom:12px;
+}
+
+/* TEXT */
+p{
+  color:#555;
+
+  font-size:clamp(14px,2vw,17px);
+
+  line-height:1.6;
+
+  margin-bottom:30px;
+}
+
+/* PAYPAL CONTAINER */
+#paypal-button-container{
+  width:100%;
+}
+
+/* ANIMATION */
+@keyframes fadeIn{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* TABLET */
+@media (max-width:768px){
+
+  .paypal-card{
+    padding:35px 25px;
+    border-radius:20px;
+  }
+
+}
+
+/* MOBILE */
+@media (max-width:480px){
+
+  body{
+    padding:15px;
+  }
+
+  .paypal-card{
+    padding:28px 20px;
+    border-radius:18px;
+  }
+
+  h1{
+    margin-bottom:10px;
+  }
+
+  p{
+    margin-bottom:24px;
+  }
+
+}
   </style>
 </head>
 
