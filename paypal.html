@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PayPal Payment</title>
+
+  <script src="https://www.paypal.com/sdk/js?client-id=AWwHV5kZpZ6qwAM3BReNPv7-GXSB5xE4iOwgetjDA8F6aVnaCuQo8Wr2dJBNZSLz6Wt8NNKj8Yp9Lcc1&currency=USD"></script>
+
+  <style>
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      font-family:Arial, sans-serif;
+
+      background:
+      radial-gradient(circle at top left,#ede9fe,#fdf2f8);
+    }
+
+    .paypal-card{
+      width:90%;
+      max-width:500px;
+      background:white;
+      padding:30px;
+      border-radius:20px;
+      box-shadow:0 15px 40px rgba(0,0,0,0.12);
+      text-align:center;
+    }
+
+    h1{
+      color:#7c3aed;
+      margin-bottom:10px;
+    }
+
+    p{
+      color:#555;
+      margin-bottom:25px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="paypal-card">
+
+    <h1>Pay with PayPal</h1>
+
+    <p>Secure international payment</p>
+
+    <div id="paypal-button-container"></div>
+
+  </div>
+
+  <script>
+    paypal.Buttons({
+
+      createOrder: function(data, actions) {
+        return actions.order.create({
+          purchase_units: [{
+            amount: {
+              value: '2.50'
+            }
+          }]
+        });
+      },
+
+      onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+
+          alert("Payment Successful!");
+
+          window.location.href = "success.html";
+
+        });
+      }
+
+    }).render('#paypal-button-container');
+  </script>
+
+</body>
+</html>

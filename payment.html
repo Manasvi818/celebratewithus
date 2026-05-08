@@ -194,32 +194,14 @@ animation:fadeIn 0.6s ease;
   <!-- Your payment logic -->
   <script src="scripts/payment.js"></script>
 
-  <script>document.getElementById("paypalBtn").addEventListener("click", function () {
+  <script>
+  
+document.getElementById("paypalBtn").addEventListener("click", function () {
 
-  paypal.Buttons({
-    createOrder: function(data, actions) {
-      return actions.order.create({
-        purchase_units: [{
-          amount: {
-            value: '2.50'
-          }
-        }]
-      });
-    },
-
-    onApprove: function(data, actions) {
-      return actions.order.capture().then(function(details) {
-
-        alert("Payment successful by " + details.payer.name.given_name);
-
-        // Redirect after payment
-        window.location.href = "success.html";
-      });
-    }
-
-  }).render('body');
+  window.location.href = "paypal.html";
 
 });
+
 
 function selectTemplate(templateName) {
   localStorage.setItem("selectedTemplate", templateName);
