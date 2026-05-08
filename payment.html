@@ -122,6 +122,30 @@ animation:fadeIn 0.6s ease;
   box-shadow:0 20px 40px rgba(124,58,237,0.5);
 }
 
+.paypal-btn{
+  margin-top:15px;
+  width:100%;
+  padding:14px;
+
+  border:none;
+  border-radius:14px;
+
+  font-size:16px;
+  font-weight:600;
+  color:white;
+
+  background:#0070ba;
+
+  box-shadow:0 10px 25px rgba(0,112,186,0.35);
+
+  cursor:pointer;
+  transition:0.3s ease;
+}
+
+.paypal-btn:hover{
+  transform:scale(1.03);
+  box-shadow:0 20px 40px rgba(0,112,186,0.45);
+}
 </style>
 
 </head>
@@ -143,7 +167,9 @@ animation:fadeIn 0.6s ease;
 
   <button id="rzpButton" class="pay-btn">Pay with Razorpay</button>
 
-  <div id="paypal-button-container"></div>
+  <button id="paypalBtn" class="paypal-btn">
+  Pay with PayPal
+</button>
 
   <p class="muted">
     If you face any query or issue, reach out to us at <strong>celebratewithus10@gmail.com</strong>
@@ -163,10 +189,38 @@ animation:fadeIn 0.6s ease;
 <!-- VERY IMPORTANT: Razorpay Checkout Script -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+<script src="https://www.paypal.com/sdk/js?client-id=AWwHV5kZpZ6qwAM3BReNPv7-GXSB5xE4iOwgetjDA8F6aVnaCuQo8Wr2dJBNZSLz6Wt8NNKj8Yp9Lcc1&currency=USD"></script>
+
   <!-- Your payment logic -->
   <script src="scripts/payment.js"></script>
 
-  <script>
+  <script>document.getElementById("paypalBtn").addEventListener("click", function () {
+
+  paypal.Buttons({
+    createOrder: function(data, actions) {
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: '2.50'
+          }
+        }]
+      });
+    },
+
+    onApprove: function(data, actions) {
+      return actions.order.capture().then(function(details) {
+
+        alert("Payment successful by " + details.payer.name.given_name);
+
+        // Redirect after payment
+        window.location.href = "success.html";
+      });
+    }
+
+  }).render('body');
+
+});
+
 function selectTemplate(templateName) {
   localStorage.setItem("selectedTemplate", templateName);
   window.location.href = `payment.html?template=${templateName}`;
