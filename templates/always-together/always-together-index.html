@@ -515,19 +515,55 @@ function unlock(){
 
 /* RENDER */
 function render(){
-  grid.innerHTML="";
+
+  grid.innerHTML = "";
+  messages.innerHTML = "";
+
   images.forEach((x,i)=>{
-    grid.innerHTML+=`
+
+    let media = "";
+
+    if(x.type === "video"){
+
+      media = `
+        <video controls style="
+          width:100%;
+          border-radius:10px;
+        ">
+          <source src="${x.url}" type="video/mp4">
+        </video>
+      `;
+
+    } else {
+
+      media = `
+        <img src="${x.url}"
+             onclick="zoom('${x.url}')">
+      `;
+    }
+
+    grid.innerHTML += `
       <div class="card">
-        <img src="${x.url}" onclick="zoom('${x.url}')">
-        <button class="tapBtn" onclick="surprise(${i})">Surprise</button>
-        <p class="caption">${x.caption || ""}</p>
+
+        ${media}
+
+        <button class="tapBtn"
+                onclick="surprise(${i})">
+          Surprise
+        </button>
+
+        <p class="caption">
+          ${x.caption || ""}
+        </p>
+
       </div>
     `;
   });
 
   notes.forEach(n=>{
-    messages.innerHTML+=`<div class="note">${n}</div>`;
+    messages.innerHTML += `
+      <div class="note">${n}</div>
+    `;
   });
 }
 
