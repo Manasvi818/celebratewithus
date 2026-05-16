@@ -332,6 +332,75 @@ margin-bottom:25px;
 
   color:var(--text-main);
 }
+
+/* SURPRISE POPUP */
+
+.surprise-popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.45);
+
+  display:none;
+  justify-content:center;
+  align-items:center;
+
+  z-index:999999;
+  backdrop-filter:blur(5px);
+}
+
+.surprise-box{
+  width:min(90%,420px);
+
+  background:linear-gradient(145deg,var(--card),var(--beige));
+
+  border-radius:30px;
+  padding:35px 28px;
+
+  text-align:center;
+
+  box-shadow:0 20px 60px rgba(0,0,0,.18);
+
+  animation:popupShow .35s ease;
+}
+
+.popup-heart{
+  font-size:42px;
+  margin-bottom:10px;
+}
+
+.surprise-box h2{
+  font-family:'Allura',cursive;
+  font-size:3rem;
+  margin:0 0 10px;
+  color:var(--text-main);
+}
+
+.surprise-box p{
+  font-size:16px;
+  line-height:1.7;
+  color:var(--text-main);
+}
+
+.close-popup{
+  position:absolute;
+  margin-top:-10px;
+  margin-left:160px;
+
+  cursor:pointer;
+  font-size:18px;
+  color:var(--accent);
+}
+
+@keyframes popupShow{
+  from{
+    transform:scale(.8);
+    opacity:0;
+  }
+  to{
+    transform:scale(1);
+    opacity:1;
+  }
+}
 </style>
 </head>
 
@@ -531,7 +600,17 @@ const cuteMessages = [
 ];
 
 function showRandom(){
-  alert(cuteMessages[Math.floor(Math.random()*cuteMessages.length)]);
+
+  const randomMsg =
+    cuteMessages[Math.floor(Math.random()*cuteMessages.length)];
+
+  document.getElementById("surpriseText").innerText = randomMsg;
+
+  document.getElementById("surprisePopup").style.display = "flex";
+}
+
+function closeSurprise(){
+  document.getElementById("surprisePopup").style.display = "none";
 }
 
 /* MUSIC */
@@ -657,5 +736,23 @@ document.addEventListener("DOMContentLoaded", ()=>{
 <footer class="site-footer">
   <p>© CelebrateWithUs.web • Crafted with 💛</p>
 </footer>
+
+<!-- SWEET AFFECTION SURPRISE POPUP -->
+
+<div id="surprisePopup" class="surprise-popup">
+
+  <div class="surprise-box">
+
+    <span class="close-popup" onclick="closeSurprise()">✕</span>
+
+    <div class="popup-heart">💖</div>
+
+    <h2>Sweet Surprise</h2>
+
+    <p id="surpriseText"></p>
+
+  </div>
+
+</div>
 </body>
 </html>
