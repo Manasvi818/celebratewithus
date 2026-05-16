@@ -521,7 +521,7 @@ function render(){
       <div class="card">
         <img src="${x.url}" onclick="zoom('${x.url}')">
         <button class="tapBtn" onclick="surprise(${i})">Surprise</button>
-        <p class="caption">${x.cap}</p>
+        <p class="caption">${x.caption || ""}</p>
       </div>
     `;
   });
