@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Watch Demo</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+  margin:0;
+  background:#f7f3ff;
+  font-family:'Inter',sans-serif;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  min-height:100vh;
+}
+
+.demo-container{
+  width:90%;
+  max-width:1000px;
+
+  background:white;
+  padding:25px;
+
+  border-radius:28px;
+
+  box-shadow:0 10px 40px rgba(0,0,0,0.08);
+}
+
+.demo-title{
+  text-align:center;
+  font-size:38px;
+  margin-bottom:20px;
+
+  background:linear-gradient(90deg,#7b5cff,#ff4f8b);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.video-wrapper{
+  position:relative;
+  padding-bottom:56.25%;
+  height:0;
+  overflow:hidden;
+
+  border-radius:22px;
+}
+
+.video-wrapper iframe{
+  position:absolute;
+  top:0;
+  left:0;
+
+  width:100%;
+  height:100%;
+
+  border:none;
+  border-radius:22px;
+}
+
+.back-btn{
+  margin-top:25px;
+
+  display:inline-block;
+
+  padding:14px 26px;
+
+  border-radius:999px;
+
+  background:linear-gradient(90deg,#7b5cff,#ff4f8b);
+
+  color:white;
+  text-decoration:none;
+
+  font-weight:600;
+
+  transition:0.3s;
+}
+
+.back-btn:hover{
+  transform:translateY(-2px);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="demo-container">
+
+  <h1 class="demo-title">Website Demo</h1>
+
+  <div class="video-wrapper">
+
+    <!-- PUT YOUR YOUTUBE VIDEO LINK BELOW -->
+    <iframe
+      src="https://www.youtube.com/embed/YOUR_VIDEO_ID?autoplay=1&rel=0"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+
+  </div>
+
+  <a href="index.html" class="back-btn">
+    ← Back to Home
+  </a>
+
+</div>
+
+</body>
+</html>

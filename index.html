@@ -72,6 +72,12 @@
 
         <div class="hero-buttons">
           <button class="primary-btn" onclick="goToStyles()">Start Creating →</button>
+
+            <!-- Watch Demo Button -->
+  <button class="watch-demo-btn" onclick="watchDemo()">
+    ▶ Watch Demo
+  </button>
+
           <a href="demo.html">
   <button class="secondary-btn">View Demo</button>
 </a>
@@ -334,6 +340,10 @@ function goToPayment(templateName) {
 
 function toggleMenu() {
   document.getElementById("mobileMenu").classList.toggle("open");
+}
+
+function watchDemo() {
+  window.location.href = "watch-demo.html";
 }
 </script>
 
