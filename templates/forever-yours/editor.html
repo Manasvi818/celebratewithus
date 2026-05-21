@@ -263,7 +263,13 @@ const STORAGE_KEY = `project_${projectId}`;
 const MSG_KEY = `msg_${projectId}`;
 const MUSIC_KEY = `music_${projectId}`;
 
+let items = [];
+let messages = "";
+let music = "";
+let password = "";
 
+let widget;
+const mediaGrid = document.getElementById("mediaGrid");
 
 async function autoSave() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
