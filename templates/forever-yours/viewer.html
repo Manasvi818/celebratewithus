@@ -367,7 +367,7 @@ img, video{
 <body>
 
 <!-- LOCK -->
-<div id="lockScreen">
+<div id="lockScreen" style="display:none;">
   <div class="lockBox">
     <h3> Private Forever</h3>
     <input id="passInput" type="password" placeholder="Enter password">
@@ -434,6 +434,19 @@ function checkPassword(){
   }
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  // Show loading text while fetching
+  document.getElementById("lockScreen").innerHTML = `
+    <div class="lockBox">
+      <h3>Loading 💜</h3>
+      <p>Please wait...</p>
+    </div>
+  `;
+  document.getElementById("lockScreen").style.display = "flex";
+
+  loadViewerData();
+});
+
 async function loadViewerData() {
   try {
     const res = await fetch(`https://celebratewithus-1-qwb2.onrender.com/get-project
@@ -449,6 +462,17 @@ async function loadViewerData() {
       renderGallery();
       renderMessages();
       setupMusic();
+
+       lockScreen.innerHTML = `
+    <div class="lockBox">
+      <h3>🔐 Private Forever</h3>
+      <input id="passInput" type="password" placeholder="Enter password">
+      <button onclick="checkPassword()">Enter</button>
+      <p id="wrongPass" style="display:none;color:pink;">Wrong password</p>
+    </div>
+  `;
+        lockScreen.style.display = "flex";
+
     }
 
   } catch (err) {
