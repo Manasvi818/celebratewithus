@@ -449,8 +449,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadViewerData() {
   try {
-    const res = await fetch(`https://celebratewithus-1-qwb2.onrender.com/get-project
-/${projectId}`);
+    const res = await fetch(`https://celebratewithus-1-qwb2.onrender.com/get-project/${projectId}`);
     const result = await res.json();
 
     if (result.success) {
@@ -475,9 +474,18 @@ async function loadViewerData() {
 
     }
 
-  } catch (err) {
-    console.error(" Viewer load failed:", err);
-  }
+  }  catch (err) {
+  console.error("Viewer load failed:", err);
+  lockScreen.innerHTML = `
+    <div class="lockBox">
+      <h3>🔐 Private Forever</h3>
+      <input id="passInput" type="password" placeholder="Enter password">
+      <button onclick="checkPassword()">Enter</button>
+      <p id="wrongPass" style="display:none;color:pink;">Wrong password</p>
+    </div>
+  `;
+  lockScreen.style.display = "flex";
+}
 }
 
 /* LOAD DATA */
@@ -553,9 +561,7 @@ function renderGallery(){
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadViewerData();
-});
+
 
 /* LAVENDER SPARKLE CURSOR */
 let lastSparkleTime = 0;
