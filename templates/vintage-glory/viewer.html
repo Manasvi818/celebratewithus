@@ -700,6 +700,9 @@ let messages = "";
 let music = "";
 let password = "";
 let song = "";
+let PASS = "";        // ✅ ADD THIS — fixes "PASS is not defined"
+let isLoaded = false; // ✅ ADD THIS too (also used before declaration)
+
 
 /* ensure localStorage exists */
 
@@ -714,8 +717,8 @@ let isPlaying = false;
 
 async function loadViewerData() {
   try {
-    const res = await fetch(`https://celebratewithus-1-qwb2.onrender.com/get-project
-/${projectId}`);
+   const res = await fetch(`https://celebratewithus-1-qwb2.onrender.com/get-project/${projectId}`);
+
     const result = await res.json();
 
     if (result.success) {
@@ -779,29 +782,28 @@ function toggleMusic(){
 
 /* PASSWORD */
 function unlock(){
-
-  const input = document.getElementById("pass").value.trim();
-  const saved = PASS;
-
-  if(PASS === ""){
-  document.getElementById("passwordOverlay").style.display="none";
-  playMusic();
-  isPlaying = true;
-  render();
-  loadMessages();
-  return;
-}
-
-  if(input === PASS){
-    document.getElementById("passwordOverlay").style.display="none";
-    playMusic();
-isPlaying = true;
- render();
- loadMessages();
-  }else{
-    document.getElementById("wrongPass").style.display="block";
+  // ✅ Guard: if DB hasn't responded yet, wait
+  if(!isLoaded){
+    alert("Still loading, please wait a moment...");
+    return;
   }
 
+  const input = document.getElementById("pass").value.trim();
+
+  if(PASS === ""){
+    document.getElementById("passwordOverlay").style.display = "none";
+    playMusic();
+    isPlaying = true;
+    return;
+  }
+
+  if(input === PASS){
+    document.getElementById("passwordOverlay").style.display = "none";
+    playMusic();
+    isPlaying = true;
+  } else {
+    document.getElementById("wrongPass").style.display = "block";
+  }
 }
 
 pass.addEventListener("keydown",(e)=>{ if(e.key==="Enter") unlock(); });
@@ -970,9 +972,9 @@ setTimeout(()=>s.remove(),3000);
 
 },800);
 
-document.addEventListener("DOMContentLoaded", () => {
+
   loadViewerData();
-});
+
 </script>
 <footer class="site-footer">
   <p>© CelebrateWithUs.web • Crafted with 💛</p>
