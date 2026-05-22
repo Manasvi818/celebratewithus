@@ -462,36 +462,33 @@ async function loadViewerData() {
       messages = result.messages || "";
       music = result.music || "";
       password = result.password || "";
-      dataLoaded = true; // ✅ ADD THIS
+      dataLoaded = true;
+
+      // ✅ Cache locally like Cultural Festive does
+      localStorage.setItem(`project_${projectId}`, JSON.stringify(data));
+      localStorage.setItem(`msg_${projectId}`, messages);
+      localStorage.setItem(`music_${projectId}`, music);
+      localStorage.setItem(`pass_${projectId}`, password);
 
       renderGallery();
       renderMessages();
       setupMusic();
-
-       lockScreen.innerHTML = `
-    <div class="lockBox">
-      <h3>🔐 Private Forever</h3>
-      <input id="passInput" type="password" placeholder="Enter password">
-      <button onclick="checkPassword()">Enter</button>
-      <p id="wrongPass" style="display:none;color:pink;">Wrong password</p>
-    </div>
-  `;
-        lockScreen.style.display = "flex";
-
     }
 
-  }  catch (err) {
-  console.error("Viewer load failed:", err);
-  lockScreen.innerHTML = `
-    <div class="lockBox">
-      <h3>🔐 Private Forever</h3>
-      <input id="passInput" type="password" placeholder="Enter password">
-      <button onclick="checkPassword()">Enter</button>
-      <p id="wrongPass" style="display:none;color:pink;">Wrong password</p>
-    </div>
-  `;
-  lockScreen.style.display = "flex";
-}
+  } catch (err) {
+    console.error("DB load failed, trying localStorage:", err);
+
+    // ✅ Fallback to localStorage (instant) like Cultural Festive
+    data = JSON.parse(localStorage.getItem(`project_${projectId}`) || "[]");
+    messages = localStorage.getItem(`msg_${projectId}`) || "";
+    music = localStorage.getItem(`music_${projectId}`) || "";
+    password = localStorage.getItem(`pass_${projectId}`) || "";
+    dataLoaded = true;
+
+    renderGallery();
+    renderMessages();
+    setupMusic();
+  }
 }
 
 /* LOAD DATA */
