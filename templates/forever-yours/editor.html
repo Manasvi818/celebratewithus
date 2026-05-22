@@ -303,12 +303,13 @@ async function loadFromDB() {
     localStorage.setItem(MSG_KEY, messages);
     localStorage.setItem(MUSIC_KEY, music);
     localStorage.setItem(`pass_${projectId}`, password);
-
+  
     render();
     loadMessages();
   }
 }
 }
+
 
 function saveAll(){
   if(items && items.length > 0){
@@ -388,18 +389,12 @@ function initWidget(){
   });
 }
 
-/* Cloudinary Upload */
+// REPLACE the existing openWidget function with this:
 function openWidget(){
   if(!widget){
-    document.body.style.cursor = "wait"; // loader feel
-    setTimeout(() => {
-      document.body.style.cursor = "default";
-    }, 1000);
-
-    alert("Opening uploader...");
+    alert("Uploader is still loading, please wait a moment and try again.");
     return;
   }
-
   widget.open();
 }
 
@@ -776,13 +771,13 @@ function copyViewerLink() {
 
 </script>
 
-<div style="text-align:center; margin-top:30px;"
+<div style="text-align:center;
+ margin-top:30px;
   display:flex;
-  justify-content:center;
-  gap:12px;
-  margin-top:30px;
-  flex-wrap:wrap;
-">
+   justify-content:center;
+    gap:12px;
+     flex-wrap:wrap;">
+     </div>
 
   <button class="btn" onclick="goToViewer()">
     💾 Save All & Show Viewer Page
