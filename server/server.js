@@ -7,8 +7,6 @@ const path = require("path");
 const express = require("express");
 const app = express();
 
-
-
 const cors = require("cors");
 
 app.use(cors({
@@ -633,19 +631,12 @@ async function generateInvoice(data) {
 app.post("/validate-coupon", async (req, res) => {
   const { coupon } = req.body;
   try {
-    const couponDoc = await Coupon.findOne({ 
-      code: coupon.toUpperCase(), 
-      active: true 
-    });
-    if (!couponDoc) {
-      return res.status(400).json({ success: false, message: "Invalid or expired coupon." });
-    }
-    if (couponDoc.expiresAt && new Date() > couponDoc.expiresAt) {
-      return res.status(400).json({ success: false, message: "Coupon has expired." });
-    }
-    return res.json({ success: true, discountPercent: couponDoc.discountPercent });
+    const result = await couponController.applyCoupon(coupon);
+    return res.json(result);
   } catch (err) {
+    console.error("COUPON ERROR:", err.message);
     res.status(500).json({ success: false, message: "Server error." });
   }
 });
 
+   
