@@ -627,12 +627,31 @@ async function generateInvoice(data) {
   });
 }
 
-// add this route alongside your other routes
+const Coupon = require("./models/Coupon"); // add at top if not there
+
 app.post("/validate-coupon", async (req, res) => {
   const { coupon } = req.body;
+  if (!coupon) return res.status(400).json({ success: false, message: "No coupon provided." });
+
   try {
-    const result = await couponController.applyCoupon(coupon);
-    return res.json(result);
+    const couponDoc = await Coupon.findOne({
+      code: coupon.toUpperCase().trim(),
+      active: true
+    });
+
+    console.log("Looking for coupon:", coupon.toUpperCase().trim());
+    console.log("Found:", couponDoc);
+
+    if (!couponDoc) {
+      return res.status(400).json({ success: false, message: "Invalid or expired coupon." });
+    }
+
+    if (couponDoc.expiresAt && new Date() > couponDoc.expiresAt) {
+      return res.status(400).json({ success: false, message: "Coupon has expired." });
+    }
+
+    return res.json({ success: true, discountPercent: couponDoc.discountPercent });
+
   } catch (err) {
     console.error("COUPON ERROR:", err.message);
     res.status(500).json({ success: false, message: "Server error." });
