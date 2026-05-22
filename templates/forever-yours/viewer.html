@@ -426,7 +426,7 @@ function checkPassword(){
   const wrongPass = document.getElementById("wrongPass");
 
   if(!dataLoaded){
-    wrongPass.innerText = "No password set. Please set it in editor page";
+    wrongPass.innerText = "⏳ Still loading... please wait a moment";
     wrongPass.style.display = "block";
     return;
   }
