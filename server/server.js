@@ -43,6 +43,10 @@ app.get("/cors-test", (req, res) => {
   res.json({ cors: "working", time: Date.now() });
 });
 
+app.get("/ping", (req, res) => {
+  res.json({ status: "awake" });
+});
+
 // ✅ CORS - single clean middleware, no duplicates
 
 const PORT = process.env.PORT || 10000;
