@@ -344,6 +344,7 @@ const STORAGE_KEY = `project_${projectId}`;
 const MSG_KEY = `msg_${projectId}`;
 const MUSIC_KEY = `music_${projectId}`;
 let items = [];
+
 async function loadFromDB() {
   try {
     const res = await fetch(`https://celebratewithus-1-qwb2.onrender.com/get-project/${projectId}`);
@@ -351,21 +352,23 @@ async function loadFromDB() {
 
     if (result.success) {
       items = result.data || [];
+      const messages = result.messages || "";
+      const music = result.music || "";
+      const password = result.password || "";
 
-      let messages = result.messages || "";
-      let music = result.music || "";
-      let password = result.password || "";
-
+      // ✅ Save ALL to localStorage so next refresh is instant
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
       localStorage.setItem(MSG_KEY, messages);
       localStorage.setItem(MUSIC_KEY, music);
       localStorage.setItem(`pass_${projectId}`, password);
 
+      document.getElementById("bgMusicSelect").value = music;
+
       render();
       loadMessages();
     }
-  } catch (err) {
-    console.error("❌ Load failed:", err);
+  } catch(err) {
+    console.error("loadFromDB failed:", err);
   }
 }
 
@@ -521,18 +524,12 @@ function initWidget(){
   });
 }
 
-/* Cloudinary Upload */
+// REPLACE existing openWidget with:
 function openWidget(){
   if(!widget){
-    document.body.style.cursor = "wait"; // loader feel
-    setTimeout(() => {
-      document.body.style.cursor = "default";
-    }, 1000);
-
-    alert("Opening uploader...");
+    alert("Uploader is still loading, please try again.");
     return;
   }
-
   widget.open();
 }
 
@@ -671,10 +668,29 @@ autoSave();
   }, 1500);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadMessages();  
-    loadFromDB();   // 🔥 ADD THIS
- // ✅ ADD HERE
+document.addEventListener("DOMContentLoaded", async () => {
+
+  // ✅ STEP 1: Load from localStorage INSTANTLY (so page doesn't look empty)
+  const cached = localStorage.getItem(STORAGE_KEY);
+  if(cached){
+    try { items = JSON.parse(cached); } catch(e){ items = []; }
+    render();
+  }
+
+  const cachedMusic = localStorage.getItem(MUSIC_KEY);
+  if(cachedMusic){
+    document.getElementById("bgMusicSelect").value = cachedMusic;
+  }
+
+  loadMessages();
+
+  // ✅ STEP 2: Sync from DB in background (updates localStorage too)
+  try {
+    await loadFromDB();
+  } catch(err) {
+    console.error("DB sync failed, using localStorage:", err);
+  }
+});
 
   // ✅ ADD THESE LINES HERE
   const musicOverlay = document.getElementById("musicOverlay");
@@ -693,7 +709,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   
-});
+
 
 function downloadViewer() {
   autoSave();
@@ -875,13 +891,7 @@ function copyViewerLink() {
 
 </script>
 
-<div style="text-align:center; margin-top:30px;"
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  margin-top:30px;
-  flex-wrap:wrap;
-">
+<div style="text-align:center; margin-top:30px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
 
   <button class="btn" onclick="goToViewer()">
     💾 Save All & Show Viewer Page
