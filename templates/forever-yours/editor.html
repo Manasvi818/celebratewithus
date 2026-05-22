@@ -297,7 +297,11 @@ async function loadFromDB() {
     music = result.music || "";
     password = result.password || "";
 
-localStorage.setItem(MSG_KEY, messages); 
+ // ✅ Save ALL to localStorage so viewer can read instantly
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    localStorage.setItem(MSG_KEY, messages);
+    localStorage.setItem(MUSIC_KEY, music);
+    localStorage.setItem(`pass_${projectId}`, password);
 
     render();
     loadMessages();
