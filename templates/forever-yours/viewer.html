@@ -422,22 +422,22 @@ let password = "";
 
 /* PASSWORD */
 function checkPassword(){
+  const passInput = document.getElementById("passInput");
+  const wrongPass = document.getElementById("wrongPass");
 
-  const savedPass = password;
-
-  if(!savedPass){
-    wrongPass.innerText = "No password set. Please set it in editor page ";
+  if(!password){
+    wrongPass.innerText = "No password set. Please set it in editor page";
     wrongPass.style.display = "block";
     return;
   }
 
-  if(passInput.value === savedPass){
+  if(passInput.value === password){
     lockScreen.style.display="none";
     startFloatingWords();
     startSparkles();
     startMusic();
   }else{
-    wrongPass.innerText = "Wrong password ";
+    wrongPass.innerText = "Wrong password 💜";
     wrongPass.style.display="block";
   }
 }
