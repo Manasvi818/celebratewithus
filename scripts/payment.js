@@ -173,34 +173,3 @@ async function applyCoupon() {
   }
 }
 
-app.post("/validate-coupon", async (req, res) => {
-  const { coupon } = req.body;
-  try {
-    const couponDoc = await Coupon.findOne({ 
-      code: coupon.toUpperCase(), 
-      active: true 
-    });
-
-    if (!couponDoc) {
-      return res.status(400).json({ success: false, message: "Invalid or expired coupon." });
-    }
-
-    if (couponDoc.expiresAt && new Date() > couponDoc.expiresAt) {
-      return res.status(400).json({ success: false, message: "Coupon has expired." });
-    }
-
-    return res.json({ success: true, discountPercent: couponDoc.discountPercent });
-  } catch (err) {
-    res.status(500).json({ success: false, message: "Server error." });
-  }
-});
-
-// models/Coupon.js
-const mongoose = require("mongoose");
-const couponSchema = new mongoose.Schema({
-  code: { type: String, required: true, unique: true, uppercase: true },
-  discountPercent: { type: Number, required: true },
-  active: { type: Boolean, default: true },
-  expiresAt: { type: Date }
-});
-module.exports = mongoose.model("Coupon", couponSchema);

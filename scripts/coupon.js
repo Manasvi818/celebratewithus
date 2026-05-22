@@ -1,11 +1,8 @@
 const mongoose = require("mongoose");
-
 const couponSchema = new mongoose.Schema({
-  code: String,
-  discount: Number,
-  used: Boolean,
-  email: String
+  code: { type: String, required: true, unique: true, uppercase: true },
+  discountPercent: { type: Number, required: true },
+  active: { type: Boolean, default: true },
+  expiresAt: { type: Date }
 });
-
 module.exports = mongoose.model("Coupon", couponSchema);
-
