@@ -308,6 +308,9 @@ async function loadFromDB() {
     loadMessages();
   }
 }
+catch(err) {
+    console.error("loadFromDB failed:", err);
+  }
 }
 
 
@@ -793,7 +796,7 @@ function copyViewerLink() {
 
   <p style="margin-top:12px; font-size:13px; color:#8a5a55;">
     ⚠️ When you click on "Download Invoice", along with the billing you will get 
-    <b>Editor page link</b> and <b>Viewer page link</b>.
+    <b>Editor page link</b> and <b>Viewer page link</b>
   </p>
 
 </div>
