@@ -372,7 +372,7 @@ img, video{
 <body>
 
 <!-- LOCK -->
-<div id="lockScreen" style="display:none;">
+<div id="lockScreen" style="display:flex;">
   <div class="lockBox">
     <h3> Private Forever</h3>
     <input id="passInput" type="password" placeholder="Enter password">
@@ -443,15 +443,6 @@ function checkPassword(){
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("lockScreen").innerHTML = `
-    <div class="lockBox">
-      <div style="font-size:36px;animation:spin 1s linear infinite;display:inline-block;">💜</div>
-      <h3 style="margin-top:10px;">Loading your memories...</h3>
-      <p style="opacity:0.7;font-size:13px;">This may take up to 30 seconds<br>on first load 🌸</p>
-    </div>
-  `;
-  document.getElementById("lockScreen").style.display = "flex";
-
   loadViewerData();
 });
 
