@@ -119,3 +119,88 @@ const res = await fetch(`${BASE_URL}/create-order`, {
     }
   });
 });
+
+async function applyCoupon() {
+  const couponCode = document.getElementById("coupon").value.trim();
+  const discountMsg = document.getElementById("discountMsg");
+  const priceDisplay = document.getElementById("priceDisplay");
+
+  if (!couponCode) {
+    discountMsg.textContent = "Please enter a coupon code.";
+    discountMsg.style.color = "red";
+    return;
+  }
+
+  try {
+    const res = await fetch(`${BASE_URL}/validate-coupon`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ coupon: couponCode })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      discountMsg.textContent = data.message || "Invalid coupon code.";
+      discountMsg.style.color = "red";
+      localStorage.removeItem("finalAmount");
+      localStorage.removeItem("appliedCoupon");
+      priceDisplay.textContent = "₹199";
+      return;
+    }
+
+    // data should return: { success: true, discountPercent: 20 } or { discountedPrice: 159 }
+    const originalPrice = 199;
+    let finalPrice = originalPrice;
+
+    if (data.discountedPrice) {
+      finalPrice = data.discountedPrice;
+    } else if (data.discountPercent) {
+      finalPrice = Math.round(originalPrice * (1 - data.discountPercent / 100));
+    }
+
+    localStorage.setItem("finalAmount", finalPrice);
+    localStorage.setItem("appliedCoupon", couponCode);
+
+    priceDisplay.textContent = `₹${finalPrice} ✅`;
+    discountMsg.textContent = `Coupon applied! You save ₹${originalPrice - finalPrice}`;
+    discountMsg.style.color = "green";
+
+  } catch (err) {
+    console.error("Coupon error:", err);
+    discountMsg.textContent = "Error applying coupon. Try again.";
+    discountMsg.style.color = "red";
+  }
+}
+
+app.post("/validate-coupon", async (req, res) => {
+  const { coupon } = req.body;
+  try {
+    const couponDoc = await Coupon.findOne({ 
+      code: coupon.toUpperCase(), 
+      active: true 
+    });
+
+    if (!couponDoc) {
+      return res.status(400).json({ success: false, message: "Invalid or expired coupon." });
+    }
+
+    if (couponDoc.expiresAt && new Date() > couponDoc.expiresAt) {
+      return res.status(400).json({ success: false, message: "Coupon has expired." });
+    }
+
+    return res.json({ success: true, discountPercent: couponDoc.discountPercent });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error." });
+  }
+});
+
+// models/Coupon.js
+const mongoose = require("mongoose");
+const couponSchema = new mongoose.Schema({
+  code: { type: String, required: true, unique: true, uppercase: true },
+  discountPercent: { type: Number, required: true },
+  active: { type: Boolean, default: true },
+  expiresAt: { type: Date }
+});
+module.exports = mongoose.model("Coupon", couponSchema);

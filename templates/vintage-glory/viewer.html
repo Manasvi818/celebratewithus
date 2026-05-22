@@ -734,10 +734,9 @@ async function loadViewerData() {
 
       if (music) {
         song = music;
-        setupMusic();
       }
 
-      document.getElementById("passwordOverlay").style.display = "flex";
+      
       isLoaded = true;
 
     }
@@ -782,13 +781,23 @@ function toggleMusic(){
 
 /* PASSWORD */
 function unlock(){
-  // ✅ Guard: if DB hasn't responded yet, wait
+  const input = document.getElementById("pass").value.trim();
+
   if(!isLoaded){
-    alert("Still loading, please wait a moment...");
+    // ✅ Data still loading — check if no password needed, else wait
+    document.getElementById("wrongPass").style.display = "none";
+    const loadingMsg = document.getElementById("wrongPass");
+    loadingMsg.style.display = "block";
+    loadingMsg.style.color = "#C9A36B";
+    loadingMsg.innerText = "Loading... please try again in a moment.";
+
+    // Auto-retry after 2 seconds
+    setTimeout(() => {
+      loadingMsg.style.display = "none";
+      if(isLoaded) unlock();
+    }, 2000);
     return;
   }
-
-  const input = document.getElementById("pass").value.trim();
 
   if(PASS === ""){
     document.getElementById("passwordOverlay").style.display = "none";
@@ -802,9 +811,20 @@ function unlock(){
     playMusic();
     isPlaying = true;
   } else {
+    document.getElementById("wrongPass").style.color = "#ff6b6b";
+    document.getElementById("wrongPass").innerText = "Incorrect password";
     document.getElementById("wrongPass").style.display = "block";
   }
 }
+
+  if(input === PASS){
+    document.getElementById("passwordOverlay").style.display = "none";
+    playMusic();
+    isPlaying = true;
+  } else {
+    document.getElementById("wrongPass").style.display = "block";
+  }
+
 
 pass.addEventListener("keydown",(e)=>{ if(e.key==="Enter") unlock(); });
 
@@ -972,6 +992,7 @@ setTimeout(()=>s.remove(),3000);
 
 },800);
 
+document.getElementById("passwordOverlay").style.display = "flex";
 
   loadViewerData();
 
