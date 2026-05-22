@@ -449,6 +449,23 @@ if(!password){
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // ✅ STEP 1: Load from localStorage INSTANTLY (no waiting)
+  const cachedData = localStorage.getItem(`project_${projectId}`);
+  const cachedPass = localStorage.getItem(`pass_${projectId}`);
+
+  if(cachedData || cachedPass){
+    data = JSON.parse(cachedData || "[]");
+    messages = localStorage.getItem(`msg_${projectId}`) || "";
+    music = localStorage.getItem(`music_${projectId}`) || "";
+    password = cachedPass || "";
+    dataLoaded = true;
+
+    renderGallery();
+    renderMessages();
+    setupMusic();
+  }
+
+  // ✅ STEP 2: Sync from DB in background (silent update)
   loadViewerData();
 });
 
@@ -464,7 +481,7 @@ async function loadViewerData() {
       password = result.password || "";
       dataLoaded = true;
 
-      // ✅ Cache locally like Cultural Festive does
+      // ✅ Update cache
       localStorage.setItem(`project_${projectId}`, JSON.stringify(data));
       localStorage.setItem(`msg_${projectId}`, messages);
       localStorage.setItem(`music_${projectId}`, music);
@@ -476,18 +493,8 @@ async function loadViewerData() {
     }
 
   } catch (err) {
-    console.error("DB load failed, trying localStorage:", err);
-
-    // ✅ Fallback to localStorage (instant) like Cultural Festive
-    data = JSON.parse(localStorage.getItem(`project_${projectId}`) || "[]");
-    messages = localStorage.getItem(`msg_${projectId}`) || "";
-    music = localStorage.getItem(`music_${projectId}`) || "";
-    password = localStorage.getItem(`pass_${projectId}`) || "";
-    dataLoaded = true;
-
-    renderGallery();
-    renderMessages();
-    setupMusic();
+    console.error("DB load failed:", err);
+    dataLoaded = true; // still mark loaded so password works
   }
 }
 
