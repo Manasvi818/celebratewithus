@@ -288,6 +288,7 @@ async function autoSave() {
 }
 
 async function loadFromDB() {
+  try {
   const res = await fetch(`https://celebratewithus-1-qwb2.onrender.com/get-project/${projectId}`);
   const result = await res.json();
 
@@ -306,6 +307,7 @@ async function loadFromDB() {
     render();
     loadMessages();
   }
+}
 }
 
 function saveAll(){
@@ -563,7 +565,25 @@ function saveMessages(arr){
 
 
 window.addEventListener("DOMContentLoaded", async () => {
-  await loadFromDB(); 
+  // ✅ STEP 1: Load from localStorage INSTANTLY
+  const cached = localStorage.getItem(STORAGE_KEY);
+  if(cached){
+    items = JSON.parse(cached);
+    messages = localStorage.getItem(MSG_KEY) || "";
+    music = localStorage.getItem(MUSIC_KEY) || "";
+    password = localStorage.getItem(`pass_${projectId}`) || "";
+
+    bgMusicSelect.value = music;
+    render();
+    loadMessages();
+  }
+
+  // ✅ STEP 2: Sync from DB in background
+  try {
+    await loadFromDB();
+  } catch(err) {
+    console.error("DB sync failed, using localStorage:", err);
+  }
 });
 
 function waitForCloudinary(){
