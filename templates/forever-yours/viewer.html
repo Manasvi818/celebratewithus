@@ -417,7 +417,7 @@ let data = [];
 let messages = "";
 let music = "";
 let password = "";
-
+let dataLoaded = false; // ✅ ADD THIS
 
 
 /* PASSWORD */
@@ -425,7 +425,13 @@ function checkPassword(){
   const passInput = document.getElementById("passInput");
   const wrongPass = document.getElementById("wrongPass");
 
-  if(!password){
+  if(password === "" && !dataLoaded){
+    wrongPass.innerText = "No password set. Please set it in editor page";
+    wrongPass.style.display = "block";
+    return;
+  }
+
+if(!password){
     wrongPass.innerText = "No password set. Please set it in editor page";
     wrongPass.style.display = "block";
     return;
@@ -456,6 +462,7 @@ async function loadViewerData() {
       messages = result.messages || "";
       music = result.music || "";
       password = result.password || "";
+      dataLoaded = true; // ✅ ADD THIS
 
       renderGallery();
       renderMessages();
