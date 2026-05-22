@@ -19,17 +19,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       console.log("CALLING:", `${BASE_URL}/create-order`);
 
-      // 🔥 CREATE ORDER
-      const res = await fetch(`${BASE_URL}/create-order`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          amountINR: 199,
-          template
-        })
-      });
+      // 🔥 CREATE ORDER — replace the existing fetch body with this:
+const finalAmount = parseInt(localStorage.getItem("finalAmount")) || 199;
+const appliedCoupon = localStorage.getItem("appliedCoupon") || "";
+
+const res = await fetch(`${BASE_URL}/create-order`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    amountINR: finalAmount,   // ✅ uses discounted price
+    template,
+    coupon: appliedCoupon     // ✅ optional: send coupon to server too
+  })
+});
 
       if (!res.ok) {
         throw new Error("Failed to reach server");
@@ -49,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
         currency: data.currency,
         order_id: data.orderId,
         name: "CelebrateWithUs",
-        description: "Template Purchase ₹199",
+        description: `Template Purchase ₹${finalAmount}`,
 
         handler: async function (response) {
           try {
