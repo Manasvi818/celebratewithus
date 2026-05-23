@@ -636,8 +636,11 @@ app.post("/validate-coupon", async (req, res) => {
   try {
     const couponDoc = await Coupon.findOne({
       code: coupon.toUpperCase().trim(),
-      $or: [{ active: true }, { used: false }]  // ✅ handles old + new docs
+      used: false    // ✅ use actual field in DB
     });
+
+    console.log("Looking for:", coupon.toUpperCase().trim());
+    console.log("Found:", couponDoc);
 
     if (!couponDoc) {
       return res.status(400).json({ success: false, message: "Invalid or expired coupon." });
@@ -645,7 +648,7 @@ app.post("/validate-coupon", async (req, res) => {
 
     return res.json({ 
       success: true, 
-      discountPercent: couponDoc.discountPercent || couponDoc.discount  // ✅ handles both
+      discountPercent: couponDoc.discount  // ✅ use actual field in DB
     });
 
   } catch (err) {
