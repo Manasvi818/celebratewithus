@@ -39,12 +39,14 @@ app.post("/validate-coupon", async (req, res) => {
   if (!coupon) return res.status(400).json({ success: false, message: "No coupon provided." });
 
   try {
-    const couponDoc = await Coupon.findOne({
-      code: coupon.toUpperCase().trim(),
-      used: false
-    });
+    // Search without any filter first
+    const allCoupons = await Coupon.find({}).limit(5);
+    console.log("ALL COUPONS IN DB:", JSON.stringify(allCoupons));
 
-    if (!couponDoc) {
+    const couponDoc = await Coupon.findOne({ code: coupon.toUpperCase().trim() });
+    console.log("RAW DOC:", JSON.stringify(couponDoc));
+
+    if (!couponDoc || couponDoc.used === true) {
       return res.status(400).json({ success: false, message: "Invalid or expired coupon." });
     }
 
