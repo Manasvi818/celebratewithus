@@ -653,10 +653,6 @@ async function generateInvoice(data) {
   });
 }
 
-
-
-
-
 // TEMPORARY DEBUG - remove after checking
 app.get("/debug-coupons", async (req, res) => {
   try {
