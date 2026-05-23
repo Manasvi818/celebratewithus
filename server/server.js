@@ -704,3 +704,11 @@ app.get("/test-coupon/:code", async (req, res) => {
   }
 });
    
+app.get("/list-collections", async (req, res) => {
+  try {
+    const collections = await mongoose.connection.db.listCollections().toArray();
+    res.json({ collections: collections.map(c => c.name) });
+  } catch (err) {
+    res.json({ error: err.message });
+  }
+});
