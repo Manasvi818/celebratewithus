@@ -653,7 +653,7 @@ async function generateInvoice(data) {
   });
 }
 
-const Coupon = require("./models/Coupon"); // add at top if not there
+
 
 
 
