@@ -707,3 +707,22 @@ app.get("/list-collections", async (req, res) => {
     res.json({ error: err.message });
   }
 });
+
+// TEMPORARY - remove after running once
+app.get("/add-missing-coupons", async (req, res) => {
+  try {
+    const missing = [
+      "IFINTGT9", "U3EQOBD6"  // ✅ add ALL codes from your old invoices here
+    ];
+    
+    for (const code of missing) {
+      const exists = await Coupon.findOne({ code });
+      if (!exists) {
+        await Coupon.create({ code, discount: 20, used: false, email: "guest@email.com" });
+      }
+    }
+    res.json({ success: true, added: missing.length });
+  } catch (err) {
+    res.json({ error: err.message });
+  }
+});
