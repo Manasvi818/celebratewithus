@@ -1,5 +1,6 @@
 const { createCoupon, applyCoupon, markUsed } = require("./coupon");
 const Project = require("./models/Project");
+const Coupon = require("./models/Coupon");  // ✅ move to top
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
@@ -30,6 +31,31 @@ app.options("*", cors({
 
 app.options("*", cors());
 app.use(express.json());
+
+app.post("/validate-coupon", async (req, res) => {
+  console.log("🎯 VALIDATE-COUPON HIT", req.body);
+  const { coupon } = req.body;
+
+  if (!coupon) return res.status(400).json({ success: false, message: "No coupon provided." });
+
+  try {
+    const couponDoc = await Coupon.findOne({
+      code: coupon.toUpperCase().trim(),
+      used: false
+    });
+
+    if (!couponDoc) {
+      return res.status(400).json({ success: false, message: "Invalid or expired coupon." });
+    }
+
+    return res.json({ success: true, discountPercent: couponDoc.discount });
+
+  } catch (err) {
+    console.error("COUPON ERROR:", err.message);
+    res.status(500).json({ success: false, message: "Server error." });
+  }
+});
+
 
 app.use((req, res, next) => {
   res.setHeader('Permissions-Policy', 'accelerometer=(), gyroscope=(), magnetometer=()');
@@ -629,36 +655,7 @@ async function generateInvoice(data) {
 
 const Coupon = require("./models/Coupon"); // add at top if not there
 
-app.post("/validate-coupon", async (req, res) => {
-  console.log("🎯 VALIDATE-COUPON HIT", req.body);
-  const { coupon } = req.body;
 
-
-  if (!coupon) return res.status(400).json({ success: false, message: "No coupon provided." });
-
-  try {
-    const couponDoc = await Coupon.findOne({
-      code: coupon.toUpperCase().trim(),
-      used: false    // ✅ use actual field in DB
-    });
-
-    console.log("Looking for:", coupon.toUpperCase().trim());
-    console.log("Found:", couponDoc);
-
-    if (!couponDoc) {
-      return res.status(400).json({ success: false, message: "Invalid or expired coupon." });
-    }
-
-    return res.json({ 
-      success: true, 
-      discountPercent: couponDoc.discount  // ✅ use actual field in DB
-    });
-
-  } catch (err) {
-    console.error("COUPON ERROR:", err.message);
-    res.status(500).json({ success: false, message: "Server error." });
-  }
-});
 
 // TEMPORARY DEBUG - remove after checking
 app.get("/debug-coupons", async (req, res) => {
