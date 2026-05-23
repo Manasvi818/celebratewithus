@@ -636,21 +636,17 @@ app.post("/validate-coupon", async (req, res) => {
   try {
     const couponDoc = await Coupon.findOne({
       code: coupon.toUpperCase().trim(),
-      active: true
+      $or: [{ active: true }, { used: false }]  // ✅ handles old + new docs
     });
-
-    console.log("Looking for coupon:", coupon.toUpperCase().trim());
-    console.log("Found:", couponDoc);
 
     if (!couponDoc) {
       return res.status(400).json({ success: false, message: "Invalid or expired coupon." });
     }
 
-    if (couponDoc.expiresAt && new Date() > couponDoc.expiresAt) {
-      return res.status(400).json({ success: false, message: "Coupon has expired." });
-    }
-
-    return res.json({ success: true, discountPercent: couponDoc.discountPercent });
+    return res.json({ 
+      success: true, 
+      discountPercent: couponDoc.discountPercent || couponDoc.discount  // ✅ handles both
+    });
 
   } catch (err) {
     console.error("COUPON ERROR:", err.message);
@@ -671,11 +667,22 @@ app.get("/debug-coupons", async (req, res) => {
 // TEMPORARY - remove after running once
 app.get("/fix-coupons", async (req, res) => {
   try {
-    const result = await Coupon.updateMany(
-      { discount: { $exists: true }, discountPercent: { $exists: false } },
-      [{ $set: { discountPercent: "$discount", active: true } }]
-    );
-    res.json({ success: true, fixed: result.modifiedCount });
+    // Get all coupons with old format
+    const oldCoupons = await Coupon.find({ discount: { $exists: true } });
+    
+    let fixed = 0;
+    for (const c of oldCoupons) {
+      await Coupon.updateOne(
+        { _id: c._id },
+        { $set: { 
+          discountPercent: c.discount,
+          active: !c.used
+        }}
+      );
+      fixed++;
+    }
+
+    res.json({ success: true, fixed });
   } catch (err) {
     res.json({ error: err.message });
   }

@@ -25,13 +25,16 @@ async function createCoupon(email) {
 }
 
 async function applyCoupon(code) {
-  const coupon = await Coupon.findOne({ code: code.toUpperCase().trim(), active: true });
+  const coupon = await Coupon.findOne({ 
+    code: code.toUpperCase().trim(),
+    $or: [{ active: true }, { used: false }]  // handles both old and new docs
+  });
 
   if (!coupon) {
-    return { success: false, message: "Invalid or expired coupon." };  // ✅ fixed
+    return { success: false, message: "Invalid or expired coupon." };
   }
 
-  return { success: true, discountPercent: coupon.discountPercent };   // ✅ fixed
+  return { success: true, discountPercent: coupon.discountPercent || coupon.discount };
 }
 
 async function markUsed(code) {
