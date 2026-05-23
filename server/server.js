@@ -668,4 +668,16 @@ app.get("/debug-coupons", async (req, res) => {
   }
 });
 
+// TEMPORARY - remove after running once
+app.get("/fix-coupons", async (req, res) => {
+  try {
+    const result = await Coupon.updateMany(
+      { discount: { $exists: true }, discountPercent: { $exists: false } },
+      [{ $set: { discountPercent: "$discount", active: true } }]
+    );
+    res.json({ success: true, fixed: result.modifiedCount });
+  } catch (err) {
+    res.json({ error: err.message });
+  }
+});
    
