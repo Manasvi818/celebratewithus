@@ -16,7 +16,8 @@ async function createCoupon(email) {
 
   const coupon = await Coupon.create({
     code,
-    discount: 20,
+    discountPercent: 20,  // ✅ fixed: was "discount"
+    active: true,
     email
   });
 
@@ -24,17 +25,17 @@ async function createCoupon(email) {
 }
 
 async function applyCoupon(code) {
-  const coupon = await Coupon.findOne({ code });
+  const coupon = await Coupon.findOne({ code: code.toUpperCase().trim(), active: true });
 
-  if (!coupon || coupon.used) {
-    return { valid: false };
+  if (!coupon) {
+    return { success: false, message: "Invalid or expired coupon." };  // ✅ fixed
   }
 
-  return { valid: true, discount: coupon.discount };
+  return { success: true, discountPercent: coupon.discountPercent };   // ✅ fixed
 }
 
 async function markUsed(code) {
-  await Coupon.updateOne({ code }, { used: true });
+  await Coupon.updateOne({ code }, { active: false }); // ✅ deactivates after use
 }
 
 module.exports = {

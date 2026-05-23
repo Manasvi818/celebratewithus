@@ -658,4 +658,14 @@ app.post("/validate-coupon", async (req, res) => {
   }
 });
 
+// TEMPORARY DEBUG - remove after checking
+app.get("/debug-coupons", async (req, res) => {
+  try {
+    const all = await Coupon.find({}).limit(10);
+    res.json({ count: all.length, coupons: all });
+  } catch (err) {
+    res.json({ error: err.message });
+  }
+});
+
    
