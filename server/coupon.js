@@ -49,3 +49,21 @@ module.exports = {
   applyCoupon,
   markUsed
 };
+
+app.get("/add-missing-coupons", async (req, res) => {
+  try {
+    const missing = [
+      "IFINTGT9", "U3EQOBD6"  // add ALL codes from your invoices here
+    ];
+    
+    for (const code of missing) {
+      const exists = await Coupon.findOne({ code });
+      if (!exists) {
+        await Coupon.create({ code, discount: 20, used: false, email: "guest@email.com" });
+      }
+    }
+    res.json({ success: true, added: missing.length });
+  } catch (err) {
+    res.json({ error: err.message });
+  }
+});
