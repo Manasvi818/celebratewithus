@@ -630,7 +630,10 @@ async function generateInvoice(data) {
 const Coupon = require("./models/Coupon"); // add at top if not there
 
 app.post("/validate-coupon", async (req, res) => {
+  console.log("🎯 VALIDATE-COUPON HIT", req.body);
   const { coupon } = req.body;
+
+
   if (!coupon) return res.status(400).json({ success: false, message: "No coupon provided." });
 
   try {
@@ -686,6 +689,16 @@ app.get("/fix-coupons", async (req, res) => {
     }
 
     res.json({ success: true, fixed });
+  } catch (err) {
+    res.json({ error: err.message });
+  }
+});
+
+app.get("/test-coupon/:code", async (req, res) => {
+  try {
+    const code = req.params.code.toUpperCase().trim();
+    const doc = await Coupon.findOne({ code });
+    res.json({ searched: code, found: doc });
   } catch (err) {
     res.json({ error: err.message });
   }
