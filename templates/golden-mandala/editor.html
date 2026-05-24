@@ -713,6 +713,33 @@ autoSave();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // ✅ Load from cache instantly
+  const cached = localStorage.getItem(STORAGE_KEY);
+  if (cached) {
+    try {
+      items = JSON.parse(cached);
+      render();
+    } catch(e) {}
+  }
+
+  const cachedMsg = localStorage.getItem(MSG_KEY);
+  if (cachedMsg) {
+    messages = cachedMsg;
+    loadMessages();
+  }
+
+  const cachedMusic = localStorage.getItem(MUSIC_KEY);
+  if (cachedMusic) {
+    music = cachedMusic;
+    document.getElementById("bgMusicSelect").value = music;
+  }
+
+  const cachedPass = localStorage.getItem(PASS_KEY);
+  if (cachedPass) {
+    password = cachedPass;
+  }
+
+  // Then fetch fresh data from DB in background
   loadFromDB();
 });
 
