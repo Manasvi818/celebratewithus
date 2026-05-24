@@ -728,3 +728,10 @@ app.get("/add-missing-coupons", async (req, res) => {
     res.json({ error: err.message });
   }
 });
+
+// Keep server awake
+setInterval(() => {
+  fetch("https://celebratewithus-1-qwb2.onrender.com/ping")
+    .then(() => console.log("🔄 Self-ping sent"))
+    .catch(() => {});
+}, 10 * 60 * 1000); // every 10 minutes
