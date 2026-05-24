@@ -712,7 +712,9 @@ app.get("/list-collections", async (req, res) => {
 app.get("/add-missing-coupons", async (req, res) => {
   try {
     const missing = [
-      "IFINTGT9", "U3EQOBD6"  // ✅ add ALL codes from your old invoices here
+      "IFINTGT9", "U3EQOBD6", "U22B01MB", "QL4GW7YV", "Q7FIZMD1", "QVRAPP1D", "NVJ3V38F", "U3EQOBD6", "U3EQOBD6", "NG7L9J32", "CF466LKR", "5DRYA46H", "IFINTGT9", "GPD12NA2", "5ARTEE28", "NSNA2TMJ", "IYM9JVOD", "I4AE68XN", "NSF1SDDP", "93S7JYU7", "9K0NIG1B", "FDOHEFSN", "QQZOE4FE",
+"4OD3YW79", "Y9X1J4RZ", "FCLGD98I", "FA7QRIFL", "BB0Q15ZZ"
+ // ✅ add ALL codes from your old invoices here
     ];
     
     for (const code of missing) {
