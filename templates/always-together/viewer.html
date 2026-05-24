@@ -693,7 +693,7 @@ function unlock(){
 
 async function loadViewerData() {
   try {
-    const res = await fetch(`https://celebratewithus-1-qwb2.onrender.com/get-project/${projectId}`);
+    const res = await fetch(`https://celebratewithus.up.railway.app/get-project/${projectId}`);
     const result = await res.json();
 
     console.log("FULL RESULT:", result);        // ✅ ADD

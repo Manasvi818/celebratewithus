@@ -332,7 +332,7 @@ console.log("STORAGE KEY:", STORAGE_KEY);
 
  async function loadFromDB() {
   try {
-    const res = await fetch(`https://celebratewithus-1-qwb2.onrender.com/get-project
+    const res = await fetch(`https://celebratewithus.up.railway.app/get-project
 /${projectId}`);
     const result = await res.json();
 
@@ -503,7 +503,7 @@ async function autoSave() {
   }
 
   try {
-    await fetch("https://celebratewithus-1-qwb2.onrender.com/save-project", {
+    await fetch("https://celebratewithus.up.railway.app/save-project", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

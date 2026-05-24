@@ -356,7 +356,7 @@ async function autoSave() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 
   try {
-    await fetch("https://celebratewithus-1-qwb2.onrender.com/save-project", {
+    await fetch("https://celebratewithus.up.railway.app/save-project", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -378,7 +378,7 @@ async function autoSave() {
 
 async function loadFromDB() {
   try {
-    const res = await fetch(`https://celebratewithus-1-qwb2.onrender.com/get-project
+    const res = await fetch(`https://celebratewithus.up.railway.app/get-project
 /${projectId}`);
     const result = await res.json();
 
@@ -753,7 +753,7 @@ function copyViewerLink() {
 
   if (!invoicePath) {
     const fallbackPath = `/invoices/invoice_${projectId}.pdf`;
-    window.open(`https://celebratewithus-1-qwb2.onrender.com${fallbackPath}`, "_blank");
+    window.open(`https://celebratewithus.up.railway.app${fallbackPath}`, "_blank");
     return;
   }
 
