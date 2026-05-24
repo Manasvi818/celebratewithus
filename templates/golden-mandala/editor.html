@@ -476,12 +476,10 @@ function initWidget(){
 /* Cloudinary Upload */
 function openWidget(){
   if(!widget){
-    document.body.style.cursor = "wait"; // loader feel
+    waitForCloudinary();
     setTimeout(() => {
-      document.body.style.cursor = "default";
-    }, 1000);
-
-    alert("Opening uploader...");
+      if(widget) widget.open();
+    }, 1500);
     return;
   }
 
