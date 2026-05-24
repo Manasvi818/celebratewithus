@@ -70,7 +70,8 @@ app.get("/cors-test", (req, res) => {
 });
 
 app.get("/ping", (req, res) => {
-  res.json({ status: "awake" });
+  res.send("ok");
+
 });
 
 // ✅ CORS - single clean middleware, no duplicates
