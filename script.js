@@ -3,7 +3,7 @@ const template = params.get("template");
 
 console.log("TEMPLATE:", template);
 
-const res = await fetch("https://celebratewithus.up.railway.app/create-order", {
+const res = await fetch("https://celebratewithus-production.up.railway.app/create-order", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
@@ -26,7 +26,7 @@ var options = {
   handler: function (response) {
     console.log("Payment Success:", response);
 
-   fetch("https://celebratewithus.up.railway.app/verify-payment", {
+   fetch("https://celebratewithus-production.up.railway.app/verify-payment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

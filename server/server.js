@@ -14,7 +14,7 @@ app.use(cors({
   origin: [
     "https://www.celebratewithus.co.in",
     "https://celebratewithus.co.in",
-    "https://celebratewithus.up.railway.app"
+    "https://celebratewithus-production.up.railway.app"
   ],
   credentials: true
 }));
@@ -23,7 +23,7 @@ app.options("*", cors({
   origin: [
     "https://www.celebratewithus.co.in",
     "https://celebratewithus.co.in",
-    "https://celebratewithus.up.railway.app"
+    "https://celebratewithus-production.up.railway.app"
   ],
   credentials: true
 }));
@@ -732,7 +732,7 @@ app.get("/add-missing-coupons", async (req, res) => {
 
 // Keep server awake
 setInterval(() => {
-  fetch("https://celebratewithus.up.railway.app/ping")
+  fetch("https://celebratewithus-production.up.railway.app/ping")
     .then(() => console.log("🔄 Self-ping sent"))
     .catch(() => {});
 }, 10 * 60 * 1000); // every 10 minutes

@@ -543,7 +543,7 @@ function preview(obj){
 
 async function loadFromDB() {
   try {
-    const res = await fetch(`https://celebratewithus.up.railway.app/get-project/${projectId}`);
+    const res = await fetch(`https://celebratewithus-production.up.railway.app/get-project/${projectId}`);
     const result = await res.json();
 
     if (result.success) {
@@ -632,7 +632,7 @@ async function autoSave() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 
   try {
-    await fetch("https://celebratewithus.up.railway.app/save-project", {
+    await fetch("https://celebratewithus-production.up.railway.app/save-project", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -1017,7 +1017,7 @@ function copyViewerLink() {
 
   if (!invoicePath) {
     const fallbackPath = `/invoices/invoice_${projectId}.pdf`;
-    window.open(`https://celebratewithus.up.railway.app${fallbackPath}`, "_blank");
+    window.open(`https://celebratewithus-production.up.railway.app${fallbackPath}`, "_blank");
     return;
   }
 

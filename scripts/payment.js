@@ -1,4 +1,4 @@
-const BASE_URL = "https://celebratewithus.up.railway.app";
+const BASE_URL = "https://celebratewithus-production.up.railway.app";
 
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
