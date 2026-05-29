@@ -1,19 +1,15 @@
 const BASE_URL = "https://celebratewithus-production.up.railway.app";
 
+// ✅ Session-only flag — true only if coupon was applied THIS visit
+let couponAppliedThisSession = false;
+
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
   const template = params.get("template");
 
   console.log("TEMPLATE:", template);
 
-  // ✅ FIX 1: Always reset price to 199 when page loads
-  // This ensures old coupon from previous session never carries over
-  localStorage.removeItem("finalAmount");
-  localStorage.removeItem("appliedCoupon");
-  localStorage.removeItem("discount");
-  localStorage.removeItem("nextCoupon");
-
-  // Reset display to ₹199 on load
+  // ✅ Always show ₹199 on page load — never carry over old coupon
   const priceDisplay = document.getElementById("priceDisplay");
   if (priceDisplay) priceDisplay.textContent = "₹199";
 
@@ -29,10 +25,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       console.log("CALLING:", `${BASE_URL}/create-order`);
 
-      // ✅ FIX 2: Only use discounted amount if coupon was applied THIS session
-      // If no coupon applied, always default to 199
-      const finalAmount = parseInt(localStorage.getItem("finalAmount")) || 199;
-      const appliedCoupon = localStorage.getItem("appliedCoupon") || "";
+      // ✅ KEY FIX: Only use discounted price if customer applied coupon THIS visit
+      // If they didn't apply a coupon this session, always charge ₹199
+      const finalAmount = couponAppliedThisSession
+        ? (parseInt(localStorage.getItem("finalAmount")) || 199)
+        : 199;
+      const appliedCoupon = couponAppliedThisSession
+        ? (localStorage.getItem("appliedCoupon") || "")
+        : "";
 
       const res = await fetch(`${BASE_URL}/create-order`, {
         method: "POST",
@@ -86,15 +86,16 @@ document.addEventListener("DOMContentLoaded", () => {
               return;
             }
 
-            localStorage.setItem("projectId",    result.projectId);
-            localStorage.setItem("invoicePath",  result.invoice);
+            localStorage.setItem("projectId",   result.projectId);
+            localStorage.setItem("invoicePath", result.invoice);
 
-            // ✅ FIX 3: Clear coupon data immediately after successful payment
+            // ✅ Clear coupon data after successful payment
             // So next purchase always starts fresh at ₹199
             localStorage.removeItem("finalAmount");
             localStorage.removeItem("appliedCoupon");
             localStorage.removeItem("discount");
             localStorage.removeItem("nextCoupon");
+            couponAppliedThisSession = false;
 
             alert("Payment successful!");
             window.location.href = `/editor/${template}/${result.projectId}`;
@@ -146,7 +147,7 @@ async function applyCoupon() {
   }
 
   try {
-    const res  = await fetch(`${BASE_URL}/validate-coupon`, {
+    const res = await fetch(`${BASE_URL}/validate-coupon`, {
       method:  "POST",
       headers: { "Content-Type": "application/json" },
       body:    JSON.stringify({ coupon: couponCode })
@@ -158,9 +159,10 @@ async function applyCoupon() {
       discountMsg.textContent = data.message || "Invalid coupon code.";
       discountMsg.style.color = "red";
 
-      // ✅ Clear any old saved discount if coupon is invalid
+      // Reset everything if coupon is invalid
       localStorage.removeItem("finalAmount");
       localStorage.removeItem("appliedCoupon");
+      couponAppliedThisSession = false;
       priceDisplay.textContent = "₹199";
       return;
     }
@@ -174,12 +176,14 @@ async function applyCoupon() {
       finalPrice = Math.round(originalPrice * (1 - data.discountPercent / 100));
     }
 
+    // ✅ Save discount and mark that coupon was applied this session
     localStorage.setItem("finalAmount",   finalPrice);
     localStorage.setItem("appliedCoupon", couponCode);
+    couponAppliedThisSession = true;  // ← this is the key flag
 
-    priceDisplay.textContent  = `₹${finalPrice} ✅`;
-    discountMsg.textContent   = `Coupon applied! You save ₹${originalPrice - finalPrice}`;
-    discountMsg.style.color   = "green";
+    priceDisplay.textContent = `₹${finalPrice} ✅`;
+    discountMsg.textContent  = `Coupon applied! You save ₹${originalPrice - finalPrice}`;
+    discountMsg.style.color  = "green";
 
   } catch (err) {
     console.error("Coupon error:", err);
