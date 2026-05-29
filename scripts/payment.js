@@ -6,8 +6,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   console.log("TEMPLATE:", template);
 
-  const btn = document.getElementById("rzpButton");
+  // ✅ FIX 1: Always reset price to 199 when page loads
+  // This ensures old coupon from previous session never carries over
+  localStorage.removeItem("finalAmount");
+  localStorage.removeItem("appliedCoupon");
+  localStorage.removeItem("discount");
+  localStorage.removeItem("nextCoupon");
 
+  // Reset display to ₹199 on load
+  const priceDisplay = document.getElementById("priceDisplay");
+  if (priceDisplay) priceDisplay.textContent = "₹199";
+
+  const btn = document.getElementById("rzpButton");
   if (!btn) return;
 
   btn.addEventListener("click", async () => {
@@ -19,19 +29,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
       console.log("CALLING:", `${BASE_URL}/create-order`);
 
-      // 🔥 CREATE ORDER — replace the existing fetch body with this:
-const finalAmount = parseInt(localStorage.getItem("finalAmount")) || 199;
-const appliedCoupon = localStorage.getItem("appliedCoupon") || "";
+      // ✅ FIX 2: Only use discounted amount if coupon was applied THIS session
+      // If no coupon applied, always default to 199
+      const finalAmount = parseInt(localStorage.getItem("finalAmount")) || 199;
+      const appliedCoupon = localStorage.getItem("appliedCoupon") || "";
 
-const res = await fetch(`${BASE_URL}/create-order`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    amountINR: finalAmount,   // ✅ uses discounted price
-    template,
-    coupon: appliedCoupon     // ✅ optional: send coupon to server too
-  })
-});
+      const res = await fetch(`${BASE_URL}/create-order`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amountINR: finalAmount,
+          template,
+          coupon: appliedCoupon
+        })
+      });
 
       if (!res.ok) {
         throw new Error("Failed to reach server");
@@ -59,15 +70,13 @@ const res = await fetch(`${BASE_URL}/create-order`, {
 
             const verifyRes = await fetch(`${BASE_URL}/verify-payment`, {
               method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
+              headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-  razorpay_payment_id: response.razorpay_payment_id,
-  razorpay_order_id: response.razorpay_order_id,
-  razorpay_signature: response.razorpay_signature,
-  template
-})
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id:   response.razorpay_order_id,
+                razorpay_signature:  response.razorpay_signature,
+                template
+              })
             });
 
             const result = await verifyRes.json();
@@ -77,12 +86,17 @@ const res = await fetch(`${BASE_URL}/create-order`, {
               return;
             }
 
-            localStorage.setItem("projectId", result.projectId);
-            localStorage.setItem("invoicePath", result.invoice);
+            localStorage.setItem("projectId",    result.projectId);
+            localStorage.setItem("invoicePath",  result.invoice);
 
-            // ✅ SUCCESS FLOW
+            // ✅ FIX 3: Clear coupon data immediately after successful payment
+            // So next purchase always starts fresh at ₹199
+            localStorage.removeItem("finalAmount");
+            localStorage.removeItem("appliedCoupon");
+            localStorage.removeItem("discount");
+            localStorage.removeItem("nextCoupon");
+
             alert("Payment successful!");
-
             window.location.href = `/editor/${template}/${result.projectId}`;
 
           } catch (err) {
@@ -93,7 +107,8 @@ const res = await fetch(`${BASE_URL}/create-order`, {
 
         modal: {
           ondismiss: function () {
-            alert("Payment cancelled");
+            btn.innerText = "Pay with Razorpay";
+            btn.disabled = false;
           }
         }
       };
@@ -103,13 +118,12 @@ const res = await fetch(`${BASE_URL}/create-order`, {
       btn.disabled = true;
 
       const rzp = new Razorpay(options);
-
       rzp.open();
 
       rzp.on("payment.failed", function (response) {
-  console.error("Payment failed:", response.error);
-  alert("Payment failed: " + response.error.description);
-        btn.innerText = "Pay Now";
+        console.error("Payment failed:", response.error);
+        alert("Payment failed: " + response.error.description);
+        btn.innerText = "Pay with Razorpay";
         btn.disabled = false;
       });
 
@@ -121,8 +135,8 @@ const res = await fetch(`${BASE_URL}/create-order`, {
 });
 
 async function applyCoupon() {
-  const couponCode = document.getElementById("coupon").value.trim();
-  const discountMsg = document.getElementById("discountMsg");
+  const couponCode   = document.getElementById("coupon").value.trim();
+  const discountMsg  = document.getElementById("discountMsg");
   const priceDisplay = document.getElementById("priceDisplay");
 
   if (!couponCode) {
@@ -132,10 +146,10 @@ async function applyCoupon() {
   }
 
   try {
-    const res = await fetch(`${BASE_URL}/validate-coupon`, {
-      method: "POST",
+    const res  = await fetch(`${BASE_URL}/validate-coupon`, {
+      method:  "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ coupon: couponCode })
+      body:    JSON.stringify({ coupon: couponCode })
     });
 
     const data = await res.json();
@@ -143,13 +157,14 @@ async function applyCoupon() {
     if (!res.ok || !data.success) {
       discountMsg.textContent = data.message || "Invalid coupon code.";
       discountMsg.style.color = "red";
+
+      // ✅ Clear any old saved discount if coupon is invalid
       localStorage.removeItem("finalAmount");
       localStorage.removeItem("appliedCoupon");
       priceDisplay.textContent = "₹199";
       return;
     }
 
-    // data should return: { success: true, discountPercent: 20 } or { discountedPrice: 159 }
     const originalPrice = 199;
     let finalPrice = originalPrice;
 
@@ -159,12 +174,12 @@ async function applyCoupon() {
       finalPrice = Math.round(originalPrice * (1 - data.discountPercent / 100));
     }
 
-    localStorage.setItem("finalAmount", finalPrice);
+    localStorage.setItem("finalAmount",   finalPrice);
     localStorage.setItem("appliedCoupon", couponCode);
 
-    priceDisplay.textContent = `₹${finalPrice} ✅`;
-    discountMsg.textContent = `Coupon applied! You save ₹${originalPrice - finalPrice}`;
-    discountMsg.style.color = "green";
+    priceDisplay.textContent  = `₹${finalPrice} ✅`;
+    discountMsg.textContent   = `Coupon applied! You save ₹${originalPrice - finalPrice}`;
+    discountMsg.style.color   = "green";
 
   } catch (err) {
     console.error("Coupon error:", err);
@@ -172,4 +187,3 @@ async function applyCoupon() {
     discountMsg.style.color = "red";
   }
 }
-
