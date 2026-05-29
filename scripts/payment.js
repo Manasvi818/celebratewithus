@@ -9,6 +9,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const priceDisplay = document.getElementById("priceDisplay");
   if (priceDisplay) priceDisplay.textContent = "₹199";
 
+  // ✅ FIX: Restore coupon state from localStorage on page load
+  const savedAmount = localStorage.getItem("finalAmount");
+  const savedCoupon = localStorage.getItem("appliedCoupon");
+
+  if (savedAmount && savedCoupon) {
+    couponAppliedThisSession = true;
+
+    if (priceDisplay) priceDisplay.textContent = `₹${savedAmount} ✅`;
+
+    const discountMsg = document.getElementById("discountMsg");
+    if (discountMsg) {
+      discountMsg.textContent = `Coupon "${savedCoupon}" applied! You save ₹${199 - parseInt(savedAmount)}`;
+      discountMsg.style.color = "green";
+    }
+
+    const couponInput = document.getElementById("coupon");
+    if (couponInput) couponInput.value = savedCoupon;
+  }
+
   const btn = document.getElementById("rzpButton");
   if (!btn) return;
 
