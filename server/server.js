@@ -357,7 +357,7 @@ console.log("=== VERIFY DEBUG END ===");
       editorLink: `https://celebratewithus.co.in/editor/${templateName}/${projectId}`,
       coupon: req.body?.coupon || "N/A",
       nextCoupon: coupon.code,
-      discount: req.body?.discount || 0,
+      amountINR: req.body?.amountINR || 199,
       date: new Date().toLocaleDateString("en-IN"),
       time: new Date().toLocaleTimeString("en-IN")
     });
@@ -578,10 +578,10 @@ async function generateInvoice(data) {
     const stream = fs.createWriteStream(filePath);
     doc.pipe(stream);
 
-    const baseAmount = 199;
-    const discount = parseInt(data.discount || 0);
-    const safeDiscount = isNaN(discount) ? 0 : discount;
-    const finalAmount = Math.round(baseAmount - (baseAmount * safeDiscount / 100));
+    // ✅ NEW
+const baseAmount = 199;
+const finalAmount = parseInt(data.amountINR) || baseAmount;
+const safeDiscount = baseAmount - finalAmount;
 
     // Background
     doc.rect(0, 0, doc.page.width, doc.page.height).fill("#E89AC6");
@@ -623,8 +623,10 @@ async function generateInvoice(data) {
 
     doc.fillColor("#ffffff");
     doc.text(`Coupon Used: ${data.coupon || "N/A"}`);
-    doc.text(`Discount: ₹${safeDiscount}`);
-    doc.text(`Final Amount Paid: ₹${finalAmount}`);
+    // ✅ NEW
+doc.text(`Discount: ₹${safeDiscount}`);
+doc.text(`Final Amount Paid: ₹${finalAmount}`);
+// (same lines, but now safeDiscount and finalAmount are correct)
     doc.moveDown(3);
 
     const boxY = doc.y;
