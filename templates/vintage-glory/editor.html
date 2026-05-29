@@ -726,7 +726,7 @@ function downloadViewer() {
   const coupon = "No Coupon Applied";
 
   const couponUsed = localStorage.getItem("appliedCoupon") || "No Coupon Applied";
-const discount = parseInt(localStorage.getItem("discount")) || 0;
+const discount = couponApplied ? parseInt(localStorage.getItem("discount")) || 0 : 0;
 const finalAmount = parseInt(localStorage.getItem("finalAmount")) || 199;
 const nextCoupon = localStorage.getItem("nextCoupon") || "N/A";
   
