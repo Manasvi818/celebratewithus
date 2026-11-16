@@ -1,4 +1,4 @@
-const BASE_URL = "https://celebratewithus-production.up.railway.app";
+const BASE_URL = "https://celebratewithus.onrender.com";
 
 let couponAppliedThisSession = false;
 
